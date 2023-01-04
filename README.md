@@ -430,6 +430,7 @@ CSVファイルをSQLで操作し、集計したり検索できる。
 
 - Usage
     - `man2 csv2sqlite`
+- Examples
     - `csv2sqlite csv,csv,... "<sqlstring>"`
     - `csv2sqlite csv,csv,... -ReadFile <sqlfile>`
     - `"<sqlstring>" | csv2sqlite csv,csv,...`
@@ -452,6 +453,7 @@ CSVファイルをSQLで操作し、集計したり検索できる。
 - Usage
     - `man2 clip2img`
     - `clip2img [directory] [-DirView] [-MSPaint] [-View]`
+- Examples
     - `clip2img -d ~/Documents`
     - `clip2img -n a.png`
 
@@ -549,7 +551,7 @@ Sleepが終わるまでプロンプトが帰ってこないので、
 筆者は`Windows Terminal`を`Alt > Shift> +/-`で分割して時計として使っている。
 
 - Usage
-    ` man2 sleepy`
+    - `man2 sleepy`
 - Examples
     - `sleepy`
         - pomodoro timer (`-Minute 25`)
