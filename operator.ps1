@@ -14,9 +14,8 @@ if ($IsWindows){
     ## unix-like commands
     . $pwshSrcDir/sed_function.ps1
     . $pwshSrcDir/sed-i_function.ps1
-    . $pwshSrcDir/sed-CaseSensitive_function.ps1
     . $pwshSrcDir/grep_function.ps1
-    . $pwshSrcDir/grep-CaseSensitive_function.ps1
+    . $pwshSrcDir/uniq_function.ps1
 
     . $pwshSrcDir/head_function.ps1
     . $pwshSrcDir/tail_function.ps1
@@ -26,9 +25,6 @@ if ($IsWindows){
 
     . $pwshSrcDir/cat2_function.ps1
     . $pwshSrcDir/tac_function.ps1
-
-    . $pwshSrcDir/uniq_function.ps1
-    . $pwshSrcDir/uniq-CaseSensitive_function.ps1
 
     ## misc
     . $pwshSrcDir/say_function.ps1
@@ -49,6 +45,7 @@ if ($IsWindows){
 . $pwshSrcDir/tateyoko_function.ps1
 . $pwshSrcDir/fillretu_function.ps1
 . $pwshSrcDir/yarr_function.ps1
+. $pwshSrcDir/juni_function.ps1
 
 . $pwshSrcDir/flat_function.ps1
 
