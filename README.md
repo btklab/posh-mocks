@@ -14,7 +14,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat fs=", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep-CaseSensitive`, `grep`, `gyo`, `head`, `json2txt`, `keta`, `man2`, `pwmake`, `say`, `sed-CaseSensitive`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq-CaseSensitive`, `uniq`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `json2txt`, `juni`, `keta`, `man2`, `pwmake`, `say`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
 
 Inspired by:
 
@@ -109,7 +109,7 @@ if ($IsWindows){
 
 ### unix-like commands
 
-#### `sed`, `sed-CaseSensitive` - Stream EDitor
+#### `sed` - Stream EDitor
 
 文字列を置換する。Windows用。
 Linux環境で使う`sed`のような使用感で文字列を置換するが、劣化コピーである。
@@ -149,7 +149,7 @@ Linuxでいう`sed -i`（の劣化コピー）。ただし誤爆防止のため`
 - Inspired by Unix/Linux Commands
     - Command: `sed`
 
-#### `grep`, `grep-CaseSensitive`
+#### `grep` - seaches for regex patterns
 
 文字列の検索とヒット行の出力。Windows用。
 Linux環境で使う`grep`のような使用感で文字列を検索するが、劣化コピーである。
@@ -202,7 +202,7 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 - Inspired by Unix/Linux Commands
     - Command: `chead`
 
-#### `uniq`, `uniq-CaseSensitive` - report or omit repeated lines
+#### `uniq` - report or omit repeated lines
 
 入力から隣接する（連続する）重複行をなくし一意とする。大文字小文字は区別しない。事前ソート必要。
 `Group-Object -NoElement`と同じ効果。
@@ -294,14 +294,35 @@ cat a.txt | fillretu | tateyoko | keta
    _    1    _
 ```
 
-#### `yarr` - Expand vertical data to horizontal
+#### `juni` - Enumerate the number of rows in each line
+
+各行の行数を列挙
+
+- Usage
+    - `man2 juni`
+    - `cat a.txt | juni`
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `juni`
+
+Output:
+
+```powershell
+"a".."d" | juni
+1 a
+2 b
+3 c
+4 d
+```
+
+#### `yarr` - Expand long data to wide
 
 縦型（ロング型）の半角スペース区切りレコードを、
 指定列をキーに横型（ワイド型）に変換する。
 
 - Usage
     - `man2 yarr`
-    - `cat a.txt | yarr num=<int>`
+    - `cat a.txt | yarr [-n|-num <int>]`
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `yarr`
@@ -310,26 +331,65 @@ Input(long type data):
 
 ```powershell
 cat a.txt
+2018 1
+2018 2 9
 2018 3
-2018 3
-2018 3
 2017 1
-2017 1
-2017 1
-2017 1
-2017 1
-2022 5
-2022 5
+2017 2
+2017 3
+2017 4
+2017 5 6
+2022 1
+2022 2
 ```
 
 Output(wide type data):
 
 ```powershell
-# num=1で左から1列目をkeyとしてワイド型に変換。
-cat a.txt | grep . | yarr num=1
-2018 3 3 3
-2017 1 1 1 1 1
-2022 5 5
+# num=1で左から1列目をkeyとしてロング型をワイド型に変換。
+cat a.txt | grep . | yarr -n 1
+2018 1 2 9 3
+2017 1 2 3 4 5 6
+2022 1 2
+```
+
+※ `grep .`で空行をスキップ（＝1文字以上の行のみヒット）
+
+#### `tarr` - Expand wide data to long
+
+横長（ワイド型）の半角スペース区切りレコードを、
+指定列をキーに縦長（ロング型）に変換する。
+
+- Usage
+    - `man2 tarr`
+    - `cat a.txt | tarr [-n|-num <int>]`
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `tarr`
+
+Input(long type data):
+
+```powershell
+cat a.txt
+2018 1 2 3
+2017 1 2 3 4
+2022 1 2
+```
+
+Output(wide type data):
+
+```powershell
+# num=1で左から1列目をkeyとしてワイド型をロング型に変換。
+cat a.txt | grep . | tarr -n 1
+2018 1
+2018 2
+2018 3
+2017 1
+2017 2
+2017 3
+2017 4
+2022 1
+2022 2
 ```
 
 ※ `grep .`で空行をスキップ（＝1文字以上の行のみヒット）

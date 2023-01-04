@@ -69,7 +69,8 @@ function head{
       $dispRowNum = 10
     }elseif($args[0] -eq '-n'){
       # -n 行数指定ありの場合
-      if($args.Count -lt 2){throw "引数が不足しています."}
+      if($args.Count -lt 2){
+        Write-Error "引数が不足しています." -ErrorAction Stop }
       $setNumFlag = $true
       $dispRowNum = [int]$args[1]
     }else{

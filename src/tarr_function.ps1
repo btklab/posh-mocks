@@ -1,43 +1,42 @@
 <#
 .SYNOPSIS
 
-yarr - Expand vertical data to horizontal
+tarr - Expand vertical data to horizontal
 
-縦型（ロング型）の半角スペース区切りレコードを
-指定列をキーに横型（ワイド型）に変換する。
+横型（ワイド型）の半角スペース区切りレコードを
+指定列をキーに縦型（ロング型）に変換する。
 
-指定列をキーとして横に並べる
-事前ソート不要
-大文字小文字を区別しない
+ヘッダなし半角スペース区切り入力を期待。
+事前ソート不要。
+大文字小文字を区別しない。
 
 .EXAMPLE
 cat a.txt
-2018 3
-2018 3
-2018 3
-2017 1
-2017 1
-2017 1
-2017 1
-2017 1
-2022 5
-2022 5
+2018 1 2 3
+2017 1 2 3 4
+2022 1 2
 
-PS> cat a.txt | grep . | yarr -n 1
-2018 3 3 3
-2017 1 1 1 1 1
-2022 5 5
+PS> cat a.txt | grep . | tarr -n 1
+2018 1
+2018 2
+2018 3
+2017 1
+2017 2
+2017 3
+2017 4
+2022 1
+2022 2
 
 ※ grep . で空行をスキップ（＝1文字以上の行のみヒット）
 
 
 
 .EXAMPLE
-PS C:\>cat a.txt | yarr -n 2
+PS C:\>cat a.txt | tarr -n 2
 1列目から2列目をキーとして折り返す
 
 #>
-function yarr {
+function tarr {
     Param(
         [Parameter(Position=0,Mandatory=$False)]
         [Alias('n')]
@@ -50,11 +49,6 @@ function yarr {
         [parameter(Mandatory=$False,ValueFromPipeline=$True)]
         [string[]] $Text
     )
-
-    begin {
-        ## init var
-        $hash = [ordered] @{}
-    }
     process {
         [string]$line = $_
         # is line empty?
@@ -72,20 +66,9 @@ function yarr {
         [int] $sVal = $eKey + 1
         [int] $eVal = $keyValAry.Count - 1
         [string] $key = $keyValAry[($sKey..$eKey)] -Join "$Delimiter"
-        [string] $val = $keyValAry[($sVal..$eVal)] -Join "$Delimiter"
-        if ($hash.Contains($key)){
-            # if key already exist
-            $val = $hash["$key"] + "$Delimiter" + $val
-            $hash["$key"] = $val
-        } else {
-            $hash.Add($key, $val)
-        }
-    }
-    end {
-        # output hash
-        foreach ($k in $hash.keys){
-            [string] $writeLine = $k + "$Delimiter" + $hash["$k"]
-            Write-Output $writeLine
-        }
+		foreach ($val in $keyValAry[($sVal..$eVal)]){
+			[string] $writeLine = $key + "$Delimiter" + $val
+			Write-Output $writeLine
+		}
     }
 }

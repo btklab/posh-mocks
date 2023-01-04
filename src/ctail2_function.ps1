@@ -50,7 +50,8 @@ function ctail2 {
     $cutRowNum = 1
   }elseif($args[0] -eq '-n'){
     # -n 行数指定ありの場合
-    if($args.Count -lt 2){throw "引数が不足しています."}
+    if($args.Count -lt 2){
+      Write-Error "引数が不足しています." -ErrorAction Stop}
     $setNumFlag = $true
     $cutRowNum = [int]$args[1]
   }else{
@@ -73,16 +74,17 @@ function ctail2 {
   }
 
   if($stdinFlag){
-    $inputData = $input | % { $_ }
+    $inputData = $input | ForEach-Object { $_ }
     $fileGyoNum = $inputData.Length - 1 - $cutRowNum
     if($fileGyoNum -ge 0){$inputData[0..$fileGyoNum]}
   }
 
   if($readFileFlag){
     for($i = $fileArryStartCounter; $i -lt $args.Count; $i++){
-      $fileList = (Get-ChildItem -Path $args[$i] | %{ $_.FullName })
-      foreach($files in $fileList){
-        $fileFullPath = "$files"
+      $fileList = (Get-ChildItem -Path $args[$i] `
+        | ForEach-Object { $_.FullName })
+      foreach($f in $fileList){
+        $fileFullPath = "$f"
         $fileGyoNum = (Get-Content -LiteralPath "$fileFullPath" -Encoding UTF8).Length - 1 - $cutRowNum
         if($fileGyoNum -ge 0){(Get-Content -LiteralPath "$fileFullPath" -Encoding UTF8)[0..$fileGyoNum]}
       }
