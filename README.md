@@ -13,7 +13,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat fs=", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep-CaseSensitive`, `grep`, `gyo`, `head`, `keta`, `man2`, `pwmake`, `say`, `sed-CaseSensitive`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tateyoko`, `teatimer`, `uniq-CaseSensitive`, `uniq`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep-CaseSensitive`, `grep`, `gyo`, `head`, `keta`, `man2`, `pwmake`, `say`, `sed-CaseSensitive`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq-CaseSensitive`, `uniq`
 
 Inspired by:
 
@@ -37,6 +37,8 @@ Inspired by:
 
 `src`下のファイルは1ファイル1関数。関数名はファイル名から`_function.ps1`をのぞいた文字列。基本的に他の関数には依存しないようにしているので、関数ファイル単体を移動して利用することもできる。（一部の関数は他の関数ファイルに依存しているものもある）
 
+完成させるつもりがなく、おおよそ動けばよいという考えなので、永遠にモックアップのまま。
+
 
 ## Install functions
 
@@ -45,8 +47,8 @@ Inspired by:
 
 ```powershell
 # install all functions
-. path/to/pwsh-spaghetti/operator.ps1
-. path/to/pwsh-spaghetti/operator-extra.ps1
+. path/to/posh-mocks/operator.ps1
+. path/to/posh-mocks/operator-extra.ps1
 ```
 
 関数は一部を除きできるだけ他の関数と依存しないようにしている。
@@ -66,8 +68,8 @@ if ($IsWindows){
     $env:LESSCHARSET = "utf-8"
 }
 # sourcing dot files
-. path/to/pwsh-spaghetti/src/hoge_function.ps1
-. path/to/pwsh-spaghetti/src/piyo_function.ps1
+. path/to/posh-mocks/src/hoge_function.ps1
+. path/to/posh-mocks/src/piyo_function.ps1
 ```
 
 
@@ -83,6 +85,7 @@ if ($IsWindows){
 筆者は作った関数をすぐに忘れてしまうため。
 
 - Usage
+    - `man2 man2`
     - `man2 [-c <int>] [func-name]`
 - 挙動
     - `man2`関数ファイルと同階層にある`*_function.ps1`ファイルから`_function.ps1`を除去して列挙する
@@ -101,12 +104,13 @@ if ($IsWindows){
 
 #### `sed`, `sed-CaseSensitive` - Stream EDitor
 
-文字列を置換する。
+文字列を置換する。Windows用。
 Linux環境で使う`sed`のような使用感で文字列を置換するが、劣化コピーである。
 `"string" | ForEach-Object{ $_ -replace 'reg','str' }`と同じ効果を得る。
 `sed`は（筆者が毎日）よく使うコマンドなので、Bash・PowerShellとも同じ使用感・より短い文字数で利用できるようにした。
 
 - Usage
+    - `man2 sed`
     - `sed 's;<regex-pattern>;<replace-strings>;g'`
         - 左から2文字目が区切り文字。`sed 's@hoge@piyo@g'`と書いてもよい
     - `sed 's;<regex-pattern>;<replace-strings>;'`
@@ -125,8 +129,9 @@ Linuxでいう`sed -i`（の劣化コピー）。ただし誤爆防止のため`
 同じ動作をするPowerShellワンライナーがいつも長くなるので。
 
 - Usage
+    - `man2 sed-i`
     - `sed-i 's;<before>;<after>;g' file [-Execute] [-Overwrite|-OverwriteBackup]`
-        - デフォルトでdry run、かつ、バックアップ作成（.bak）ありの安全動作
+    - デフォルトでdry run、かつ、バックアップ作成（.bak）ありの安全動作
 - Examples
     - `sed-i 's;abc;def;g' file -Execute`
         - Linux: `sed -i.bak 's;abc;def;g' file` と等価（`.bak`ファイルにオリジナルファイルをバックアップ）
@@ -139,12 +144,13 @@ Linuxでいう`sed -i`（の劣化コピー）。ただし誤爆防止のため`
 
 #### `grep`, `grep-CaseSensitive`
 
-文字列の検索とヒット行の出力。
+文字列の検索とヒット行の出力。Windows用。
 Linux環境で使う`grep`のような使用感で文字列を検索するが、劣化コピーである。
 `"string" | Select-String -Pattern <reg>`と同じ効果を得る。
 `grep`は（筆者が毎日）よく使うコマンドなので、Bash・PowerShellとも同じ使用感・より短い文字数で利用できるようにした。
 
 - Usage
+    - `man2 grep`
     - `grep 'word' <file1,file2,...>`
     - `grep -v 'word' <file1,file2,...>`
     - `grep -o 'word' <file1,file2,...>`
@@ -161,6 +167,9 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 `"string" | Select-Object -First <int> / -Last <int>`と同じ効果を得る。
 
 - Usage
+    - `man2 head`
+    - `man2 tail`
+- Examples
     - `1..20 | head [-n <int>]`
     - `1..20 | tail [-n <int>]`
     - `head *.*`
@@ -174,11 +183,15 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 `"string" | Select-Object -Skip <int> / -SkipLast <int>`と同じ効果を得る。
 
 - Usage
+    - `man2 chead`
+    - `man2 ctail`
+    - `man2 ctail2`,
+- Examples
     - `1..20 | chead  [-n <int>]`
     - `1..20 | ctail2 [-n <int>]`
     - `1..20 | ctail`
-        - `ctail`は末尾の1行のみ削除
-        - 場合により`ctail`よりも高速に動作するかもしれない
+        - `ctail`は**末尾1行のみ**削除
+        - 場合により`ctail2`よりも高速に動作するかもしれない
 - Inspired by Unix/Linux Commands
     - Command: `chead`
 
@@ -188,6 +201,8 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 `Group-Object -NoElement`と同じ効果。
 
 - Usage
+    - `man2 uniq`
+- Examples
     - `1,2,3,4,5,3 | sort | uniq`
     - `1,2,3,4,5,3 | sort | uniq -c`
 - Inspired by Unix/Linux Commands
@@ -200,6 +215,7 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 ハイフン「-」指定で標準入力
 
 - Usage
+    - `man2 cat2`
     - `cat2 file1 file2 file3...`
 - Inspired by Unix/Linux Commands
     - Command: `cat`
@@ -209,8 +225,10 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 入力を行単位逆順に出力する。
 
 - Usage
+    - `man2 tac`
+- Examples
     - `1..5 | tac`
-    - ` tac a.txt,b.txt`
+    - `tac a.txt,b.txt`
 - Inspired by Unix/Linux Commands
     - Command: `tac`
 
@@ -218,10 +236,12 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 
 #### `tateyoko` - transpose columns and rows
 
-半角スペース区切り文字列の縦横変換。
-行数と列数は不揃いでもよい。
+行列の転置（半角スペース区切り文字列の縦横変換）。
+列数は不揃いでもよい。
 
 - Usage
+    - `man2 tateyoko`
+- Examples
     - `"1 2 3","4 5 6","7 8 9" | tateyoko`
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
@@ -232,6 +252,8 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 半角スペース区切り文字列を任意列数となるように整える。
 
 - Usage
+    - `man2 flat`
+- Examples
     - `"1 2 3","4 5 6","7 8 9" | flat`
     - `"1 2 3","4 5 6","7 8 9" | flat 4`
 - Inspired by [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
@@ -241,12 +263,15 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 #### `Add-CrLf`, `Add-CrLf-EndOfFile` - Add LineFeed
 
 改行を挿入する。
+`Add-CrLf`は、文字列中に``` `r`n ```を見つけるとそこに改行を挿入する。
+`Add-CrLf-EndOfFile`は、入力の最後に改行を1行挿入する。
+`Get-Content -Delimiter`と似た挙動である。
 
-- `Add-CrLf`は、文字列中に``` `r`n ```を見つけるとそこに改行を挿入する。
-- `Add-CrLf-EndOfFile`は、入力の最後に改行を1行挿入する。
+- Usage
+    - `man2 Add-CrLf`
+    - `man2 Add-CrLf-EndOfFile`
 
-
-#### `addb`, `addl` , `addr` , `addt` - Insert text strings at the top, bottom, left, and right of the input
+#### `addb`, `addl`, `addr`, `addt` - Insert text strings at the top, bottom, left, and right of the input
 
 入力の上下左右に文字列を挿入する。
 
@@ -260,6 +285,11 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 `addr`と`addl`は、左や右に列を追加するのに便利。<br />
 
 - Usage
+    - `man2 addb`
+    - `man2 addl`
+    - `man2 addr`
+    - `man2 addt`
+- Examples
     - `"A B C D" | addt '<table>','' | addb '','</table>'`
     - `"B C D" | addr " E" | addl "A "`
 - Inspired by [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
@@ -274,6 +304,8 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 マルチバイト文字対応。
 
 - Usage
+    - `man2 keta`
+- Examples
     - `"aaa bbb ccc","dddddd eeee ffff" | keta`
         - デフォルトで右揃え
     - `"aaa bbb ccc","dddddd eeee ffff" | keta -l`
@@ -284,17 +316,85 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 
 #### `gyo` - row counter
 
-入力文字列の行数を出力する。
+入力文字列の行数をカウント。
 `(1..20 | Measure-Object).Count`と同じ効果。
 
 - Usage
+    - `man2 gyo`
+- Examples
     - `1..20 | gyo`
     - `gyo *.*`
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `gyo`
 
-### csv handling
+### csv/toml handling
+
+#### `toml2psobject` - parser for toml-like configuration files
+
+[TOML(Tom's Obvious Minimal Language)](https://toml.io/en/)風設定ファイルの簡易パーサ。
+TOML風の設定情報を読み込みPSCustomObjectとして返す。
+
+ユースケースとしては、筆者は職務をTOML形式でリストアップする場合などに用いている。
+配列とハッシュを用いて1カラムの中に複数の要素を格納できるので、
+CSV形式などの「1行1レコード形式」では表現しにくい情報を表現できるかもしれない。
+（Excelのセル内改行のイメージ）
+
+基本的にTOML的な記法を期待するが、最も違う点は
+ブラケット`[ ]`で囲む文字列を`key`ではなく`key="id"`として認識する点と、
+ブラケット内でドット`.`を用いても要素の親子関係を表現せずひとつの文字列として解釈する点、
+その代わり、マルチバイト文字をブラケット内に用いることができる。
+
+`-ToJson`スイッチで出力をJson形式に変換したり、
+`ConvertTo-Csv`でCSV形式に変換したりできる。
+（PowerShellを使わない同僚のためにリストをエクスポートできる）
+
+- Usage
+    - `man2 toml2psobject`
+    - `toml2psobject [[-File] <String>] [-DateFormat <String>] [-ToJson] [-JsonDepth <Int32>] [-Simplify] [-Quote] [-NoPoshListAndHash] [-Execute]`
+- Examples
+    - `cat a.toml | toml2psobject`
+
+Input(TOML-like format):
+
+```
+## comment
+[あいうえお]
+    bumon = haccp # comment
+    cat   = "haccp"
+    act   = review
+    freq  = weekly
+    tag   = [haccp, verification]
+    stat  = true
+    ref   = 224_617.445_991_228
+    link  = {
+        y2021="https://github.com/",
+        y2022="https://github.com/",
+        rep = ["hoge", "fuga"],
+        }
+    note  = """
+      multi-line note1
+      multi-line note2
+      multi-line note3
+      """
+```
+
+Output(PSObject):
+
+```powershell
+cat a.toml | toml2psobject
+
+id    : あいうえお
+bumon : haccp
+cat   : "haccp"
+act   : review
+freq  : weekly
+tag   : @("haccp", "verification")
+stat  : True
+ref   : 224617.445991228
+link  : @{y2021="https://github.com/"; y2022="https://github.com/"; rep = @("hoge", "fuga")}
+note  : multi-line note1\nmulti-line note2\nmulti-line note3
+```
 
 #### `csv2txt` - csv to text
 
@@ -302,7 +402,11 @@ CSVを半角スペース区切りの1行1レコード形式（SSV）に変換す
 改行含みのCSVデータを1行にして`grep`する、などの用途に便利。
 
 - Usage
+    - `man2 csv2txt`
+- Example
     - `cat a.csv | csv2txt [-z | -NaN]`
+- Inspired by [csv2txt.py - ryuichiueda/MyCommands - GitHub](https://github.com/ryuichiueda/MyCommands)
+    - The MIT License: Copyright (C) 2014, Ryuichi Ueda
 
 #### `catcsv` - concatenate csv files
 
@@ -311,10 +415,12 @@ CSVを半角スペース区切りの1行1レコード形式（SSV）に変換す
 ヘッダ「無し」の場合`-NoHeader`オプションをつける
 
 - Usage
+    - `man2 catcsv`
     - `catcsv [[-Path] <String>] [-Output <String>] [-List] [-OffList] [-OverWrite] [-NoHeader]`
+- Examples
     - `catcsv`
         - カレントディレクトリの`*.csv`を`out.csv`に出力する
-    - `catcsv a*.csv`
+    - `catcsv a*.csv -Output out.csv`
         - カレントディレクトリの`a*.csv`を`out.csv`に出力する
 
 #### `csv2sqlite` - Apply sqlite-sql to csv files
@@ -323,6 +429,7 @@ CSVファイルに対して`sqlite`のSQL文を発行する。
 CSVファイルをSQLで操作し、集計したり検索できる。
 
 - Usage
+    - `man2 csv2sqlite`
     - `csv2sqlite csv,csv,... "<sqlstring>"`
     - `csv2sqlite csv,csv,... -ReadFile <sqlfile>`
     - `"<sqlstring>" | csv2sqlite csv,csv,...`
@@ -343,6 +450,7 @@ CSVファイルをSQLで操作し、集計したり検索できる。
 デフォルトの保存場所は`~/Pictures`
 
 - Usage
+    - `man2 clip2img`
     - `clip2img [directory] [-DirView] [-MSPaint] [-View]`
     - `clip2img -d ~/Documents`
     - `clip2img -n a.png`
@@ -353,6 +461,8 @@ CSVファイルをSQLで操作し、集計したり検索できる。
 クリップボードの変化を検知すると`-Action {scriptblock}`に指定したアクションを実行する。
 
 - Usage
+    - `man2 clipwatch`
+- Examples
     - `clipwatch -Action {Get-ClipBoard | say}`
         - 文字列をクリップボードにコピーするたび`say`コマンド（後述）を実行する
     - `clipwatch -Action {Get-Clipboard | say -EN -Speed 2}`
@@ -364,10 +474,14 @@ CSVファイルをSQLで操作し、集計したり検索できる。
 ファイル監視。実行したディレクトリ配下のファイルの変更を、
 更新時刻またはハッシュ値の比較で検知する。
 `-Action {scriptblock}`を指定すると、変化を検知した際にアクションを実行する。
-LaTeXなど、文章を書きながら、上書き保存するたび自動コンパイルしたい場合に便利。
+
+ユースケースとしては、筆者の場合であるが、LaTeXやMarkdownで文章を書きながら
+ソースファイルの変更を監視し、上書き保存ごとにコンパイルする、というふうに用いている。
 
 - Usage
+    - `man2 fwatch`
     - `fwatch [-Path] <String> [[-Action] <ScriptBlock>] [-Interval <String>] [-Log <String>] [-Message <String>] [-Recurse] [-Hash] [-OutOnlyLog] [-Quiet]`
+- Examples
     - `fwatch -Path index.md -Action {cat index.md | md2html > a.html; ii a.html}`
     - `fwatch -Path . -Action {cat a.md | md2html > a.html; ii a.html} -Recurse`
 
@@ -383,6 +497,9 @@ LaTeXなど、文章を書きながら、上書き保存するたび自動コン
 ブログ記事の作成などに便利な道具。
 
 - Usage (`Set-Alias -name ml -value Get-OGP`)
+    - `man2 Get-OGP`
+    - `man2 ml`
+- Examples
     - `ml -m | Set-Clipboard`
         - クリップボードのUriをマークダウン形式のリンクに変換して再度クリップボードに格納
     - `ml | Format-List`
@@ -400,10 +517,12 @@ PowerShell版make-like command。劣化コピー。
 カレントディレクトリにあるMakefileを読み実行する。
 
 特徴は、実行コマンドにPowerShellコマンドを使用できる点、およびタスクランナーとしてカレントプロセスで動作する点。
-たとえば、ドットソースで読み込んだ関数もMakefileに記述して走らせることができる。
-（実際のところ、筆者はこの関数をたまにしか使わない自作コマンドのメモ（覚え書き）として用いている）
+たとえば、カレントプロセスのPowerShellにドットソースで読み込んだ関数も、Makefileに記述して走らせることができる。
+
+筆者のユースケースとしては、この関数をたまにしか使わない自作コマンドのメモ（覚え書き）として用いている。
 
 - Usage
+    - `man2 pwmake`
     - `pwmake [[-Target] <String>] [[-Variables] <String[]>] [-File <String>] [-Delimiter <String>] [-TargetDelimiter <String>] [-ErrAction<String>] [-Help] [-DryRun]`
 - Inspired by Unix/Linux Commands
     - Command: `make`
@@ -414,6 +533,8 @@ PowerShell版make-like command。劣化コピー。
 入力された文字列を読み上げる（文字列入力を音声出力に変換する）。
 
 - Usage
+    - `man2 say`
+- Examples
     - `Get-Clipboard | say -JA`
     - `clipwatch -Action {Get-Clipboard | say -EN -Speed 2}`
 
@@ -428,6 +549,8 @@ Sleepが終わるまでプロンプトが帰ってこないので、
 筆者は`Windows Terminal`を`Alt > Shift> +/-`で分割して時計として使っている。
 
 - Usage
+    ` man2 sleepy`
+- Examples
     - `sleepy`
         - pomodoro timer (`-Minute 25`)
     - `sleepy -s 3`
@@ -454,4 +577,5 @@ Sleepが終わるまでプロンプトが帰ってこないので、
 仕事に没頭すると休憩するタイミングをのがしやすいので。
 
 - Usage
+    - `man2 teatimer`
     - `teatimer [[-Minutes] <Int32>] [[-Hours] <Int32>] [[-Seconds] <Int32>] [[-At] <DateTime>] [    [-Title] <String>] [[-Text] <String>] [[-Timeout] <Int32>] [[-EventTimeout] <Int32>] [-ShowPastTime] [-Quiet] [[-IconType]`
