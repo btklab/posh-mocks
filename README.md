@@ -5,6 +5,7 @@ A mock-up set of [PowerShell](https://github.com/PowerShell/PowerShell) 7 functi
 - For use in UTF-8 Japanese environments on windows.
 - For my personal work and hobby use.
 - Note that the code is spaghetti (due to my technical inexperience).
+- Insufficient error handling
 
 function list:
 
@@ -23,7 +24,8 @@ Inspired by:
     - Commands: `grep`, `sed`, `head`, `tail`, `awk`, `make`, `uniq`, and more...
 - [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
-    - Commands: `man2`, `keta`, `tateyoko`, `gyo`
+    - Commands: `man2`, `keta`, `tateyoko`, `gyo`, `fillretu`, `yarr`
+
 - [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
     - License: The MIT License (MIT): Copyright (c) 2016 Yasuhiro, Yamada
     - Commands: `flat`, `addt`, `addb`, `addr`, `addl`, 
@@ -40,7 +42,9 @@ Inspired by:
 
 `src`下のファイルは1ファイル1関数。関数名はファイル名から`_function.ps1`をのぞいた文字列。基本的に他の関数には依存しないようにしているので、関数ファイル単体を移動して利用することもできる。（一部の関数は他の関数ファイルに依存しているものもある）
 
-完成させるつもりがなく、おおよそ動けばよいという考えなので、永遠にモックアップのまま。
+**充分なエラー処理をしていない**。
+おおよそ動けばよいという考えなので、永遠にモックアップのまま。
+
 
 
 ## Install functions
@@ -237,9 +241,9 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 
 ### text filter
 
-#### `tateyoko` - transpose columns and rows
+#### `tateyoko` - Transpose columns and rows
 
-行列の転置（半角スペース区切り文字列の縦横変換）。
+半角スペース区切り行列の転置（半角スペース区切り文字列の縦横変換）。
 列数は不揃いでもよい。
 
 - Usage
@@ -249,6 +253,87 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `tateyoko`
+
+#### `fillretu` - Align records to the maximum number of columns
+
+半角スペース区切りレコードの列数を最大列数にそろえる。
+不足列を埋める、で、fill（埋める）＋retu（列）。
+列数がそろっていると何かと都合よい。
+
+- Usage
+    - `man2 fillretu`
+    - `cat a.txt | fillretu`
+
+Input:
+
+```powershell
+cat a.txt
+2018 3 3 3
+2017 1 1 1 1 1
+2022 5 5
+```
+
+Output:
+
+```powershell
+cat a.txt | fillretu
+2018 3 3 3 _ _
+2017 1 1 1 1 1
+2022 5 5 _ _ _
+```
+
+`tateyoko`とのコンビネーション。
+
+```powershell
+cat a.txt | fillretu | tateyoko | keta
+2018 2017 2022
+   3    1    5
+   3    1    5
+   3    1    _
+   _    1    _
+   _    1    _
+```
+
+#### `yarr` - Expand vertical data to horizontal
+
+縦型（ロング型）の半角スペース区切りレコードを、
+指定列をキーに横型（ワイド型）に変換する。
+
+- Usage
+    - `man2 yarr`
+    - `cat a.txt | yarr num=<int>`
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `yarr`
+
+Input(long type data):
+
+```powershell
+cat a.txt
+2018 3
+2018 3
+2018 3
+2017 1
+2017 1
+2017 1
+2017 1
+2017 1
+2022 5
+2022 5
+```
+
+Output(wide type data):
+
+```powershell
+# num=1で左から1列目をkeyとしてワイド型に変換。
+cat a.txt | grep . | yarr num=1
+2018 3 3 3
+2017 1 1 1 1 1
+2022 5 5
+```
+
+※ `grep .`で空行をスキップ（＝1文字以上の行のみヒット）
+
 
 #### `flat` - flat rows
 
