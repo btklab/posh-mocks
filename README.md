@@ -13,7 +13,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat fs=", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep-CaseSensitive`, `grep`, `gyo`, `head`, `keta`, `man2`, `pwmake`, `say`, `sed-CaseSensitive`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq-CaseSensitive`, `uniq`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep-CaseSensitive`, `grep`, `gyo`, `head`, `json2txt`, `keta`, `man2`, `pwmake`, `say`, `sed-CaseSensitive`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq-CaseSensitive`, `uniq`
 
 Inspired by:
 
@@ -30,6 +30,9 @@ Inspired by:
 - [mattn/sleepy - GitHub](https://github.com/mattn/sleepy)
     - License: The MIT License (MIT): Copyright (c) 2022 Yasuhiro Matsumoto
     - Commands: `sleepy`
+- [tomnomnom/gron: Make JSON greppable! - GitHub](https://github.com/tomnomnom/gron)
+    - License: The MIT License (MIT): Copyright (c) 2016 Tom Hudson
+    - Commands: `gron`
 
 コード群にまとまりはないが、事務職（非技術職）な筆者の毎日の仕事（おもに文字列処理）を、より素早くさばくための道具としてのコマンドセットを想定している（毎日使用する関数は10個に満たないが）。
 
@@ -328,7 +331,7 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `gyo`
 
-### csv/toml handling
+### csv/toml/json handling
 
 #### `toml2psobject` - parser for toml-like configuration files
 
@@ -396,7 +399,80 @@ link  : @{y2021="https://github.com/"; y2022="https://github.com/"; rep = @("hog
 note  : multi-line note1\nmulti-line note2\nmulti-line note3
 ```
 
-#### `csv2txt` - csv to text
+#### `json2txt` - transform json into key-value format with one record per line.
+
+Json形式のテキスト入力を1行1レコード形式に変換し`grep`しやすくする。
+逆変換はできない。
+PowerShell7.3以降に実装された`ConvertFrom-Json -AsHashTable`を使用する。
+
+動機は、「[GitHub - jiro4989/gsv: gsv transforms a multi-line CSV into one-line JSON to make it easier to grep.](https://github.com/jiro4989/gsv)」およびその発想元である「[tomnomnom/gron: Make JSON greppable! - GitHub](https://github.com/tomnomnom/gron)」のコンセプトが面白かったため。
+とくに具体的なユースケースを想定していない。PowerShellの`ConvertFrom-Json -AsHashTable`を使えば実装できるのでは、と考えたものを具体化してみたもの。
+
+- Usage
+    - `man2 json2txt`
+- Example
+    - `cat a.json | json2txt`
+- Inspired by [tomnomnom/gron: Make JSON greppable! - GitHub](https://github.com/tomnomnom/gron)
+    - License: The MIT License (MIT): Copyright (c) 2016 Tom Hudson
+
+Input(Json):
+
+```json
+{"widget": {
+    "debug": "on",
+    "window": {
+        "title": "Sample Konfabulator Widget",
+        "name": "main_window",
+        "width": 500,
+        "height": 500
+    },
+    "image": {
+        "src": "Images/Sun.png",
+        "name": "sun1",
+        "hOffset": 250,
+        "vOffset": 250,
+        "alignment": "center"
+    },
+    "text": {
+        "data": "Click Here",
+        "size": 36,
+        "style": "bold",
+        "name": "text1",
+        "hOffset": 250,
+        "vOffset": 100,
+        "alignment": "center",
+        "onMouseUp": "sun1.opacity = (sun1.opacity / 100) * 90;"
+    }
+}}
+```
+
+from: https://json.org/example.html
+
+Output(greppable!):
+
+```powershell
+cat a.json | json2txt
+.widget.debug = on
+.widget.window.title = "Sample Konfabulator Widget"
+.widget.window.name = "main_window"
+.widget.window.width = 500
+.widget.window.height = 500
+.widget.image.src = "Images/Sun.png"
+.widget.image.name = "sun1"
+.widget.image.hOffset = 250
+.widget.image.vOffset = 250
+.widget.image.alignment = "center"
+.widget.text.data = "Click Here"
+.widget.text.size = 36
+.widget.text.style = "bold"
+.widget.text.name = "text1"
+.widget.text.hOffset = 250
+.widget.text.vOffset = 100
+.widget.text.alignment = "center"
+.widget.text.onMouseUp = "sun1.opacity = (sun1.opacity / 100) * 90;"
+```
+
+#### `csv2txt` - parse csv to text
 
 CSVを半角スペース区切りの1行1レコード形式（SSV）に変換する。
 改行含みのCSVデータを1行にして`grep`する、などの用途に便利。
