@@ -57,8 +57,9 @@ if ($IsWindows){
 . $pwshSrcDir/csv2txt_function.ps1
 . $pwshSrcDir/csv2sqlite_function.ps1
 
-## TOML
+## TOML/JSON
 . $pwshSrcDir/toml2psobject_function.ps1
+. $pwshSrcDir/json2txt_function.ps1
 
 ## clipboard
 . $pwshSrcDir/clip2img_function.ps1
