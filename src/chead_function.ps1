@@ -20,7 +20,7 @@ PS C:\> cat a.txt | chead -n 5
 a.txt の最初の 5 行を削除し残りの行を出力
 
 #>
-function chead{
+function chead {
 
   begin
   {
@@ -34,7 +34,8 @@ function chead{
 
     }elseif($args[0] -eq '-n'){
       # -n 行数指定ありの場合
-      if($args.Count -lt 2){throw "引数が不足しています."}
+      if($args.Count -lt 2){
+        Write-Error "引数が不足しています." -ErrorAction Stop}
       $cutRowNum = [int]$args[1]
 
     }elseif($args[0] -eq '+h'){
@@ -43,12 +44,13 @@ function chead{
         
       if($args[1] -eq '-n'){
         # -n 行数指定ありの場合
-        if($args.Count -lt 3){throw "引数が不足しています."}
+        if($args.Count -lt 3){
+          Write-Error "引数が不足しています." -ErrorAction Stop}
         $cutRowNum = [int]$args[2]
       }
 
     }else{
-      throw "引数が不正です."
+      Write-Error "引数が不正です." -ErrorAction Stop
     }
   } # end of begin block
 
@@ -59,10 +61,12 @@ function chead{
       if($readRowCounter -eq 1){
         Write-Output $_
       }else{
-        if( ($readRowCounter - 1) -gt $cutRowNum){Write-Output $_}
+        if( ($readRowCounter - 1) -gt $cutRowNum){
+          Write-Output $_}
       }
     }else{
-      if($readRowCounter -gt $cutRowNum){Write-Output $_}
+      if($readRowCounter -gt $cutRowNum){
+        Write-Output $_}
     }
   } # end of process block
 }
