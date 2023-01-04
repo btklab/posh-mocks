@@ -14,7 +14,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat fs=", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `json2txt`, `keta`, `man2`, `pwmake`, `say`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `json2txt`, `juni`, `keta`, `man2`, `pwmake`, `say`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
 
 Inspired by:
 
@@ -346,11 +346,50 @@ cat a.txt
 Output(wide type data):
 
 ```powershell
-# num=1で左から1列目をkeyとしてワイド型に変換。
+# num=1で左から1列目をkeyとしてロング型をワイド型に変換。
 cat a.txt | grep . | yarr -n 1
 2018 1 2 9 3
 2017 1 2 3 4 5 6
 2022 1 2
+```
+
+※ `grep .`で空行をスキップ（＝1文字以上の行のみヒット）
+
+#### `tarr` - Expand wide data to long
+
+横長（ワイド型）の半角スペース区切りレコードを、
+指定列をキーに縦長（ロング型）に変換する。
+
+- Usage
+    - `man2 tarr`
+    - `cat a.txt | tarr [-n|-num <int>]`
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `tarr`
+
+Input(long type data):
+
+```powershell
+cat a.txt
+2018 1 2 3
+2017 1 2 3 4
+2022 1 2
+```
+
+Output(wide type data):
+
+```powershell
+# num=1で左から1列目をkeyとしてワイド型をロング型に変換。
+cat a.txt | grep . | tarr -n 1
+2018 1
+2018 2
+2018 3
+2017 1
+2017 2
+2017 3
+2017 4
+2022 1
+2022 2
 ```
 
 ※ `grep .`で空行をスキップ（＝1文字以上の行のみヒット）

@@ -45,6 +45,7 @@ if ($IsWindows){
 . $pwshSrcDir/tateyoko_function.ps1
 . $pwshSrcDir/fillretu_function.ps1
 . $pwshSrcDir/yarr_function.ps1
+. $pwshSrcDir/tarr_function.ps1
 . $pwshSrcDir/juni_function.ps1
 
 . $pwshSrcDir/flat_function.ps1
