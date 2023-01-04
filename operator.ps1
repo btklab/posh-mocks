@@ -38,10 +38,13 @@ if ($IsWindows){
 #Set-Alias -name make -value pwmake
 
 ## text filter
-. $pwshSrcDir/tateyoko_function.ps1
-. $pwshSrcDir/flat_function.ps1
 . $pwshSrcDir/keta_function.ps1
 . $pwshSrcDir/gyo_function.ps1
+. $pwshSrcDir/tateyoko_function.ps1
+. $pwshSrcDir/fillretu_function.ps1
+. $pwshSrcDir/yarr_function.ps1
+
+. $pwshSrcDir/flat_function.ps1
 
 . $pwshSrcDir/Add-CrLf_function.ps1
 . $pwshSrcDir/Add-CrLf-EndOfFile_function.ps1
