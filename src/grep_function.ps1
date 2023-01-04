@@ -100,9 +100,12 @@ function grep {
         $fflag = $false
 
         # test args
-        if($args.Count -lt 1){ throw "引数が不正です." }
+        if($args.Count -lt 1){
+            Write-Error "引数が不正です." -ErrorAction Stop }
 
         # v option: パイプライン読み込みモード
+        if(($args[0] -eq "-v") -and ($args.Count -eq 1)){
+            Write-Error "引数が不正です."  -ErrorAction Stop}
         if(($args[0] -eq "-v") -and ($args.Count -eq 2)){
             $pipflag = $true
             $vflag = $true
@@ -111,6 +114,8 @@ function grep {
         }
 
         # v option: ファイル読み込みモード
+        if(($args[0] -eq "-v") -and ($args.Count -eq 1)){
+            Write-Error "引数が不正です."  -ErrorAction Stop}
         if(($args[0] -eq "-v") -and ($args.Count -eq 3)){
             $vflag = $true
             $chkflag = $true
@@ -119,22 +124,30 @@ function grep {
         }
 
         # f option: パイプライン読み込みモード
+        if(($args[0] -eq "-f") -and ($args.Count -eq 1)){
+            Write-Error "引数が不正です."  -ErrorAction Stop}
         if(($args[0] -eq "-f") -and ($args.Count -eq 2)){
             $pipflag = $true
             $fflag = $true
             $chkflag = $true
-            $scrptn = Get-Content -Path $args[1] -Encoding UTF8 | Select-String -Pattern '.'
+            $scrptn = Get-Content -Path $args[1] -Encoding UTF8 `
+                | Select-String -Pattern '.'
         }
 
         # f option: ファイル読み込みモード
+        if(($args[0] -eq "-f") -and ($args.Count -eq 1)){
+            Write-Error "引数が不正です."  -ErrorAction Stop}
         if(($args[0] -eq "-f") -and ($args.Count -eq 3)){
             $fflag = $true
             $chkflag = $true
-            $scrptn = Get-Content -Path $args[1] -Encoding UTF8 | Select-String -Pattern '.'
+            $scrptn = Get-Content -Path $args[1] -Encoding UTF8 `
+                | Select-String -Pattern '.'
             $file = $args[2]
         }
 
         # o option: パイプライン読み込みモード
+        if(($args[0] -eq "-o") -and ($args.Count -eq 1)){
+            Write-Error "引数が不正です."  -ErrorAction Stop}
         if(($args[0] -eq "-o") -and ($args.Count -eq 2)){
             $pipflag = $true
             $oflag = $true
@@ -144,6 +157,8 @@ function grep {
         }
 
         # o option: ファイル読み込みモード
+        if(($args[0] -eq "-o") -and ($args.Count -eq 1)){
+            Write-Error "引数が不正です."  -ErrorAction Stop}
         if(($args[0] -eq "-o") -and ($args.Count -eq 3)){
             $oflag = $true
             $chkflag = $true
@@ -153,6 +168,8 @@ function grep {
         }
 
         # H option: ファイル読み込みモード
+        if(($args[0] -eq "-H") -and ($args.Count -ne 3)){
+            Write-Error "引数が不正です."  -ErrorAction Stop}
         if(($args[0] -eq "-H") -and ($args.Count -eq 3)){
             $hflag = $true
             $chkflag = $true
@@ -162,10 +179,10 @@ function grep {
 
         # default: パイプライン読み込みモード
         if((!$chkflag) -and ($args.Count -eq 1)){
-                $pipflag = $true
-                $chkflag = $true
-                $defaultflag = $true
-                $scrptn = $args[0]
+            $pipflag = $true
+            $chkflag = $true
+            $defaultflag = $true
+            $scrptn = $args[0]
         }
 
         # default: ファイル読み込みモード
@@ -177,8 +194,8 @@ function grep {
         }
 
         # 不正な引数
-        if(!$chkflag){throw '引数が不正です.'}
-
+        if(!$chkflag){
+            Write-Error '引数が不正です.' -ErrorAction Stop}
     }
 
     process
@@ -193,15 +210,14 @@ function grep {
             if($_ -match $scrptn){ Write-Output $_ }
         }
         if(($oflag) -and ($pipflag)){
-            $regex.Matches($_) | foreach{ Write-Output $_.Value }
+            $regex.Matches($_) | ForEach-Object { Write-Output $_.Value }
         }
     }
     end {
         if(($hflag) -and (!$pipflag)){
-            if($args.Count -lt 3){ throw "引数が不正です." }
+            if($args.Count -lt 3){ Write-Error "引数が不正です." }
             Select-String -Pattern $scrptn -Path $file -Encoding UTF8 |
             ForEach-Object {
-                #$p = $_.Path -Replace '^[A-Z]:\\',''
                 $p = $_.Path
                 $line = $p + ':' + [string]$_.LineNumber + ':' + [string]$_.Line
                 Write-Output $line
@@ -224,7 +240,8 @@ function grep {
         if(($oflag) -and (!$pipflag)){
             Select-String -Pattern $scrptn -Path $file -Encoding UTF8 |
             ForEach-Object { Write-Output $_.Line } |
-            ForEach-Object { $regex.Matches($_) | foreach{ Write-Output $_.Value }}
+            ForEach-Object { $regex.Matches($_) |
+            ForEach-Object { Write-Output $_.Value }}
         }
 
         # デフォルト: ファイル読み込みモード

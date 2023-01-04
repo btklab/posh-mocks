@@ -10,28 +10,30 @@ if ($IsWindows){
     # compartible with multi byte code
     $env:LESSCHARSET = "utf-8"
 }
+if ($IsWindows){
+    ## unix-like commands
+    . $pwshSrcDir/sed_function.ps1
+    . $pwshSrcDir/sed-i_function.ps1
+    . $pwshSrcDir/grep_function.ps1
+    . $pwshSrcDir/uniq_function.ps1
+
+    . $pwshSrcDir/head_function.ps1
+    . $pwshSrcDir/tail_function.ps1
+    . $pwshSrcDir/chead_function.ps1
+    . $pwshSrcDir/ctail_function.ps1
+    . $pwshSrcDir/ctail2_function.ps1
+
+    . $pwshSrcDir/cat2_function.ps1
+    . $pwshSrcDir/tac_function.ps1
+
+    ## misc
+    . $pwshSrcDir/say_function.ps1
+    . $pwshSrcDir/teatimer_function.ps1
+}
 
 ## get funcs
 . $pwshSrcDir/man2_function.ps1
 
-## unix-like commands
-. $pwshSrcDir/sed_function.ps1
-. $pwshSrcDir/sed-i_function.ps1
-. $pwshSrcDir/sed-CaseSensitive_function.ps1
-. $pwshSrcDir/grep_function.ps1
-. $pwshSrcDir/grep-CaseSensitive_function.ps1
-
-. $pwshSrcDir/head_function.ps1
-. $pwshSrcDir/tail_function.ps1
-. $pwshSrcDir/chead_function.ps1
-. $pwshSrcDir/ctail_function.ps1
-. $pwshSrcDir/ctail2_function.ps1
-
-. $pwshSrcDir/cat2_function.ps1
-. $pwshSrcDir/tac_function.ps1
-
-. $pwshSrcDir/uniq_function.ps1
-. $pwshSrcDir/uniq-CaseSensitive_function.ps1
 
 ### pwsh implementation of gnu make command
 . $pwshSrcDir/pwmake_function.ps1
@@ -43,6 +45,7 @@ if ($IsWindows){
 . $pwshSrcDir/tateyoko_function.ps1
 . $pwshSrcDir/fillretu_function.ps1
 . $pwshSrcDir/yarr_function.ps1
+. $pwshSrcDir/juni_function.ps1
 
 . $pwshSrcDir/flat_function.ps1
 
@@ -86,7 +89,5 @@ Set-Alias -name ml -value Get-OGP
 ## math
 
 ## misc
-. $pwshSrcDir/say_function.ps1
 . $pwshSrcDir/sleepy_function.ps1
-. $pwshSrcDir/teatimer_function.ps1
 

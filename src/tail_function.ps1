@@ -60,7 +60,8 @@ function tail{
       $dispRowNum = 10
     }elseif($args[0] -eq '-n'){
       # -n 行数指定ありの場合
-      if($args.Count -lt 2){throw "引数が不足しています."}
+      if($args.Count -lt 2){
+        Write-Error "引数が不足しています." -ErrorAction Stop}
       $setNumFlag = $true
       $dispRowNum = [int]$args[1]
     }else{
@@ -125,19 +126,19 @@ function tail{
     if($readFileFlag){
       for($i = $fileArryStartCounter; $i -lt $args.Count; $i++){
         $fileList = (Get-Item $args[$i] | %{ $_.FullName })
-        foreach($files in $fileList){
+        foreach($f in $fileList){
           # ファイル名を出力
           #$dispFileName = (Split-Path -Leaf "$files")
-          $dispFileName = "$files"
+          $dispFileName = "$f"
           Write-Output ('==> ' + "$dispFileName" + ' <==')
           # バージョンに応じて指定行数を出力
           #$oldVersionFlag = $true
           if($oldVersionFlag){
             # v2.0 以下
             $tmpDispRowNum = $dispRowNum * -1
-            @(Get-Content "$files" -Encoding UTF8)[$tmpDispRowNum..-1]
+            @(Get-Content "$f" -Encoding UTF8)[$tmpDispRowNum..-1]
           }else{
-            Get-Content "$files" -Tail $dispRowNum -Encoding UTF8
+            Get-Content "$f" -Tail $dispRowNum -Encoding UTF8
           }
           # ファイルの区切りとして空行を一行出力
           Write-Output ''

@@ -112,12 +112,13 @@ function sed {
         $pReadFlag = $false
         
         ## 引数のテスト
-        if($args.Count -ne 1){throw "引数が不足しています."}
+        if($args.Count -ne 1){
+            Write-Error "引数が不足しています." -ErrorAction Stop}
         [string]$OptStr = ($args[0]).Substring(0,1)
         if( ($OptStr -ne "s") -and `
             ($OptStr -ne "p") -and `
             ($OptStr -ne "d") ){
-            throw "引数が不正です."
+            Write-Error "引数が不正です." -ErrorAction Stop
         }
         
         ## セパレータ文字の取得（2文字目がセパレータ）
@@ -125,13 +126,15 @@ function sed {
         
         # 置換対象文字列の取得
         $regexstr = ($args[0]).Split("$SepStr")
-        if($regexstr.Count -ne 4){throw "引数が不正です."}
+        if($regexstr.Count -ne 4){
+            Write-Error "引数が不正です."  -ErrorAction Stop}
         
         $srcptn = $regexstr[1]
         $repptn = $regexstr[2]
         #$repptn = $repptn -replace '\\n', '`r`n'
         #$repptn = $repptn -replace '\\t', '`t'
-        if(! $srcptn){throw "引数が不正です."}
+        if(! $srcptn){
+            Write-Error "引数が不正です." -ErrorAction Stop}
         
         # s（置換）とg（global）の指定確認
         if($regexstr[0] -like 's'){$sflag = $true}
@@ -148,7 +151,8 @@ function sed {
         }else{
             $regex = [Regex]$srcptn
         }
-        if(!($sflag) -and !($pflag) -and !($dflag)){throw "引数が不正です."}
+        if(!($sflag) -and !($pflag) -and !($dflag)){
+            Write-Error "引数が不正です." -ErrorAction Stop}
         #Write-Output $srcptn, $repptn
     }
 
