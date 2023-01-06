@@ -65,7 +65,7 @@ Inspired by:
 
 
 ```powershell
-# install favorite functions
+# install favorite functions for japanese environment
 # set encode
 if ($IsWindows){
     chcp 65001
@@ -84,7 +84,7 @@ if ($IsWindows){
 
 各関数の挙動と作った動機と簡単な説明。
 
-### show functions
+### Show functions
 
 #### `man2` - Enumerate the function names
 
@@ -107,7 +107,7 @@ if ($IsWindows){
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `man2`
 
-### unix-like commands
+### Unix-like text filters
 
 #### `sed` - Stream EDitor
 
@@ -149,7 +149,7 @@ Linuxでいう`sed -i`（の劣化コピー）。ただし誤爆防止のため`
 - Inspired by Unix/Linux Commands
     - Command: `sed`
 
-#### `grep` - seaches for regex patterns
+#### `grep` - Seaches for regex patterns
 
 文字列の検索とヒット行の出力。Windows用。
 Linux環境で使う`grep`のような使用感で文字列を検索するが、劣化コピーである。
@@ -167,7 +167,7 @@ Linux環境で使う`grep`のような使用感で文字列を検索するが、
     - Command: `grep`
 
 
-#### `head`, `tail` - output the first/last part of files
+#### `head`, `tail` - Output the first/last part of files
 
 入力文字列の最初の数行または最後の数行を出力する。
 Linux環境で使う`head`、`tail`のような使用感で文字列を置換する。
@@ -184,7 +184,7 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 - Inspired by Unix/Linux Commands
     - Command: `head`, `tail`
 
-#### `chead`, `ctail`, `ctail2` - cut the first/last part of files
+#### `chead`, `ctail`, `ctail2` - Cut the first/last part of files
 
 入力文字列の最初の数行または最後の数行を削除（カット）して出力する。
 `"string" | Select-Object -Skip <int> / -SkipLast <int>`と同じ効果を得る。
@@ -202,24 +202,25 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 - Inspired by Unix/Linux Commands
     - Command: `chead`
 
-#### `uniq` - report or omit repeated lines
+#### `uniq` - Report or omit repeated lines
 
 入力から隣接する（連続する）重複行をなくし一意とする。大文字小文字は区別しない。事前ソート必要。
 `Group-Object -NoElement`と同じ効果。
 
 - Usage
     - `man2 uniq`
+    - `uniq [-c|-d]`
 - Examples
     - `1,2,3,4,5,3 | sort | uniq`
     - `1,2,3,4,5,3 | sort | uniq -c`
 - Inspired by Unix/Linux Commands
     - Command: `uniq`
 
-#### `cat2` - concatenate files and print on the standard output
+#### `cat2` - Concatenate files and print on the standard output
 
 テキストファイルのコンテンツを取得。
 複数ファイルを指定する方法は、`Get-Content`の際の「カンマ区切り」ではなく「半角スペース区切り」。
-ハイフン「-」指定で標準入力
+引数にハイフン「`-`」指定で標準入力から読み込み。
 
 - Usage
     - `man2 cat2`
@@ -227,7 +228,7 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 - Inspired by Unix/Linux Commands
     - Command: `cat`
 
-#### `tac` - output strings in reverse
+#### `tac` - Output strings in reverse
 
 入力を行単位逆順に出力する。
 
@@ -239,7 +240,10 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 - Inspired by Unix/Linux Commands
     - Command: `tac`
 
-### text filter
+
+
+
+### text filters for space-separated input
 
 #### `tateyoko` - Transpose columns and rows
 
@@ -367,7 +371,7 @@ cat a.txt | grep . | yarr -n 1
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `tarr`
 
-Input(long type data):
+Input(wide type data):
 
 ```powershell
 cat a.txt
@@ -376,7 +380,7 @@ cat a.txt
 2022 1 2
 ```
 
-Output(wide type data):
+Output(long type data):
 
 ```powershell
 # num=1で左から1列目をkeyとしてワイド型をロング型に変換。
@@ -395,7 +399,7 @@ cat a.txt | grep . | tarr -n 1
 ※ `grep .`で空行をスキップ（＝1文字以上の行のみヒット）
 
 
-#### `flat` - flat rows
+#### `flat` - Flat rows
 
 半角スペース区切り文字列を任意列数となるように整える。
 
@@ -445,7 +449,7 @@ cat a.txt | grep . | tarr -n 1
     - Command: `addt`, `addb`, `addr`, `addl`
 
 
-#### `keta`
+#### `keta` - Padding per columns
 
 半角スペース区切り入力の桁そろえ。
 端末上で半角スペース区切り入力を確認するときに見やすい。
@@ -462,7 +466,7 @@ cat a.txt | grep . | tarr -n 1
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `keta`
 
-#### `gyo` - row counter
+#### `gyo` - Row counter
 
 入力文字列の行数をカウント。
 `(1..20 | Measure-Object).Count`と同じ効果。
@@ -476,9 +480,9 @@ cat a.txt | grep . | tarr -n 1
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `gyo`
 
-### csv/toml/json handling
+### csv / toml / json handling
 
-#### `toml2psobject` - parser for toml-like configuration files
+#### `toml2psobject` - Parser for toml-like configuration files
 
 [TOML(Tom's Obvious Minimal Language)](https://toml.io/en/)風設定ファイルの簡易パーサ。
 TOML風の設定情報を読み込みPSCustomObjectとして返す。
@@ -488,7 +492,7 @@ TOML風の設定情報を読み込みPSCustomObjectとして返す。
 CSV形式などの「1行1レコード形式」では表現しにくい情報を表現できるかもしれない。
 （Excelのセル内改行のイメージ）
 
-基本的にTOML的な記法を期待するが、最も違う点は
+基本的にTOML的な記法を期待するが、もっとも違う点は
 ブラケット`[ ]`で囲む文字列を`key`ではなく`key="id"`として認識する点と、
 ブラケット内でドット`.`を用いても要素の親子関係を表現せずひとつの文字列として解釈する点、
 その代わり、マルチバイト文字をブラケット内に用いることができる。
@@ -544,7 +548,7 @@ link  : @{y2021="https://github.com/"; y2022="https://github.com/"; rep = @("hog
 note  : multi-line note1\nmulti-line note2\nmulti-line note3
 ```
 
-#### `json2txt` - transform json into key-value format with one record per line.
+#### `json2txt` - Transform json into key-value format with one record per line.
 
 Json形式のテキスト入力を1行1レコード形式に変換し`grep`しやすくする。
 逆変換はできない。
@@ -617,7 +621,7 @@ cat a.json | json2txt
 .widget.text.onMouseUp = "sun1.opacity = (sun1.opacity / 100) * 90;"
 ```
 
-#### `csv2txt` - parse csv to text
+#### `csv2txt` - Parse csv to text
 
 CSVを半角スペース区切りの1行1レコード形式（SSV）に変換する。
 改行含みのCSVデータを1行にして`grep`する、などの用途に便利。
@@ -629,7 +633,7 @@ CSVを半角スペース区切りの1行1レコード形式（SSV）に変換す
 - Inspired by [csv2txt.py - ryuichiueda/MyCommands - GitHub](https://github.com/ryuichiueda/MyCommands)
     - The MIT License: Copyright (C) 2014, Ryuichi Ueda
 
-#### `catcsv` - concatenate csv files
+#### `catcsv` - Concatenate csv files
 
 任意のフォルダにあるUTF-8なCSVファイル群をひとつのCSVファイルにまとめる。
 空行はスキップ。CSVヘッダは「有or無」どちらかに統一されている必要あり。
@@ -661,7 +665,7 @@ CSVファイルをSQLで操作し、集計したり検索できる。
     - `"<sqlstring>" | csv2sqlite db`
     - `cat <sqlfile> | csv2sqlite db`
 
-### clipboard operation
+### Clipboard operation
 
 #### `clip2img` - Save clip board image as an image file
 
@@ -734,7 +738,7 @@ CSVファイルをSQLで操作し、集計したり検索できる。
 
 ### misc
 
-#### `pwmake` - pwsh implementation of gnu make command
+#### `pwmake` - Pwsh implementation of gnu make command
 
 PowerShell版make-like command。劣化コピー。
 カレントディレクトリにあるMakefileを読み実行する。
@@ -794,7 +798,7 @@ Sleepが終わるまでプロンプトが帰ってこないので、
     - License: The MIT License (MIT): Copyright (c) 2022 Yasuhiro Matsumoto
     - Command: `sleepy`
 
-#### `teatimer` - time-up notification
+#### `teatimer` - Time-up notification
 
 ティータイマー。時間がきたら通知トレイからポップアップ通知してくれる。
 仕事に没頭すると休憩するタイミングをのがしやすいので。

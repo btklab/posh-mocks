@@ -1,10 +1,10 @@
 <#
 .SYNOPSIS
 
-tarr - Expand vertical data to horizontal
+tarr - Expand wide data to long
 
-横型（ワイド型）の半角スペース区切りレコードを
-指定列をキーに縦型（ロング型）に変換する。
+横長（ワイド型）の半角スペース区切りレコードを、
+指定列をキーに縦長（ロング型）に変換する。
 
 ヘッダなし半角スペース区切り入力を期待。
 事前ソート不要。
@@ -29,8 +29,6 @@ PS> cat a.txt | grep . | tarr -n 1
 
 ※ grep . で空行をスキップ（＝1文字以上の行のみヒット）
 
-
-
 .EXAMPLE
 PS C:\>cat a.txt | tarr -n 2
 1列目から2列目をキーとして折り返す
@@ -43,7 +41,7 @@ function tarr {
         [int] $num = 1,
 
         [Parameter(Mandatory=$False)]
-        [ValidateSet( " ", ",", "\t")]
+        [ValidateSet( ' ', ',', "\t")]
         [string] $Delimiter = ' ',
 
         [parameter(Mandatory=$False,ValueFromPipeline=$True)]
