@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
 
-yarr - Expand vertical data to horizontal
+yarr - Expand long data to wide
 
-縦型（ロング型）の半角スペース区切りレコードを
+縦型（ロング型）の半角スペース区切りレコードを、
 指定列をキーに横型（ワイド型）に変換する。
 
 指定列をキーとして横に並べる
@@ -12,21 +12,21 @@ yarr - Expand vertical data to horizontal
 
 .EXAMPLE
 cat a.txt
+2018 1
+2018 2 9
 2018 3
-2018 3
-2018 3
 2017 1
-2017 1
-2017 1
-2017 1
-2017 1
-2022 5
-2022 5
+2017 2
+2017 3
+2017 4
+2017 5 6
+2022 1
+2022 2
 
 PS> cat a.txt | grep . | yarr -n 1
-2018 3 3 3
-2017 1 1 1 1 1
-2022 5 5
+2018 1 2 9 3
+2017 1 2 3 4 5 6
+2022 1 2
 
 ※ grep . で空行をスキップ（＝1文字以上の行のみヒット）
 
