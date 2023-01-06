@@ -321,7 +321,7 @@ Output:
 4 d
 ```
 
-#### `retu` -  column number
+#### `retu` -  Output column number
 
 半角スペース区切り入力の列数を出力。
 
@@ -405,6 +405,18 @@ cat a.txt | grep . | yarr -n 1
 ```
 
 ※ `grep .`で空行をスキップ（＝1文字以上の行のみヒット）
+
+Equivalent in PowerShell
+
+```powershell
+cat a.txt | grep . | ForEach-Object -begin{$h=@{}} -process{$a=$_ -split " ", 2; $h[$($a[0])]+=" $($a[1])"} -end {foreach($k in $h.keys){$k+$h[$k]}}
+2022 1 2
+2018 1 2 9 3
+2017 1 2 3 4 5 6
+```
+
+
+
 
 #### `tarr` - Expand wide data to long
 

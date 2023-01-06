@@ -325,7 +325,7 @@ function csv2sqlite {
     }
     # is pandoc command exist?
     function isCommandExist ([string]$comName) {
-      try { Get-Command $comName | Out-Null
+      try { Get-Command $comName -ErrorAction Stop | Out-Null
         return $True
       } catch {
         return $False

@@ -9,7 +9,7 @@ function isFileExists ([string]$f){
 }
 # is command exist?
 function isCommandExist ([string]$cmd) {
-    try { Get-Command $cmd | Out-Null
+    try { Get-Command $cmd -ErrorAction Stop | Out-Null
         return $True
     } catch {
         return $False

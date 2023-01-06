@@ -69,6 +69,15 @@ function sleepy {
         [double] $Span = 1
     )
     # private function
+    # is command exist?
+    function isCommandExist ([string]$cmd) {
+        try { Get-Command $cmd -ErrorAction Stop | Out-Null
+            return $True
+        } catch {
+            return $False
+        }
+    }
+
     function span2str ($timespan){
         if ($timespan.Days -ge 1){
             [string] $sStr = $timespan.ToString("dd\.hh\:mm\:ss")
@@ -175,6 +184,9 @@ function sleepy {
         Write-Host "en: $((Get-Date).ToString('M/d HH:mm:ss'))" -ForegroundColor Green
     }
     if ($TeaTimer){
+        if (-not (isCommandExist "teatimer")){
+            Write-Error "command: ""teatimer"" is not available." -ErrorAction Stop
+        }
         teatimer -At (Get-Date).AddSeconds(5).ToString('yyyy-MM-dd HH:mm:ss') -Quiet
     }
 

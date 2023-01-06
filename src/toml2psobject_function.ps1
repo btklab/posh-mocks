@@ -306,10 +306,10 @@ function toml2psobject {
     }
     # is pandoc command exist?
     function isCommandExist ([string]$cmd) {
-      try { Get-Command $cmd | Out-Null
-        return $True
+      try { Get-Command $cmd -ErrorAction Stop | Out-Null
+          return $True
       } catch {
-        return $False
+          return $False
       }
     }
     # private function
