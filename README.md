@@ -14,7 +14,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat fs=", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `json2txt`, `juni`, `keta`, `man2`, `pwmake`, `say`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `json2txt`, `juni`, `keta`, `man2`, `pwmake`, `retu`, `say`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
 
 Inspired by:
 
@@ -304,6 +304,8 @@ cat a.txt | fillretu | tateyoko | keta
 
 - Usage
     - `man2 juni`
+    - `juni [-z]`
+- Examples
     - `cat a.txt | juni`
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
@@ -317,6 +319,51 @@ Output:
 2 b
 3 c
 4 d
+```
+
+#### `retu` -  column number
+
+半角スペース区切り入力の列数を出力。
+
+- 同じ列数の場合は、重複を削除して列数を出力
+- 列数が変化するごとに列数を出力する
+- 空行はゼロを出力
+
+すべての行の列数が同じか否かを検知するタスクなどで使う。
+
+- Usage
+    - `man2 retu`
+    - `retu [-c]`
+- Examples
+    - `cat a.txt | retu`
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `retu`
+
+
+Output:
+
+```powershell
+# If all column numbers are equal,
+# duplicates are removed and
+# only one column numbers is output.
+"a".."z" | retu
+1
+
+# Output for each change in the
+# number of columns.
+"a a","b b c","c c c","d d" | retu
+2
+3
+2
+
+# With the "-c" switch, all rows
+# are output with column numbers.
+"a a","b b c","c c c","d d" | retu -c
+2 a a
+3 b b c
+3 c c c
+2 d d
 ```
 
 #### `yarr` - Expand long data to wide
