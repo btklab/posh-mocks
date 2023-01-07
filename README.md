@@ -38,12 +38,11 @@ Inspired by:
 
 コード群にまとまりはないが、事務職（非技術職）な筆者の毎日の仕事（おもに文字列処理）を、より素早くさばくための道具としてのコマンドセットを想定している（毎日使用する関数は10個に満たないが）。
 
-基本的に入力としてUTF-8で半角区切りな行指向の文字列データ（テキストオブジェクト）を期待する、主にパターンマッチング処理を行うためのフィルタ群。少しながら、オブジェクトのパイプライン入力を受け付けたり、オブジェクトとして出力する「PowerShellのコマンドレット的といえるもの」も、ある。Windows上でしか動かない関数も、ある。
+基本的に入力としてUTF-8で半角スペース区切り、行指向の文字列データ（テキストオブジェクト）を期待する、主にパターンマッチング処理を行うためのフィルタ群。少しながら、オブジェクトのパイプライン入力を受け付けたり、オブジェクトとして出力する「PowerShellのコマンドレット的といえるもの」も、ある。Windows上でしか動かない関数も、ある。
 
 `src`下のファイルは1ファイル1関数。関数名はファイル名から`_function.ps1`をのぞいた文字列。基本的に他の関数には依存しないようにしているので、関数ファイル単体を移動して利用することもできる。（一部の関数は他の関数ファイルに依存しているものもある）
 
-**充分なエラー処理をしていない**。
-おおよそ動けばよいという考えなので、永遠にモックアップのまま。
+**充分なエラー処理をしていない**モックアップ。
 
 
 
@@ -61,7 +60,7 @@ Inspired by:
 関数は一部を除きできるだけ他の関数と依存しないようにしている。
 必要な関数単独を直接ドットソースで読み込んでもよい。
 この場合、以下のように最初にカレントプロセスのエンコードを`UTF-8`にしておくとよい。
-理由は、当関数群は基本的にパイプライン経由の入出力として`UTF-8`を想定しているため。
+理由は、当関数群が基本的にパイプライン経由の入出力として`UTF-8`を想定しているため。
 
 
 ```powershell
@@ -165,12 +164,12 @@ Linux環境で使う`grep`のような使用感で文字列を検索するが、
 - Usage
     - `man2 grep`
     - `grep '<regex>' -H file1,file2,...`
-    - `cat file1,file2,... | grep '<regex>' [-v][-f][-s][-C <int>[],<int>]]`
+    - `cat file1,file2,... | grep '<regex>' [-v][-f][-s][-C <int>[,<int>]]`
     - `cat file1,file2,... | grep '<regex>' [-o]`
 - Inspired by Unix/Linux Commands
     - Command: `grep`
 
-検索速度は遅い。筆者の環境ではシンプルにSelect-Stringを用いた方が早かった。
+検索速度は遅い。筆者の環境ではシンプルにSelect-Stringを用いた方が速い。
 
 ```powershell
 # Select-String (fast)
@@ -283,10 +282,10 @@ table2col.md:66:| table |
 Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
 cat .\Command.txt | grep "Get\-", "Set\-" -NotMatch | Select-Object -Last 5
 
-Cmdlet          Write-Output                                       7.0.0.0    Microsoft.PowerShell.Utility
-Cmdlet          Write-Progress                                     7.0.0.0    Microsoft.PowerShell.Utility
-Cmdlet          Write-Verbose                                      7.0.0.0    Microsoft.PowerShell.Utility
-Cmdlet          Write-Warning                                      7.0.0.0    Microsoft.PowerShell.Utility
+Cmdlet  rite-Output   7.0.0.0  Microsoft.PowerShell.Utility
+Cmdlet  rite-Progress 7.0.0.0  Microsoft.PowerShell.Utility
+Cmdlet  rite-Verbose  7.0.0.0  Microsoft.PowerShell.Utility
+Cmdlet  rite-Warning  7.0.0.0  Microsoft.PowerShell.Utility
 ```
 
 ```powershell
@@ -304,12 +303,12 @@ Cmdlet          Write-Warning                                      7.0.0.0    Mi
 Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
 cat .\Command.txt | grep 'Get\-Computer' -C 2, 3
 
-  Cmdlet          Get-Command                                        7.3.1.500  Microsoft.PowerShell.Core
-  Cmdlet          Get-ComputeProcess                                 1.0.0.0    HostComputeService
-> Cmdlet          Get-ComputerInfo                                   7.0.0.0    Microsoft.PowerShell.Management
-  Cmdlet          Get-Content                                        7.0.0.0    Microsoft.PowerShell.Management
-  Cmdlet          Get-Counter                                        7.0.0.0    Microsoft.PowerShell.Diagnostics
-  Cmdlet          Get-Credential                                     7.0.0.0    Microsoft.PowerShell.Security
+  Cmdlet   Get-Command        7.3.1.500  Microsoft.PowerShell.Core
+  Cmdlet   Get-ComputeProcess 1.0.0.0    HostComputeService
+> Cmdlet   Get-ComputerInfo   7.0.0.0    Microsoft.PowerShell.Management
+  Cmdlet   Get-Content        7.0.0.0    Microsoft.PowerShell.Management
+  Cmdlet   Get-Counter        7.0.0.0    Microsoft.PowerShell.Diagnostics
+  Cmdlet   Get-Credential     7.0.0.0    Microsoft.PowerShell.Security
 
 Tips: use Out-String -Stream (alias:oss) to greppable
 
@@ -358,15 +357,15 @@ $hash | grep 'foo'
 # Out-String converts the output to a single multi-line string object
 $hash | Out-String | grep 'foo'
 
-Name                           Value
-----                           -----
-Name                           foo
-Category                       bar
+Name           Value
+----           -----
+Name           foo
+Category       bar
 
 # Out-String -Stream converts the output to a multiple single-line string objects
 $hash | Out-String -Stream | grep 'foo'
 
-Name                           foo
+Name           foo
 ```
 
 #### `head`, `tail` - Output the first/last part of files
@@ -554,16 +553,16 @@ Output:
 
 # Output for each change in the
 # number of columns.
-"a a","b b c","c c c","d d" | retu
+"a a","b b b","c c c","d d" | retu
 2
 3
 2
 
 # With the "-c" switch, all rows
 # are output with column numbers.
-"a a","b b c","c c c","d d" | retu -c
+"a a","b b b","c c c","d d" | retu -c
 2 a a
-3 b b c
+3 b b b
 3 c c c
 2 d d
 ```
@@ -616,8 +615,6 @@ cat a.txt | grep . | ForEach-Object -begin{$h=@{}} -process{$a=$_ -split " ", 2;
 2018 1 2 9 3
 2017 1 2 3 4 5 6
 ```
-
-
 
 
 #### `tarr` - Expand wide data to long
@@ -727,6 +724,7 @@ cat a.txt | grep . | tarr -n 1
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `keta`
 
+
 #### `gyo` - Row counter
 
 入力文字列の行数をカウント。
@@ -740,6 +738,105 @@ cat a.txt | grep . | tarr -n 1
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `gyo`
+
+
+### writing
+
+#### `Get-OGP(Alias:ml)` - Make Link with markdown format
+
+指定したURIからサイトプレビュー用Open Graph protocol（OGP）の要素（主にmetaタグの要素）を取得する。
+標準入力、第一引数でUriを指定しない場合はクリップボードの値を使おうとする。
+
+気になるサイトのUriをクリップボードにコピーした状態でコマンドを打つと、マークダウン形式やhtml形式に変換してくれる。
+ブログ記事の作成などに便利な道具。
+
+- Usage (`Set-Alias -name ml -value Get-OGP`)
+    - `man2 Get-OGP`
+    - `man2 ml`
+- Examples
+    - `ml -m | Set-Clipboard`
+        - クリップボードのUriをマークダウン形式のリンクに変換して再度クリップボードに格納
+    - `ml | Format-List`
+        - クリップボードのUriからOGP要素（metaタグの要素）を取得
+- Inspired by [goark/ml - GitHub](https://github.com/goark/ml)
+    - License: Apache License Version 2.0, January 2004, https://www.apache.org/licenses/LICENSE-2.0
+    - Command: `Get-OGP (Alias: ml)`
+
+#### `jl` - Join the next Line with the keyword
+
+キーワードで終わる行に次の行を連結する。たとえばHTMLで日本語を使うとき、「、」で改行した場合に余計な空白がはいることがあるが、このコマンドで下処理しておけば大丈夫。
+デフォルトで「、」で終わる行のみ検知して次の行を連結。そうでない行はそのまま出力。
+
+
+- Usage
+    - `man2 jl`
+    - `jl [[-Key] <String>] [-Delimiter <String>] [-SkipBlank] [-AddCrLf] [-Regex]`
+- Note
+    - `-Key <regex>`で任意の末尾文字列を指定できる。ただし正規表現regexである点に注意
+    - たとえば`-Key .`を指定すると、すべての行（空行以外）が連結される
+    - 文字列としての`.`や`-`を指定する場合は`\.`、`\-`のようにエスケープすること
+
+Input
+
+```powershell
+Write-Output "あいう、","えお”,"かきくけ","こさし"
+あいう、
+えお
+かきくけ
+こさし
+```
+
+Output
+
+```powershell
+Write-Output "あいう、","えお”,"かきくけ","こさし" | jl
+あいう、えお
+かきくけ
+こさし
+
+説明
+=============
+デフォルトで、全角読点「、」で終わる行に次の行を連結する
+```
+
+オプションの工夫で「空行区切り」のリストを「タブ区切り」に変換できる。
+
+Input
+
+```powershell
+cat data.txt
+bumon-A
+filter
+17:45 2017/05/10
+hoge
+fuga
+
+bumon-B
+eva
+17:46 2017/05/10
+piyo
+piyo
+
+bumon-C
+tank
+17:46 2017/05/10
+fuga
+fuga
+```
+
+Output
+
+```powershell
+cat data.txt | jl . -d "`t"
+bumon-A filter  17:45 2017/05/10        hoge    fuga
+bumon-B eva     17:46 2017/05/10        piyo    piyo
+bumon-C tank    17:46 2017/05/10        fuga    fuga
+
+説明
+=============
+空行区切りレコードをタブ区切りに変換
+```
+
 
 ### csv / toml / json handling
 
@@ -815,8 +912,8 @@ Json形式のテキスト入力を1行1レコード形式に変換し`grep`し�
 逆変換はできない。
 PowerShell7.3以降に実装された`ConvertFrom-Json -AsHashTable`を使用する。
 
-動機は、「[GitHub - jiro4989/gsv: gsv transforms a multi-line CSV into one-line JSON to make it easier to grep.](https://github.com/jiro4989/gsv)」およびその発想元である「[tomnomnom/gron: Make JSON greppable! - GitHub](https://github.com/tomnomnom/gron)」のコンセプトが面白かったため。
-とくに具体的なユースケースを想定していない。PowerShellの`ConvertFrom-Json -AsHashTable`を使えば実装できるのでは、と考えたものを具体化してみたもの。
+動機は、「[GitHub - jiro4989/gsv: gsv transforms a multi-line CSV into one-line JSON to make it easier to grep.](https://github.com/jiro4989/gsv)」およびその発想元である「[GitHub - tomnomnom/gron: Make JSON greppable!](https://github.com/tomnomnom/gron)」のコンセプトが面白かったため。
+とくに具体的なユースケースを想定していない。
 
 - Usage
     - `man2 json2txt`
@@ -963,7 +1060,7 @@ CSVファイルをSQLで操作し、集計したり検索できる。
 更新時刻またはハッシュ値の比較で検知する。
 `-Action {scriptblock}`を指定すると、変化を検知した際にアクションを実行する。
 
-ユースケースとしては、筆者の場合であるが、LaTeXやMarkdownで文章を書きながら
+ユースケースとしては、筆者の場合LaTeXやMarkdownで文章を書きながら
 ソースファイルの変更を監視し、上書き保存ごとにコンパイルする、というふうに用いている。
 
 - Usage
@@ -974,28 +1071,6 @@ CSVファイルをSQLで操作し、集計したり検索できる。
     - `fwatch -Path . -Action {cat a.md | md2html > a.html; ii a.html} -Recurse`
 
 
-### utils
-
-#### `Get-OGP(Alias:ml)` - Make Link with Markdown Format
-
-指定したURIからサイトプレビュー用Open Graph protocol（OGP）の要素（主にmetaタグの要素）を取得する。
-標準入力、第一引数でUriを指定しない場合はクリップボードの値を使おうとする。
-
-気になるサイトのUriをクリップボードにコピーした状態でコマンドを打つと、マークダウン形式やhtml形式に変換してくれる。
-ブログ記事の作成などに便利な道具。
-
-- Usage (`Set-Alias -name ml -value Get-OGP`)
-    - `man2 Get-OGP`
-    - `man2 ml`
-- Examples
-    - `ml -m | Set-Clipboard`
-        - クリップボードのUriをマークダウン形式のリンクに変換して再度クリップボードに格納
-    - `ml | Format-List`
-        - クリップボードのUriからOGP要素（metaタグの要素）を取得
-- Inspired by [goark/ml - GitHub](https://github.com/goark/ml)
-    - License: Apache License Version 2.0, January 2004, https://www.apache.org/licenses/LICENSE-2.0
-    - Command: `Get-OGP (Alias: ml)`
-
 
 ### misc
 
@@ -1003,11 +1078,12 @@ CSVファイルをSQLで操作し、集計したり検索できる。
 
 PowerShell版make-like command。劣化コピー。
 カレントディレクトリにあるMakefileを読み実行する。
+ただし、GNU make用のMakefileとの互換性はほとんどない。
 
 特徴は、実行コマンドにPowerShellコマンドを使用できる点、およびタスクランナーとしてカレントプロセスで動作する点。
 たとえば、カレントプロセスのPowerShellにドットソースで読み込んだ関数も、Makefileに記述して走らせることができる。
 
-筆者のユースケースとしては、この関数をたまにしか使わない自作コマンドのメモ（覚え書き）として用いている。
+筆者のユースケースとしては、たまにしか使わない自作コマンドのメモ（覚え書き）として用いている。
 
 - Usage
     - `man2 pwmake`
@@ -1061,9 +1137,9 @@ PowerShell版make-like command。劣化コピー。
 
 #### `teatimer` - Time-up notification
 
-ティータイマー。時間がきたら通知トレイからポップアップ通知してくれる。
+Windows環境用ティータイマー。時間がきたら通知トレイからポップアップ通知してくれる。
 仕事に没頭すると休憩するタイミングをのがしやすいので。
 
 - Usage
     - `man2 teatimer`
-    - `teatimer [[-Minutes] <Int32>] [[-Hours] <Int32>] [[-Seconds] <Int32>] [[-At] <DateTime>] [    [-Title] <String>] [[-Text] <String>] [[-Timeout] <Int32>] [[-EventTimeout] <Int32>] [-ShowPastTime] [-Quiet] [[-IconType]`
+    - `teatimer [[-Minutes] <Int32>] [[-Hours] <Int32>] [[-Seconds] <Int32>] [[-At] <DateTime>] [[-Title] <String>] [[-Text] <String>] [[-Timeout] <Int32>] [[-EventTimeout] <Int32>] [-ShowPastTime] [-Quiet] [[-IconType]`
