@@ -48,6 +48,7 @@ if ($IsWindows){
 . $pwshSrcDir/tarr_function.ps1
 . $pwshSrcDir/juni_function.ps1
 . $pwshSrcDir/retu_function.ps1
+. $pwshSrcDir/count_function.ps1
 
 . $pwshSrcDir/flat_function.ps1
 

@@ -159,26 +159,46 @@ function json2txt {
     ## transform json into key-value format
     function TransJsonKey ($contents, [string]$key){
         $exp = '$contents' + '.' + "$key"
-        $exp = $exp.Replace('.','"."')
-        $exp = $exp -replace '^(\$contents)"','$contents'
-        $exp = "$exp"""
         #Write-Debug $exp
+        if ($exp -match 'PS'){
+            [string[]] $expAry = @()
+            $splitExp = $exp -split '.'
+            foreach ($i in $splitExp){
+                if ($i -match 'PS'){
+                    $expAry += """$i"""
+                } else {
+                    $expAry += $i
+                }
+            }
+            $exp = $expAry -Join '.'
+        }
+        #$exp = $exp.Replace('.','"."')
+        #$exp = $exp -replace '^(\$contents)"','$contents'
+        #$exp = "$exp"""
+        Write-Debug $exp
         $con = Invoke-Expression $exp
         switch -Exact (retArrayOrHashOrValue $con) {
             "Array" {
                 foreach ($i in $con){
                     if ($i.GetType().Name -match 'HashTable'){
+                        # item is hashtable
                         foreach ($k in $i.keys){
                             $k = "$key.$k"
                             TransJsonKey $contents $k
                         }
                         break;
                     } elseif ($i.GetType().BaseType -eq 'System.Array'){
+                        # item is array
                         foreach ($a in $i){
-                            ".$key = $i"
+                            ".$key = $a"
                         }
                     } else {
-                        $val = FormatVal $i
+                        # item is value
+                        if (($i -eq "") -or ($i -eq '""')){
+                            $val = '""'
+                        } else {
+                            $val = FormatVal $i
+                        }
                         Write-Output ".$key = $val"
                     }
                 }
@@ -195,7 +215,7 @@ function json2txt {
             }
             "Value" {
                 if ($con -eq ""){
-                    $val = "null"
+                    $val = '""'
                 } else {
                     $val = FormatVal $con
                 }
@@ -209,7 +229,7 @@ function json2txt {
             }
             default {
                 if ($con -eq ""){
-                    $val = "null"
+                    $val = '""'
                 } else {
                     $val = FormatVal $con
                 }

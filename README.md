@@ -314,7 +314,7 @@ Tips: use Out-String -Stream (alias:oss) to greppable
 
 cat .\Command.txt | grep 'Get\-Computer' -C 2, 3 | oss | grep '>'
 
-> Cmdlet          Get-ComputerInfo                                   7.0.0.0    Microsoft.PowerShell.Management
+> Cmdlet   Get-ComputerInfo   7.0.0.0    Microsoft.PowerShell.Management
 ```
 
 ```powershell
@@ -522,7 +522,7 @@ Output:
 4 d
 ```
 
-#### `retu` -  Output column number
+#### `retu` - Output column number
 
 半角スペース区切り入力の列数を出力。
 
@@ -565,6 +565,74 @@ Output:
 3 b b b
 3 c c c
 2 d d
+```
+
+#### `count` - Count up keys
+
+半角スペース区切り入力のキー数のカウント。
+`<k1>`列から`<k2>`列をキーフィールドとみなし、
+重複するキーフィールド数をカウントする。
+`-c`スイッチで、カウントアップしながら全行出力。
+
+- Usage
+    - `man2 count`
+    - `count [-c] <k1> <k2>`
+- Examples
+    - `cat a.txt | count [-c] <k1> <k2>`
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `count`
+
+Input:
+
+```powershell
+PS> cat a.txt
+01 埼玉県 01 さいたま市 100
+01 埼玉県 02 川越市 100
+01 埼玉県 03 熊谷市 100
+02 東京都 04 新宿区 100
+02 東京都 05 中央区 100
+02 東京都 06 港区 100
+02 東京都 07 千代田区 100
+02 東京都 08 八王子市 100
+02 東京都 09 立川市 100
+03 千葉県 10 千葉市 100
+03 千葉県 11 市川市 100
+03 千葉県 12 柏市 100
+04 神奈川県 13 横浜市 100
+04 神奈川県 14 川崎市 100
+04 神奈川県 15 厚木市 100
+04 神奈川県 16 小田原市 100
+```
+
+Output:
+
+```powershell
+PS> cat a.txt | grep . | sort | count 1 2
+3 01 埼玉県
+6 02 東京都
+3 03 千葉県
+4 04 神奈川県
+```
+
+```powershell
+PS> cat a.txt | grep . | sort | count -c 1 2
+1 01 埼玉県 01 さいたま市 100
+2 01 埼玉県 02 川越市 100
+3 01 埼玉県 03 熊谷市 100
+1 02 東京都 04 新宿区 100
+2 02 東京都 05 中央区 100
+3 02 東京都 06 港区 100
+4 02 東京都 07 千代田区 100
+5 02 東京都 08 八王子市 100
+6 02 東京都 09 立川市 100
+1 03 千葉県 10 千葉市 100
+2 03 千葉県 11 市川市 100
+3 03 千葉県 12 柏市 100
+1 04 神奈川県 13 横浜市 100
+2 04 神奈川県 14 川崎市 100
+3 04 神奈川県 15 厚木市 100
+4 04 神奈川県 16 小田原市 100
 ```
 
 #### `yarr` - Expand long data to wide
@@ -770,7 +838,7 @@ cat a.txt | grep . | tarr -n 1
 
 - Usage
     - `man2 jl`
-    - `jl [[-Key] <String>] [-Delimiter <String>] [-SkipBlank] [-AddCrLf] [-Regex]`
+    - `jl [[-Key] <String>] [-Delimiter <String>] [-SkipBlank] [-AddCrLf]`
 - Note
     - `-Key <regex>`で任意の末尾文字列を指定できる。ただし正規表現regexである点に注意
     - たとえば`-Key .`を指定すると、すべての行（空行以外）が連結される
