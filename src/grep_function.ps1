@@ -299,7 +299,7 @@ function grep {
         if ($FileNameOnly){
             (Select-String @splatting).FileName | Sort-Object -Stable -Unique; return
         } elseif ($FileNameAndLineNumber){
-            Select-String @splatting; return
+            Select-String @splatting | Out-String -Stream  ; return
         } else {
             (Select-String @splatting).Line; return
         }
@@ -307,5 +307,5 @@ function grep {
     if ($AllMatches){
         ($input | Select-String @splatting).Matches.Value; return
     }
-    $input | Select-String @splatting; return
+    ($input | Select-String @splatting).Line ; return
 }
