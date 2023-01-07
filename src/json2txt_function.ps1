@@ -90,6 +90,8 @@ function json2txt {
         [parameter(Mandatory=$False,ValueFromPipeline=$True)]
         [string[]] $Text
     )
+    #Requires -Version 7.3
+
     # private functions
     ## is file exists?
     function isFileExists ([string]$f){
