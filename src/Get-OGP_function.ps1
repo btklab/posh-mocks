@@ -94,29 +94,8 @@ OutputImage : ~/Downloads/campaign-social_s.png
 curl https://github.com/
 200 OK
 <meta charset="utf-8">
-<meta name="request-id" content="FBC2:1408:1472DE:19F50A:63B2D937" data-pjax-transient="true"/>
-<meta name="html-safe-nonce" content="afc9a261a365d3df147ba51e8faf45e4b2d6a6df90d1323d509b4ac53dd65d08" data-pjax-transient="true"/>
-<meta name="visitor-payload" content="eyJyZWZlcnJlciI6IiIsInJlcXVlc3RfaWQiOiJGQkMyOjE0MDg6MTQ3MkRFOjE5RjUwQTo2M0IyRDkzNyIsInZpc2l0b3JfaWQiOiI2OTQzMjMzNTYyNDcxNzQ5OTQzIiwicmVnaW9uX2VkZ2UiOiJqYXBhbmVhc3QiLCJyZWdpb25fcmVuZGVyIjoiamFwYW5lYXN0In0=" data-pjax-transient="true"/>
-<meta name="visitor-hmac" content="ebbab191bc01b35061ad0f083d7518ee1d36203ae30c82bd3a394c2a801c2149" data-pjax-transient="true"/>
-<meta name="page-subject" content="GitHub">
-<meta name="github-keyboard-shortcuts" content="dashboards" data-turbo-transient="true" />
-<meta name="selected-link" value="/" data-turbo-transient>
-<meta name="google-site-verification" content="c1kuD-K2HIVF635lypcsWPoD4kilo5-jA_wBFyT4uMY">
-<meta name="google-site-verification" content="KT5gs8h0wvaagLKAVWq8bbeNwnZZK1r1XQysX3xurLU">
-<meta name="google-site-verification" content="ZzhVyEFwb7w3e0-uOTltm8Jsck2F5StVihD0exw2fsA">
-<meta name="google-site-verification" content="GXs5KoUUkNCoaAZn7wPN-t01Pywp9M3sEjnt_3_ZWPc">
-<meta name="google-site-verification" content="Apib7-x98H0j5cPqHWwSMm6dNU4GmODRoqxLiDzdx9I">
-<meta name="octolytics-url" content="https://collector.github.com/github/collect" />
-<meta name="user-login" content="">
 <meta name="viewport" content="width=device-width">
 <meta name="description" content="GitHub is where over 94 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and features, power your CI/CD and DevOps workflows, and secure code before you commit it.">
-<meta property="fb:app_id" content="1401488693436528">
-<meta name="apple-itunes-app" content="app-id=1477376905" />
-<meta name="twitter:image:src" content="https://github.githubassets.com/images/modules/site/social-cards/campaign-social.png" />
-<meta name="twitter:site" content="@github" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="GitHub: Let’s build from here" />
-<meta name="twitter:description" content="GitHub is where over 94 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and feat..." />
 <meta property="og:image" content="https://github.githubassets.com/images/modules/site/social-cards/campaign-social.png" />
 <meta property="og:image:alt" content="GitHub is where over 94 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and feat..." />
 <meta property="og:site_name" content="GitHub" />
@@ -124,27 +103,7 @@ curl https://github.com/
 <meta property="og:title" content="GitHub: Let’s build from here" />
 <meta property="og:url" content="https://github.com/" />
 <meta property="og:description" content="GitHub is where over 94 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and feat..." />
-<meta name="hostname" content="github.com">
-<meta name="expected-hostname" content="github.com">
-<meta name="enabled-features" content="TURBO_EXPERIMENT_RISKY,IMAGE_METRIC_TRACKING,GEOJSON_AZURE_MAPS">
-<meta http-equiv="x-pjax-version" content="d723c77796b63329602515be9802022933c67f9314b79877a2818a8018e9268c" data-turbo-track="reload">
-<meta http-equiv="x-pjax-csp-version" content="3f846e6544a1902c66451867aeeb5075d5751f213c39d9f38b95724bb97d5045" data-turbo-track="reload">
-<meta http-equiv="x-pjax-css-version" content="9556cd062552d1fe04e933d9cbb8b03bdc5aae786bc1081caa9d8885a385528b" data-turbo-track="reload">
-<meta http-equiv="x-pjax-js-version" content="b2193b29d11bb50a2ff37e86140fee0b2b1ab807f5b1bece10b01657929d6481" data-turbo-track="reload">
-<meta name="turbo-cache-control" content="no-preview" data-turbo-transient="">
-<meta property="og:image:type" content="image/png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="is_logged_out_page" content="true">
-<meta name="turbo-body-classes" content="logged-out env-production page-responsive header-overlay home-campaign">
-<meta name="browser-stats-url" content="https://api.github.com/_private/browser/stats">
-<meta name="browser-errors-url" content="https://api.github.com/_private/browser/errors">
-<meta name="browser-optimizely-client-errors-url" content="https://api.github.com/_private/browser/optimizely_client/errors">
-<meta name="theme-color" content="#1e2327">
 <title>GitHub: Let’s build from here · GitHub</title>
-<title>Python</title>
-<title>JavaScript</title>
-<title>Go</title>
 
 .EXAMPLE
 Get-OGP "https://github.com/" -DownloadMetaImage -Image ~/Downloads/hoge.png | fl

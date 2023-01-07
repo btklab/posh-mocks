@@ -213,6 +213,11 @@ $hash | Out-String -Stream | grep 'foo'
 
 Name                           foo
 
+.EXAMPLE
+# Read regex pattern from file (grep -f <file> [-SimpleMatch])
+
+cat a.txt | grep -f regfile.txt
+cat a.txt | grep regfile.txt -f
 
 #>
 function grep {
