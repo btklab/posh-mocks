@@ -739,6 +739,105 @@ cat a.txt | grep . | tarr -n 1
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `gyo`
 
+
+### writing
+
+#### `Get-OGP(Alias:ml)` - Make Link with markdown format
+
+指定したURIからサイトプレビュー用Open Graph protocol（OGP）の要素（主にmetaタグの要素）を取得する。
+標準入力、第一引数でUriを指定しない場合はクリップボードの値を使おうとする。
+
+気になるサイトのUriをクリップボードにコピーした状態でコマンドを打つと、マークダウン形式やhtml形式に変換してくれる。
+ブログ記事の作成などに便利な道具。
+
+- Usage (`Set-Alias -name ml -value Get-OGP`)
+    - `man2 Get-OGP`
+    - `man2 ml`
+- Examples
+    - `ml -m | Set-Clipboard`
+        - クリップボードのUriをマークダウン形式のリンクに変換して再度クリップボードに格納
+    - `ml | Format-List`
+        - クリップボードのUriからOGP要素（metaタグの要素）を取得
+- Inspired by [goark/ml - GitHub](https://github.com/goark/ml)
+    - License: Apache License Version 2.0, January 2004, https://www.apache.org/licenses/LICENSE-2.0
+    - Command: `Get-OGP (Alias: ml)`
+
+#### `jl` - Join the next Line with the keyword
+
+キーワードで終わる行に次の行を連結する。たとえばHTMLで日本語を使うとき、「、」で改行した場合に余計な空白がはいることがあるが、このコマンドで下処理しておけば大丈夫。
+デフォルトで「、」で終わる行のみ検知して次の行を連結。そうでない行はそのまま出力。
+
+
+- Usage
+    - `man2 jl`
+    - `jl [[-Key] <String>] [-Delimiter <String>] [-SkipBlank] [-AddCrLf] [-Regex]`
+- Note
+    - `-Key <regex>`で任意の末尾文字列を指定できる。ただし正規表現regexである点に注意
+    - たとえば`-Key .`を指定すると、すべての行（空行以外）が連結される
+    - 文字列としての`.`や`-`を指定する場合は`\.`、`\-`のようにエスケープすること
+
+Input
+
+```powershell
+Write-Output "あいう、","えお”,"かきくけ","こさし"
+あいう、
+えお
+かきくけ
+こさし
+```
+
+Output
+
+```powershell
+Write-Output "あいう、","えお”,"かきくけ","こさし" | jl
+あいう、えお
+かきくけ
+こさし
+
+説明
+=============
+デフォルトで、全角読点「、」で終わる行に次の行を連結する
+```
+
+オプションの工夫で「空行区切り」のリストを「タブ区切り」に変換できる。
+
+Input
+
+```powershell
+cat data.txt
+bumon-A
+filter
+17:45 2017/05/10
+hoge
+fuga
+
+bumon-B
+eva
+17:46 2017/05/10
+piyo
+piyo
+
+bumon-C
+tank
+17:46 2017/05/10
+fuga
+fuga
+```
+
+Output
+
+```powershell
+cat data.txt | jl . -d "`t"
+bumon-A filter  17:45 2017/05/10        hoge    fuga
+bumon-B eva     17:46 2017/05/10        piyo    piyo
+bumon-C tank    17:46 2017/05/10        fuga    fuga
+
+説明
+=============
+空行区切りレコードをタブ区切りに変換
+```
+
+
 ### csv / toml / json handling
 
 #### `toml2psobject` - Parser for toml-like configuration files
@@ -971,28 +1070,6 @@ CSVファイルをSQLで操作し、集計したり検索できる。
     - `fwatch -Path index.md -Action {cat index.md | md2html > a.html; ii a.html}`
     - `fwatch -Path . -Action {cat a.md | md2html > a.html; ii a.html} -Recurse`
 
-
-### utils
-
-#### `Get-OGP(Alias:ml)` - Make Link with Markdown Format
-
-指定したURIからサイトプレビュー用Open Graph protocol（OGP）の要素（主にmetaタグの要素）を取得する。
-標準入力、第一引数でUriを指定しない場合はクリップボードの値を使おうとする。
-
-気になるサイトのUriをクリップボードにコピーした状態でコマンドを打つと、マークダウン形式やhtml形式に変換してくれる。
-ブログ記事の作成などに便利な道具。
-
-- Usage (`Set-Alias -name ml -value Get-OGP`)
-    - `man2 Get-OGP`
-    - `man2 ml`
-- Examples
-    - `ml -m | Set-Clipboard`
-        - クリップボードのUriをマークダウン形式のリンクに変換して再度クリップボードに格納
-    - `ml | Format-List`
-        - クリップボードのUriからOGP要素（metaタグの要素）を取得
-- Inspired by [goark/ml - GitHub](https://github.com/goark/ml)
-    - License: Apache License Version 2.0, January 2004, https://www.apache.org/licenses/LICENSE-2.0
-    - Command: `Get-OGP (Alias: ml)`
 
 
 ### misc

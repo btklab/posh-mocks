@@ -59,6 +59,11 @@ if ($IsWindows){
 . $pwshSrcDir/addt_function.ps1
 
 ## writing
+. $pwshSrcDir/jl_function.ps1
+
+## web
+. $pwshSrcDir/Get-OGP_function.ps1
+Set-Alias -name ml -value Get-OGP
 
 ## csv
 . $pwshSrcDir/catcsv_function.ps1
@@ -76,9 +81,6 @@ if ($IsWindows){
 ## file watcher
 . $pwshSrcDir/fwatch_function.ps1
 
-## web
-. $pwshSrcDir/Get-OGP_function.ps1
-Set-Alias -name ml -value Get-OGP
 
 ## office
 
