@@ -11,7 +11,7 @@ function list:
 
 ```powershell
 # one-liner to create function list
-cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat fs=", " | Set-Clipboard
+cat README.md | grep '^#### ' | grep '`[^`]+`' -o | sort | flat fs=", " | Set-Clipboard
 ```
 
 - `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `json2txt`, `juni`, `keta`, `man2`, `pwmake`, `retu`, `say`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
@@ -153,19 +153,221 @@ Linuxでいう`sed -i`（の劣化コピー）。ただし誤爆防止のため`
 
 文字列の検索とヒット行の出力。Windows用。
 Linux環境で使う`grep`のような使用感で文字列を検索するが、劣化コピーである。
-`"string" | Select-String -Pattern <reg>`と同じ効果を得る。
+`Select-String -Pattern <reg>`と同じ効果を得る。
 `grep`は（筆者が毎日）よく使うコマンドなので、Bash・PowerShellとも同じ使用感・より短い文字数で利用できるようにした。
+
+デフォルトで大文字小文字を区別しないが、
+-CaseSensitiveスイッチで大文字小文字を区別する
+
+デフォルトでパターンを正規表現として解釈するが、
+[-s|-SimpleMatch]オプションでパターンを文字列として認識する
 
 - Usage
     - `man2 grep`
-    - `grep 'word' <file1,file2,...>`
-    - `grep -v 'word' <file1,file2,...>`
-    - `grep -o 'word' <file1,file2,...>`
-    - `grep -H 'word' <file1,file2,...>`
-    - `grep -f 'file' <file1,file2,...>`
+    - `grep '<regex>' -H file1,file2,...`
+    - `cat file1,file2,... | grep '<regex>' [-v][-f][-s][-C <int>[],<int>]]`
+    - `cat file1,file2,... | grep '<regex>' [-o]`
 - Inspired by Unix/Linux Commands
     - Command: `grep`
 
+検索速度は遅い。筆者の環境ではシンプルにSelect-Stringを用いた方が早かった。
+
+```powershell
+# Select-String (fast)
+1..10 | %{ Measure-Command{ 1..100000 | sls 99999 }} | ft
+
+Days Hours Minutes Seconds Milliseconds
+---- ----- ------- ------- ------------
+0    0     0       0       437
+0    0     0       0       386
+0    0     0       0       394
+0    0     0       0       385
+0    0     0       0       407
+0    0     0       0       715
+0    0     0       0       424
+0    0     0       0       424
+0    0     0       0       443
+0    0     0       0       423
+```
+
+```powershell
+# grep (slow)
+1..10 | %{ Measure-Command{ 1..100000 | grep 99999 }} | ft
+
+Days Hours Minutes Seconds Milliseconds
+---- ----- ------- ------- ------------
+0    0     0       1       84
+0    0     0       1       74
+0    0     0       1       287
+0    0     0       1       81
+0    0     0       1       186
+0    0     0       1       186
+0    0     0       1       79
+0    0     0       1       382
+0    0     0       1       178
+0    0     0       1       183
+```
+
+Examples
+
+- ref: [Select-String (Microsoft.PowerShell.Utility) - PowerShell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-string)
+
+```powershell
+# Find a case-sensitive match (grep 'regex' -CaseSensitive)
+
+'Hello', 'HELLO' | grep 'HELLO' -CaseSensitive -SimpleMatch
+
+HELLO
+```
+
+```powershell
+# Find a pattern match (grep 'regex')
+
+grep '\?' -H "$PSHOME\en-US\*.txt"
+    https://go.microsoft.com/fwlink/?LinkID=108518.
+    or go to: https://go.microsoft.com/fwlink/?LinkID=210614
+    or go to: https://go.microsoft.com/fwlink/?LinkID=113316
+      Get-Process -?         : Displays help about the Get-Process cmdlet.
+```
+
+```powershell
+# Find matches in text files (grep 'regex' -H file,file,...)
+
+Get-Alias   | Out-File -FilePath .\Alias.txt   -Encoding UTF8
+Get-Command | Out-File -FilePath .\Command.txt -Encoding UTF8
+grep 'Get\-' -H .\*.txt | Select-Object -First 5
+
+Alias.txt:7:Alias           cal2 -> Get-OLCalendar
+Alias.txt:8:Alias           cat -> Get-Content
+Alias.txt:28:Alias           dir -> Get-ChildItem
+Alias.txt:44:Alias           gal -> Get-Alias
+Alias.txt:46:Alias           gbp -> Get-PSBreakpoint
+```
+
+```powershell
+# Skip blank lines (grep ".")
+
+PS> "aaa","","bbb","ccc"
+aaa
+
+bbb
+ccc
+
+PS> "aaa","","bbb","ccc" | grep .
+aaa
+bbb
+ccc
+```
+
+```powershell
+# Find a string in subdirectories (grep 'regex' -H file,file,... [-r|Recurse])
+
+grep 'tab' -H '*.md' -r [-FileNameOnly|-FileNameAndLineNumber]
+
+Table: caption
+:::{.table2col}
+| table |
+
+The following commands are also approximately equivalent
+
+ls *.md -Recurse | grep "table"
+
+table2col.md:10:Table: caption
+table2col.md:12::::{.table2col}
+table2col.md:66:| table |
+```
+
+```powershell
+# Find strings that do not match a pattern (grep 'regex' [-v|-NotMatch])
+
+Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
+cat .\Command.txt | grep "Get\-", "Set\-" -NotMatch | Select-Object -Last 5
+
+Cmdlet          Write-Output                                       7.0.0.0    Microsoft.PowerShell.Utility
+Cmdlet          Write-Progress                                     7.0.0.0    Microsoft.PowerShell.Utility
+Cmdlet          Write-Verbose                                      7.0.0.0    Microsoft.PowerShell.Utility
+Cmdlet          Write-Warning                                      7.0.0.0    Microsoft.PowerShell.Utility
+```
+
+```powershell
+# Use double quotes when searching for tab characters (grep "`t")
+
+ "1,2,3", "4,5,6", "7,8,9", "" | %{ $_ -replace ',', "`t" } | grep "`t[28]"
+
+1       2       3
+7       8       9
+```
+
+```powershell
+# Find lines before and after a match (grep "regex" -C <int>,<int> )
+
+Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
+cat .\Command.txt | grep 'Get\-Computer' -C 2, 3
+
+  Cmdlet          Get-Command                                        7.3.1.500  Microsoft.PowerShell.Core
+  Cmdlet          Get-ComputeProcess                                 1.0.0.0    HostComputeService
+> Cmdlet          Get-ComputerInfo                                   7.0.0.0    Microsoft.PowerShell.Management
+  Cmdlet          Get-Content                                        7.0.0.0    Microsoft.PowerShell.Management
+  Cmdlet          Get-Counter                                        7.0.0.0    Microsoft.PowerShell.Diagnostics
+  Cmdlet          Get-Credential                                     7.0.0.0    Microsoft.PowerShell.Security
+
+Tips: use Out-String -Stream (alias:oss) to greppable
+
+cat .\Command.txt | grep 'Get\-Computer' -C 2, 3 | oss | grep '>'
+
+> Cmdlet          Get-ComputerInfo                                   7.0.0.0    Microsoft.PowerShell.Management
+```
+
+```powershell
+# Find all pattern matches (grep 'regex' -o)
+
+cat "$PSHOME\en-US\*.txt" | grep "PowerShell"
+
+    PowerShell Help System
+    Displays help about PowerShell cmdlets and concepts.
+    PowerShell Help describes PowerShell cmdlets, functions, scripts, and
+    modules, and explains concepts, including the elements of the PowerShell
+    PowerShell does not include help files, but you can read the help topics
+    You can find help for PowerShell online at
+       1. Start PowerShell with the "Run as administrator" option.
+      Get-Help About_Modules : Displays help about PowerShell modules.
+
+cat "$PSHOME\en-US\*.txt" | grep "PowerShell" -o
+PowerShell
+PowerShell
+PowerShell
+PowerShell
+PowerShell
+PowerShell
+PowerShell
+PowerShell
+PowerShell
+```
+
+```powershell
+# Convert pipeline objects to strings using Out-String -Stream
+
+$hash = @{
+    Name     = 'foo'
+    Category = 'bar'
+}
+
+# !! NO output, due to .ToString() conversion
+$hash | grep 'foo'
+
+# Out-String converts the output to a single multi-line string object
+$hash | Out-String | grep 'foo'
+
+Name                           Value
+----                           -----
+Name                           foo
+Category                       bar
+
+# Out-String -Stream converts the output to a multiple single-line string objects
+$hash | Out-String -Stream | grep 'foo'
+
+Name                           foo
+```
 
 #### `head`, `tail` - Output the first/last part of files
 
@@ -831,8 +1033,8 @@ PowerShell版make-like command。劣化コピー。
 経過時間や残り時間が**視覚的に**わかる。
 デフォルトで`-Minutes 25`（ポモドーロタイマー）。
 
-Sleepが終わるまでプロンプトが帰ってこないので、
-筆者は`Windows Terminal`を`Alt > Shift> +/-`で分割して時計として使っている。
+筆者は`Windows Terminal`を`Alt > Shift > +/-`で分割し、
+常に端末の片隅に表示して使っている。
 
 - Usage
     - `man2 sleepy`
