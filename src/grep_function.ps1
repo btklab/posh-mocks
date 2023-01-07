@@ -1,253 +1,306 @@
 <#
 .SYNOPSIS
+
+grep - similar to grep in UNIX
+
 指定した文字列にヒットする行を出力
-大文字小文字を区別しない
-ただし、-oオプション指定時のみ大文字小文字が
-区別される点に注意する
-正規表現も使用できる
 
-grep 'word' <file1,file2,...>
-grep -v 'word' <file1,file2,...>
-grep -o 'word' <file1,file2,...>
-grep -H 'word' <file1,file2,...>
-grep -f 'file' <file1,file2,...>
+デフォルトで大文字小文字を区別しないが、
+-CaseSensitiveスイッチで大文字小文字を区別する
 
-cat <file1,file2,...> | grep [-v | -o] 'word'
+デフォルトでパターンを正規表現として解釈するが、
+[-s|-SimpleMatch]オプションでパターンを文字列として認識する
+
+cat file1,file2,... | grep '<regex>' [-v][-f][-s][-C <int>]
+cat file1,file2,... | grep '<regex>' [-o]
+grep '<regex>' -H file1,file2,...
 
     -v: 指定文字にヒットしない行を出力
-
     -o: ヒットした文字のみ出力
-
     -f: ファイルから検索文字列（regex）を指定
+    -H: 指定されたファイル内を検索
+        -Recurseで再帰的にファイルを検索
+        -FileNameOnlyでファイル名のみ一意に出力
+        -FileNameAndLineNumberでファイル名と列数を出力
 
-    -H: 指定文字を含む行とファイル名を出力
-        ファイル名はドライブ文字を除くフルパスが出力される。
-        このオプションはShift-JISテキストファイルにのみ
-        適用可能.パイプライン読み込み不可.
+検索速度は（ラップしているため）遅い。
+筆者の環境ではシンプルにSelect-Stringを用いた方が早かった。
 
-※パイプラインを使用しない書き方（ファイルを指定する書き方）
-    の方が高速.（Select-Stringを使用する）
+Select-String
 
-.EXAMPLE
-PS C:\>grep 'word' a.txt
+PS> 1..10 | %{ Measure-Command{ 1..100000 | sls 99999 }} | ft
 
-説明
---------------------------------
-a.txt から word という文字列を含む行を出力する
+Days Hours Minutes Seconds Milliseconds
+---- ----- ------- ------- ------------
+0    0     0       0       437
+0    0     0       0       386
+0    0     0       0       394
+0    0     0       0       385
+0    0     0       0       407
+0    0     0       0       715
+0    0     0       0       424
+0    0     0       0       424
+0    0     0       0       443
+0    0     0       0       423
 
+grep
 
-.EXAMPLE
-PS C:\>cat a.txt | grep 'word'
+1..10 | %{ Measure-Command{ 1..100000 | grep 99999 }} | ft
 
-説明
---------------------------------
-a.txt から word という文字列を含む行を出力する
-ファイルを直接指定する場合よりも処理速度は遅い
-
-PS C:\>grep 'word' *.txt
-
-説明
---------------------------------
-ファイル指定はワイルドカードも使用可能.
-拡張子.txt から word という文字列を含む行を出力する
-
-PS C:\>grep 'word' a.txt,b.txt
-
-説明
---------------------------------
-カンマで区切って複数のファイル指定も可能.
-a.txt と b.txt から word という文字列を含む行を出力する
-
-
-.EXAMPLE
-PS C:\>cat a.txt | grep -v 'word'
-
-説明
---------------------------------
-a.txt から word という文字列を含まない行を出力する
+Days Hours Minutes Seconds Milliseconds
+---- ----- ------- ------- ------------
+0    0     0       1       84
+0    0     0       1       74
+0    0     0       1       287
+0    0     0       1       81
+0    0     0       1       186
+0    0     0       1       186
+0    0     0       1       79
+0    0     0       1       382
+0    0     0       1       178
+0    0     0       1       183
 
 
-.EXAMPLE
-PS C:\>cat a.txt | grep -o 'word'
-
-説明
---------------------------------
-a.txt から word という文字列だけ抽出する
-ただし-oオプションでは大文字小文字が区別される点に注意する
+ref:
+about Select-String: https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-string?view=powershell-7.3
+about splatting: https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_splatting?view=powershell-7.3
 
 .EXAMPLE
-PS C:\>grep -H 'word' *.txt
+# Find a case-sensitive match (grep 'regex' -CaseSensitive)
 
-説明
---------------------------------
--Hオプションでファイル名とヒット行数も出力する.
-カレントディレクトリのファイルのうち、拡張子が .txtのファイルから
-word という文字列を含む行とファイル名を出力する
+'Hello', 'HELLO' | grep 'HELLO' -CaseSensitive -SimpleMatch
+
+HELLO
+
+.EXAMPLE
+# Find a pattern match (grep 'regex')
+
+grep '\?' -H "$PSHOME\en-US\*.txt"
+    https://go.microsoft.com/fwlink/?LinkID=108518.
+    or go to: https://go.microsoft.com/fwlink/?LinkID=210614
+    or go to: https://go.microsoft.com/fwlink/?LinkID=113316
+      Get-Process -?         : Displays help about the Get-Process cmdlet.
+
+.EXAMPLE
+# Skip blank lines (grep ".")
+
+PS> "aaa","","bbb","ccc"
+aaa
+
+bbb
+ccc
+
+PS> "aaa","","bbb","ccc" | grep .
+aaa
+bbb
+ccc
+
+.EXAMPLE
+# Find matches in text files (grep 'regex' -H file,file,...)
+
+Get-Alias   | Out-File -FilePath .\Alias.txt   -Encoding UTF8
+Get-Command | Out-File -FilePath .\Command.txt -Encoding UTF8
+grep 'Get\-' -H .\*.txt | Select-Object -First 5
+
+Alias.txt:7:Alias           cal2 -> Get-OLCalendar
+Alias.txt:8:Alias           cat -> Get-Content
+Alias.txt:28:Alias           dir -> Get-ChildItem
+Alias.txt:44:Alias           gal -> Get-Alias
+Alias.txt:46:Alias           gbp -> Get-PSBreakpoint
+
+.EXAMPLE
+# Find a string in subdirectories (grep 'regex' -H file,file,... [-r|Recurse])
+
+grep 'tab' -H '*.md' -r [-FileNameOnly|-FileNameAndLineNumber]
+
+Table: caption
+:::{.table2col}
+| table |
+
+The following commands are also approximately equivalent
+
+ls *.md -Recurse | grep "table"
+
+table2col.md:10:Table: caption
+table2col.md:12::::{.table2col}
+table2col.md:66:| table |
+
+.EXAMPLE
+# Find strings that do not match a pattern (grep 'regex' [-v|-NotMatch])
+
+Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
+cat .\Command.txt | grep "Get\-", "Set\-" -NotMatch | Select-Object -Last 5
+
+Cmdlet          Write-Output                                       7.0.0.0    Microsoft.PowerShell.Utility
+Cmdlet          Write-Progress                                     7.0.0.0    Microsoft.PowerShell.Utility
+Cmdlet          Write-Verbose                                      7.0.0.0    Microsoft.PowerShell.Utility
+Cmdlet          Write-Warning                                      7.0.0.0    Microsoft.PowerShell.Utility
+
+.EXAMPLE
+# Use double quotes when searching for tab characters (grep "`t")
+
+ "1,2,3", "4,5,6", "7,8,9", "" | %{ $_ -replace ',', "`t" } | grep "`t[28]"
+
+1       2       3
+7       8       9
+
+.EXAMPLE
+# Find lines before and after a match (grep "regex" -C <int>,<int> )
+
+Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
+cat .\Command.txt | grep 'Get\-Computer' -C 2, 3
+
+  Cmdlet          Get-Command                                        7.3.1.500  Microsoft.PowerShell.Core
+  Cmdlet          Get-ComputeProcess                                 1.0.0.0    HostComputeService
+> Cmdlet          Get-ComputerInfo                                   7.0.0.0    Microsoft.PowerShell.Management
+  Cmdlet          Get-Content                                        7.0.0.0    Microsoft.PowerShell.Management
+  Cmdlet          Get-Counter                                        7.0.0.0    Microsoft.PowerShell.Diagnostics
+  Cmdlet          Get-Credential                                     7.0.0.0    Microsoft.PowerShell.Security
+
+Tips: use Out-String -Stream (alias:oss) to greppable
+
+cat .\Command.txt | grep 'Get\-Computer' -C 2, 3 | oss | grep '>'
+
+> Cmdlet          Get-ComputerInfo                                   7.0.0.0    Microsoft.PowerShell.Management
+
+.EXAMPLE
+# Find all pattern matches (grep 'regex' -o)
+
+cat "$PSHOME\en-US\*.txt" | grep "PowerShell"
+
+    PowerShell Help System
+    Displays help about PowerShell cmdlets and concepts.
+    PowerShell Help describes PowerShell cmdlets, functions, scripts, and
+    modules, and explains concepts, including the elements of the PowerShell
+    PowerShell does not include help files, but you can read the help topics
+    You can find help for PowerShell online at
+       1. Start PowerShell with the "Run as administrator" option.
+      Get-Help About_Modules : Displays help about PowerShell modules.
+
+
+cat "$PSHOME\en-US\*.txt" | grep "PowerShell" -o
+PowerShell
+PowerShell
+PowerShell
+PowerShell
+PowerShell
+PowerShell
+PowerShell
+PowerShell
+PowerShell
+
+.EXAMPLE
+# Convert pipeline objects to strings using Out-String -Stream
+
+$hash = @{
+    Name = 'foo'
+    Category = 'bar'
+}
+
+# !! NO output, due to .ToString() conversion
+$hash | grep 'foo'
+
+# Out-String converts the output to a single multi-line string object
+$hash | Out-String | grep 'foo'
+
+Name                           Value
+----                           -----
+Name                           foo
+Category                       bar
+
+# Out-String -Stream converts the output to a multiple single-line string objects
+$hash | Out-String -Stream | grep 'foo'
+
+Name                           foo
 
 
 #>
 function grep {
-    begin
-    {
-        # 変数の初期化
-        $file = ''
-        $chkflag = $false
-        $pipflag = $false
-        $defaultflag = $false
-        $vflag = $false
-        $hflag = $false
-        $oflag = $false
-        $fflag = $false
+    Param(
+        [Parameter(Position=0,Mandatory=$False)]
+        [string[]] $Pattern,
 
-        # test args
-        if($args.Count -lt 1){
-            Write-Error "引数が不正です." -ErrorAction Stop }
+        [Parameter(Mandatory=$False)]
+        [alias('f')]
+        [switch] $File,
 
-        # v option: パイプライン読み込みモード
-        if(($args[0] -eq "-v") -and ($args.Count -eq 1)){
-            Write-Error "引数が不正です."  -ErrorAction Stop}
-        if(($args[0] -eq "-v") -and ($args.Count -eq 2)){
-            $pipflag = $true
-            $vflag = $true
-            $chkflag = $true
-            $scrptn = $args[1]
-        }
+        [Parameter(Mandatory=$False)]
+        [alias('H')]
+        [string[]] $Path,
 
-        # v option: ファイル読み込みモード
-        if(($args[0] -eq "-v") -and ($args.Count -eq 1)){
-            Write-Error "引数が不正です."  -ErrorAction Stop}
-        if(($args[0] -eq "-v") -and ($args.Count -eq 3)){
-            $vflag = $true
-            $chkflag = $true
-            $scrptn = $args[1]
-            $file = $args[2]
-        }
+        [Parameter(Mandatory=$False)]
+        [alias('v')]
+        [switch] $NotMatch,
 
-        # f option: パイプライン読み込みモード
-        if(($args[0] -eq "-f") -and ($args.Count -eq 1)){
-            Write-Error "引数が不正です."  -ErrorAction Stop}
-        if(($args[0] -eq "-f") -and ($args.Count -eq 2)){
-            $pipflag = $true
-            $fflag = $true
-            $chkflag = $true
-            $scrptn = Get-Content -Path $args[1] -Encoding UTF8 `
-                | Select-String -Pattern '.'
-        }
+        [Parameter(Mandatory=$False)]
+        [alias('s')]
+        [switch] $SimpleMatch,
 
-        # f option: ファイル読み込みモード
-        if(($args[0] -eq "-f") -and ($args.Count -eq 1)){
-            Write-Error "引数が不正です."  -ErrorAction Stop}
-        if(($args[0] -eq "-f") -and ($args.Count -eq 3)){
-            $fflag = $true
-            $chkflag = $true
-            $scrptn = Get-Content -Path $args[1] -Encoding UTF8 `
-                | Select-String -Pattern '.'
-            $file = $args[2]
-        }
+        [Parameter(Mandatory=$False)]
+        [alias('o')]
+        [switch] $AllMatches,
 
-        # o option: パイプライン読み込みモード
-        if(($args[0] -eq "-o") -and ($args.Count -eq 1)){
-            Write-Error "引数が不正です."  -ErrorAction Stop}
-        if(($args[0] -eq "-o") -and ($args.Count -eq 2)){
-            $pipflag = $true
-            $oflag = $true
-            $chkflag = $true
-            $scrptn = $args[1]
-            $regex = [Regex]$scrptn
-        }
+        [Parameter(Mandatory=$False)]
+        [alias('C')]
+        [int[]] $Context,
 
-        # o option: ファイル読み込みモード
-        if(($args[0] -eq "-o") -and ($args.Count -eq 1)){
-            Write-Error "引数が不正です."  -ErrorAction Stop}
-        if(($args[0] -eq "-o") -and ($args.Count -eq 3)){
-            $oflag = $true
-            $chkflag = $true
-            $scrptn = $args[1]
-            $file = $args[2]
-            $regex = [Regex]$scrptn
-        }
+        [Parameter(Mandatory=$False)]
+        [switch] $CaseSensitive,
 
-        # H option: ファイル読み込みモード
-        if(($args[0] -eq "-H") -and ($args.Count -ne 3)){
-            Write-Error "引数が不正です."  -ErrorAction Stop}
-        if(($args[0] -eq "-H") -and ($args.Count -eq 3)){
-            $hflag = $true
-            $chkflag = $true
-            $scrptn = $args[1]
-            $file = $args[2]
-        }
+        [Parameter(Mandatory=$False)]
+        [alias('r')]
+        [switch] $Recurse,
 
-        # default: パイプライン読み込みモード
-        if((!$chkflag) -and ($args.Count -eq 1)){
-            $pipflag = $true
-            $chkflag = $true
-            $defaultflag = $true
-            $scrptn = $args[0]
-        }
+        [Parameter(Mandatory=$False)]
+        [switch] $FileNameOnly,
 
-        # default: ファイル読み込みモード
-        if((!$chkflag) -and ($args.Count -eq 2)){
-            $chkflag = $true
-            $defaultflag = $true
-            $scrptn = $args[0]
-            $file = $args[1]
-        }
+        [Parameter(Mandatory=$False)]
+        [switch] $FileNameAndLineNumber,
 
-        # 不正な引数
-        if(!$chkflag){
-            Write-Error '引数が不正です.' -ErrorAction Stop}
+        [parameter(Mandatory=$False,ValueFromPipeline=$True)]
+        [string[]] $Text
+    )
+    # test params
+    if ((-not $Pattern) -and (-not $File)){
+        Write-Error "do not set regex pattern or pattern-files." -ErrorAction Stop
     }
-
-    process
-    {
-        if(($vflag) -and ($pipflag)){
-            if($_ -notmatch $scrptn){ Write-Output $_ }
-        }
-        if(($fflag) -and ($pipflag)){
-            $_ | Select-String -Pattern $scrptn
-        }
-        if(($defaultflag) -and ($pipflag)){
-            if($_ -match $scrptn){ Write-Output $_ }
-        }
-        if(($oflag) -and ($pipflag)){
-            $regex.Matches($_) | ForEach-Object { Write-Output $_.Value }
+    # set params
+    if ($File){
+        # read patterns from files
+        $pat = Get-Content -Path $Pattern -Encoding UTF8
+    } else {
+        $pat = $Pattern
+    }
+    $splatting = @{
+        Pattern       = $pat
+        CaseSensitive = $CaseSensitive
+        Encoding      = "utf8"
+        SimpleMatch   = $SimpleMatch
+        NotMatch      = $NotMatch
+        AllMatches    = $AllMatches
+    }
+    if ($PSVersionTable.PSVersion.Major -ge 7){
+        # -NoEmphasis parameter was introduced in PowerShell 7
+        $splatting.Set_Item('NoEmphasis', $True)
+    }
+    if ($Context){
+        $splatting.Set_Item('Context', $Context)
+    }
+    if ($Path){
+        $splatting.Set_Item('Path', (Get-ChildItem -Path $Path -Recurse:$Recurse))
+    }
+    # main
+    if ($Path){
+        if ($FileNameOnly){
+            (Select-String @splatting).FileName | Sort-Object -Stable -Unique; return
+        } elseif ($FileNameAndLineNumber){
+            Select-String @splatting; return
+        } else {
+            (Select-String @splatting).Line; return
         }
     }
-    end {
-        if(($hflag) -and (!$pipflag)){
-            if($args.Count -lt 3){ Write-Error "引数が不正です." }
-            Select-String -Pattern $scrptn -Path $file -Encoding UTF8 |
-            ForEach-Object {
-                $p = $_.Path
-                $line = $p + ':' + [string]$_.LineNumber + ':' + [string]$_.Line
-                Write-Output $line
-            }
-        }
-
-        # vオプション: ファイル読み込みモード
-        if(($vflag) -and (!$pipflag)){
-            Select-String -Pattern $scrptn -Path $file -NotMatch -Encoding UTF8 |
-            ForEach-Object { Write-Output $_.Line }
-        }
-
-        # fオプション: ファイル読み込みモード
-        if(($fflag) -and (!$pipflag)){
-            Select-String -Pattern $scrptn -Path $file -Encoding UTF8 |
-            ForEach-Object { Write-Output $_.Line }
-        }
-
-        # oオプション: ファイル読み込みモード
-        if(($oflag) -and (!$pipflag)){
-            Select-String -Pattern $scrptn -Path $file -Encoding UTF8 |
-            ForEach-Object { Write-Output $_.Line } |
-            ForEach-Object { $regex.Matches($_) |
-            ForEach-Object { Write-Output $_.Value }}
-        }
-
-        # デフォルト: ファイル読み込みモード
-        if(($defaultflag) -and (!$pipflag)){
-            Select-String -Pattern $scrptn -Path $file -Encoding UTF8 |
-            ForEach-Object { Write-Output $_.Line }
-        }
+    if ($AllMatches){
+        ($input | Select-String @splatting).Matches.Value; return
     }
+    $input | Select-String @splatting; return
 }
