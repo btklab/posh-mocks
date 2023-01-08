@@ -1,133 +1,99 @@
 <#
 .SYNOPSIS
-指定した列数で折り返す
-区切り文字は半角スペースを認識する
 
-flat [fs=<string>] [num>]
+flat - Flat columns
 
-flat 
- 引数を何も指定しなければ全行1列半角スペース区切りでに出力
+半角スペース区切りの入力を任意列数で折り返す
+引数を何も指定しなければ全行1列に整形して出力
 
-flat <num>
- 指定列数で折り返し
 
 .DESCRIPTION
 
-inspired by
-https://qiita.com/greymd/items/3515869d9ed2a1a61a49
+inspired by:
 シェルの弱点を補おう！"まさに"なCLIツール、egzact
+https://qiita.com/greymd/items/3515869d9ed2a1a61a49
 Qiita:greymd氏, 2016/05/12, accessed 2017/11/13
 
 .EXAMPLE
-PS C:\>ls -Name *.txt | flat
+1..9 | flat
+1 2 3 4 5 6 7 8 9
 
-説明
---------------
-カレントディレクトリ内の *.txt の中身が
-半角スペース区切りで一行に出力される
 
 .EXAMPLE
-PS C:\>ls -Name *.* | flat 5
+1..9 | flat 4
+1 2 3 4
+5 6 7 8
+9
 
-説明
---------------
-カレントディレクトリ内のファイルが
-5列で表示される
+.EXAMPLE
+echo "aiueo" | flat 3 -ifs "" -ofs ""
+aiu
+eo
 
 #>
 function flat {
+    param (
+        [Parameter(Mandatory=$False, Position=0)]
+        [Alias('n')]
+        [int] $Num,
 
-    begin
-    {
-        # 引数の処理
-        $nflag = $false
-        $fsflag = $false
-        $emptyflag = $false
+        [Parameter(Mandatory=$False)]
+        [Alias('ifs')]
+        [string] $InputDelimiter = ' ',
 
-        foreach($arg in $args){
-            if([string]$arg -match 'fs='){
-                $fsflag = $true
-                $fs = [string]$arg -Replace '^fs=',''
-                if($fs -eq ''){$emptyflag = $true}
-            }
-        }
-        if($fsflag){
-            if($args[1]){
-                $nflag = $true
-                $optNum = [int]$args[1]
-                if($optNum -lt 1){throw '列数には1以上の整数を指定ください'}
-            }
-        }elseif($args[0]){
-            $fs = ' '
-            $nflag = $true
-            $optNum = [int]$args[0]
-            if($optNum -lt 1){throw '列数には1以上の整数を指定ください'}
-        }else{
-            $fs = ' '
-        }
+        [Parameter(Mandatory=$False)]
+        [Alias('ofs')]
+        [string] $OutputDelimiter = ' ',
 
-        # 変数の初期化
-        if($nflag){
-            $retu = [int]$optNum
-            $counter = 0
+        [parameter(Mandatory=$False,ValueFromPipeline=$True)]
+        [string[]] $InputText
+    )
+    begin {
+        # parse option
+        if (-not $Num){
+            [boolean] $flatFlag = $True
+        } else {
+            [boolean] $flatFlag = $False
         }
-        $readLine = ''
-        $writeLine = ''
+        if ($InputDelimiter -eq ''){
+            [boolean] $emptyDelimiterFlag = $True
+        } else {
+            [boolean] $emptyDelimiterFlag = $False
+        }
+        # init var
+        [int] $cnt = 0
+        [string] $tempLine = ''
+        $tempAryList = New-Object 'System.Collections.Generic.List[System.String]'
     }
-
-    process
-    {
-        $readLine = [string]$_
-
-        if(!$emptyflag){
-            # -n オプション:任意の列数で改行
-            if($nflag){
-                $splitLine = $readLine -Split "$fs"
-                for($i=0; $i -lt $splitLine.Count; $i++){
-                    $counter++
-                    $writeLine = [string]$WriteLine + "$fs" + [string]$splitLine[$i]
-                    if($counter -eq $retu){
-                        $writeLine = $WriteLine -Replace "^$fs", ""
-                        Write-Output $writeLine
-                        $writeLine = ''
-                        $counter = 0
-                    }
-                }
-            }else{
-                # 引数なし：全行を半角スペース区切りで1行にして出力
-                $writeLine = [string]$writeLine + "$fs" + [string]$readLine
+    process {
+        [string] $line = [string] $_
+        if ($flatFlag){
+            # flatten input
+            $tempAryList.Add($line)
+        } else {
+            [string[]] $splitLine = $line -split $InputDelimiter
+            if ($emptyDelimiterFlag){
+                # delete first and last element in $splitLine
+                $splitLine = $splitLine[1..($splitLine.Count - 2)]
             }
-        }else{
-            # -n オプション:任意の列数で改行
-            if($nflag){
-                $splitLine = $readLine -Split "$fs"
-                for($i=1; $i -lt $splitLine.Count - 1; $i++){
-                    $counter++
-                    $writeLine = [string]$WriteLine + [string]$splitLine[$i]
-                    if($counter -eq $retu){
-                        Write-Output $writeLine
-                        $writeLine = ''
-                        $counter = 0
-                    }
+            foreach ($s in $splitLine){
+                $cnt++
+                if ($cnt -lt $Num){
+                    $tempAryList.Add($s)
+                } else {
+                    $tempAryList.Add($s)
+                    [string] $tempLine = $tempAryList.ToArray() -join $OutputDelimiter
+                    Write-Output $tempLine
+                    $cnt = 0
+                    $tempAryList = New-Object 'System.Collections.Generic.List[System.String]'
                 }
-            }else{
-                # 引数なし：全行を1行にして出力
-                $writeLine = [string]$writeLine + [string]$readLine
             }
         }
-
     }
-
-    end
-    {
-        if($nflag){
-            if($writeLine -ne ''){
-                $writeLine = $WriteLine -Replace "^$fs", ""
-                Write-Output $writeLine
-            }
-        }else{
-            $writeLine = $WriteLine -Replace "^$fs", ""
-            Write-Output $writeLine
+    end {
+        if ($tempAryList.ToArray().Count -gt 0){
+            [string] $tempLine = $tempAryList.ToArray() -join $OutputDelimiter
+            Write-Output $tempLine
         }
     }
 }

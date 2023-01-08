@@ -11,7 +11,7 @@ function list:
 
 ```powershell
 # one-liner to create function list
-cat README.md | grep '^#### ' | grep '`[^`]+`' -o | sort | flat fs=", " | Set-Clipboard
+cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
 - `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `man2`, `pwmake`, `retu`, `say`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
@@ -169,7 +169,11 @@ Linux環境で使う`grep`のような使用感で文字列を検索するが、
 - Inspired by Unix/Linux Commands
     - Command: `grep`
 
-検索速度は遅い。筆者の環境ではシンプルにSelect-Stringを用いた方が速い。
+検索速度は遅い。筆者の環境ではシンプルに`Select-String`を用いた方が速い。
+したがって、あまり引数をもちいないシンプルな用途であれば、
+`Set-Alias -name grep -value Select-String`としたほうがより速く動作する
+（むしろ`grep`よりも`sls`の方が文字数が少ないので、何もせずそのまま`sls`を用いてもよい）。
+
 
 ```powershell
 # Select-String (fast)
@@ -206,6 +210,8 @@ Days Hours Minutes Seconds Milliseconds
 0    0     0       1       178
 0    0     0       1       183
 ```
+
+
 
 Examples
 
@@ -309,8 +315,10 @@ cat .\Command.txt | grep 'Get\-Computer' -C 2, 3
   Cmdlet   Get-Content        7.0.0.0    Microsoft.PowerShell.Management
   Cmdlet   Get-Counter        7.0.0.0    Microsoft.PowerShell.Diagnostics
   Cmdlet   Get-Credential     7.0.0.0    Microsoft.PowerShell.Security
+```
 
-Tips: use Out-String -Stream (alias:oss) to greppable
+```powershell
+# Tips: use Out-String -Stream (alias:oss) to greppable
 
 cat .\Command.txt | grep 'Get\-Computer' -C 2, 3 | oss | grep '>'
 
@@ -342,6 +350,43 @@ PowerShell
 PowerShell
 PowerShell
 ```
+
+これは`Select-String（alias:sls）`を用いて以下のようにも書ける。
+
+
+```powershell
+# パイプラインをつなげているときに
+# カッコ()を追加するのは手戻りがあって面倒で楽しくない
+(cat "$PSHOME\en-US\*.txt" | sls "PowerShell" -AllMatches).Matches.Value
+
+PowerShell
+…(以下略)
+```
+
+筆者は、パイプでコマンドをつないでいるときに`()`を書きたくない。
+パイプで右に右にとコマンドをつないでいくのは楽しいが、
+手戻りして`()`を追加するのは面倒で楽しくない。
+
+`grep`で`Select-String`の（速度の遅い劣化版）ラッパーを作った理由もこのあたりにある。
+単に`grep 'regex'`する場合は、`sls 'regex'`とした方が速い。
+しかし、ちょっと複雑な（だが筆者的にはよく使う）オプション、
+たとえば`grep 'regex' -o`や`grep 'regex' -H <files> -FileNameOnly`などは、
+余計なカッコ`()`や長いパイプを書かずに済むので良い。
+
+
+```powershell
+# このように書けばカッコ()は書かなくてよいが、
+# grep -oと書けばすむところ、2つも多くパイプを
+# つなげることになるのであまり楽しくない
+cat "$PSHOME\en-US\*.txt" `
+    | sls "PowerShell" -AllMatches `
+    | select -ExpandProperty Matches `
+    | select -ExpandProperty Value
+
+PowerShell
+…(以下略)
+```
+
 
 ```powershell
 # Convert pipeline objects to strings using Out-String -Stream
@@ -725,18 +770,42 @@ cat a.txt | grep . | tarr -n 1
 ※ `grep .`で空行をスキップ（＝1文字以上の行のみヒット）
 
 
-#### `flat` - Flat rows
+#### `flat` - Flat columns
 
 半角スペース区切り文字列を任意列数となるように整える。
+`-ifs`で入力テキストの区切り文字を、<br />
+`-ofs`で出力テキストの区切り文字をそれぞれ指定できる。<br />
+それぞれ空文字も指定可能。（`-ifs ""`, `-ofs ""`）
 
 - Usage
     - `man2 flat`
 - Examples
-    - `"1 2 3","4 5 6","7 8 9" | flat`
-    - `"1 2 3","4 5 6","7 8 9" | flat 4`
+    - `1..9 | flat`
+    - `1..9 | flat 4`
+    - `"aiueo" | flat 3 -ifs "" -ofs ""`
 - Inspired by [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
     - License: The MIT License (MIT): Copyright (c) 2016 Yasuhiro, Yamada
     - Command: `flat`
+
+Examples
+
+```powershell
+1..9 | flat
+1 2 3 4 5 6 7 8 9
+```
+
+```powershell
+1..9 | flat 4
+1 2 3 4
+5 6 7 8
+9
+```
+
+```powershell
+"aiueo" | flat 3 -ifs "" -ofs ""
+aiu
+eo
+```
 
 #### `Add-CrLf`, `Add-CrLf-EndOfFile` - Add LineFeed
 
