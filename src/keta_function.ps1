@@ -50,17 +50,19 @@ function keta {
 
     begin
     {
-        $leftFlag = $false
         # get args
         if(($args.Count) -and ([string]$args[0] -eq '-l')){
-            $leftFlag = $true
+            $leftPaddingFlag = $True
+        } else {
+            $leftPaddingFlag = $False
         }
         # init variables
-        $sp = ''
-        $writeLine = ''
-        $readRow = 0
+        [string] $Delimiter = ' '
+        [string] $sp = ''
+        [string] $writeLine = ''
+        [int] $readRow = 0
         $hashRow = @{}
-        # 列毎の文字バイト数格納ハッシュ
+        # hashtable for storing the number of character bytes for each column
         $hashColByte = @{}
     }
 
@@ -68,99 +70,58 @@ function keta {
     {
         # 1st pass
         $readRow++
-        $splitLine = $_ -Split ' '
+        $line = [string] $_
+        $hashRow[$readRow] = $line
+        $splitLine = $line -Split $Delimiter
 
-        # 列数の取得
+        # get number of columns
         if($readRow -eq 1){$retu = $splitLine.Count}
 
-        # 列毎の文字数取得
+        # get number of character width for each column
         for($i = 0; $i -lt $splitLine.Count; $i++){
+            [string] $colStr = $splitLine[$i]
+            [int] $colWidth = [System.Text.Encoding]::GetEncoding("Shift_Jis").GetByteCount($colStr)
 
-            # 対象文字列にシングルクオートがあると.GetByteCountで
-            # エラーになるため、シングルクオートはあらかじめエスケープしておく
-
-            # シングルクオートの計数
-            $quotnum = 0
-            $colStr = $splitLine[$i]
-            $s = $colStr
-            for($k = 0; $k -lt $s.Length; $k++){
-                if([string]$s[$k] -eq "'"){ $quotnum-- }
-            }
-
-            # シングルクオートのエスケープ
-            $colStr = [string]$colStr -Replace "'","@a@a@"
-            #Write-Output $colStr
-
-            $ex = '[System.Text.Encoding]::GetEncoding("Shift_Jis").GetByteCount(' + "'" + $colStr + "'" + ')'
-            $strByte = Invoke-Expression "$ex"
-            $strByte = [int]$strByte + ( [int]$quotnum * 4 )            
-            #Write-Output $strByte
-            #Write-Output $hashColByte[$i]
-
-            # 最大文字バイト数の取得
-            if([int]$strByte + 0 -gt [int]($hashColByte[$i]) + 0){
-                $hashColByte[$i] = [int]$strByte
+            # get max column width for each column
+            if([int]($colWidth) + 0 -gt [int]($hashColByte[$i]) + 0){
+                $hashColByte[$i] = $colWidth
             }
         }
-
-        # 行をハッシュに格納
-        $hashRow[$readRow] = [string]$_
     }
 
     end
     {
         # 2nd pass
         for($i = 1; $i -le $readRow; $i++){
-            # 行の再読み込みと文字Byte数の取得
-            $splitLine = $hashRow[$i] -Split ' '
+            # reload the line and getting the number of character width
+            $splitLine = $hashRow[$i] -Split $Delimiter
 
-            # 列毎の文字数取得
+            # get number of character width per column
             for($j = 0; $j -lt $splitLine.Count; $j++){
-                
-                # 対象文字列にシングルクオートがあると.GetByteCountで
-                # エラーになるため、シングルクオートはあらかじめエスケープしておく
+                [string] $colStr = $splitLine[$j]
+                [int] $colWidth = [System.Text.Encoding]::GetEncoding("Shift_Jis").GetByteCount($colStr)
 
-                # シングルクオートの計数
-                $quotnum = 0
-                $colStr = $splitLine[$j]
-                $s = $colStr
-                for($k = 0; $k -lt $s.Length; $k++){
-                    if([string]$s[$k] -eq "'"){ $quotnum-- }
-                }
-
-                # シングルクオートのエスケープ
-                $colStr = [string]$colStr -Replace "'","@a@a@"
-                #Write-Output $colStr
-
-                $ex = '[System.Text.Encoding]::GetEncoding("Shift_Jis").GetByteCount(' + "'" + $colStr + "'" + ')'
-                $strByte = Invoke-Expression "$ex"
-                $strByte = [int]$strByte + ( [int]$quotnum * 4 )
-                #Write-Output $strByte
-
-                # シングルクオートのエスケープ解除
-                $colStr = [string]$colStr -Replace "@a@a@","'"
-
-                # ゼロ埋めメイン処理
-                $setByteNum = [int]$hashColByte[$j] - [int]$strByte
+                # padding
+                [int] $setByteNum = [int]($hashColByte[$j]) - [int]($colWidth)
                 if($setByteNum -le 0){$setByteNum = 0}
 
                 for($k = 1; $k -le $setByteNum; $k++){
-                    $sp = [string]$sp + ' '
+                    $sp = $sp + ' '
                 }
 
-                # 左詰めか右詰か
-                if($leftFlag){
-                    $tmpWriteLine = [string]$colStr + $sp
+                # left padding or right padding?
+                if($leftPaddingFlag){
+                    [string] $tmpWriteLine = $colStr + $sp
                 }else{
-                    $tmpWriteLine = $sp + [string]$colStr
+                    [string] $tmpWriteLine = $sp + $colStr
                 }
                 $sp = ''
 
-                # 出力文字列の生成
+                # output
                 if($j -eq 0){
-                    $writeLine = [string]$tmpWriteLine
+                    $writeLine = $tmpWriteLine
                 }else{
-                    $writeLine = [string]$writeLine + ' ' + [string]$tmpWriteLine
+                    $writeLine = $writeLine + $Delimiter + $tmpWriteLine
                 }
             }
             Write-Output $writeLine
