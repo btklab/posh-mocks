@@ -5,7 +5,7 @@ A mock-up set of [PowerShell](https://github.com/PowerShell/PowerShell) 7 functi
 - For use in UTF-8 Japanese environments on windows.
 - For my personal work and hobby use.
 - Note that the code is spaghetti (due to my technical inexperience).
-- Insufficient error handling
+- Insufficient tests and error handlings.
 
 function list:
 

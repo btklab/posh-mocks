@@ -43,7 +43,7 @@ function flat {
 
         [Parameter(Mandatory=$False)]
         [Alias('ofs')]
-        [string] $OutputDelimiter = ' ',
+        [string] $OutputDelimiter,
 
         [parameter(Mandatory=$False,ValueFromPipeline=$True)]
         [string[]] $InputText
@@ -59,6 +59,12 @@ function flat {
             [boolean] $emptyDelimiterFlag = $True
         } else {
             [boolean] $emptyDelimiterFlag = $False
+        }
+        # set output delimiter
+        if (-not $OutputDelimiter){
+            [string] $oDelim = $InputDelimiter
+        } else {
+            [string] $oDelim = $OutputDelimiter
         }
         # init var
         [int] $cnt = 0
@@ -82,7 +88,7 @@ function flat {
                     $tempAryList.Add($s)
                 } else {
                     $tempAryList.Add($s)
-                    [string] $tempLine = $tempAryList.ToArray() -join $OutputDelimiter
+                    [string] $tempLine = $tempAryList.ToArray() -join $oDelim
                     Write-Output $tempLine
                     $cnt = 0
                     $tempAryList = New-Object 'System.Collections.Generic.List[System.String]'
@@ -92,7 +98,7 @@ function flat {
     }
     end {
         if ($tempAryList.ToArray().Count -gt 0){
-            [string] $tempLine = $tempAryList.ToArray() -join $OutputDelimiter
+            [string] $tempLine = $tempAryList.ToArray() -join $oDelim
             Write-Output $tempLine
         }
     }
