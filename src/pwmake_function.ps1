@@ -990,7 +990,10 @@ function pwmake {
         ## execute commandlines
         foreach ($comline in $commandlines){
             ## replace auto variables
-            $comline = ReplaceAutoVar "$comline" "$tar" $tarDepDict
+            [string] $comline = ReplaceAutoVar "$comline" "$tar" $tarDepDict
+            if (($comline -eq '') -or ($comline -match '^\s*$')){
+                continue
+            }
             ## main
             if ($DryRun){
                 ## out debug

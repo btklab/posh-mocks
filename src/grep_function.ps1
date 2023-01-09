@@ -307,5 +307,8 @@ function grep {
     if ($AllMatches){
         ($input | Select-String @splatting).Matches.Value; return
     }
+    if ($Context){
+        $input | Select-String @splatting | Out-String -Stream ; return
+    }
     ($input | Select-String @splatting).Line ; return
 }
