@@ -486,7 +486,34 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 - Inspired by Unix/Linux Commands
     - Command: `tac`
 
+Examples:
 
+```powoershell
+1..5 | tac
+5
+4
+3
+2
+1
+```
+
+#### `rev` - Reverse strings
+
+文字列を行内で反転する。
+
+- Usage
+    - `man2 rev`
+- Examples
+    - `"aiueo" | rev`
+- Inspired by Unix/Linux Commands
+    - Command: `rev`
+
+Examples:
+
+```powershell
+"aiueo" | tac
+oeuia
+```
 
 
 ### text filters for space-separated input
@@ -503,6 +530,20 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `tateyoko`
+
+Examples:
+
+```powershell
+"1 2 3","4 5 6","7 8 9"
+1 2 3
+4 5 6
+7 8 9
+
+"1 2 3","4 5 6","7 8 9" | tateyoko
+1 4 7
+2 5 8
+3 6 9
+```
 
 #### `fillretu` - Align records to the maximum number of columns
 
