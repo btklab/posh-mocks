@@ -222,16 +222,16 @@ cat a.txt | grep regfile.txt -f
 #>
 function grep {
     Param(
-        [Parameter(Position=0,Mandatory=$False)]
+        [Parameter(Mandatory=$False,Position=0)]
         [string[]] $Pattern,
+
+        [Parameter(Mandatory=$False,Position=1)]
+        [alias('H')]
+        [string[]] $Path,
 
         [Parameter(Mandatory=$False)]
         [alias('f')]
         [switch] $File,
-
-        [Parameter(Mandatory=$False)]
-        [alias('H')]
-        [string[]] $Path,
 
         [Parameter(Mandatory=$False)]
         [alias('v')]
