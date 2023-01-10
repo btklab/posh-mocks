@@ -2,9 +2,6 @@
 .SYNOPSIS
 tac -- print lines in reverse
 
-ref:
-https://man7.org/linux/man-pages/man1/tac.1.html
-
 関連: rev
 
 .DESCRIPTION
@@ -24,12 +21,10 @@ tac a.txt
 #>
 function tac {
     Param(
-        [parameter(Mandatory=$False)]
+        [parameter(Mandatory=$False, Position=0)]
         [string[]] $InputFiles,
 
-        [parameter(
-          Mandatory=$False,
-          ValueFromPipeline=$True)]
+        [parameter(Mandatory=$False, ValueFromPipeline=$True)]
         [string[]] $Text
     )
     if($InputFiles){

@@ -39,7 +39,7 @@ PS C:\>cat a.txt | yarr -n 2
 #>
 function yarr {
     Param(
-        [Parameter(Position=0,Mandatory=$False)]
+        [Parameter(Mandatory=$False,Position=0)]
         [Alias('n')]
         [int] $num = 1,
 
@@ -59,12 +59,12 @@ function yarr {
         [string]$line = $_
         # is line empty?
         if ($line -eq ''){
-            Write-Error "detect empty row: $line" -ErrorAction Stop
+            Write-Error "Detect empty line: $line" -ErrorAction Stop
         }
         # split key
         $keyValAry = $line -split "$Delimiter"
         if ($keyValAry.Count -le $num){
-            Write-Error "Detect key-only lines: $line"  -ErrorAction Stop
+            Write-Error "Detect key-only line: $line"  -ErrorAction Stop
         }
         # set key, val into hashtable
         [int] $sKey = 0

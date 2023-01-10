@@ -9,7 +9,8 @@ fillretu -- 全レコードの列数を最大列数にそろえる
 -SkipBlankで空行をスキップ
 
 yarrなどで生成した列数不定の入力の整形に向く。
-    cat data | yarr num=1 | yateyoko
+
+    cat data | yarr -num 1 | fillretu | tateyoko
 
 入力を2pass（2度読み込む）
 1passで全行の列数をカウント、
