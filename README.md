@@ -28,7 +28,7 @@ Inspired by:
 
 - [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
     - License: The MIT License (MIT): Copyright (c) 2016 Yasuhiro, Yamada
-    - Commands: `flat`, `addt`, `addb`, `addr`, `addl`, 
+    - Commands: `flat`, `addt`, `addb`, `addr`, `addl`, `mirror`, and more...
 - [mattn/sleepy - GitHub](https://github.com/mattn/sleepy)
     - License: The MIT License (MIT): Copyright (c) 2022 Yasuhiro Matsumoto
     - Commands: `sleepy`
@@ -526,7 +526,7 @@ oeuia
     - Command: `rev`
 - Inspired by [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
     - License: The MIT License (MIT): Copyright (c) 2016 Yasuhiro, Yamada
-    - Command: `rev2`
+    - Command: `mirror`
 
 Examples:
 
