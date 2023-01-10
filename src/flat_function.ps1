@@ -14,6 +14,20 @@ inspired by:
 https://qiita.com/greymd/items/3515869d9ed2a1a61a49
 Qiita:greymd氏, 2016/05/12, accessed 2017/11/13
 
+.PARAMETER Delimiter
+Field separator. -fs
+Default value is space " ".
+
+.PARAMETER InputDelimiter
+Input field separator. -ifs
+If fs is already set, this option is primarily used.
+
+.PARAMETER OutoputDelimiter
+Output field separator. -ofs
+If fs is already set, this option is primarily used.
+
+
+
 .EXAMPLE
 1..9 | flat
 1 2 3 4 5 6 7 8 9
@@ -26,7 +40,7 @@ Qiita:greymd氏, 2016/05/12, accessed 2017/11/13
 9
 
 .EXAMPLE
-echo "aiueo" | flat 3 -ifs "" -ofs ""
+echo "aiueo" | flat -fs ""
 aiu
 eo
 
@@ -38,8 +52,12 @@ function flat {
         [int] $Num,
 
         [Parameter(Mandatory=$False)]
+        [Alias('fs')]
+        [string] $Delimiter = ' ',
+
+        [Parameter(Mandatory=$False)]
         [Alias('ifs')]
-        [string] $InputDelimiter = ' ',
+        [string] $InputDelimiter,
 
         [Parameter(Mandatory=$False)]
         [Alias('ofs')]
@@ -55,16 +73,23 @@ function flat {
         } else {
             [boolean] $flatFlag = $False
         }
-        if ($InputDelimiter -eq ''){
+        # set input delimiter
+        if ($InputDelimiter){
+            [string] $iDelim = $InputDelimiter
+        } else {
+            [string] $iDelim = $Delimiter
+        }
+        # set output delimiter
+        if ($OutputDelimiter){
+            [string] $oDelim = $OutputDelimiter
+        } else {
+            [string] $oDelim = $Delimiter
+        }
+        # test is iDelim -eq ''?
+        if ($iDelim -eq ''){
             [boolean] $emptyDelimiterFlag = $True
         } else {
             [boolean] $emptyDelimiterFlag = $False
-        }
-        # set output delimiter
-        if (-not $OutputDelimiter){
-            [string] $oDelim = $InputDelimiter
-        } else {
-            [string] $oDelim = $OutputDelimiter
         }
         # init var
         [int] $cnt = 0
@@ -77,7 +102,7 @@ function flat {
             # flatten input
             $tempAryList.Add($line)
         } else {
-            [string[]] $splitLine = $line -split $InputDelimiter
+            [string[]] $splitLine = $line -split $iDelim
             if ($emptyDelimiterFlag){
                 # delete first and last element in $splitLine
                 $splitLine = $splitLine[1..($splitLine.Count - 2)]
