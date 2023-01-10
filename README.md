@@ -14,7 +14,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `man2`, `pwmake`, `retu`, `say`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `man2`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
 
 Inspired by:
 
@@ -513,6 +513,32 @@ Examples:
 ```powershell
 "aiueo" | tac
 oeuia
+```
+#### `rev2` - Reverse strings
+
+半角スペースで区切られた列をリバースする。
+列内の文字列はリバースしない。
+入力はパイプのみ受け付け。
+
+- Usage
+    - `man2 rev2`
+- Inspired by Unix/Linux Commands
+    - Command: `rev`
+- Inspired by [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
+    - License: The MIT License (MIT): Copyright (c) 2016 Yasuhiro, Yamada
+    - Command: `rev2`
+
+Examples:
+
+```powershell
+.EXAMPLE
+PS> Write-Output "01 02 03" | rev2
+03 02 01
+
+.EXAMPLE
+PS> Write-Output "01 02 03" | rev2 -e
+01 02 03
+03 02 01
 ```
 
 
