@@ -795,6 +795,30 @@ C 1 10
 4
 ```
 
+```powershell
+# calc average with sm2 and lcalc command
+
+## input
+"A 1 10","B 1 10","A 1 10","C 1 10"
+A 1 10
+B 1 10
+A 1 10
+C 1 10
+
+## sum up
+"A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3
+2 A 1 20
+1 B 1 10
+1 C 1 10
+
+## calc average
+"A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3 | lcalc '$0;$NF/$1'
+2 A 1 20 10
+1 B 1 10 10
+1 C 1 10 10
+```
+
+
 #### `lcalc` - Column-to-column calculator
 
 半角スペース区切りの標準入力における列同士の計算。
@@ -858,6 +882,29 @@ lcalc -d 'pi'
 # 短縮形で使用できる関数以外の関数も使用できる
 lcalc -d '[math]::Ceiling(1.1)'
 2
+```
+
+```powershell
+# calc average with sm2 and lcalc command
+
+## input
+"A 1 10","B 1 10","A 1 10","C 1 10"
+A 1 10
+B 1 10
+A 1 10
+C 1 10
+
+## sum up
+"A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3
+2 A 1 20
+1 B 1 10
+1 C 1 10
+
+## calc average
+"A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3 | lcalc '$0;$NF/$1'
+2 A 1 20 10
+1 B 1 10 10
+1 C 1 10 10
 ```
 
 #### `retu` - Output column number
