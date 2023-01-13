@@ -61,6 +61,7 @@ if ($IsWindows){
 
 ## writing
 . $pwshSrcDir/jl_function.ps1
+. $pwshSrcDir/kinsoku_function.ps1
 
 ## web
 . $pwshSrcDir/Get-OGP_function.ps1
