@@ -746,18 +746,53 @@ Examples detail:
 Examples detail:
 
 ```powershell
-# delete field 1 and 2
-"1 2 3","4 5 6","7 8 9" | delf 1 2
-3
-6
-9
+# input
+"A 1 10","B 1 10","A 1 10","C 1 10"
+A 1 10
+B 1 10
+A 1 10
+C 1 10
+
+# Sort by key column before connecting pipeline to sm2 command
+"A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 1 2 3 3
+A 1 20
+B 1 10
+C 1 10
+
+# Result if you forget to sort
+"A 1 10","B 1 10","A 1 10","C 1 10" | sm2 1 2 3 3
+A 1 10
+B 1 10
+A 1 10
+C 1 10
 ```
 
 ```powershell
-# delete field 1 and 2nd field from right
-"1 2 3 4 5","6 7 8 9 10" | delf 1 NF-1
-2 3 5
-7 8 10
+# input
+"A 1 10","B 1 10","A 1 10","C 1 10"
+A 1 10
+B 1 10
+A 1 10
+C 1 10
+
+# +count option
+"A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3
+2 A 1 20
+1 B 1 10
+1 C 1 10
+```
+
+```powershell
+# input
+"A 1 10","B 1 10","A 1 10","C 1 10"
+A 1 10
+B 1 10
+A 1 10
+C 1 10
+
+# calculator mode
+"A 1 10","B 1 10","A 1 10","C 1 10" | sm2 0 0 2 2
+4
 ```
 
 #### `lcalc` - Column-to-column calculator
