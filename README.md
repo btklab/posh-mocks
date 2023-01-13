@@ -947,7 +947,7 @@ eo
 
 ### writing
 
-#### `kinsoku` -- Japanese text wrapper
+#### `kinsoku` - Japanese text wrapper
 
 日本語文章の文字列折り返し。
 入力行1行ごとに禁則処理を施し、任意の幅で折り返す。
@@ -960,13 +960,22 @@ eo
 - Usage
     - `man2 kinsoku`
     - `kinsoku [-Width] <Int32> [-Expand] [-Yoon] [-Join <String>] [-OffTrim] [-SkipTop <String>] [-SkipTopJoinStr <String>]`
+- Options:
+    - `-Width <int>`で折返し文字幅を指定（全角2、半角1）
+    - `-Expand`でぶら下げ禁則処理ON
+    - `-Yoon`で「ゃゅょ」と促音「っ」禁則処理 ON（デフォルトでON）
+    - `-Join '\n'`で改行ポイントに'\n'を挿入。出力は改行なし
+    - `-AddLastChar <str>`で行末のみに任意文字列を追加
+    - `-OffTrim`で行頭行末の空白を削除しない
+        - 禁則処理後、行の前後の空白は削除される
 - Examples:
     - `"aa aa aa aaa aa aa, hoge fuga." | kinsoku 18`
     - `"あいうえおかきくけこ、さしすせそたち。" | kinsoku 20 -Expand`
 - Inspired by [禁則処理 - PyJaPDF](http://pyjapdf.linxs.org/home/kinsoku)
     - Command: `kinsoku.py`
 
-Examples:
+
+Examples detail:
 
 ```powershell
 # How to use kinsoku command
@@ -1022,6 +1031,9 @@ ID0001:\nあああああ、
 
 "ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n'
 ID0001:\nあああああ、\nいいいいい、\nううううう
+
+"ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n' -AddLastChar '\r\n'
+ID0001:\nあああああ、\nいいいいい、\nううううう\r\n
 ```
 
 
