@@ -9,6 +9,7 @@ kinsoku -- Japanese text wrapper
 「-Expand」でぶら下げ禁則処理ON
 「-Yoon」で「ゃゅょ」と促音「っ」禁則処理 ON（デフォルトでON）
 「-Join '\n'」で改行ポイントに'\n'を挿入。出力は改行なし
+「-AddLastChar <str>」で行末のみに任意文字列を追加
 
 禁則処理後、行の前後の空白は削除される。
 「-OffTrim」で行頭行末の空白を削除しない。
@@ -84,7 +85,7 @@ PS > "あいうえおかきくけこ、さしすせそたち。" | kinsoku 20 -E
 
 
 .EXAMPLE
-"あいうえおかきくけこ、さしすせそたち。" | kinsoku 22 -Expand -Join '\n'
+"あいうえおかきくけこ、さしすせそたち。" | kinsoku 20 -Expand -Join '\n'
 あいうえおかきくけこ、\nさしすせそたち。
 
 
@@ -109,6 +110,9 @@ ID0001:\nあああああ、
 
 PS > "ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n'
 ID0001:\nあああああ、\nいいいいい、\nううううう
+
+PS > "ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n' -AddLastChar '\r\n'
+ID0001:\nあああああ、\nいいいいい、\nううううう\r\n
 
 説明
 ===============
@@ -142,6 +146,9 @@ function kinsoku {
 
         [parameter(Mandatory=$False)]
         [string]$SkipTopJoinStr = '',
+
+        [parameter(Mandatory=$False)]
+        [string]$AddLastChar,
 
         [parameter(Mandatory=$False,
             ValueFromPipeline=$True)]
@@ -216,14 +223,18 @@ function kinsoku {
 
         # private function
         function isKinsokuFirstChars ([string] $c){
-            if ($kinsokuFirstChars.Contains($c)){
+            [string[]]$charAry = $c.ToCharArray()
+            [string] $firstChar = $charAry[0]
+            if ($kinsokuFirstChars.Contains($firstChar)){
                 return $True
             } else {
                 return $False
             }
         }
         function isKinsokuLastChars ([string] $c){
-            if ($kinsokuLastChars.Contains($c)){
+            [string[]]$charAry = $c.ToCharArray()
+            [string] $lastChar = $charAry[-1]
+            if ($kinsokuLastChars.Contains($lastChar)){
                 return $True
             } else {
                 return $False
@@ -295,6 +306,11 @@ function kinsoku {
             } else {
                 [string] $preLine = ''
             }
+            if ($AddLastChar){
+                [string] $postLine = $AddLastChar
+            } else {
+                [string] $postLine = ''
+            }
             # init var
             [string[]] $outputLines = @()
             [string]   $outputLine  = $preLine + $SkipTopJoinStr
@@ -307,11 +323,11 @@ function kinsoku {
             # create charset
             if ($lineWidth -eq 0){
                 # empty line
-                $outputLines += $outputLine + $line
+                $outputLines += $outputLine + $line + $postLine
                 return $outputLines
             }
             if ($lineWidth -le $Width) {
-                $outputLines += $outputLine + $line
+                $outputLines += $outputLine + $line + $postLine
                 return $outputLines
             }
             # main
@@ -324,6 +340,9 @@ function kinsoku {
             for ($pos=0; $pos -lt $lineChars.Count; $pos++){
                 [string] $c = $lineChars[$pos]
                 $lineWidthTotal += countChar $c
+                if ($pos -eq $lineChars.Count - 1){
+                    $c = $c + $postLine
+                }
                 if ($Width -lt 2){
                     $outputLines += $c
                 } elseif ($lineWidthTotal -eq $Width){
