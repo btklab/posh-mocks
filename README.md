@@ -14,14 +14,14 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `man2`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `man2`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
 
 Inspired by:
 
 - Article
     - [Parsing Text with PowerShell (3/3), Steve Lee, January 28th, 2019](https://devblogs.microsoft.com/powershell/parsing-text-with-powershell-3-3/).
 - Unix/Linux commands
-    - Commands: `grep`, `sed`, `head`, `tail`, `awk`, `make`, `uniq`, and more...
+    - Commands: `grep`, `sed`, `head`, `tail`, `awk`, `make`, `uniq`, `self`, `delf`, and more...
 - [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Commands: `man2`, `keta`, `tateyoko`, `gyo`, `fillretu`, `yarr`, `count`, and more...
@@ -635,6 +635,194 @@ Output:
 2 b
 3 c
 4 d
+```
+
+#### `self` - Select fields
+
+半角スペース区切りの標準入力から任意の列のみ抽出する。
+すべての列は'0'で、最終列は'NF'で指定することもできる
+
+1.2.3と指定すると、1列目の2文字目から3文字を切り出し
+切り出し文字数が対象文字数よりも多い場合は切り取れる範囲のみ切り出し。
+
+
+- Usage
+    - `man2 self`
+    - `self <num> <num>...`
+- Examples
+    - `"1 2 3","4 5 6","7 8 9" | self 1 3`
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `self`
+
+Examples detail:
+
+```powershell
+# select field 1 and 3
+"1 2 3","4 5 6","7 8 9" | self 1 3
+1 3
+4 6
+7 9
+```
+
+```powershell
+# select 2nd field and and
+# cut out 2 characters from the 2nd character
+"123 456 789","223 523 823" | self 2.2.2
+56
+23
+
+# select entire line and add 2nd field,
+# and cut out 2 characters from the 2nd character in the 2nd field
+"123 456 789","223 523 823" | self 0 2.2.2
+123 456 789 56
+223 523 823 23
+```
+
+```powershell
+# select the 1st field from the leftmost field and
+# select the 2nd field from the rightmost field(=NF)
+"1 2 3 4 5","6 7 8 9 10" | self 1 NF-1
+1 4
+6 9
+```
+
+
+#### `delf` - Delete fields
+
+半角スペース区切りの標準入力から指定列のみ削除する
+最終列を'NF'で指定することもできる
+
+
+- Usage
+    - `man2 delf`
+    - `delf <num> <num>...`
+- Examples
+    - `"1 2 3","4 5 6","7 8 9" | delf 1 3`
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `delf`
+
+Examples detail:
+
+```powershell
+# delete field 1 and 2
+"1 2 3","4 5 6","7 8 9" | delf 1 2
+3
+6
+9
+```
+
+```powershell
+# delete field 1 and 2nd field from right
+"1 2 3 4 5","6 7 8 9 10" | delf 1 NF-1
+2 3 5
+7 8 10
+```
+
+#### `sm2` - Sum up
+
+半角スペース区切りの標準入力から指定列の合計を算出（サムアップ）する。
+
+`sm2 <k1> <k2> <s1> <s2>`と指定することで、
+`<k1>`列から`<k2>`列をキーとして`<s1>`列から`<s2>`列までを合計する。
+
+`sm2 0 0 <s1> <s2>`と指定すると全行サムアップ。
+ファイルのキーの事前ソートが必要。
+大文字小文字を区別しない。
+
+
+- Usage
+    - `man2 sm2`
+    - `sm2 [+count] <k1> <k2> <s1> <s2>`
+- Options
+    - `+count`: 合計した行数を最左列に出力
+- Examples
+    - `"A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 1 2 3 3`
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `delf`
+
+Examples detail:
+
+```powershell
+# delete field 1 and 2
+"1 2 3","4 5 6","7 8 9" | delf 1 2
+3
+6
+9
+```
+
+```powershell
+# delete field 1 and 2nd field from right
+"1 2 3 4 5","6 7 8 9 10" | delf 1 NF-1
+2 3 5
+7 8 10
+```
+
+#### `lcalc` - Column-to-column calculator
+
+半角スペース区切りの標準入力における列同士の計算。
+
+
+- Usage
+    - `man2 lcalc`
+    - `lcalc [-d] 'expr; expr;...'`
+- Options
+    - `expr`はクオート内において`;`で区切ることで複数の計算式を指定可能
+    - `-d`: 電卓モード
+- Note
+    - 計算列の指定
+        - `$1,$2,...` : 列指定は`$`記号＋列数
+        - `$0`        : 全列指定
+        - `$NF`       : 最終列のみこのように書くことができる。ただし`$NF-1`とは書けない点に注意。
+    - 短縮形で使用できる関数
+        - 丸め       : `round($1,num)`
+        - 平方根     : `sqrt($1)`
+        - べき乗     : `pow($1,2)`
+        - 絶対値     : `abs($1)`
+        - 対数       : `log($1)`
+        - 対数base=2 : `log2($1)`
+        - 常用対数   : `log10($1)`
+        - パイ       : `PI`
+- Examples
+    - `"8.3 70","8.6 65","8.8 63" | lcalc '$1+1;$2/10'`
+    - `lcalc -d '1+1'`
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `lcalc`
+
+Examples detail:
+
+```powershell
+# input
+"8.3 70","8.6 65","8.8 63"
+8.3 70
+8.6 65
+8.8 63
+
+# lcalc
+"8.3 70","8.6 65","8.8 63" | lcalc '$1+1;$2/10'
+9.3 7
+9.6 6.5
+9.8 6.3
+```
+
+```powershell
+# calculator mode does not require
+# standard input (from pipline)
+lcalc -d '1+1'
+2
+
+lcalc -d '1+sqrt(4)'
+3
+
+lcalc -d 'pi'
+3.14159265358979
+
+# 短縮形で使用できる関数以外の関数も使用できる
+lcalc -d '[math]::Ceiling(1.1)'
+2
 ```
 
 #### `retu` - Output column number
