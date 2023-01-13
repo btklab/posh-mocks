@@ -54,6 +54,28 @@ lcalc -d 'pi'
 lcalc -d '[math]::Ceiling(1.1)'
 2
 
+.EXAMPLE
+# calc average with sm2 and lcalc command
+
+## input
+"A 1 10","B 1 10","A 1 10","C 1 10"
+A 1 10
+B 1 10
+A 1 10
+C 1 10
+
+## sum up
+"A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3
+2 A 1 20
+1 B 1 10
+1 C 1 10
+
+## calc average
+"A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3 | lcalc '$0;$NF/$1'
+2 A 1 20 10
+1 B 1 10 10
+1 C 1 10 10
+
 #>
 function lcalc {
 
