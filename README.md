@@ -14,7 +14,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `man2`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `man2`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `sleepy`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
 
 Inspired by:
 
@@ -24,8 +24,7 @@ Inspired by:
     - Commands: `grep`, `sed`, `head`, `tail`, `awk`, `make`, `uniq`, and more...
 - [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
-    - Commands: `man2`, `keta`, `tateyoko`, `gyo`, `fillretu`, `yarr`
-
+    - Commands: `man2`, `keta`, `tateyoko`, `gyo`, `fillretu`, `yarr`, `count`, and more...
 - [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
     - License: The MIT License (MIT): Copyright (c) 2016 Yasuhiro, Yamada
     - Commands: `flat`, `addt`, `addb`, `addr`, `addl`, `mirror`, and more...
@@ -35,6 +34,8 @@ Inspired by:
 - [tomnomnom/gron: Make JSON greppable! - GitHub](https://github.com/tomnomnom/gron)
     - License: The MIT License (MIT): Copyright (c) 2016 Tom Hudson
     - Commands: `gron`
+- [禁則処理 - PyJaPDF](http://pyjapdf.linxs.org/home/kinsoku)
+    - Commands: `kinsoku.py`
 
 コード群にまとまりはないが、事務職（非技術職）な筆者の毎日の仕事（おもに文字列処理）を、より素早くさばくための道具としてのコマンドセットを想定している（毎日使用する関数は10個に満たないが）。
 
@@ -946,6 +947,84 @@ eo
 
 ### writing
 
+#### `kinsoku` -- Japanese text wrapper
+
+日本語文章の文字列折り返し。
+入力行1行ごとに禁則処理を施し、任意の幅で折り返す。
+入力はパイプライン経由を期待。
+`-Expand`スイッチでぶら下げ処理。
+
+用途は、筆者の場合、[Graphviz](https://graphviz.org/)や[plantuml](https://plantuml.com/)などの外部ツールに日本語を流し込み、かつ、折り返したい場合によく用いる。日本語文章を任意の幅で改行したいが、句読点などが行頭にくると読みにくいため。
+
+
+- Usage
+    - `man2 kinsoku`
+    - `kinsoku [-Width] <Int32> [-Expand] [-Yoon] [-Join <String>] [-OffTrim] [-SkipTop <String>] [-SkipTopJoinStr <String>]`
+- Examples:
+    - `"aa aa aa aaa aa aa, hoge fuga." | kinsoku 18`
+    - `"あいうえおかきくけこ、さしすせそたち。" | kinsoku 20 -Expand`
+- Inspired by [禁則処理 - PyJaPDF](http://pyjapdf.linxs.org/home/kinsoku)
+    - Command: `kinsoku.py`
+
+Examples:
+
+```powershell
+# How to use kinsoku command
+"aa aa aa aaa aa aa, hoge fuga." | kinsoku 18
+"aa aa aa aaa aa aa, hoge fuga." | kinsoku -Width 18
+
+aa aa aa aaa aa
+aa, hoge fuga.
+
+# How to use -Expamd
+"aa aa aa aaa aa aa, hoge fuga." | kinsoku 18 -Expand
+aa aa aa aaa aa aa,
+hoge fuga.
+```
+
+```powershell
+# How to use -Expand and -Join <str> option
+"あいうえおかきくけこ、さしすせそたち。" | kinsoku 20
+あいうえおかきくけ
+こ、さしすせそたち。
+
+"あいうえおかきくけこ、さしすせそたち。" | kinsoku 22
+あいうえおかきくけこ、
+さしすせそたち。
+
+"あいうえおかきくけこ、さしすせそたち。" | kinsoku 20 -Expand
+あいうえおかきくけこ、
+さしすせそたち。
+
+"あいうえおかきくけこ、さしすせそたち。" | kinsoku 22 -Expand -Join '\n'
+あいうえおかきくけこ、\nさしすせそたち。
+```
+
+```powershell
+# How to use -SkipTop option
+"ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand
+ID0001:ああ
+あああ、い
+いいいい、
+ううううう
+
+# -SkipTop 'ID....:'で、ID文字列はノーカウント。
+# 先頭にIDがあり、それをカウントしたくない場合などに使う。
+"ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:'
+ID0001:あああああ、
+いいいいい、
+ううううう
+
+"ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n'
+ID0001:\nあああああ、
+いいいいい、
+ううううう
+
+"ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n'
+ID0001:\nあああああ、\nいいいいい、\nううううう
+```
+
+
 #### `Get-OGP(Alias:ml)` - Make Link with markdown format
 
 指定したURIからサイトプレビュー用Open Graph protocol（OGP）の要素（主にmetaタグの要素）を取得する。
@@ -980,7 +1059,7 @@ eo
     - たとえば`-Key .`を指定すると、すべての行（空行以外）が連結される
     - 文字列としての`.`や`-`を指定する場合は`\.`、`\-`のようにエスケープすること
 
-Input
+Input:
 
 ```powershell
 Write-Output "あいう、","えお”,"かきくけ","こさし"
@@ -990,7 +1069,7 @@ Write-Output "あいう、","えお”,"かきくけ","こさし"
 こさし
 ```
 
-Output
+Output:
 
 ```powershell
 Write-Output "あいう、","えお”,"かきくけ","こさし" | jl
