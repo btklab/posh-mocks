@@ -159,7 +159,7 @@ Linux環境で使う`grep`のような使用感で文字列を検索するが、
 デフォルトで大文字小文字を区別しないが、
 -CaseSensitiveスイッチで大文字小文字を区別する
 
-デフォルトでパターンを正規表現として解釈するが、
+指定したパターンはデフォルトで正規表現として解釈するが、
 [-s|-SimpleMatch]オプションでパターンを文字列として認識する
 
 - Usage
@@ -169,6 +169,8 @@ Linux環境で使う`grep`のような使用感で文字列を検索するが、
     - `cat file1,file2,... | grep '<regex>' [-o]`
 - Inspired by Unix/Linux Commands
     - Command: `grep`
+- Learn
+    - [about Splatting - PowerShell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_splatting) ([ja-jp](https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.core/about/about_splatting))
 
 検索速度は遅い。筆者の環境ではシンプルに`Select-String`を用いた方が速い。
 したがって、あまり引数をもちいないシンプルな用途であれば、
@@ -954,7 +956,8 @@ eo
 入力はパイプライン経由を期待。
 `-Expand`スイッチでぶら下げ処理。
 
-用途は、筆者の場合、[Graphviz](https://graphviz.org/)や[plantuml](https://plantuml.com/)などの外部ツールに日本語を流し込み、かつ、折り返したい場合によく用いる。日本語文章を任意の幅で改行したいが、句読点などが行頭にくると読みにくいため。
+用途は、筆者の場合、[Graphviz](https://graphviz.org/)や[plantuml](https://plantuml.com/)などの外部ツールに日本語を流し込み、かつ、折り返したい場合によく用いる。
+単純に文字数をカウントして折り返すと、日本語の場合は句読点などが行頭にきて読みにくいことがあるため。
 
 
 - Usage
@@ -963,7 +966,7 @@ eo
 - Options:
     - `-Width <int>`で折返し文字幅を指定（全角2、半角1）
     - `-Expand`でぶら下げ禁則処理ON
-    - `-Yoon`で「ゃゅょ」と促音「っ」禁則処理 ON（デフォルトでON）
+    - `-Yoon`で「ゃゅょ」と促音「っ」禁則処理ON（デフォルトでON）
     - `-Join '\n'`で改行ポイントに'\n'を挿入。出力は改行なし
     - `-AddLastChar <str>`で行末のみに任意文字列を追加
     - `-OffTrim`で行頭行末の空白を削除しない
@@ -973,7 +976,6 @@ eo
     - `"あいうえおかきくけこ、さしすせそたち。" | kinsoku 20 -Expand`
 - Inspired by [禁則処理 - PyJaPDF](http://pyjapdf.linxs.org/home/kinsoku)
     - Command: `kinsoku.py`
-
 
 Examples detail:
 
