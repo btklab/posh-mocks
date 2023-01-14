@@ -14,7 +14,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `man2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `man2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
 
 Inspired by:
 
@@ -36,6 +36,12 @@ Inspired by:
     - Commands: `gron`
 - [禁則処理 - PyJaPDF](http://pyjapdf.linxs.org/home/kinsoku)
     - Commands: `kinsoku.py`
+- [miyamiya/mypss: My PowerShell scripts - GitHub](https://github.com/miyamiya/mypss)
+    - Commands: `Get-Draw.ps1`
+- [ImageMagick](https://imagemagick.org/index.php)
+    - Commands: `convert`, `magick convert`(on windows)
+
+
 
 コード群にまとまりはないが、事務職（非技術職）な筆者の毎日の仕事（おもに文字列処理）を、より素早くさばくための道具としてのコマンドセットを想定している（毎日使用する関数は10個に満たないが）。
 
@@ -1217,7 +1223,7 @@ eo
     - Command: `gyo`
 
 
-### Graphs and charts
+### Plot chart and graph
 
 #### `dot2gviz` - Wrapper for Graphviz:dot command
 
@@ -1288,6 +1294,531 @@ eo
         - <https://www.java.com/en/download/>
 
 
+#### `md2mindmap` - Generate graphviz script to draw a mind map from list data in markdown format
+
+markdown形式のリストデータからマインドマップを描画する`graphviz`スクリプトを生成する。
+入力データは「半角スペース4つ」に「ハイフン」で階層構造を期待する
+（`-Space 2`とすると、ハイフンの前の半角スペースは2つとして認識する）。
+
+- 文末にアンダースコア「_」を入れると、枠なし文字列になる
+- 一行目にmarkdownの第一見出し形式でタイトルを入力すると（`# title`）キャプションとして認識する。
+
+箇条書きをマインドマップに変換すると、とくにグループ分けが視覚的に理解しやすくなる（気がする）。
+上の`dot2gviz`と組み合わせて使うと、形式変換から作図までワンライナーで処理できるので便利。
+たとえば、`cat a.md | md2mindmap > a.dot; dot2gviz a.dot | ii`とする。
+
+- Usage
+    - `man2 md2mindmap`
+    - `md2mindmap [[-OutputFile] <String>] [[-Space] <Int32>] [[-GraphType] <String>] [-TopToBottom] [-ReverseEdge] [[-DotFile] <String>] [[-NodeShape] <String>] [[-NodeFillColor] <String>] [[-FirstNodeShape] <String>] [[-FirstNodeFillColor] <String>] [-OffRounded] [[-Title] <String>] [[-TitleLoc] <String>] [[-TitleJust] <String>] [[-FontName] <String>] [[-FontNameWindowsDefault] <String>] [[-FontSize]<Double>] [[-FontColor] <String>] [[-FoldLabel] <Int32>] [[-Kinsoku] <Int32>] [[-LayoutEngine] <String>] [[-Delimiter] <String>] [[-LegendFontSize] <Int32>] [-SolarizedDark] [-SolarizedLight] [[-PenWidth] <Int32>] [[-SkipTop] <String>]`
+- Examples
+    - `cat a.md | md2mindmap -o a.dot`
+    - `cat a.md | md2mindmap > a.dot`
+    - `cat a.md | md2mindmap | Out-File a.dot -Encoding utf8`
+    - `dot2gviz`との連携
+        - `cat a.md | md2mindmap > a.dot; dot2gviz a.dot | ii`
+- Options
+    - `-LayoutEngine (circo|dot|fdp|neato|osage|sfdp|twopi|patchwork)`でレイアウトエンジンを指定可能
+    - `-FontName <fontname>`でフォントを指定可能
+    - `-SolarizedDark`, `-SolarizedLight`スイッチでカラースキーマ「[Solarized](https://github.com/altercation/solarized)」をセット
+    - `-NodeShape <String>`でノードの形状を変更可能
+        `-FirstNodeShape <String>`でルート（一番最初）のノードの形状のみ変更
+    - `-Kinsoku <int>`で日本語文書に禁則処理を適用して任意の文字幅で折り返し
+        - 全角文字幅は2、半角文字幅は1として折り返し文字幅を指定する
+    - `-TopToBottom`スイッチで、レイアウトを左→右ではなく上→下に変更する
+- Dependencies
+    - `dot2gviz` from posh-mocks (this repository)
+    - `kinsoku` from posh-mocks (this repository) if `-Kinsoku <int>` option used
+- Credits
+    - Solarized color palette from:
+        - <https://github.com/altercation/solarized>
+        - <http://ethanschoonover.com/solarized>
+        - License: MIT License Copyright (c) 2011 Ethan Schoonover
+
+Examples:
+
+```powershell
+# input data
+# A list in markdown format,
+# 4 single-byte spaces plus a hyphen
+
+cat a.md
+# What flavor would you like?
+
+- Flavors
+    - Chocolate
+        - Ice cream_
+        - Cake_
+    - Strawberry
+        - Ice cream_
+        - Cake_
+    - Vanilla
+        - Ice cream_
+        - Cake_
+
+legend right
+this is legend
+end legend
+```
+
+```powershell
+# output
+# Note that fontname="meiryo" is specified by default
+
+cat a.md | md2mindmap
+graph mindmap {
+ // graph settings
+ graph [
+  charset = "UTF-8";
+  fontname = "Meiryo";
+  label = "What flavor would you like?\n\n";
+  labelloc = "t";
+  labeljust = "c";
+  layout = "dot";
+  rankdir = "LR";
+  newrank = true;
+  overlap = "false";
+ ];
+ // node settings
+ node [
+  fontname = "Meiryo";
+  shape = "plaintext";
+  style = "rounded";
+ ];
+ // edge settings
+ edge [
+  fontname = "Meiryo";
+ ];
+
+ subgraph cluster_legend {
+
+ // set node
+"ID0001" [label="Flavors", shape="box" ];
+"ID0002" [label="Chocolate", shape="box" ];
+"ID0003" [label="Ice cream", shape="plaintext" ];
+"ID0004" [label="Cake", shape="plaintext" ];
+"ID0005" [label="Strawberry", shape="box" ];
+"ID0006" [label="Ice cream", shape="plaintext" ];
+"ID0007" [label="Cake", shape="plaintext" ];
+"ID0008" [label="Vanilla", shape="box" ];
+"ID0009" [label="Ice cream", shape="plaintext" ];
+"ID0010" [label="Cake", shape="plaintext" ];
+
+ // set edge
+"ID0001" -- "ID0002" [style="solid"];
+"ID0002" -- "ID0003" [style="solid"];
+"ID0002" -- "ID0004" [style="solid"];
+"ID0001" -- "ID0005" [style="solid"];
+"ID0005" -- "ID0006" [style="solid"];
+"ID0005" -- "ID0007" [style="solid"];
+"ID0001" -- "ID0008" [style="solid"];
+"ID0008" -- "ID0009" [style="solid"];
+"ID0008" -- "ID0010" [style="solid"];
+
+ // set option
+
+ graph [
+   labelloc="b";
+   labeljust="r";
+   color="white";
+   label=<
+   <TABLE
+       BORDER="1"
+       CELLBORDER="0"
+       COLOR="gray15"
+       BGCOLOR="grey95"
+   >
+   <TR><TD ALIGN="LEFT"><FONT COLOR="gray15" POINT-SIZE="11">this is legend</FONT></TD></TR>
+   </TABLE>>;
+ ];
+ };
+}
+```
+
+```powershell
+# output png using "dot2gviz"
+cat a.md | md2mindmap > a.dot; dot2gviz a.dot | ii
+# or
+cat a.md | md2mindmap > a.dot; dot2gviz a.dot -o png | ii
+```
+
+![](img/md2mindmap_sinple.png)
+
+```powershell
+# change direction
+cat a.md | md2mindmap -TopToBottom  > a.dot; dot2gviz a.dot | ii
+```
+
+![](img/md2mindmap_toptobottom.png)
+
+```powershell
+# change color scheme
+cat a.md | md2mindmap -SolarizedDark > a.dot; dot2gviz a.dot | ii
+```
+
+![](img/md2mindmap_SolarizedDark.png)
+
+```powershell
+# change layout engine
+cat a.md | md2mindmap -SolarizedDarkLayoutEngine sfdp > a.dot; dot2gviz a.dot | ii
+```
+
+![](img/md2mindmap_LayoutEngine_sfdp.png)
+
+```powershell
+# change FirstNodeShape and layout engine
+cat a.md | md2mindmap -FirstNodeShape cylinder -SolarizedDarkLayoutEngine sfdp > a.dot; dot2gviz a.dot | ii
+```
+
+![](img/md2mindmap_FirstNodeShape_cylinder.png)
+
+```powershell
+# change FirstNodeShapeFillColor
+cat a.md | md2mindmap -FirstNodeFillColor orange > a.dot; dot2gviz a.dot | ii
+```
+
+![](img/md2mindmap_FirstNodeShapeFillColor.png)
+
+`-Kinsoku <int>`オプションで、日本語の文章を禁則処理にしたがい任意幅で折り返し。全角文字列は幅2、半角文字列は幅1として折り返したい幅を指定する。
+
+```powershell
+# input
+cat a.md
+# kinsoku test
+
+- 日本語文字列の、禁則処理テスト
+    - 最初の見出し、です
+    - 二つ目の見出し、です
+    - 三つ目の見出し、です
+```
+
+```powershell
+# apply kinsoku
+# -Kinsoku 14で、全角文字として7文字で折り返し。
+# ただし行頭行末に禁則文字が来ないように、
+# 折り返し幅が自動調整される
+cat a.md | md2mindmap -Kinsoku 14 > .\img\a.dot; dot2gviz .\img\a.dot -o png | ii
+```
+
+![](img/md2mindmap_Kinsoku.png)
+
+
+
+#### `md2mindmap2` - Generate plantuml script to draw a mind map from list data in markdown format
+
+markdown形式のリストデータからマインドマップを描画する`plantuml`スクリプトを生成する。
+入力データは「半角スペース4つ」に「ハイフン」で階層構造を期待する
+（`-Space 2`とすると、ハイフンの前の半角スペースは2つとして認識する）。
+
+- 文末にアンダースコア`_`を入れると、枠なし文字列になる
+- 一行目にmarkdownの第一見出し形式でタイトルを入力する（`# title`）と、図全体のキャプションとして認識する。
+
+箇条書きをマインドマップに変換すると、とくにグループ分けが視覚的に理解しやすくなる（気がする）。
+上の`pu2java`と組み合わせて使うと、形式変換から作図までワンライナーで処理できるので便利。
+たとえば、`cat a.md | md2mindmap2 > a.pu; pu2java a.pu | ii`とする。
+
+- Usage
+    - `man2 md2mindmap2`
+    - `md2mindmap2 [[-OutputFile] <String>] [[-Space] <Int32>] [[-Title] <String>] [[-Scale] <Double>] [-Monochrome] [-WBS] [-HandWritten] [[-FontName] <String>] [[-FontNameWindowsDefault] <String>] [[-Theme] <String>] [[-FoldLabel] <Int32>] [[-FoldLabelOnlyPlainText] <Int32>] [[-Kinsoku] <Int32>] [[-KinsokuOnlyPlainText] <Int32>] [[-LegendRight] <String[]>] [[-LegendLeft] <String[]>] [-RightToLeft]`
+- Examples
+    - `cat a.md | md2mindmap2 -o a.pu`
+    - `cat a.md | md2mindmap2 > a.pu`
+    - `cat a.md | md2mindmap2 | Out-File a.pu -Encoding utf8`
+    - `pu2java`との連携
+        - `cat a.md | md2mindmap2 > a.pu ; pu2java a.pu | ii`
+- Options
+    - `-Theme <theme>`でカラースキーマを指定可能
+    - `-FontName <fontname>`でフォントを指定可能
+    - `-Kinsoku <int>`で日本語文書に禁則処理を適用して任意の文字幅で折り返し
+        - 全角文字幅は2、半角文字幅は1として折り返し文字幅を指定する
+- Dependencies
+    - `pu2java` from posh-mocks (this repository)
+    - `kinsoku` from posh-mocks (this repository) if `-Kinsoku <int>` option used
+- Credit
+    - [mindmap-diagram - plantuml](https://plantuml.com/en/mindmap-diagram)
+
+Examples:
+
+```powershell
+# input data
+# A list in markdown format,
+# 4 single-byte spaces plus a hyphen
+
+cat a.md
+# What flavor would you like?
+
+- Flavors
+    - Chocolate
+        - Ice cream_
+        - Cake_
+    - Strawberry
+        - Ice cream_
+        - Cake_
+    - Vanilla
+        - Ice cream_
+        - Cake_
+
+legend right
+this is legend
+end legend
+```
+
+```powershell
+# output
+# Note that fontname="meiryo" is specified by default
+
+cat a.md | md2mindmap2
+@startmindmap
+
+title What flavor would you like?
+skinparam DefaultFontName "Meiryo"
+
+* Flavors
+** Chocolate
+***_ Ice cream
+***_ Cake
+** Strawberry
+***_ Ice cream
+***_ Cake
+** Vanilla
+***_ Ice cream
+***_ Cake
+
+legend right
+this is legend
+end legend
+
+@endmindmap
+```
+
+```powershell
+# output png using "pu2java"
+cat a.md | md2mindmap2 > a.pu; pu2java a.pu | ii
+# or
+cat a.md | md2mindmap2 > a.pu; pu2java a.pu -o png | ii
+```
+
+![](img/md2mindmap2_sinple.png)
+
+
+```powershell
+# change color scheme
+cat a.md | md2mindmap2 -Theme blueprint > a.pu; pu2java a.pu | ii
+```
+
+![](img/md2mindmap2_Theme_blueprint.png)
+
+
+`-Kinsoku <int>`オプションで、日本語の文章を禁則処理にしたがい任意幅で折り返し。全角文字列は幅2、半角文字列は幅1として折り返したい幅を指定する。
+
+```powershell
+# input
+cat a.md
+# kinsoku test
+
+- 日本語文字列の、禁則処理テスト
+    - 最初の見出し、です
+    - 二つ目の見出し、です
+    - 三つ目の見出し、です
+```
+
+```powershell
+# apply kinsoku
+# -Kinsoku 14で、全角文字として7文字で折り返し。
+# ただし行頭行末に禁則文字が来ないように、
+# 折り返し幅が自動調整される
+cat a.md | md2mindmap2 -Scale 1.3 -Kinsoku 14 > a.pu; pu2java a.pu | ii
+```
+
+![](img/md2mindmap2_Kinsoku.png)
+
+`-WBS`スイッチでWork Breakdown Structure形式の図を出力。`@startuml`, `@enduml`の代わりに`@startwbs`, `@endwbs`を先頭と末尾に追加
+
+```powershell
+# apply WBS (Work Breakdown Structure)
+# input
+# WBSの例
++ <&flag>社長
+    + 業務本部
+        + 総務部
+            + SO
+            + SO
+            + SO
+        + 営業部
+            + EI
+        + 物流
+            + LOGI
+    + 生産本部
+        + 1st
+            + A
+            + P
+            + S
+        + 2nd
+            + T
+            + E
+    + 研究所
+        - ISO
+        + LAB
+            + LAB
+            + QC
+
+# Output
+cat wbs.md | md2mindmap2 -WBS | Tee-Object -FilePath a.pu ; pu2java a.pu -OutputFileType svg | ii
+@startwbs
+
+'title none
+skinparam DefaultFontName "Meiryo"
+
++ <&flag>社長
+++ 業務本部
++++ 総務部
+++++ SO
+++++ SO
+++++ SO
++++ 営業部
+++++ EI
++++ 物流
+++++ LOGI
+++ 生産本部
++++ 1st
+++++ A
+++++ P
+++++ S
++++ 2nd
+++++ T
+++++ E
+++ 研究所
+--- ISO
++++ LAB
+++++ LAB
+++++ QC
+
+@endwbs
+```
+
+![](img/md2mindmap2_WBS.png)
+
+
+### Image processing
+
+#### `ConvImage` - Image rotation, flipping, scaling, convert format
+
+画像の回転、リサイズ、拡大縮小、形式変換。Assembly:`System.Drawing`を用いる。
+画像の形式変換は入出力に指定するファイルの拡張子から自動認識する
+
+ 「リサイズ」と「回転・反転」は同時にはできない点に注意する。
+ 出力ファイルと同名ファイルがあると強制上書きされる点にも注意する。
+
+
+- Usage
+    - `man2 pu2java`
+    - `ConvImage [-inputFile] <String[]> [-outputFile] <String[]> [-resize <String>] [-rotate <String>] [-flip] [-flop] [-Exif] [-ExifOrientationOnly] [-notOverWrite]`
+- Examples
+    - `ConvImage -inputFile <file> -outputFile <file> [-notOverWrite]`
+    - `ConvImage -inputFile <file> -outputFile <file> -resize <num>x<num> [-notOverWrite]`
+    - `ConvImage -inputFile <file> -outputFile <file> -rotate <num> [-flip] [-flop] ] [-notOverWrite]`
+- Dependencies
+    - PowerShell
+        - Assembly: `System.Drawing`
+- Inspired by:
+    - Get-Draw.ps1 - miyamiya/mypss: My PowerShell scripts - GitHub
+        - <https://github.com/miyamiya/mypss>
+        - License: The MIT License (MIT): Copyright (c) 2013 miyamiya
+   - ImageMagick (command)
+       - <https://imagemagick.org/index.php>
+
+Examples:
+
+```powershell
+ConvImage before.jpg after.png
+
+説明
+========================
+最も簡単な例。
+before.jpg を after.png に形式変換する。
+```
+
+```powershell
+ConvImage before.jpg after.png -resize 500x500
+
+説明
+========================
+最も簡単な例その2。
+before.jpg を after.png に形式変換し、かつ、
+サイズが 500px×500pxに収まるように
+アスペクト比（縦横比）を保ちリサイズする
+```
+
+```powershell
+ConvImage -inputFile before.jpg -outputFile after.png -resize 100x100
+
+説明
+========================
+オプションを正確に記述した例。上記「簡単な例その2」と同じ結果を得る。
+before.jpg を after.png に形式変換し、かつ、
+サイズが 100px×100pxに収まるように、
+アスペクト比（縦横比）を保ちリサイズする
+```
+
+```powershell
+ConvImage -inputFile before.jpg -outputFile after.png -resize 100x100 -notOverWrite
+
+説明
+========================
+before.jpg を after.png に形式変換し、かつ、
+サイズが 100px×100pxに収まるように、
+アスペクト比（縦横比）を保ちリサイズする
+-notOverWriteオプションにより、
+もし after.png が存在していても上書きしない.
+```
+
+```powershell
+ConvImage before.jpg after.png -resize 10%
+
+説明
+========================
+before.jpg を after.png に形式変換し、かつ、
+縦横のピクセルが 10%（1/10）に縮小される
+アスペクト比（縦横比）は保たれる
+```
+
+```powershell
+ConvImage before.jpg after.png -resize 100
+
+説明
+========================
+before.jpg を after.png に形式変換し、かつ、
+縦（高さ）のピクセルが 100pxにリサイズされる
+アスペクト比（縦横比）は保たれる
+```
+
+```powershell
+ConvImage before.jpg after.png -rotate 90
+
+説明
+========================
+before.jpg を after.png に形式変換し、かつ、
+90度回転される
+```
+
+```powershell
+ConvImage before.jpg after.png -rotate 90 -flip
+
+説明
+========================
+before.jpg を after.png に形式変換し、かつ、
+90度回転され、かつ、
+上下反転される
+```
+
+```powershell
+ConvImage before.jpg after.png -rotate 90 -flop
+
+説明
+========================
+before.jpg を after.png に形式変換し、かつ、
+90度回転され、かつ、
+左右反転される
+```
 
 ### Writing
 

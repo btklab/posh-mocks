@@ -61,6 +61,19 @@ if ($IsWindows){
 . $pwshSrcDir/addr_function.ps1
 . $pwshSrcDir/addt_function.ps1
 
+
+## graph and chart
+. $pwshSrcDir/dot2gviz_function.ps1
+. $pwshSrcDir/pu2java_function.ps1
+
+. $pwshSrcDir/md2mindmap_function.ps1
+. $pwshSrcDir/md2mindmap2_function.ps1
+
+
+## image processing
+. $pwshSrcDir/ConvImage_function.ps1
+
+
 ## writing
 . $pwshSrcDir/jl_function.ps1
 . $pwshSrcDir/kinsoku_function.ps1
@@ -87,10 +100,6 @@ Set-Alias -name ml -value Get-OGP
 
 
 ## office
-
-## graph and chart
-. $pwshSrcDir/dot2gviz_function.ps1
-. $pwshSrcDir/pu2java_function.ps1
 
 ## sys admin
 
