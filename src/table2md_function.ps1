@@ -145,8 +145,8 @@ function table2md {
     }
     $readListHeader = New-Object 'System.Collections.Generic.List[System.String]'
     $readList       = New-Object 'System.Collections.Generic.List[System.String]'
-    [boolean] $headerFlag = $False
-    [boolean] $tableFlag  = $False
+    [bool] $headerFlag = $False
+    [bool] $tableFlag  = $False
     if ($input.Count -ne 0){
       [string[]] $inAry = $input
     } else {

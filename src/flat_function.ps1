@@ -69,9 +69,9 @@ function flat {
     begin {
         # parse option
         if (-not $Num){
-            [boolean] $flatFlag = $True
+            [bool] $flatFlag = $True
         } else {
-            [boolean] $flatFlag = $False
+            [bool] $flatFlag = $False
         }
         # set input delimiter
         if ($InputDelimiter){
@@ -87,9 +87,9 @@ function flat {
         }
         # test is iDelim -eq ''?
         if ($iDelim -eq ''){
-            [boolean] $emptyDelimiterFlag = $True
+            [bool] $emptyDelimiterFlag = $True
         } else {
-            [boolean] $emptyDelimiterFlag = $False
+            [bool] $emptyDelimiterFlag = $False
         }
         # init var
         [int] $cnt = 0

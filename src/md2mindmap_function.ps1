@@ -512,9 +512,9 @@ function md2mindmap {
         [string] $colBlack        = '#000000'
         ## Set color scheme
         if ($SolarizedDark -or $SolarizedLight){
-            [boolean] $schemeFlag = $True
+            [bool] $schemeFlag = $True
         } else {
-            [boolean] $schemeFlag = $False
+            [bool] $schemeFlag = $False
         }
         [int] $numberOfColors = 10
         if ($SolarizedDark){
@@ -551,7 +551,7 @@ function md2mindmap {
             $itemLevel = [math]::Floor($whiteSpaceLength / $Space)
             return $itemLevel
         }
-        function setNodeStr ([string]$nodeId, [string]$nodeLabel, [boolean]$plainTextFlag, [int]$scColNum){
+        function setNodeStr ([string]$nodeId, [string]$nodeLabel, [bool]$plainTextFlag, [int]$scColNum){
             ## 色指定がある場合
             [string]$colorName = ''
             if ($nodeLabel -match '^\[#'){

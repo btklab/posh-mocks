@@ -73,11 +73,11 @@ function count {
         }elseif ($args[0] -eq "-c"){
             if($args.Count -lt 3){
                 Write-Error "Insufficient arguments." -ErrorAction Stop }
-            [boolean] $oFlag = $True
+            [bool] $oFlag = $True
             [int] $k1 = $args[1] - 1
             [int] $k2 = $args[2] - 1
         }else{
-            [boolean] $oFlag = $False
+            [bool] $oFlag = $False
             [int] $k1 = $args[0] - 1
             [int] $k2 = $args[1] - 1
         }

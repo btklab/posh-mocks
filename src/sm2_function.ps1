@@ -85,8 +85,8 @@ function sm2 {
 
     begin
     {
-        [boolean] $countFlag   = $False
-        [boolean] $dentakuFlag = $False
+        [bool] $countFlag   = $False
+        [bool] $dentakuFlag = $False
 
         # キーの格納
         if($args[0] -like '+count'){
@@ -121,7 +121,7 @@ function sm2 {
         # 値格納用配列の作成
         $sumHash = @{}
         $lastSumHash = @{}
-        [boolean] $skipSubKeyFlag = $False
+        [bool] $skipSubKeyFlag = $False
 
         # その他変数の初期化
         [int] $rowCounter = 0

@@ -347,10 +347,10 @@ function toml2psobject {
         )
         #return $vStr
         $v = $vStr.Trim()
-        [boolean] $sQuoteFlag  = $False
-        [boolean] $dQuoteFlag  = $False
-        [boolean] $bracketFlag = $False
-        [boolean] $braceFlag   = $False
+        [bool] $sQuoteFlag  = $False
+        [bool] $dQuoteFlag  = $False
+        [bool] $bracketFlag = $False
+        [bool] $braceFlag   = $False
         [int] $sQuoteCnt  = 0
         [int] $dQuoteCnt  = 0
         [int] $bracketCnt = 0
@@ -492,13 +492,13 @@ function toml2psobject {
             [string[]] $Text
         )
         begin {
-            [boolean] $insideObjectFlag = $False
-            [boolean] $insideHereStringFlag = $False
+            [bool] $insideObjectFlag = $False
+            [bool] $insideHereStringFlag = $False
             [string[]] $befLineAry = @()
             $lineList = New-Object 'System.Collections.Generic.List[System.String]'
             [string] $befLineStr = ''
             [int] $rowCnt = 0
-            [boolean] $skipRowFlag = $False
+            [bool] $skipRowFlag = $False
         }
         process {
             # 1st pass

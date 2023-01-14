@@ -326,7 +326,7 @@ function Get-OGP {
         [string] $canonicalUri = ""
         [string] $innerImage   = ""
         [string] $innerDesc    = ""
-        [boolean] $imageFlag   = $False
+        [bool] $imageFlag   = $False
         $metaAry | ForEach-Object {
             [string] $metaTag = [string] $_
             [string] $prop = $metaTag -replace '^<meta [^<]*property="(?<property>[^"]*)".*$', '$1'
