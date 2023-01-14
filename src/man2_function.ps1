@@ -156,12 +156,13 @@ function man2 {
         # set linewidth max value
         [int] $lineWidthMax = 2147483647
 
-        [int] $bufCol = $Column
-        if ($bufCol -lt 1){
-            $bufCol = 1
+        if ($Column -lt 1){
+            [int] $bufCol = 1
+        } else {
+            [int] $bufCol = $Column
         }
         [int] $dispRow = [math]::Ceiling( ($fileList.Count) / $bufCol)
-        while (($lineWidthMax -gt $bufWidth) -or ($bufCol -gt 1)){
+        while (($lineWidthMax -gt $bufWidth) -or ($bufCol -eq 1)){
             [int] $dispRow = [math]::Ceiling( ($fileList.Count) / $bufCol)
             $lineWidthMax = $fileList `
                 | flat $dispRow `
