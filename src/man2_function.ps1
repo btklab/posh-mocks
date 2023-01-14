@@ -1,36 +1,43 @@
 <#
 .SYNOPSIS
 
-拡張コマンドのマニュアルを表示する
+man2 - Display function list and manual
 
- -lオプション: コマンド名を一列に出力 
+拡張コマンドのリスト・マニュアルを表示する
+
+Usage:
+ man2
+ man2 sm2 [-Paging]
+ 
+
+ -lオプション：コマンド名を一列に出力 
+ -pオプション：Out-Host -Paging
 
 依存: flat, tateyoko, keta
 
-関連: -
-
-
-.DESCRIPTION
--
-
 .EXAMPLE
-PS C:\>man2
+man2
+
 拡張コマンドをリストする
 
 .EXAMPLE
-PS C:\>man2 getlast
+man2 getlast
+
 getlast コマンドのヘルプを表示する
 
 .EXAMPLE
-PS C:\>man2 -c 3
+man2 -c 3
+
 列数を指定
 
 .EXAMPLE
-PS C:\>man2 -Exclude 'Get'
+man2 -Exclude 'Get'
+
 「Get」を含むコマンドを除外
 
 .EXAMPLE
-PS C:\>man2 -Include 'Get'
+man2 -Include 'Get'
+
 「Get」を含むコマンドのみ出力
 
 #>
@@ -43,11 +50,15 @@ function man2 {
 
         [Parameter(Mandatory=$False)]
         [Alias('c')]
-        [int]$Col = 3,
+        [int]$Column = 20,
 
         [Parameter(Mandatory=$False)]
         [Alias('e')]
         [string]$Exclude,
+
+        [Parameter(Mandatory=$False)]
+        [Alias('p')]
+        [switch]$Paging,
 
         [Parameter(Mandatory=$False)]
         [Alias('i')]
@@ -60,6 +71,34 @@ function man2 {
         [Alias('l')]
         [switch]$Line
     )
+    # private functions
+    function Get-UIBufferSize {
+        return (Get-Host).UI.RawUI.BufferSize
+    }
+    function Get-LineWidth {
+        param (
+            [Parameter(Mandatory=$False)]
+            [switch] $Max = $True,
+            [parameter(Mandatory=$False, ValueFromPipeline=$True)]
+            [string[]] $InputText
+        )
+        begin {
+            [int] $lineWidth = 0
+            $enc = [System.Text.Encoding]::GetEncoding("Shift_JIS")
+        }
+        process {
+            [string] $line = [string] $_
+            [int] $tmpWidth = $enc.GetByteCount($line)
+            if ($Max){
+                if ($tmpWidth -gt $lineWidth){
+                    $lineWidth = $tmpWidth
+                }
+            }
+        }
+        end {
+            return $lineWidth
+        }        
+    }
     # get script dir
     $isPwshDir = $False
     if (($FunctionName) -and (Test-Path -Path $FunctionName -PathType Container)){
@@ -76,7 +115,7 @@ function man2 {
     # get function files
     if ($isPwshDir) {
         # pwsh dir
-        $file_list = Get-ChildItem -Path $targetDir -File `
+        $fileList = Get-ChildItem -Path $targetDir -File `
             | Where-Object { $_.Name -match '_function\.ps1$' -and $_.Name -notmatch '^sample' } `
             | Select-Object -ExpandProperty Name `
             | ForEach-Object { $_.Replace('_function.ps1', '') }`
@@ -93,7 +132,7 @@ function man2 {
             }
     } else {
         # not pwsh dir
-        $file_list = Get-ChildItem -Path $targetDir -File  `
+        $fileList = Get-ChildItem -Path $targetDir -File  `
             | Select-Object -ExpandProperty Name `
             | ForEach-Object {
                 if (($Exclude) -and ($Include)) {
@@ -107,27 +146,37 @@ function man2 {
                 }
             }
     }
-    #Write-Output $targetDir
-    # get file num
-    $file_count = $file_list `
-        | Measure-Object `
-        | Select-Object -ExpandProperty Count
-    # get display row num
-    #$disp_row = [math]::Floor([int]$file_count / $Col)
-    $disp_row = [math]::Ceiling([int]$file_count / $Col)
     # output
-    if (($FunctionName) -and (Test-Path $FunctionName -PathType Container)){
-        if($isWindows){
-            $file_list `
-                | flat $disp_row `
-                | tateyoko `
-                | keta -l
-        } else {
-            $file_list `
-                | flat $disp_row `
+    function dispMan {
+        param(
+            [string[]] $fileList
+        )
+        # get window width
+        [int] $bufWidth = (Get-UIBufferSize).Width
+        # set linewidth max value
+        [int] $lineWidthMax = 2147483647
+
+        [int] $bufCol = $Column
+        while ($lineWidthMax -gt $bufWidth){
+            [int] $dispRow = [math]::Ceiling( ($fileList.Count) / $bufCol)
+            $lineWidthMax = $fileList `
+                | flat $dispRow `
                 | tateyoko `
                 | keta -l `
-                | less
+                | Get-LineWidth -Max
+            $bufCol--
+        }
+        [string[]] $dispAry = $fileList `
+                | flat $dispRow `
+                | tateyoko `
+                | keta -l
+        return $dispAry
+    }
+    if (($FunctionName) -and (Test-Path $FunctionName -PathType Container)){
+        if($isWindows){
+            dispMan $fileList
+        } else {
+            dispMan $fileList | less
         }
     } elseif (($FunctionName) -and (Test-Path $FunctionName -Include *.py)){
         # python script -> help
@@ -140,13 +189,13 @@ function man2 {
         # ps1 function -> Get-Help
         if ($Examples) {
             if($isWindows){
-                Get-Help $FunctionName -Examples | Out-Host -Paging
+                Get-Help $FunctionName -Examples | Out-Host -Paging:$Paging
             } else {
                 Get-Help $FunctionName -Examples | less
             }
         } else {
             if($isWindows){
-                Get-Help $FunctionName -Full | Out-Host -Paging
+                Get-Help $FunctionName -Full | Out-Host -Paging:$Paging
             } else {
                 Get-Help $FunctionName -Full | less
             }
@@ -154,22 +203,15 @@ function man2 {
     } elseif ($Line) {
         # output list
         if($isWindows){
-            $file_list
+            $fileList
         }else{
-            $file_list | less
+            $fileList | less
         }
     } else {
         if($isWindows){
-            $file_list `
-                | flat $disp_row `
-                | tateyoko `
-                | keta -l
+            dispMan $fileList
         } else {
-            $file_list `
-                | flat $disp_row `
-                | tateyoko `
-                | keta -l `
-                | less
+            dispMan $fileList | less
         }
     }
 }

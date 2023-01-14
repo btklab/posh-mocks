@@ -98,17 +98,17 @@ if ($IsWindows){
 筆者は作った関数をすぐに忘れてしまうため。
 
 - Usage
-    - `man2 man2`
-    - `man2 [-c <int>] [func-name]`
+    - `man2`
+    - `man2 [func-name] [-p|-paging]`
+    - `man2 [[-FunctionName] <String>] [-c|-Column <Int32>] [-Exclude <String>] [-p|-Paging] [-Include <String>] [-Examples] [-l|-Line]`
 - 挙動
-    - `man2`関数ファイルと同階層にある`*_function.ps1`ファイルから`_function.ps1`を除去して列挙する
+    - `man2`関数ファイルと同階層にある`*_function.ps1`ファイルのファイル名から`_function.ps1`を除去して列挙する
 - 依存
     - `flat`, `tateyoko`, `keta`
 - Examples
     - `man2`
-    - `man2 -c 4`
     - `man2 man2`
-    - `man2 keta`
+    - `man2 man2 -p`
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `man2`
