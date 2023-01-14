@@ -1300,8 +1300,8 @@ markdown形式のリストデータからマインドマップを描画する`gr
 入力データは「半角スペース4つ」に「ハイフン」で階層構造を期待する
 （`-Space 2`とすると、ハイフンの前の半角スペースは2つとして認識する）。
 
-- 文末にアンダースコア「_」を入れると、枠なし文字列になる
-- 一行目にmarkdownの第一見出し形式でタイトルを入力すると（`# title`）キャプションとして認識する。
+- 文末にアンダースコア`_`を入れると、枠なし文字列になる
+- 一行目にmarkdownの第一見出し形式でタイトルを入力する（`# title`）とキャプションとして認識する。
 
 箇条書きをマインドマップに変換すると、とくにグループ分けが視覚的に理解しやすくなる（気がする）。
 上の`dot2gviz`と組み合わせて使うと、形式変換から作図までワンライナーで処理できるので便利。
@@ -1459,14 +1459,14 @@ cat a.md | md2mindmap -SolarizedDark > a.dot; dot2gviz a.dot | ii
 
 ```powershell
 # change layout engine
-cat a.md | md2mindmap -SolarizedDarkLayoutEngine sfdp > a.dot; dot2gviz a.dot | ii
+cat a.md | md2mindmap -SolarizedDark -LayoutEngine sfdp > a.dot; dot2gviz a.dot | ii
 ```
 
 ![](img/md2mindmap_LayoutEngine_sfdp.png)
 
 ```powershell
 # change FirstNodeShape and layout engine
-cat a.md | md2mindmap -FirstNodeShape cylinder -SolarizedDarkLayoutEngine sfdp > a.dot; dot2gviz a.dot | ii
+cat a.md | md2mindmap -FirstNodeShape cylinder -LayoutEngine sfdp > a.dot; dot2gviz a.dot | ii
 ```
 
 ![](img/md2mindmap_FirstNodeShape_cylinder.png)
@@ -1496,7 +1496,7 @@ cat a.md
 # -Kinsoku 14で、全角文字として7文字で折り返し。
 # ただし行頭行末に禁則文字が来ないように、
 # 折り返し幅が自動調整される
-cat a.md | md2mindmap -Kinsoku 14 > .\img\a.dot; dot2gviz .\img\a.dot -o png | ii
+cat a.md | md2mindmap -Kinsoku 14 > a.dot; dot2gviz a.dot -o png | ii
 ```
 
 ![](img/md2mindmap_Kinsoku.png)
