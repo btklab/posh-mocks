@@ -66,6 +66,10 @@ if ($IsWindows){
 . $pwshSrcDir/dot2gviz_function.ps1
 . $pwshSrcDir/pu2java_function.ps1
 
+. $pwshSrcDir/md2mindmap_function.ps1
+. $pwshSrcDir/md2mindmap2_function.ps1
+
+
 ## image processing
 . $pwshSrcDir/ConvImage_function.ps1
 
