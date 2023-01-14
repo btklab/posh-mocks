@@ -264,7 +264,7 @@ function sed-i {
     } else {
         if ($MatchFileOnly){
             # output match file only
-            [boolean] $testFlag = $False
+            [bool] $testFlag = $False
             foreach ($patn in $Patterns){
                 [regex] $p = getPatn "$patn"
                 $tmpVar = Select-String -Pattern "$p" -LiteralPath "$Target"

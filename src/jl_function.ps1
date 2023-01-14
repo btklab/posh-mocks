@@ -155,7 +155,7 @@ function jl{
         ## init var
         [string]$readLine = ""
         [string]$writeLine = ""
-        [boolean]$bufFlag = $False
+        [bool]$bufFlag = $False
         [int]$counter = 0
         [Regex]$reg = $Key + '$'
     }

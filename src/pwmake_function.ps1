@@ -360,7 +360,7 @@ function pwmake {
         return $lines
     }
 
-    function DeleteSpace ([string]$line, [boolean]$firstComFlag, [regex]$reg){
+    function DeleteSpace ([string]$line, [bool]$firstComFlag, [regex]$reg){
         if($reg){
             $line = $line -replace $reg, ''}
         if($firstComFlag){
@@ -420,7 +420,7 @@ function pwmake {
     }
 
     function SeparateBlock ([string[]]$lines){
-        [boolean]$argBlockFlag = $true
+        [bool]$argBlockFlag = $true
         [string[]]$argBlock = @()
         [string[]]$comBlock = @()
         foreach ($line in $lines) {
@@ -566,7 +566,7 @@ function pwmake {
     function CreateTargetDict ([string[]]$comBlock){
         $comDict    = @{}
         $tarDepDict = @{}
-        [boolean]$isFirstTarget = $true
+        [bool]$isFirstTarget = $true
         [string[]]$targetLineAry = @()
         [string[]]$comAry = @()
         [string[]]$depAry = @()

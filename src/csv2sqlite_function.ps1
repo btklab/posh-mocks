@@ -378,9 +378,9 @@ function csv2sqlite {
     }
     # set options
     if ($dbExts[0] -eq '.csv'){
-        [boolean] $csvFlag = $True
+        [bool] $csvFlag = $True
     } else {
-        [boolean] $csvFlag = $False
+        [bool] $csvFlag = $False
     }
     if($NoHeader){
         [string] $hSwitch = 'noheader'

@@ -314,8 +314,8 @@ function kinsoku {
             # init var
             [string[]] $outputLines = @()
             [string]   $outputLine  = $preLine + $SkipTopJoinStr
-            [boolean]  $isExpand    = $False
-            [boolean]  $isResidual  = $False
+            [bool]  $isExpand    = $False
+            [bool]  $isResidual  = $False
             [int]      $lineWidthTotal = 0
             # line characters into array
             [string[]] $lineChars = $line.ToCharArray()
