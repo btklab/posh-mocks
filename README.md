@@ -14,7 +14,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `linkcheck`, `man2`, `md2mindmap`, `md2mindmap2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `toml2psobject`, `uniq`, `yarr`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `linkcheck`, `man2`, `md2mindmap`, `md2mindmap2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `toml2psobject`, `uniq`, `yarr`
 
 Inspired by:
 
@@ -1832,9 +1832,9 @@ before.jpg を after.png に形式変換し、かつ、
 
 を実行し、`uplatex`を使用する場合は、
 
-- uplatex a.tex
-- uplatex a.tex
-- dvipdfmx -o a.pdf a.dvi
+- `uplatex a.tex`
+- `uplatex a.tex`
+- `dvipdfmx -o a.pdf a.dvi`
 
 を実行する。
 
@@ -1957,6 +1957,62 @@ ID0001:\nあああああ、\nいいいいい、\nううううう\r\n
 - Inspired by [goark/ml - GitHub](https://github.com/goark/ml)
     - License: Apache License Version 2.0, January 2004, https://www.apache.org/licenses/LICENSE-2.0
     - Command: `Get-OGP (Alias: ml)`
+
+
+#### `table2md` - Convert tab and csv delimited tables to markdown table format
+
+tab区切り・csv区切りの表をmarkdown形式に変換する。
+標準入力、第一引数で何も指定ない場合はクリップボードの値を使おうとする。
+
+csv, tsvは**ヘッダありデータ**のみ受付（1行目をヘッダ行とみなす）。
+デフォルトでタブ区切り(`-Delimiter "\t"`)
+
+- csv, tsvは数字・ハイフン・ドットだけのセルは自動で右寄せ
+- 単位つきcsvカラム（列）も、`-Units unit1,unit2,...`指定で右寄せ
+- `半角スペース` + `kg`,`ml`,`CFU`,`RLU`などいくつかの単位つき数値は標準で右寄せ
+
+エクセル表を直接コピーして変換する用途を想定している（markdown形式の表は書きにくい）。
+ただしエクセルの**セル内改行**や**セル結合**がなされた入力データはうまく変換できない。
+
+- Usage
+    - `man2 table2md`
+    - `table2md [[-Units] <String[]>] [[-DefaultUnits] <String[]>] [[-Delimiter] <String>] [[-Caption] <String>]`
+- Options
+    - `-Caption <caption>`で表にmarkdown形式のキャプションを追加
+- Examples
+    - `cat a.csv | table2md -Delimiter "," -Caption "titlle"`
+
+Examples:
+
+```powershell
+# input: tab separated values
+cat a.tsv | table2md -Caption "title"
+
+Table: title
+
+|sepal_length|sepal_width|petal_length|petal_width|species|
+|---:|---:|---:|---:|:---|
+|5.1|3.5|1.4|0.2|setosa|
+|4.9|3.0|1.4|0.2|setosa|
+|4.7|3.2|1.3|0.2|setosa|
+|4.6|3.1|1.5|0.2|setosa|
+|5.0|3.6|1.4|0.2|setosa|
+```
+
+
+```powershell
+# 単位つきcsvカラム（列）:-Units unit-name1,unit-name2,... 指定で右寄せ
+cat a.tsv | table2md -Units "CFU","kg" | head -n 15
+
+|sepal_length|sepal_width|petal_length|petal_width|species|
+|---:|---:|---:|---:|:---|
+|5.1|3.5 CFU|1.4 kg|0.2|setosa|
+|4.9|3.0 CFU|1.4 kg|0.2|setosa|
+|4.7|3.2 CFU|1.3 kg|0.2|setosa|
+|4.6|3.1 CFU|1.5 kg|0.2|setosa|
+|5.0|3.6 CFU|1.4 kg|0.2|setosa|
+```
+
 
 #### `linkcheck` - Broken link checker
 
