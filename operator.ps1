@@ -88,7 +88,9 @@ Set-Alias -name ml -value Get-OGP
 
 ## office
 
-## graph and plot
+## graph and chart
+. $pwshSrcDir/dot2gviz_function.ps1
+. $pwshSrcDir/pu2java_function.ps1
 
 ## sys admin
 
