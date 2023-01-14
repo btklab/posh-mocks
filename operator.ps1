@@ -75,6 +75,7 @@ if ($IsWindows){
 
 
 ## writing
+. $pwshSrcDir/tex2pdf_function.ps1
 . $pwshSrcDir/jl_function.ps1
 . $pwshSrcDir/kinsoku_function.ps1
 
