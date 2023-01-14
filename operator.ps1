@@ -78,6 +78,7 @@ if ($IsWindows){
 . $pwshSrcDir/tex2pdf_function.ps1
 . $pwshSrcDir/jl_function.ps1
 . $pwshSrcDir/kinsoku_function.ps1
+. $pwshSrcDir/table2md_function.ps1
 
 ## web
 . $pwshSrcDir/linkcheck_function.ps1
