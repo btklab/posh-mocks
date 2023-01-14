@@ -14,7 +14,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `man2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `linkcheck`, `man2`, `md2mindmap`, `md2mindmap2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `toml2psobject`, `uniq`, `yarr`
 
 Inspired by:
 
@@ -1300,8 +1300,8 @@ markdown形式のリストデータからマインドマップを描画する`gr
 入力データは「半角スペース4つ」に「ハイフン」で階層構造を期待する
 （`-Space 2`とすると、ハイフンの前の半角スペースは2つとして認識する）。
 
-- 文末にアンダースコア「_」を入れると、枠なし文字列になる
-- 一行目にmarkdownの第一見出し形式でタイトルを入力すると（`# title`）キャプションとして認識する。
+- 文末にアンダースコア`_`を入れると、枠なし文字列になる
+- 一行目にmarkdownの第一見出し形式でタイトルを入力する（`# title`）とキャプションとして認識する。
 
 箇条書きをマインドマップに変換すると、とくにグループ分けが視覚的に理解しやすくなる（気がする）。
 上の`dot2gviz`と組み合わせて使うと、形式変換から作図までワンライナーで処理できるので便利。
@@ -1459,14 +1459,14 @@ cat a.md | md2mindmap -SolarizedDark > a.dot; dot2gviz a.dot | ii
 
 ```powershell
 # change layout engine
-cat a.md | md2mindmap -SolarizedDarkLayoutEngine sfdp > a.dot; dot2gviz a.dot | ii
+cat a.md | md2mindmap -SolarizedDark -LayoutEngine sfdp > a.dot; dot2gviz a.dot | ii
 ```
 
 ![](img/md2mindmap_LayoutEngine_sfdp.png)
 
 ```powershell
 # change FirstNodeShape and layout engine
-cat a.md | md2mindmap -FirstNodeShape cylinder -SolarizedDarkLayoutEngine sfdp > a.dot; dot2gviz a.dot | ii
+cat a.md | md2mindmap -FirstNodeShape cylinder -LayoutEngine sfdp > a.dot; dot2gviz a.dot | ii
 ```
 
 ![](img/md2mindmap_FirstNodeShape_cylinder.png)
@@ -1496,7 +1496,7 @@ cat a.md
 # -Kinsoku 14で、全角文字として7文字で折り返し。
 # ただし行頭行末に禁則文字が来ないように、
 # 折り返し幅が自動調整される
-cat a.md | md2mindmap -Kinsoku 14 > .\img\a.dot; dot2gviz .\img\a.dot -o png | ii
+cat a.md | md2mindmap -Kinsoku 14 > a.dot; dot2gviz a.dot -o png | ii
 ```
 
 ![](img/md2mindmap_Kinsoku.png)
@@ -1822,6 +1822,32 @@ before.jpg を after.png に形式変換し、かつ、
 
 ### Writing
 
+#### `tex2pdf` - Compile tex to pdf
+
+`.tex`から`.pdf`ファイルをコンパイルする、`lualatex`と`uplatex`のラッパースクリプト。
+
+`lualatex`を使用する場合は、
+
+- `lualatex a.tex`
+
+を実行し、`uplatex`を使用する場合は、
+
+- uplatex a.tex
+- uplatex a.tex
+- dvipdfmx -o a.pdf a.dvi
+
+を実行する。
+
+- Usage
+    - `man2 tex2pdf`
+    - `tex2pdf [-file] <String> [-lualatex] [-uplatex]`
+- Examples
+    - `tex2pdf a.tex`
+- Dependencies
+    - [LaTeX - A document preparation system](https://www.latex-project.org/)
+        - `lualatex`, `uplatex`
+
+
 #### `kinsoku` - Japanese text wrapper
 
 日本語文章の文字列折り返し。
@@ -1931,6 +1957,41 @@ ID0001:\nあああああ、\nいいいいい、\nううううう\r\n
 - Inspired by [goark/ml - GitHub](https://github.com/goark/ml)
     - License: Apache License Version 2.0, January 2004, https://www.apache.org/licenses/LICENSE-2.0
     - Command: `Get-OGP (Alias: ml)`
+
+#### `linkcheck` - Broken link checker
+
+引数に指定したuriのリンク切れをチェックする。
+
+- Usage
+    - `man2 linkcheck`
+    - `linkcheck [-Uris] <String[]> [-Header] [-WaitSeconds <Int32>] [-VerboseOutput]`
+- Examples
+    - `"https://www.example.com/", "www.microsoft.com/unkownhost" | linkcheck`
+
+
+Examples:
+
+```powershell
+# basic usage
+"https://www.example.com/", "www.microsoft.com/unkownhost" | linkcheck
+Detect broken links.
+[ng] www.microsoft.com/unkownhost
+
+# verbose output
+"https://www.example.com/", "www.microsoft.com/unkownhost" | linkcheck -VerboseOutput
+[ok] https://www.example.com/
+[ng] www.microsoft.com/unkownhost
+Detect broken links.
+[ng] www.microsoft.com/unkownhost
+
+# filename and uri
+"a.html https://www.example.com/", "m.html www.microsoft.com/unkownhost" | linkcheck -Header -VerboseOutput
+[ok] a.html https://www.example.com/
+[ng] m.html www.microsoft.com/unkownhost
+Detect broken links in m.html
+[ng] m.html www.microsoft.com/unkownhost
+```
+
 
 #### `jl` - Join the next Line with the keyword
 
