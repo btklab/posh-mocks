@@ -14,7 +14,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `man2`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `man2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
 
 Inspired by:
 
@@ -1217,7 +1217,79 @@ eo
     - Command: `gyo`
 
 
-### writing
+### Graphs and charts
+
+#### `dot2gviz` - Wrapper for Graphviz:dot command
+
+[Graphviz](https://graphviz.org/)の`dot`ファイルを実行し、グラフ（棒グラフのグラフではなく、箱と矢印・ノードとエッジのほうのグラフ）を描画する。`dot -Tpng -o a.png a.dot`と等価。日本語WindowsでUTF-8な環境下での使用を想定。
+
+[Graphviz](https://graphviz.org/)で日本語を用いるときは次のようにフォントを指定せねばならない。
+
+- `dot -Nfontname="Meiryo" -Efontname="Meiryo" -Gfontname="Meiryo" -Tsvg -o a.svg a.dot`
+
+これでは長くて覚えられないので、ラッパースクリプトを作成した。最もシンプルに書くと`dot2gviz a.dot`。デフォルトで入力ファイル名と同ファイル名の`png`画像をカレントディレクトリに出力する。
+
+- Usage
+    - `man2 dot2gviz`
+    - `dot2gviz [-InputFile] <String> [[-OutputFileType] <String>] [-FontName <String>] [-LayoutEngine <String>] [-NotOverWrite] [-ErrorCheck]`
+- Examples
+    - `dot2gviz a.dot`
+        - `dot -Tpng -o a.png a.dot`と等価
+    - `dot2gviz a.dot -OutputFileType png`
+        - `dot -Tpng -o a.png a.dot`と等価
+    - `dot2gviz a.dot -OutputFileType svg`
+        - `dot -Tsvg -o a.png a.dot`と等価
+- Options
+    - `-LayoutEngine <layout>`でレイアウトエンジンを指定可能
+        - `dot2gviz a.dot -LayoutEngine sfdp`
+            - `dot -Ksfdp -Tpng -o a.png a.dot`と等価
+    - `-FontName <fontname>`でフォントを指定可能
+        - `dot2gviz a.dot -FontName 'BIZ UDPGothic'`
+            - `dot -Nfontname="BIZ UDPGothic" -Efontname="BIZ UDPGothic" -Gfontname="BIZ UDPGothic" -Tpng -o a.png a.dot`と等価
+    - `-ErrorCheck`スイッチで、等価なdotコマンド文字列が出力される
+        - `dot2gviz a.dot -OutputFileType svg -FontName Meiryo -ErrorCheck`
+            - 出力: `dot -Nfontname="Meiryo" -Efontname="Meiryo" -Gfontname="Meiryo" -Tsvg -o "a.svg" "a.dot"`
+- Dependencies
+    - [Graphviz](https://graphviz.org/)
+    - Install Graphviz (for windows)
+        - `winget install --id Graphviz.Graphviz --source winget`
+        - and execute `dot -c` with administrator privileges
+
+#### `pu2java` - Wrapper for plantuml.jar command
+
+[plantuml](https://plantuml.com/en/)形式の`.pu`ファイルを読み取り実行するラッパースクリプト。日本語WindowsでUTF-8な環境下での使用を想定。グラフ（棒グラフのグラフではなく、箱と矢印・ノードとエッジのほうのグラフ）を描画する。`java -jar plantuml.jar -charset "UTF-8" -t"svg" a.pu`と等価。日本語を用いるときは`-charset "UTF-8"`を指定する。
+
+`dot2gviz`と同じくコマンド文字列が長くて覚えられないため、このラッパースクリプトを作成した。最もシンプルに書くと`pu2java a.pu`。デフォルトで入力ファイル名と同ファイル名の`png`画像をカレントディレクトリに出力する。
+
+`plantuml.jar`ファイルの場所はデフォルトで`${HOME}/bin/plantuml.jar`を期待する。`-Jar <path/to/the/jar>`で任意の場所の`jar`ファイルを指定することもできる。
+
+- Usage
+    - `man2 pu2java`
+    - `pu2java [-InputFile] <String> [[-OutputFileType] <String>] [-ConfigFile <String>] [-OutputDir <String>] [-Charset <String>] [-Jar <String>] [-TestDot] [-CheckOnly] [-NoMetadata] [-NotOverWrite] [-ErrorCheck]`
+- Examples
+    - `pu2java a.pu`
+        - `java -jar plantuml.jar" -charset "UTF-8" -t"png" a.pu`と等価
+    - `pu2java a.pu -OutputFileType png`
+        - `java -jar plantuml.jar" -charset "UTF-8" -t"png" a.pu`と等価
+    - `pu2java a.pu -OutputFileType svg`
+        - `java -jar plantuml.jar" -charset "UTF-8" -t"svg" a.pu`と等価
+- Options
+    - `-ErrorCheck`スイッチで、等価なdotコマンド文字列が出力される
+        - `pu2java a.pu svg -ErrorCheck`
+            - 出力: `java -jar plantuml.jar" -charset "UTF-8" -t"svg" a.pu`
+- Dependencies
+    - plantuml
+        - <https://plantuml.com/en/>
+        - plantuml.jar
+            - <https://sourceforge.net/projects/plantuml/files/plantuml.jar/download>
+    - Graphviz
+        - <https://graphviz.org/>
+    - Java
+        - <https://www.java.com/en/download/>
+
+
+
+### Writing
 
 #### `kinsoku` - Japanese text wrapper
 
@@ -1237,7 +1309,7 @@ eo
     - `-Width <int>`で折返し文字幅を指定（全角2、半角1）
     - `-Expand`でぶら下げ禁則処理ON
     - `-Yoon`で「ゃゅょ」と促音「っ」禁則処理ON（デフォルトでON）
-    - `-Join '\n'`で改行ポイントに'\n'を挿入。出力は改行なし
+    - `-Join '\n'`で改行ポイントに`\n`を挿入。出力は改行なし
     - `-AddLastChar <str>`で行末のみに任意文字列を追加
     - `-OffTrim`で行頭行末の空白を削除しない
         - 禁則処理後、行の前後の空白は削除される
