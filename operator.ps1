@@ -79,6 +79,7 @@ if ($IsWindows){
 . $pwshSrcDir/kinsoku_function.ps1
 
 ## web
+. $pwshSrcDir/linkcheck_function.ps1
 . $pwshSrcDir/Get-OGP_function.ps1
 Set-Alias -name ml -value Get-OGP
 

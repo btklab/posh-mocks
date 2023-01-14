@@ -14,7 +14,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `man2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `linkcheck`, `man2`, `md2mindmap`, `md2mindmap2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
 
 Inspired by:
 
@@ -1931,6 +1931,41 @@ ID0001:\nあああああ、\nいいいいい、\nううううう\r\n
 - Inspired by [goark/ml - GitHub](https://github.com/goark/ml)
     - License: Apache License Version 2.0, January 2004, https://www.apache.org/licenses/LICENSE-2.0
     - Command: `Get-OGP (Alias: ml)`
+
+#### `linkcheck` - Broken link checker
+
+引数に指定したuriのリンク切れをチェックする。
+
+- Usage
+    - `man2 linkcheck`
+    - `linkcheck [-Uris] <String[]> [-Header] [-WaitSeconds <Int32>] [-VerboseOutput]`
+- Examples
+    - `"https://www.example.com/", "www.microsoft.com/unkownhost" | linkcheck`
+
+
+Examples:
+
+```powershell
+# basic usage
+"https://www.example.com/", "www.microsoft.com/unkownhost" | linkcheck
+Detect broken links.
+[ng] www.microsoft.com/unkownhost
+
+# verbose output
+"https://www.example.com/", "www.microsoft.com/unkownhost" | linkcheck -VerboseOutput
+[ok] https://www.example.com/
+[ng] www.microsoft.com/unkownhost
+Detect broken links.
+[ng] www.microsoft.com/unkownhost
+
+# filename and uri
+"a.html https://www.example.com/", "m.html www.microsoft.com/unkownhost" | linkcheck -Header -VerboseOutput
+[ok] a.html https://www.example.com/
+[ng] m.html www.microsoft.com/unkownhost
+Detect broken links in m.html
+[ng] m.html www.microsoft.com/unkownhost
+```
+
 
 #### `jl` - Join the next Line with the keyword
 
