@@ -14,7 +14,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `man2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `man2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `toml2psobject`, `uniq`, `yarr`
 
 Inspired by:
 
@@ -36,6 +36,12 @@ Inspired by:
     - Commands: `gron`
 - [禁則処理 - PyJaPDF](http://pyjapdf.linxs.org/home/kinsoku)
     - Commands: `kinsoku.py`
+- [miyamiya/mypss: My PowerShell scripts - GitHub](https://github.com/miyamiya/mypss)
+    - Commands: `Get-Draw.ps1`
+- [ImageMagick](https://imagemagick.org/index.php)
+    - Commands: `convert`, `magick convert`(on windows)
+
+
 
 コード群にまとまりはないが、事務職（非技術職）な筆者の毎日の仕事（おもに文字列処理）を、より素早くさばくための道具としてのコマンドセットを想定している（毎日使用する関数は10個に満たないが）。
 
@@ -1217,7 +1223,7 @@ eo
     - Command: `gyo`
 
 
-### Graphs and charts
+### Plot chart and graph
 
 #### `dot2gviz` - Wrapper for Graphviz:dot command
 
@@ -1288,6 +1294,127 @@ eo
         - <https://www.java.com/en/download/>
 
 
+### Image processing
+
+#### `ConvImage` - Image rotation, flipping, scaling, convert format
+
+画像の回転、リサイズ、拡大縮小、形式変換。Assembly:`System.Drawing`を用いる。
+画像の形式変換は入出力に指定するファイルの拡張子から自動認識する
+
+ 「リサイズ」と「回転・反転」は同時にはできない点に注意する。
+ 出力ファイルと同名ファイルがあると強制上書きされる点にも注意する。
+
+
+- Usage
+    - `man2 pu2java`
+    - `ConvImage [-inputFile] <String[]> [-outputFile] <String[]> [-resize <String>] [-rotate <String>] [-flip] [-flop] [-Exif] [-ExifOrientationOnly] [-notOverWrite]`
+- Examples
+    - `ConvImage -inputFile <file> -outputFile <file> [-notOverWrite]`
+    - `ConvImage -inputFile <file> -outputFile <file> -resize <num>x<num> [-notOverWrite]`
+    - `ConvImage -inputFile <file> -outputFile <file> -rotate <num> [-flip] [-flop] ] [-notOverWrite]`
+- Dependencies
+    - PowerShell
+        - Assembly: `System.Drawing`
+- Inspired by:
+    - Get-Draw.ps1 - miyamiya/mypss: My PowerShell scripts - GitHub
+        - <https://github.com/miyamiya/mypss>
+        - License: The MIT License (MIT): Copyright (c) 2013 miyamiya
+   - ImageMagick (command)
+       - <https://imagemagick.org/index.php>
+
+Examples:
+
+```powershell
+ConvImage before.jpg after.png
+
+説明
+========================
+最も簡単な例。
+before.jpg を after.png に形式変換する。
+```
+
+```powershell
+ConvImage before.jpg after.png -resize 500x500
+
+説明
+========================
+最も簡単な例その2。
+before.jpg を after.png に形式変換し、かつ、
+サイズが 500px×500pxに収まるように
+アスペクト比（縦横比）を保ちリサイズする
+```
+
+```powershell
+ConvImage -inputFile before.jpg -outputFile after.png -resize 100x100
+
+説明
+========================
+オプションを正確に記述した例。上記「簡単な例その2」と同じ結果を得る。
+before.jpg を after.png に形式変換し、かつ、
+サイズが 100px×100pxに収まるように、
+アスペクト比（縦横比）を保ちリサイズする
+```
+
+```powershell
+ConvImage -inputFile before.jpg -outputFile after.png -resize 100x100 -notOverWrite
+
+説明
+========================
+before.jpg を after.png に形式変換し、かつ、
+サイズが 100px×100pxに収まるように、
+アスペクト比（縦横比）を保ちリサイズする
+-notOverWriteオプションにより、
+もし after.png が存在していても上書きしない.
+```
+
+```powershell
+ConvImage before.jpg after.png -resize 10%
+
+説明
+========================
+before.jpg を after.png に形式変換し、かつ、
+縦横のピクセルが 10%（1/10）に縮小される
+アスペクト比（縦横比）は保たれる
+```
+
+```powershell
+ConvImage before.jpg after.png -resize 100
+
+説明
+========================
+before.jpg を after.png に形式変換し、かつ、
+縦（高さ）のピクセルが 100pxにリサイズされる
+アスペクト比（縦横比）は保たれる
+```
+
+```powershell
+ConvImage before.jpg after.png -rotate 90
+
+説明
+========================
+before.jpg を after.png に形式変換し、かつ、
+90度回転される
+```
+
+```powershell
+ConvImage before.jpg after.png -rotate 90 -flip
+
+説明
+========================
+before.jpg を after.png に形式変換し、かつ、
+90度回転され、かつ、
+上下反転される
+```
+
+```powershell
+ConvImage before.jpg after.png -rotate 90 -flop
+
+説明
+========================
+before.jpg を after.png に形式変換し、かつ、
+90度回転され、かつ、
+左右反転される
+```
 
 ### Writing
 
