@@ -156,12 +156,13 @@ function man2 {
         # set linewidth max value
         [int] $lineWidthMax = 2147483647
 
-        [int] $bufCol = $Column
-        if ($bufCol -lt 1){
-            $bufCol = 1
+        if ($Column -lt 1){
+            [int] $bufCol = 1
+        } else {
+            [int] $bufCol = $Column
         }
         [int] $dispRow = [math]::Ceiling( ($fileList.Count) / $bufCol)
-        while (($lineWidthMax -gt $bufWidth) -or ($bufCol -gt 1)){
+        while (($lineWidthMax -gt $bufWidth) -and ($bufCol -gt 0)){
             [int] $dispRow = [math]::Ceiling( ($fileList.Count) / $bufCol)
             $lineWidthMax = $fileList `
                 | flat $dispRow `
@@ -173,7 +174,10 @@ function man2 {
         [string[]] $dispAry = $fileList `
                 | flat $dispRow `
                 | tateyoko `
-                | keta -l
+                | keta -l `
+                | ForEach-Object {
+                    Write-Output $($_.Trim())
+                }
         return $dispAry
     }
     if (($FunctionName) -and (Test-Path $FunctionName -PathType Container)){
