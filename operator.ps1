@@ -51,6 +51,8 @@ if ($IsWindows){
 . $pwshSrcDir/juni_function.ps1
 . $pwshSrcDir/retu_function.ps1
 . $pwshSrcDir/count_function.ps1
+. $pwshSrcDir/getfirst_function.ps1
+. $pwshSrcDir/getlast_function.ps1
 
 . $pwshSrcDir/han_function.ps1
 . $pwshSrcDir/zen_function.ps1
