@@ -1264,7 +1264,7 @@ gyo *.*
 #### `han` - Convert full-width kana to half-width kana using Microsoft.VisualBasic.VbStrConv.Wide
 
 全角文字を半角に変換。For japanese locale on windows。
-`[-k|-Kana]`スイッチで全角カタカナはに変換しない
+`[-k|-Kana]`スイッチで全角カタカナは変換しない
 （半角カナを全角に変換するわけではない）
 
 - Usage
