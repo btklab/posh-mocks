@@ -43,7 +43,7 @@ Inspired by:
 
 
 
-コード群にまとまりはないが、事務職（非技術職）な筆者の毎日の仕事（おもに文字列処理）を、より素早くさばくための道具としてのコマンドセットを想定している（毎日使用する関数は10個に満たないが）。
+コード群にまとまりはないが、事務職（非技術職）な筆者の毎日の仕事（おもに文字列処理）を、より素早くさばくための道具としてのコマンドセットを想定している（毎日使用する関数は5個に満たないが）。
 
 基本的に入力としてUTF-8で半角スペース区切り、行指向の文字列データ（テキストオブジェクト）を期待する、主にパターンマッチング処理を行うためのフィルタ群。少しながら、オブジェクトのパイプライン入力を受け付けたり、オブジェクトとして出力する「PowerShellのコマンドレット的といえるもの」も、ある。Windows上でしか動かない関数も、ある。
 
@@ -646,9 +646,9 @@ Output:
 #### `self` - Select fields
 
 半角スペース区切りの標準入力から任意の列のみ抽出する。
-すべての列は'0'で、最終列は'NF'で指定することもできる
+すべての列は`0`で、最終列は`NF`で指定することもできる
 
-1.2.3と指定すると、1列目の2文字目から3文字を切り出し
+`1.2.3`と指定すると、1列目の2文字目から3文字を切り出し
 切り出し文字数が対象文字数よりも多い場合は切り取れる範囲のみ切り出し。
 
 
@@ -1207,6 +1207,25 @@ eo
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `keta`
 
+Examples:
+
+```powershell
+# input
+"aaa bbb ccc","dddddd eeee ffff"
+aaa bbb ccc
+dddddd eeee ffff
+
+# right padding (default)
+"aaa bbb ccc","dddddd eeee ffff" | keta
+   aaa  bbb  ccc
+dddddd eeee ffff
+
+# left padding (-l switch)
+"aaa bbb ccc","dddddd eeee ffff" | keta -l
+aaa    bbb  ccc 
+dddddd eeee ffff
+```
+
 
 #### `gyo` - Row counter
 
@@ -1221,6 +1240,26 @@ eo
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `gyo`
+
+Examples:
+
+```powershell
+# simple usage
+1..20 | gyo
+20
+
+# output row numbers for each text files
+# in current directory
+gyo *.*
+11 .textlintrc
+16 a.md
+76 b.md
+72 c.md
+29 a.json
+29 t.md
+118 table2col.md
+2 uri-list.txt
+```
 
 
 ### Plot chart and graph
@@ -2361,7 +2400,7 @@ CSVファイルをSQLで操作し、集計したり検索できる。
 
 ### misc
 
-#### `pwmake` - Pwsh implementation of gnu make command
+#### `pwmake` - Pwsh implementation of GNU make command
 
 PowerShell版make-like command。劣化コピー。
 カレントディレクトリにあるMakefileを読み実行する。
@@ -2374,9 +2413,143 @@ PowerShell版make-like command。劣化コピー。
 
 - Usage
     - `man2 pwmake`
+    - `pwmake`・・・引数なしでカレントディレクトリの`Makefile`を探し実行
+    - `pwmake -f path/to/Makefile`・・・ファイル指定
+    - `pwmake -Help`・・・各target行末尾の「` ## コメント`」部をヘルプとして出力
+    - `pwmake -DryRun`
     - `pwmake [[-Target] <String>] [[-Variables] <String[]>] [-File <String>] [-Delimiter <String>] [-TargetDelimiter <String>] [-ErrAction<String>] [-Help] [-DryRun]`
+- Options
+    - `-DryRun`でコマンドを実行せずに実行ログのみ出力
+    - `-Help`・・・Makefileの各target行末尾に「` ## コメント`」としておくと、`pwmake -Help`で、targetごとのヘルプを取得
+- Note
+    - 最初行からコロン`:`を含む行までの間に変数を宣言することができる
+    - コロン`:`を含む行をターゲット行とみなし、それ以外の行をコマンド行とみなす
+    - ファイル名やターゲット名に空白（半角スペース）を含めない
+    - コマンド行は1つ以上の空白又はタブを行頭におく
+    - カレントプロセスで動作する
+        - ファイルは絶対パス指定でない場合はカレントディレクトリからの相対パスで探す
+        - 実行コマンドにPowerShellコマンドを使用できる
+            - カレントプロセスのPowerShellにドットソースで読み込んだ関数も、Makefileに記述して走らせることができる
+    - コマンドラインの行頭に@をつけると出力にコマンドラインをechoしない
+    - 宣言した変数を用いるときは`${ver}`とする
+        - `$(ver)`を用いてもよいがPowerShellの`Subexpression演算子`とみなされ展開される点に注意する
+    - ただし変数に代入する値には$(shell command)としてもよい。たとえば：
+        - `DATE := $((Get-Date).ToString('yyyy-MM-dd'))`は、右辺を展開**して**代入
+        - `DATE := ${(Get-Date).ToString('yyyy-MM-dd')}`は、右辺を展開**せず**代入
+        - `DATE  = $((Get-Date).ToString('yyyy-MM-dd'))`は、右辺を展開**せず**代入
+        - `DATE  = ${(Get-Date).ToString('yyyy-MM-dd')}`は、右辺を展開**せず**代入
+            - 注：最初の例以外は、**変数は実行時に展開される**点に注意する
+    - Makefileの各target列末尾に「` ## コメント`」としておくと、`pwmake -Help`で、targetごとのヘルプを取得
 - Inspired by Unix/Linux Commands
     - Command: `make`
+
+
+Examples:
+
+```Makefile
+# use uplatex
+file    := a
+texfile := ${file}.tex
+dvifile := ${file}.dvi
+pdffile := ${file}.pdf
+date    := $((Get-Date).ToString('yyyy-MM-dd (ddd)'))
+
+.PHONY: all
+all: ${pdffile} ## Generate pdf file and open.
+    @echo ${date}
+
+${pdffile}: ${dvifile} ## Generate pdf file from dvi file.
+    dvipdfmx -o $@ $<
+
+${dvifile}: ${texfile} ## Generate dvi file from tex file.
+    uplatex $<
+    uplatex $<
+
+.PHONY: clean
+clean: ## Remove cache files.
+    Remove-Item -Path *.aux,*.dvi,*.log -Force
+```
+
+Makefileの各target列末尾に「` ## コメント`」としたので、`pwmake -Help`で、targetごとのヘルプを取得できる。
+
+```Makefile
+# ヘルプメッセージの設定書式
+target: [dep dep ...] ## this is help message
+```
+
+
+```powershell
+PS > pwmake -f Makefile -Help
+PS > pwmake -Help # デフォルトでカレントディレクトリのMakefileを探す
+
+target synopsis
+------ --------
+all    Generate pdf file and open.
+a.pdf  Generate pdf file from dvi file.
+a.dvi  Generate dvi file from tex file.
+clean  Remove cache files.
+```
+
+`-DryRun`でコマンドを実行せずに実行ログのみ出力
+
+```powershell
+pwmake -DryRun
+
+######## override args ##########
+None
+
+######## argblock ##########
+file=a
+texfile=a.tex
+dvifile=a.dvi
+pdffile=a.pdf
+date=2023-01-15 (日)
+
+######## phonies ##########
+all
+clean
+
+######## comBlock ##########
+all: a.pdf
+ @echo 2023-01-15 (日)
+
+a.pdf: a.dvi
+ dvipdfmx -o $@ $<
+
+a.dvi: a.tex
+ uplatex $<
+ uplatex $<
+
+clean:
+ Remove-Item -Path *.aux,*.dvi,*.log -Force
+
+######## topological sorted target lines ##########
+a.tex
+a.dvi
+a.pdf
+all
+
+######## topological sorted command lines ##########
+uplatex a.tex
+uplatex a.tex
+dvipdfmx -o a.pdf a.dvi
+@echo 2023-01-15 (sun)
+
+######## execute commands ##########
+uplatex a.tex
+uplatex a.tex
+dvipdfmx -o a.pdf a.dvi
+@echo 2023-01-15 (sun)
+```
+
+実行時エラーが発生すると処理は停止する
+
+```powershell
+pwmake
+> uplatex a.tex
+pwmake: The term 'uplatex' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+```
 
 
 #### `say` - Speech Synthesizer
