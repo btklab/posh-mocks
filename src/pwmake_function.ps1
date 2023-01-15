@@ -1,16 +1,27 @@
 <#
 .SYNOPSIS
 
-pwmake -- make for powershell
+pwmake -- Pwsh implementation of GNU make command
 
 カレントディレクトリにあるMakefileを読み実行する
 
-- Makefileの記法はGNU makeにしたがう
+Usage
+
+- man2 pwmake
+- pwmake 引数なしでカレントディレクトリの`Makefile`を探し実行
+- pwmake -f path/to/Makefile ファイル指定
+- pwmake -Help 各target行末尾の「` ## コメント`」部をヘルプとして出力
+- pwmake -DryRun
+
+Detail
+
+- Makefileの記法はおおよそGNU makeにしたがう
     - ただし行頭の空白はTabでもSpaceでも受付
     - ただし変数の定義には$()ではなく${}を使う
       $()とした場合Subexpression演算子として解釈される（後述）
 - targetを指定しなかった場合は最初のtargetが実行される
 - カレントプロセスで読み込んだドットソースfunctionもMakefileに記述できる
+- ファイルは絶対パス指定でない場合はカレントディレクトリからの相対パスで探す
 - -n（-DryRun）でコマンドを実行せずにログやエラーを出力できる
 - 「toposort」で事前にMakefileの依存関係をチェックしてもよい
 - 「#」でコメント
@@ -34,11 +45,11 @@ target: deps  #comment
         > a.md
 
 Tips:
-Makefileの各target列末尾に「 ## コメント」としておくと、
+Makefileの各target行末尾に「 ## コメント」としておくと、
 pwmake -Helpで、targetごとのコメントを取得できる。
 
 ```Makefile
-target: [dep dep ...] ## comment
+target: [dep dep ...] ## this is help message
 ```
 
 ## $ pwmake -Help
@@ -250,6 +261,99 @@ output/min_99_max_100.log: min_99_max_100/dataset/train.tsv min_99_max_100/datas
 override variables
 
 
+.EXAMPLE
+cat Makefile
+# use uplatex
+file    := a
+texfile := ${file}.tex
+dvifile := ${file}.dvi
+pdffile := ${file}.pdf
+date    := $((Get-Date).ToString('yyyy-MM-dd (ddd)'))
+
+.PHONY: all
+all: ${pdffile} ## Generate pdf file and open.
+    @echo ${date}
+
+${pdffile}: ${dvifile} ## Generate pdf file from dvi file.
+    dvipdfmx -o $@ $<
+
+${dvifile}: ${texfile} ## Generate dvi file from tex file.
+    uplatex $<
+    uplatex $<
+
+.PHONY: clean
+clean: ## Remove cache files.
+    Remove-Item -Path *.aux,*.dvi,*.log -Force
+
+
+# Makefileの各target列末尾に「` ## コメント`」としたので、`pwmake -Help`で、targetごとのヘルプを取得できる。
+PS > make -f Makefile -Help
+PS > pwmake -Help # デフォルトでカレントディレクトリのMakefileを探す
+
+target synopsis
+------ --------
+all    Generate pdf file and open.
+a.pdf  Generate pdf file from dvi file.
+a.dvi  Generate dvi file from tex file.
+clean  Remove cache files.
+
+
+# -DryRunでコマンドを実行せずに実行ログのみ出力
+pwmake -DryRun
+
+######## override args ##########
+None
+
+######## argblock ##########
+file=a
+texfile=a.tex
+dvifile=a.dvi
+pdffile=a.pdf
+date=2023-01-15 (日)
+
+######## phonies ##########
+all
+clean
+
+######## comBlock ##########
+all: a.pdf
+ @echo 2023-01-15 (日)
+
+a.pdf: a.dvi
+ dvipdfmx -o $@ $<
+
+a.dvi: a.tex
+ uplatex $<
+ uplatex $<
+
+clean:
+ Remove-Item -Path *.aux,*.dvi,*.log -Force
+
+######## topological sorted target lines ##########
+a.tex
+a.dvi
+a.pdf
+all
+
+######## topological sorted command lines ##########
+uplatex a.tex
+uplatex a.tex
+dvipdfmx -o a.pdf a.dvi
+@echo 2023-01-15 (日)
+
+######## execute commands ##########
+uplatex a.tex
+uplatex a.tex
+dvipdfmx -o a.pdf a.dvi
+@echo 2023-01-15 (日)
+
+
+# 実行時エラーが発生すると処理は停止する
+PS > pwmake
+> uplatex a.tex
+pwmake: The term 'uplatex' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+
 #>
 function pwmake {
     Param(
@@ -286,7 +390,7 @@ function pwmake {
     )
 
     ## show-help function
-    function ParseHelp {
+    function ParseHelp ([string[]] $argBlock) {
         ## parse help messages written in the following format
         ##   target: [dep dep ...] ## synopsis
         ##
@@ -299,6 +403,23 @@ function pwmake {
         ## help   help message
         ## new    create directory and set skeleton files
         ##
+        if ($argBlock){
+            $varDict = @{}
+            foreach ($var in $argBlock) {
+                ## get args and add dict (key, val)
+                $key, $val = GetArgVar "$var" $varDict
+                if($varDict){
+                    foreach ($k in $varDict.Keys){
+                        ## replace variables
+                        [string]$bef = '${' + $k + '}'
+                        [string]$aft = $varDict[$k]
+                        $val = $val.Replace($bef, $aft)
+                    }
+                }
+                $varDict.Add($key, $val)
+                #Write-Output "$key=$val"
+            }
+        }        
         Select-String '^[a-zA-Z0-9_\-\{\}\$\.\ ]+?:' -Path $File -Raw `
             | ForEach-Object {
                 $helpStr = [string]$_
@@ -313,12 +434,22 @@ function pwmake {
                 } else {
                     $helpStr = $helpStr -replace ':.*$', ''
                 }
-                $helpStr } `
+                if ($argBlock){
+                    ## replace variables
+                    foreach ($k in $varDict.Keys){
+                        [string]$bef = '${' + $k + '}'
+                        [string]$aft = $varDict[$k]
+                        $helpStr = $helpStr.Replace($bef, $aft)
+                    }
+                }
+                $helpStr
+                } `
             | ForEach-Object {
                 $helpAry = $_.split(' ## ', 2)
                 return [pscustomobject]@{
                     target = $helpAry[0]
-                    synopsis = $helpAry[1]} }
+                    synopsis = $helpAry[1]}
+            }
     }
 
     ## init var
@@ -330,9 +461,6 @@ function pwmake {
     if( -not $isExistMakefile){
         Write-Error "Could not find ""$makefile""" -ErrorAction Stop
     }
-
-    ## show help
-    if ($Help){ ParseHelp; return }
 
     ## private functions
     function AddEndOfFileMarkAndIncludeMakefile ([string]$mfile){
@@ -861,6 +989,16 @@ function pwmake {
 
     ### replace '%' to target string
     $comBlock = ReplacePercentToTarget $comBlock
+
+    ## show help
+    if ($Help){
+        if($argBlock){
+            ParseHelp $argBlock
+        } else {
+            ParseHelp
+        }
+        return
+    }
 
     ### replace argblock
     if($argBlock){
