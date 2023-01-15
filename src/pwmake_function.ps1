@@ -268,7 +268,7 @@ file    := a
 texfile := ${file}.tex
 dvifile := ${file}.dvi
 pdffile := ${file}.pdf
-date    := $((Get-Date).ToString('yyyy-MM-dd (ddd)'))
+date    := $((Get-Date).ToString('yyyy-MM-dd (ddd) HH:mm:ss'))
 
 .PHONY: all
 all: ${pdffile} ## Generate pdf file and open.
@@ -309,7 +309,7 @@ file=a
 texfile=a.tex
 dvifile=a.dvi
 pdffile=a.pdf
-date=2023-01-15 (日)
+date=2023-01-15 (Sun) 10:26:09
 
 ######## phonies ##########
 all
@@ -317,7 +317,7 @@ clean
 
 ######## comBlock ##########
 all: a.pdf
- @echo 2023-01-15 (日)
+ @echo 2023-01-15 (Sun) 10:26:09
 
 a.pdf: a.dvi
  dvipdfmx -o $@ $<
@@ -339,13 +339,13 @@ all
 uplatex a.tex
 uplatex a.tex
 dvipdfmx -o a.pdf a.dvi
-@echo 2023-01-15 (日)
+@echo 2023-01-15 (Sun) 10:26:09
 
 ######## execute commands ##########
 uplatex a.tex
 uplatex a.tex
 dvipdfmx -o a.pdf a.dvi
-@echo 2023-01-15 (日)
+@echo 2023-01-15 (Sun) 10:26:09
 
 
 # 実行時エラーが発生すると処理は停止する
