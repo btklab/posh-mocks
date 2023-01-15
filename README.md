@@ -14,14 +14,14 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `han`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `linkcheck`, `man2`, `md2mindmap`, `md2mindmap2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `linkcheck`, `man2`, `md2mindmap`, `md2mindmap2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
 
 Inspired by:
 
 - Article
     - [Parsing Text with PowerShell (3/3), Steve Lee, January 28th, 2019](https://devblogs.microsoft.com/powershell/parsing-text-with-powershell-3-3/).
 - Unix/Linux commands
-    - Commands: `grep`, `sed`, `head`, `tail`, `awk`, `make`, `uniq`, `self`, `delf`, and more...
+    - Commands: `grep`, `sed`, `head`, `tail`, `awk`, `make`, `uniq`, `self`, `delf`, `count`, `getfirst`, `getlast`, and more...
 - [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Commands: `man2`, `keta`, `tateyoko`, `gyo`, `fillretu`, `yarr`, `count`, `han`, `zen`, and more...
@@ -1025,6 +1025,95 @@ PS> cat a.txt | grep . | sort | count -c 1 2
 3 04 神奈川県 15 厚木市 100
 4 04 神奈川県 16 小田原市 100
 ```
+
+#### `getfirst` - Get the first row of the same key
+
+半角スペース区切り入力から、
+同一キーの最初行のデータを出力。
+大文字小文字を区別しない。
+
+- Usage
+    - `man2 getfirst`
+    - `getfirst <k1> <k2>`
+        - `<k1>`列から`<k2>`列をキーとみなす
+- Examples
+    - `cat a.txt | getfirst 1 2`
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `getfirst`
+
+Output:
+
+```powershell
+cat a.txt
+01 埼玉県 01 さいたま市 100
+01 埼玉県 02 川越市 100
+01 埼玉県 03 熊谷市 100
+02 東京都 04 新宿区 100
+02 東京都 05 中央区 100
+02 東京都 06 港区 100
+02 東京都 07 千代田区 100
+02 東京都 08 八王子市 100
+02 東京都 09 立川市 100
+03 千葉県 10 千葉市 100
+03 千葉県 11 市川市 100
+03 千葉県 12 柏市 100
+04 神奈川県 13 横浜市 100
+04 神奈川県 14 川崎市 100
+04 神奈川県 15 厚木市 100
+04 神奈川県 16 小田原市 100
+
+cat a.txt | getfirst 1 2
+01 埼玉県 01 さいたま市 100
+02 東京都 04 新宿区 100
+03 千葉県 10 千葉市 100
+04 神奈川県 13 横浜市 100
+```
+
+#### `getlast` - Get the last row of the same key
+
+半角スペース区切り入力から、
+同一キーの最下行のデータを出力。
+大文字小文字を区別しない。
+
+- Usage
+    - `man2 getlast`
+    - `getlast <k1> <k2>`
+        - `<k1>`列から`<k2>`列をキーとみなす
+- Examples
+    - `cat a.txt | getlast 1 2`
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `getlast`
+
+Output:
+
+```powershell
+cat a.txt
+01 埼玉県 01 さいたま市 100
+01 埼玉県 02 川越市 100
+01 埼玉県 03 熊谷市 100
+02 東京都 04 新宿区 100
+02 東京都 05 中央区 100
+02 東京都 06 港区 100
+02 東京都 07 千代田区 100
+02 東京都 08 八王子市 100
+02 東京都 09 立川市 100
+03 千葉県 10 千葉市 100
+03 千葉県 11 市川市 100
+03 千葉県 12 柏市 100
+04 神奈川県 13 横浜市 100
+04 神奈川県 14 川崎市 100
+04 神奈川県 15 厚木市 100
+04 神奈川県 16 小田原市 100
+
+cat a.txt | getlast 1 2
+01 埼玉県 03 熊谷市 100
+02 東京都 09 立川市 100
+03 千葉県 12 柏市 100
+04 神奈川県 16 小田原市 100
+```
+
 
 #### `yarr` - Expand long data to wide
 
