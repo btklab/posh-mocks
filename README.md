@@ -14,7 +14,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `linkcheck`, `man2`, `md2mindmap`, `md2mindmap2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `toml2psobject`, `uniq`, `yarr`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `grep`, `gyo`, `han`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `linkcheck`, `man2`, `md2mindmap`, `md2mindmap2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
 
 Inspired by:
 
@@ -24,7 +24,7 @@ Inspired by:
     - Commands: `grep`, `sed`, `head`, `tail`, `awk`, `make`, `uniq`, `self`, `delf`, and more...
 - [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
-    - Commands: `man2`, `keta`, `tateyoko`, `gyo`, `fillretu`, `yarr`, `count`, and more...
+    - Commands: `man2`, `keta`, `tateyoko`, `gyo`, `fillretu`, `yarr`, `count`, `han`, `zen`, and more...
 - [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
     - License: The MIT License (MIT): Copyright (c) 2016 Yasuhiro, Yamada
     - Commands: `flat`, `addt`, `addb`, `addr`, `addl`, `mirror`, and more...
@@ -1259,6 +1259,134 @@ gyo *.*
 29 t.md
 118 table2col.md
 2 uri-list.txt
+```
+
+#### `han` - Convert full-width kana to half-width kana using Microsoft.VisualBasic.VbStrConv.Wide
+
+全角文字を半角に変換。For japanese locale on windows。
+`[-k|-Kana]`スイッチで全角カタカナはに変換しない
+（半角カナを全角に変換するわけではない）
+
+- Usage
+    - `man2 han`
+- Options
+    - `[-k|-Kana]` - Do not convert full-width(zenkaku) KANA
+- Examples
+    - `"input" | han | zen -k`
+        - → 英数字記号を半角に、カナのみ全角に変換
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `han`
+- Thanks
+    - [【PowerShell】全角英数字記号を半角に変換する方法 - buralog](https://buralog.jp/powershell-zenkaku-eisuukigou-conver-to-hankaku/)
+ - Learn
+    - Regex.Replace Method (.NET 7)  - Replace(String, String, MatchEvaluator)
+        - [Regex.Replace Method (System.Text.RegularExpressions)](https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regex.replace?view=net-7.0)
+        - [Regex.Replace メソッド (System.Text.RegularExpressions)](https://learn.microsoft.com/ja-jp/dotnet/api/system.text.regularexpressions.regex.replace)
+
+
+Examples:
+
+```powershell
+"パピプペポ０１２３４５６７８９＝Ａ" | han | zen -k
+パピプペポ0123456789=A
+
+説明
+==============
+入力から英数字記号を半角に、カナのみ全角に変換
+```
+
+```powershell
+"パピプペポ０１２３４５６７８９＝Ａ" | han
+ﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟ0123456789=A
+
+"パピプペポ０１２３４５６７８９＝Ａ" | han | zen
+パピプペポ０１２３４５６７８９＝Ａ
+
+"パピプペポ０１２３４５６７８９＝Ａ" | han -k
+パピプペポ0123456789=A
+
+"パピプペポ０１２３４５６７８９＝Ａ" | han -k | zen
+パピプペポ０１２３４５６７８９＝Ａ
+
+"パピプペポ０１２３４５６７８９＝Ａ" | han | zen -k
+パピプペポ0123456789=A
+```
+
+#### `zen` - Convert half-width kana to full-width kana using Microsoft.VisualBasic.VbStrConv.Wide
+
+全角文字を半角に変換する。For japanese locale on windows。
+`[-k|-Kana]`スイッチで半角カタカナのみ全角カタカナに変換
+
+- Usage
+    - `man2 zen`
+- Options
+    - `[-k|-Kana]` - Convert only half-width kana to full-width kana
+- Examples
+    - `"input" | han | zen -k`
+        - → 英数字記号を半角に、カナのみ全角に変換
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `zen`
+- Thanks
+    - [【PowerShell】全角英数字記号を半角に変換する方法 - buralog](https://buralog.jp/powershell-zenkaku-eisuukigou-conver-to-hankaku/)
+ - Learn
+    - Regex.Replace Method (.NET 7)  - Replace(String, String, MatchEvaluator)
+        - [Regex.Replace Method (System.Text.RegularExpressions)](https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regex.replace?view=net-7.0)
+        - [Regex.Replace メソッド (System.Text.RegularExpressions)](https://learn.microsoft.com/ja-jp/dotnet/api/system.text.regularexpressions.regex.replace)
+
+Examples:
+
+```powershell
+"パピプペポ０１２３４５６７８９＝Ａ" | han | zen -k
+パピプペポ0123456789=A
+
+説明
+==============
+入力から英数字記号を半角に、カナのみ全角に変換
+```
+
+```powershell
+"パピプペポ０１２３４５６７８９＝Ａ" | han
+ﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟ0123456789=A
+
+"パピプペポ０１２３４５６７８９＝Ａ" | han | zen
+パピプペポ０１２３４５６７８９＝Ａ
+
+"パピプペポ０１２３４５６７８９＝Ａ" | han -k
+パピプペポ0123456789=A
+
+"パピプペポ０１２３４５６７８９＝Ａ" | han -k | zen
+パピプペポ０１２３４５６７８９＝Ａ
+
+"パピプペポ０１２３４５６７８９＝Ａ" | han | zen -k
+パピプペポ0123456789=A
+```
+
+#### `vbStrConv` - Convert strings using Microsoft.VisualBasic.VbStrConv
+
+文字列の変換。
+
+
+- Usage
+    - `man2 vbStrConv`
+    - `vbStrConv [-Lowercase] [-Uppercase] [-ProperCase] [-Wide] [-Narrow] [-Hiragana] [-Katakana]`
+- Options
+    - `-Lowercase`
+    - `-Uppercase`
+    - `-ProperCase`
+    - `-Wide`
+    - `-Narrow`
+    - `-Hiragana`
+    - `-Katakana`
+- Examples
+    - `"input" | vbStrConv -ProperCase`
+
+Examples:
+
+```powershell
+"input" | vbStrConv -ProperCase
+Input
 ```
 
 
