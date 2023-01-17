@@ -2,10 +2,16 @@
 
 A mock-up set of [PowerShell](https://github.com/PowerShell/PowerShell) 7 functions that filter text-object input from the pipeline(stdin) and return text-object (this concept is closer to Bash than PowerShell).Inspired by [Parsing Text with PowerShell (3/3), Steve Lee, January 28th, 2019](https://devblogs.microsoft.com/powershell/parsing-text-with-powershell-3-3/).
 
-- For use in UTF-8 Japanese environments on windows.
+- A set of functions for interactive text processing with connecting pipes.
 - For my personal work and hobby use.
-- Note that the code is spaghetti (due to my technical inexperience).
-- Insufficient tests and error handlings.
+- For use in UTF-8 Japanese environments on windows.
+- Required PowerShell 7+ on Windows
+    - Some script may work with PowerShell 5
+    - Some script may work with PowerShell 7+ on Linux
+- Note:
+    - The code is spaghetti (due to my technical inexperience).
+    - Insufficient tests and error handlings.
+    - Processing speed is slow.
 
 function list:
 
@@ -219,7 +225,6 @@ Days Hours Minutes Seconds Milliseconds
 0    0     0       1       178
 0    0     0       1       183
 ```
-
 
 
 Examples
@@ -520,7 +525,7 @@ Examples:
 Examples:
 
 ```powershell
-"aiueo" | tac
+"aiueo" | rev
 oeuia
 ```
 #### `rev2` - Reverse strings
@@ -665,6 +670,11 @@ Examples detail:
 
 ```powershell
 # select field 1 and 3
+"1 2 3","4 5 6","7 8 9"
+1 2 3
+4 5 6
+7 8 9
+
 "1 2 3","4 5 6","7 8 9" | self 1 3
 1 3
 4 6
@@ -674,6 +684,10 @@ Examples detail:
 ```powershell
 # select 2nd field and and
 # cut out 2 characters from the 2nd character
+"123 456 789","223 523 823"
+123 456 789
+223 523 823
+
 "123 456 789","223 523 823" | self 2.2.2
 56
 23
@@ -688,6 +702,10 @@ Examples detail:
 ```powershell
 # select the 1st field from the leftmost field and
 # select the 2nd field from the rightmost field(=NF)
+"1 2 3 4 5","6 7 8 9 10"
+1 2 3 4 5
+6 7 8 9 10
+
 "1 2 3 4 5","6 7 8 9 10" | self 1 NF-1
 1 4
 6 9
@@ -713,6 +731,11 @@ Examples detail:
 
 ```powershell
 # delete field 1 and 2
+"1 2 3","4 5 6","7 8 9"
+1 2 3
+4 5 6
+7 8 9
+
 "1 2 3","4 5 6","7 8 9" | delf 1 2
 3
 6
@@ -721,6 +744,10 @@ Examples detail:
 
 ```powershell
 # delete field 1 and 2nd field from right
+"1 2 3 4 5","6 7 8 9 10"
+1 2 3 4 5
+6 7 8 9 10
+
 "1 2 3 4 5","6 7 8 9 10" | delf 1 NF-1
 2 3 5
 7 8 10
@@ -1701,7 +1728,7 @@ cat a.md | md2mindmap > a.dot; dot2gviz a.dot -o png | ii
 
 ```powershell
 # change direction
-cat a.md | md2mindmap -TopToBottom  > a.dot; dot2gviz a.dot | ii
+cat a.md | md2mindmap -TopToBottom > a.dot; dot2gviz a.dot | ii
 ```
 
 ![](img/md2mindmap_toptobottom.png)
@@ -1891,8 +1918,9 @@ cat a.md | md2mindmap2 -Scale 1.3 -Kinsoku 14 > a.pu; pu2java a.pu | ii
 
 ```powershell
 # apply WBS (Work Breakdown Structure)
-# input
-# WBSの例
+cat wbs.md
+# WBS
+
 + <&flag>社長
     + 業務本部
         + 総務部
@@ -1921,7 +1949,7 @@ cat a.md | md2mindmap2 -Scale 1.3 -Kinsoku 14 > a.pu; pu2java a.pu | ii
 cat wbs.md | md2mindmap2 -WBS | Tee-Object -FilePath a.pu ; pu2java a.pu -OutputFileType svg | ii
 @startwbs
 
-'title none
+title WBS
 skinparam DefaultFontName "Meiryo"
 
 + <&flag>社長
