@@ -6,6 +6,9 @@ A mock-up set of [PowerShell](https://github.com/PowerShell/PowerShell) 7 functi
 - For my personal work and hobby use.
 - Note that the code is spaghetti (due to my technical inexperience).
 - Insufficient tests and error handlings.
+- Required PowerShell 7+ on Windows
+    - Some script may work with PowerShell 5
+    - Some script may work with PowerShell 7+ on Linux
 
 function list:
 
@@ -219,7 +222,6 @@ Days Hours Minutes Seconds Milliseconds
 0    0     0       1       178
 0    0     0       1       183
 ```
-
 
 
 Examples
@@ -1701,7 +1703,7 @@ cat a.md | md2mindmap > a.dot; dot2gviz a.dot -o png | ii
 
 ```powershell
 # change direction
-cat a.md | md2mindmap -TopToBottom  > a.dot; dot2gviz a.dot | ii
+cat a.md | md2mindmap -TopToBottom > a.dot; dot2gviz a.dot | ii
 ```
 
 ![](img/md2mindmap_toptobottom.png)
@@ -1891,8 +1893,9 @@ cat a.md | md2mindmap2 -Scale 1.3 -Kinsoku 14 > a.pu; pu2java a.pu | ii
 
 ```powershell
 # apply WBS (Work Breakdown Structure)
-# input
-# WBSの例
+cat wbs.md
+# WBS
+
 + <&flag>社長
     + 業務本部
         + 総務部
@@ -1921,7 +1924,7 @@ cat a.md | md2mindmap2 -Scale 1.3 -Kinsoku 14 > a.pu; pu2java a.pu | ii
 cat wbs.md | md2mindmap2 -WBS | Tee-Object -FilePath a.pu ; pu2java a.pu -OutputFileType svg | ii
 @startwbs
 
-'title none
+title WBS
 skinparam DefaultFontName "Meiryo"
 
 + <&flag>社長
