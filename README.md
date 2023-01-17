@@ -776,7 +776,7 @@ Examples detail:
     - `+count`: Output the total number of rows in the leftmost column. 合計した行数を最左列に出力
 - Examples
     - `"A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 1 2 3 3`
-        - **How to read** : Using the concatenated value of columns 1 and 2 as a key, sum-up the values of columns 3 and 4 respectively.
+        - **How to read** : Using the value obtained by concatenating from 1st to 2nd columns as a key, sum-up for each column values from 3rd to 3rd columns.
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `sm2`
