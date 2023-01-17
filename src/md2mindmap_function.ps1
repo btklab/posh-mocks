@@ -625,6 +625,7 @@ function md2mindmap {
                 Join = '\n'
                 SkipTop = "$SkipTop"
             }
+            $KinsokuParams.Set_Item('Expand', $true)
             $KinsokuParams.Set_Item('OffTrim', $true)
             ## 入力文字列・デリミタはクオーティングで安全にくるむこと
             $str = Write-Output "$str" | kinsoku @KinsokuParams
