@@ -282,15 +282,13 @@ ccc
 
 ```powershell
 # Find a string in subdirectories (grep 'regex' -H file,file,... [-r|Recurse])
-
 grep 'tab' -H '*.md' -r [-FileNameOnly|-FileNameAndLineNumber]
 
 Table: caption
 :::{.table2col}
 | table |
 
-The following commands are also approximately equivalent
-
+# The following commands are also approximately equivalent
 ls *.md -Recurse | grep "table"
 
 table2col.md:10:Table: caption
@@ -304,24 +302,21 @@ table2col.md:66:| table |
 Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
 cat .\Command.txt | grep "Get\-", "Set\-" -NotMatch | Select-Object -Last 5
 
-Cmdlet  rite-Output   7.0.0.0  Microsoft.PowerShell.Utility
-Cmdlet  rite-Progress 7.0.0.0  Microsoft.PowerShell.Utility
-Cmdlet  rite-Verbose  7.0.0.0  Microsoft.PowerShell.Utility
-Cmdlet  rite-Warning  7.0.0.0  Microsoft.PowerShell.Utility
+Cmdlet Write-Output   7.0.0.0  Microsoft.PowerShell.Utility
+Cmdlet Write-Progress 7.0.0.0  Microsoft.PowerShell.Utility
+Cmdlet Write-Verbose  7.0.0.0  Microsoft.PowerShell.Utility
+Cmdlet Write-Warning  7.0.0.0  Microsoft.PowerShell.Utility
 ```
 
 ```powershell
 # Use double quotes when searching for tab characters (grep "`t")
-
  "1,2,3", "4,5,6", "7,8,9", "" | %{ $_ -replace ',', "`t" } | grep "`t[28]"
-
 1       2       3
 7       8       9
 ```
 
 ```powershell
 # Find lines before and after a match (grep "regex" -C <int>,<int> )
-
 Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
 cat .\Command.txt | grep 'Get\-Computer' -C 2, 3
 
@@ -335,7 +330,6 @@ cat .\Command.txt | grep 'Get\-Computer' -C 2, 3
 
 ```powershell
 # Tips: use Out-String -Stream (alias:oss) to greppable
-
 cat .\Command.txt | grep 'Get\-Computer' -C 2, 3 | oss | grep '>'
 
 > Cmdlet   Get-ComputerInfo   7.0.0.0    Microsoft.PowerShell.Management
@@ -1077,7 +1071,7 @@ PS> cat a.txt | grep . | sort | count -c 1 2
         - `<k1>`列から`<k2>`列をキーとみなす
 - Examples
     - `cat a.txt | getfirst 1 2`
-        - **How to read** : Output only the first row with the same key, using the value obtained by concatenating from 1st to 2nd columns as a key.
+        - **How to read** : Get only the first row with the same key, using the value obtained by concatenating from 1st to 2nd columns as a key.
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `getfirst`
@@ -1122,7 +1116,7 @@ cat a.txt | getfirst 1 2
         - `<k1>`列から`<k2>`列をキーとみなす
 - Examples
     - `cat a.txt | getlast 1 2`
-        - **How to read** : Output only the last row of the same key with the value concatenated from 1st to 2nd column as the key.
+        - **How to read** : Get only the last row of the same key with the value concatenated from 1st to 2nd column as the key.
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `getlast`
