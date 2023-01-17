@@ -63,10 +63,12 @@ Inspired by:
 
 1. Comment out unnecessary lines (functions) in `operator.ps1`
 2. Dot sourcing `operator.ps1` (and optional `operator-extra.ps1`)
+    - (However, this only works for the current process. When you close the window (end the process), the dot-sourced functions are forgotten)
 
 ```powershell
 # install all functions
 . path/to/posh-mocks/operator.ps1
+# option
 . path/to/posh-mocks/operator-extra.ps1
 ```
 
@@ -662,6 +664,7 @@ Output:
     - `self <num> <num>...`
 - Examples
     - `"1 2 3","4 5 6","7 8 9" | self 1 3`
+        - **How to read** : Select fields 1st and 3rd columns.
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `self`
@@ -715,7 +718,7 @@ Examples detail:
 #### `delf` - Delete fields
 
 半角スペース区切りの標準入力から指定列のみ削除する
-最終列を'NF'で指定することもできる
+最終列を`NF`で指定することもできる
 
 
 - Usage
@@ -723,6 +726,7 @@ Examples detail:
     - `delf <num> <num>...`
 - Examples
     - `"1 2 3","4 5 6","7 8 9" | delf 1 3`
+        - **How to read** : Delete fields from 1st column to 3rd column.
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `delf`
@@ -769,12 +773,13 @@ Examples detail:
     - `man2 sm2`
     - `sm2 [+count] <k1> <k2> <s1> <s2>`
 - Options
-    - `+count`: 合計した行数を最左列に出力
+    - `+count`: Output the total number of rows in the leftmost column. 合計した行数を最左列に出力
 - Examples
     - `"A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 1 2 3 3`
+        - **How to read** : Using the concatenated value of columns 1 and 2 as a key, sum-up the values of columns 3 and 4 respectively.
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
-    - Command: `delf`
+    - Command: `sm2`
 
 Examples detail:
 
@@ -861,8 +866,8 @@ C 1 10
     - `man2 lcalc`
     - `lcalc [-d] 'expr; expr;...'`
 - Options
-    - `expr`はクオート内において`;`で区切ることで複数の計算式を指定可能
-    - `-d`: 電卓モード
+    - `expr`はクオート内において`;`区切りで複数の計算式を指定可能
+    - `-d`: calculator mode. 電卓(`dentaku`)モード
 - Note
     - 計算列の指定
         - `$1,$2,...` : 列指定は`$`記号＋列数
@@ -971,6 +976,12 @@ Output:
 
 # Output for each change in the
 # number of columns.
+"a a","b b b","c c c","d d"
+a a
+b b b
+c c c
+d d
+
 "a a","b b b","c c c","d d" | retu
 2
 3
@@ -997,6 +1008,7 @@ Output:
     - `count [-c] <k1> <k2>`
 - Examples
     - `cat a.txt | count [-c] <k1> <k2>`
+        - **How to read** : Count the number of duplicate records using the value obtained by concatenating from 1st to 2nd columns as a key.
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `count`
@@ -1065,6 +1077,7 @@ PS> cat a.txt | grep . | sort | count -c 1 2
         - `<k1>`列から`<k2>`列をキーとみなす
 - Examples
     - `cat a.txt | getfirst 1 2`
+        - **How to read** : Output only the first row with the same key, using the value obtained by concatenating from 1st to 2nd columns as a key.
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `getfirst`
@@ -1109,6 +1122,7 @@ cat a.txt | getfirst 1 2
         - `<k1>`列から`<k2>`列をキーとみなす
 - Examples
     - `cat a.txt | getlast 1 2`
+        - **How to read** : Output only the last row of the same key with the value concatenated from 1st to 2nd column as the key.
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `getlast`
