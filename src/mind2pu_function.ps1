@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
 
-md2mindmap2 - Generate plantuml script to draw a mind map from list data in markdown format
+mind2pu - Generate plantuml script to draw a mind map from list data in markdown format
 
 markdown形式のリストデータからマインドマップを描画するplantumlスクリプトを生成する
 
@@ -20,7 +20,7 @@ markdown形式のリストデータからマインドマップを描画するpla
 @startuml,@endumlの代わりに@startwbs, @endwbsを先頭と末尾に追加
 
 mindmapでleft sideやright sideと指定すると、要素の左右方向を制御できる
-（md2mindmap2のみ。md2mindmapではコメントアウトされる）
+（mind2puのみ。mind2dotではコメントアウトされる）
 
 "*"マークを"-"に置換する（sed 's;\*;-;g'）と、
 右から左方向に伸びるマップになる
@@ -51,8 +51,8 @@ PS> cat input.txt
             - fuga2
     - fuga3_
 
-cat input.txt | md2mindmap2
-cat input.txt | md2mindmap2 -o a.pu; pu2java a.pu | ii
+cat input.txt | mind2pu
+cat input.txt | mind2pu -o a.pu; pu2java a.pu | ii
 
 ## output -- plantUMLスクリプト
 @startmindmap a
@@ -79,10 +79,8 @@ skinparam DefaultFontName "BIZ UDPGothic"
 
 @endmindmap
 
-
-関連: pu2java, pert, mkpert2dot, dot2gviz,
-      logitree, md2mindmap, md2mindmap2, flowchart
-      ganttchart, ganttchart2
+.LINK
+    pu2java, dot2gviz, pert, pert2dot, pert2gantt2pu, mind2dot, mind2pu, gantt2pu, logi2dot, logi2dot2, logi2dot3, logi2pu, logi2pu2, flow2pu
 
 .PARAMETER OutputFile
 出力するファイル名
@@ -154,8 +152,8 @@ PS> cat input.txt
             - fuga2
     - fuga3_
 
-cat input.txt | md2mindmap2
-cat input.txt | md2mindmap2 -o a.pu; pu2java a.pu | ii
+cat input.txt | mind2pu
+cat input.txt | mind2pu -o a.pu; pu2java a.pu | ii
 
 ## output -- plantUMLスクリプト
 @startmindmap a
@@ -183,7 +181,7 @@ skinparam DefaultFontName "BIZ UDPGothic"
 @endmindmap
 
 .EXAMPLE
-cat wbs.md | md2mindmap2 -WBS | Tee-Object -FilePath a.pu ; pu2java a.pu -OutputFileType svg | ii
+cat wbs.md | mind2pu -WBS | Tee-Object -FilePath a.pu ; pu2java a.pu -OutputFileType svg | ii
 # WBSの例
 
 + <&flag>社長
@@ -210,7 +208,7 @@ cat wbs.md | md2mindmap2 -WBS | Tee-Object -FilePath a.pu ; pu2java a.pu -Output
             + LAB
             + QC
 #>
-function md2mindmap2 {
+function mind2pu {
     Param(
         [Parameter( Mandatory=$False)]
         [Alias('o')]
