@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `linkcheck`, `man2`, `md2mindmap`, `md2mindmap2`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `linkcheck`, `man2`, `mind2dot`, `mind2pu`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
 
 Inspired by:
 
@@ -282,15 +282,13 @@ ccc
 
 ```powershell
 # Find a string in subdirectories (grep 'regex' -H file,file,... [-r|Recurse])
-
 grep 'tab' -H '*.md' -r [-FileNameOnly|-FileNameAndLineNumber]
 
 Table: caption
 :::{.table2col}
 | table |
 
-The following commands are also approximately equivalent
-
+# The following commands are also approximately equivalent
 ls *.md -Recurse | grep "table"
 
 table2col.md:10:Table: caption
@@ -304,24 +302,21 @@ table2col.md:66:| table |
 Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
 cat .\Command.txt | grep "Get\-", "Set\-" -NotMatch | Select-Object -Last 5
 
-Cmdlet  rite-Output   7.0.0.0  Microsoft.PowerShell.Utility
-Cmdlet  rite-Progress 7.0.0.0  Microsoft.PowerShell.Utility
-Cmdlet  rite-Verbose  7.0.0.0  Microsoft.PowerShell.Utility
-Cmdlet  rite-Warning  7.0.0.0  Microsoft.PowerShell.Utility
+Cmdlet Write-Output   7.0.0.0  Microsoft.PowerShell.Utility
+Cmdlet Write-Progress 7.0.0.0  Microsoft.PowerShell.Utility
+Cmdlet Write-Verbose  7.0.0.0  Microsoft.PowerShell.Utility
+Cmdlet Write-Warning  7.0.0.0  Microsoft.PowerShell.Utility
 ```
 
 ```powershell
 # Use double quotes when searching for tab characters (grep "`t")
-
  "1,2,3", "4,5,6", "7,8,9", "" | %{ $_ -replace ',', "`t" } | grep "`t[28]"
-
 1       2       3
 7       8       9
 ```
 
 ```powershell
 # Find lines before and after a match (grep "regex" -C <int>,<int> )
-
 Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
 cat .\Command.txt | grep 'Get\-Computer' -C 2, 3
 
@@ -335,7 +330,6 @@ cat .\Command.txt | grep 'Get\-Computer' -C 2, 3
 
 ```powershell
 # Tips: use Out-String -Stream (alias:oss) to greppable
-
 cat .\Command.txt | grep 'Get\-Computer' -C 2, 3 | oss | grep '>'
 
 > Cmdlet   Get-ComputerInfo   7.0.0.0    Microsoft.PowerShell.Management
@@ -1077,7 +1071,7 @@ PS> cat a.txt | grep . | sort | count -c 1 2
         - `<k1>`列から`<k2>`列をキーとみなす
 - Examples
     - `cat a.txt | getfirst 1 2`
-        - **How to read** : Output only the first row with the same key, using the value obtained by concatenating from 1st to 2nd columns as a key.
+        - **How to read** : Get only the first row with the same key, using the value obtained by concatenating from 1st to 2nd columns as a key.
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `getfirst`
@@ -1122,7 +1116,7 @@ cat a.txt | getfirst 1 2
         - `<k1>`列から`<k2>`列をキーとみなす
 - Examples
     - `cat a.txt | getlast 1 2`
-        - **How to read** : Output only the last row of the same key with the value concatenated from 1st to 2nd column as the key.
+        - **How to read** : Get only the last row of the same key with the value concatenated from 1st to 2nd column as the key.
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `getlast`
@@ -1591,7 +1585,7 @@ Input
         - <https://www.java.com/en/download/>
 
 
-#### `md2mindmap` - Generate graphviz script to draw a mind map from list data in markdown format
+#### `mind2dot` - Generate graphviz script to draw a mind map from list data in markdown format
 
 markdown形式のリストデータからマインドマップを描画する`graphviz`スクリプトを生成する。
 入力データは「半角スペース4つ」に「ハイフン」で階層構造を期待する
@@ -1602,17 +1596,17 @@ markdown形式のリストデータからマインドマップを描画する`gr
 
 箇条書きをマインドマップに変換すると、とくにグループ分けが視覚的に理解しやすくなる（気がする）。
 上の`dot2gviz`と組み合わせて使うと、形式変換から作図までワンライナーで処理できるので便利。
-たとえば、`cat a.md | md2mindmap > a.dot; dot2gviz a.dot | ii`とする。
+たとえば、`cat a.md | mind2dot > a.dot; dot2gviz a.dot | ii`とする。
 
 - Usage
-    - `man2 md2mindmap`
-    - `md2mindmap [[-OutputFile] <String>] [[-Space] <Int32>] [[-GraphType] <String>] [-TopToBottom] [-ReverseEdge] [[-DotFile] <String>] [[-NodeShape] <String>] [[-NodeFillColor] <String>] [[-FirstNodeShape] <String>] [[-FirstNodeFillColor] <String>] [-OffRounded] [[-Title] <String>] [[-TitleLoc] <String>] [[-TitleJust] <String>] [[-FontName] <String>] [[-FontNameWindowsDefault] <String>] [[-FontSize]<Double>] [[-FontColor] <String>] [[-FoldLabel] <Int32>] [[-Kinsoku] <Int32>] [[-LayoutEngine] <String>] [[-Delimiter] <String>] [[-LegendFontSize] <Int32>] [-SolarizedDark] [-SolarizedLight] [[-PenWidth] <Int32>] [[-SkipTop] <String>]`
+    - `man2 mind2dot`
+    - `mind2dot [[-OutputFile] <String>] [[-Space] <Int32>] [[-GraphType] <String>] [-TopToBottom] [-ReverseEdge] [[-DotFile] <String>] [[-NodeShape] <String>] [[-NodeFillColor] <String>] [[-FirstNodeShape] <String>] [[-FirstNodeFillColor] <String>] [-OffRounded] [[-Title] <String>] [[-TitleLoc] <String>] [[-TitleJust] <String>] [[-FontName] <String>] [[-FontNameWindowsDefault] <String>] [[-FontSize]<Double>] [[-FontColor] <String>] [[-FoldLabel] <Int32>] [[-Kinsoku] <Int32>] [[-LayoutEngine] <String>] [[-Delimiter] <String>] [[-LegendFontSize] <Int32>] [-SolarizedDark] [-SolarizedLight] [[-PenWidth] <Int32>] [[-SkipTop] <String>]`
 - Examples
-    - `cat a.md | md2mindmap -o a.dot`
-    - `cat a.md | md2mindmap > a.dot`
-    - `cat a.md | md2mindmap | Out-File a.dot -Encoding utf8`
+    - `cat a.md | mind2dot -o a.dot`
+    - `cat a.md | mind2dot > a.dot`
+    - `cat a.md | mind2dot | Out-File a.dot -Encoding utf8`
     - `dot2gviz`との連携
-        - `cat a.md | md2mindmap > a.dot; dot2gviz a.dot | ii`
+        - `cat a.md | mind2dot > a.dot; dot2gviz a.dot | ii`
 - Options
     - `-LayoutEngine (circo|dot|fdp|neato|osage|sfdp|twopi|patchwork)`でレイアウトエンジンを指定可能
     - `-FontName <fontname>`でフォントを指定可能
@@ -1661,7 +1655,7 @@ end legend
 # output
 # Note that fontname="meiryo" is specified by default
 
-cat a.md | md2mindmap
+cat a.md | mind2dot
 graph mindmap {
  // graph settings
  graph [
@@ -1733,47 +1727,47 @@ graph mindmap {
 
 ```powershell
 # output png using "dot2gviz"
-cat a.md | md2mindmap > a.dot; dot2gviz a.dot | ii
+cat a.md | mind2dot > a.dot; dot2gviz a.dot | ii
 # or
-cat a.md | md2mindmap > a.dot; dot2gviz a.dot -o png | ii
+cat a.md | mind2dot > a.dot; dot2gviz a.dot -o png | ii
 ```
 
-![](img/md2mindmap_sinple.png)
+![](img/mind2dot_sinple.png)
 
 ```powershell
 # change direction
-cat a.md | md2mindmap -TopToBottom > a.dot; dot2gviz a.dot | ii
+cat a.md | mind2dot -TopToBottom > a.dot; dot2gviz a.dot | ii
 ```
 
-![](img/md2mindmap_toptobottom.png)
+![](img/mind2dot_toptobottom.png)
 
 ```powershell
 # change color scheme
-cat a.md | md2mindmap -SolarizedDark > a.dot; dot2gviz a.dot | ii
+cat a.md | mind2dot -SolarizedDark > a.dot; dot2gviz a.dot | ii
 ```
 
-![](img/md2mindmap_SolarizedDark.png)
+![](img/mind2dot_SolarizedDark.png)
 
 ```powershell
 # change layout engine
-cat a.md | md2mindmap -SolarizedDark -LayoutEngine sfdp > a.dot; dot2gviz a.dot | ii
+cat a.md | mind2dot -SolarizedDark -LayoutEngine sfdp > a.dot; dot2gviz a.dot | ii
 ```
 
-![](img/md2mindmap_LayoutEngine_sfdp.png)
+![](img/mind2dot_LayoutEngine_sfdp.png)
 
 ```powershell
 # change FirstNodeShape and layout engine
-cat a.md | md2mindmap -FirstNodeShape cylinder -LayoutEngine sfdp > a.dot; dot2gviz a.dot | ii
+cat a.md | mind2dot -FirstNodeShape cylinder -LayoutEngine sfdp > a.dot; dot2gviz a.dot | ii
 ```
 
-![](img/md2mindmap_FirstNodeShape_cylinder.png)
+![](img/mind2dot_FirstNodeShape_cylinder.png)
 
 ```powershell
 # change FirstNodeShapeFillColor
-cat a.md | md2mindmap -FirstNodeFillColor orange > a.dot; dot2gviz a.dot | ii
+cat a.md | mind2dot -FirstNodeFillColor orange > a.dot; dot2gviz a.dot | ii
 ```
 
-![](img/md2mindmap_FirstNodeShapeFillColor.png)
+![](img/mind2dot_FirstNodeShapeFillColor.png)
 
 `-Kinsoku <int>`オプションで、日本語の文章を禁則処理にしたがい任意幅で折り返し。全角文字列は幅2、半角文字列は幅1として折り返したい幅を指定する。
 
@@ -1793,14 +1787,14 @@ cat a.md
 # -Kinsoku 14で、全角文字として7文字で折り返し。
 # ただし行頭行末に禁則文字が来ないように、
 # 折り返し幅が自動調整される
-cat a.md | md2mindmap -Kinsoku 14 > a.dot; dot2gviz a.dot -o png | ii
+cat a.md | mind2dot -Kinsoku 14 > a.dot; dot2gviz a.dot -o png | ii
 ```
 
-![](img/md2mindmap_Kinsoku.png)
+![](img/mind2dot_Kinsoku.png)
 
 
 
-#### `md2mindmap2` - Generate plantuml script to draw a mind map from list data in markdown format
+#### `mind2pu` - Generate plantuml script to draw a mind map from list data in markdown format
 
 markdown形式のリストデータからマインドマップを描画する`plantuml`スクリプトを生成する。
 入力データは「半角スペース4つ」に「ハイフン」で階層構造を期待する
@@ -1811,17 +1805,17 @@ markdown形式のリストデータからマインドマップを描画する`pl
 
 箇条書きをマインドマップに変換すると、とくにグループ分けが視覚的に理解しやすくなる（気がする）。
 上の`pu2java`と組み合わせて使うと、形式変換から作図までワンライナーで処理できるので便利。
-たとえば、`cat a.md | md2mindmap2 > a.pu; pu2java a.pu | ii`とする。
+たとえば、`cat a.md | mind2pu > a.pu; pu2java a.pu | ii`とする。
 
 - Usage
-    - `man2 md2mindmap2`
-    - `md2mindmap2 [[-OutputFile] <String>] [[-Space] <Int32>] [[-Title] <String>] [[-Scale] <Double>] [-Monochrome] [-WBS] [-HandWritten] [[-FontName] <String>] [[-FontNameWindowsDefault] <String>] [[-Theme] <String>] [[-FoldLabel] <Int32>] [[-FoldLabelOnlyPlainText] <Int32>] [[-Kinsoku] <Int32>] [[-KinsokuOnlyPlainText] <Int32>] [[-LegendRight] <String[]>] [[-LegendLeft] <String[]>] [-RightToLeft]`
+    - `man2 mind2pu`
+    - `mind2pu [[-OutputFile] <String>] [[-Space] <Int32>] [[-Title] <String>] [[-Scale] <Double>] [-Monochrome] [-WBS] [-HandWritten] [[-FontName] <String>] [[-FontNameWindowsDefault] <String>] [[-Theme] <String>] [[-FoldLabel] <Int32>] [[-FoldLabelOnlyPlainText] <Int32>] [[-Kinsoku] <Int32>] [[-KinsokuOnlyPlainText] <Int32>] [[-LegendRight] <String[]>] [[-LegendLeft] <String[]>] [-RightToLeft]`
 - Examples
-    - `cat a.md | md2mindmap2 -o a.pu`
-    - `cat a.md | md2mindmap2 > a.pu`
-    - `cat a.md | md2mindmap2 | Out-File a.pu -Encoding utf8`
+    - `cat a.md | mind2pu -o a.pu`
+    - `cat a.md | mind2pu > a.pu`
+    - `cat a.md | mind2pu | Out-File a.pu -Encoding utf8`
     - `pu2java`との連携
-        - `cat a.md | md2mindmap2 > a.pu ; pu2java a.pu | ii`
+        - `cat a.md | mind2pu > a.pu ; pu2java a.pu | ii`
 - Options
     - `-Theme <theme>`でカラースキーマを指定可能
     - `-FontName <fontname>`でフォントを指定可能
@@ -1863,7 +1857,7 @@ end legend
 # output
 # Note that fontname="meiryo" is specified by default
 
-cat a.md | md2mindmap2
+cat a.md | mind2pu
 @startmindmap
 
 title What flavor would you like?
@@ -1889,20 +1883,20 @@ end legend
 
 ```powershell
 # output png using "pu2java"
-cat a.md | md2mindmap2 > a.pu; pu2java a.pu | ii
+cat a.md | mind2pu > a.pu; pu2java a.pu | ii
 # or
-cat a.md | md2mindmap2 > a.pu; pu2java a.pu -o png | ii
+cat a.md | mind2pu > a.pu; pu2java a.pu -o png | ii
 ```
 
-![](img/md2mindmap2_sinple.png)
+![](img/mind2pu_sinple.png)
 
 
 ```powershell
 # change color scheme
-cat a.md | md2mindmap2 -Theme blueprint > a.pu; pu2java a.pu | ii
+cat a.md | mind2pu -Theme blueprint > a.pu; pu2java a.pu | ii
 ```
 
-![](img/md2mindmap2_Theme_blueprint.png)
+![](img/mind2pu_Theme_blueprint.png)
 
 
 `-Kinsoku <int>`オプションで、日本語の文章を禁則処理にしたがい任意幅で折り返し。全角文字列は幅2、半角文字列は幅1として折り返したい幅を指定する。
@@ -1923,10 +1917,10 @@ cat a.md
 # -Kinsoku 14で、全角文字として7文字で折り返し。
 # ただし行頭行末に禁則文字が来ないように、
 # 折り返し幅が自動調整される
-cat a.md | md2mindmap2 -Scale 1.3 -Kinsoku 14 > a.pu; pu2java a.pu | ii
+cat a.md | mind2pu -Scale 1.3 -Kinsoku 14 > a.pu; pu2java a.pu | ii
 ```
 
-![](img/md2mindmap2_Kinsoku.png)
+![](img/mind2pu_Kinsoku.png)
 
 `-WBS`スイッチでWork Breakdown Structure形式の図を出力。`@startuml`, `@enduml`の代わりに`@startwbs`, `@endwbs`を先頭と末尾に追加
 
@@ -1960,7 +1954,7 @@ cat wbs.md
             + QC
 
 # Output
-cat wbs.md | md2mindmap2 -WBS | Tee-Object -FilePath a.pu ; pu2java a.pu -OutputFileType svg | ii
+cat wbs.md | mind2pu -WBS | Tee-Object -FilePath a.pu ; pu2java a.pu -OutputFileType svg | ii
 @startwbs
 
 title WBS
@@ -1993,7 +1987,7 @@ skinparam DefaultFontName "Meiryo"
 @endwbs
 ```
 
-![](img/md2mindmap2_WBS.png)
+![](img/mind2pu_WBS.png)
 
 
 ### Image processing

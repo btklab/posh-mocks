@@ -5,9 +5,6 @@
 
 Add-CrLf
 
-.DESCRIPTION
--
-
 .EXAMPLE
 PS C:\>Write-Output 'abc`r`n'def' | Add-CrLf
 abc

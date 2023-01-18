@@ -3,7 +3,8 @@
 
 sleepy - sleep with progress bar
 
-Using: Write-Progress
+.LINLK
+    Write-Progress
     https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/write-progress?view=powershell-7.3
 
 .PARAMETER Minutes

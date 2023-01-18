@@ -8,6 +8,9 @@ ctail  - 行末尾から1行削除して出力する
 
 入力はパイプラインからのみ受け付け
 
+.LINK
+    head, tail, chead, ctail, ctail2
+
 
 .EXAMPLE
 PS C:\> cat a.txt | ctail

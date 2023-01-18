@@ -190,7 +190,8 @@ ${LOG_FILE}: ${DATASET}
 ```
 
 
-関連: toposort, pwmake
+.LINK
+    toposort, pwmake
 
 .EXAMPLE
 cat Makefile

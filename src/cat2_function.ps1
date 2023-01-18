@@ -14,8 +14,6 @@ cat2 を使用することで、
 出力する順序も指定できる。
 ハイフン(-)指定で標準入力からも受付可能。
 
-.DESCRIPTION
--
 
 .EXAMPLE
 PS C:\>cat2 b.txt a.txt

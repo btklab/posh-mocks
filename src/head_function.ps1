@@ -15,6 +15,8 @@ file を指定する場合の方が
 指定しない場合よりおそらく高速だが、
 標準入力からはデータを受け付けない点に注意。
 
+.LINK
+    head, tail, chead, ctail, ctail2
 
 
 .EXAMPLE

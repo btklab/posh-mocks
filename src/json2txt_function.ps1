@@ -15,7 +15,8 @@ Inspired by:
 - jiro4989/gsv: gsv transforms a multi-line CSV into one-line JSON to make it easier to grep - GitHub
     - https://github.com/jiro4989/gsv
 
-関連: csv2txt
+.LINK
+    csv2txt
 
 .EXAMPLE
 cat a.json

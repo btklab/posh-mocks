@@ -7,7 +7,6 @@ csv2txt [-z|-NaN]
 -z :データのない列をゼロ0で表現する
 -NaN :データのない列をNaNで表現する
 
-.DESCRIPTION
 エクセルからのCSV出力にも対応している
 セル内改行vbLFは文字列\nに変換される
 
@@ -29,6 +28,8 @@ csv2txt [-z|-NaN]
  * データ中のダブルクォートはフィールドを囲うために使うものと
  区別するために、""と2文字で書いてエスケープする"
 
+.LINK
+    csv2txt, json2txt
 
 .EXAMPLE
 PS C:\>cat a.csv | csv2txt

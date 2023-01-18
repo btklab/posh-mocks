@@ -17,7 +17,8 @@ Listスイッチで、処理せずにターゲットファイルだけをリス�
 Usage: catcsv
     * カレントディレクトリの'*.csv'を'out.csv'に出力する
 
-関連: catcsv.py, catcsv_function.ps1, (python csvkit)csvsql, in2csv
+.LINK
+    catcsv.py, catcsv_function.ps1, (python csvkit)csvsql, in2csv
 
 .PARAMETER List
 処理をせずにターゲットファイルだけを列挙

@@ -23,11 +23,9 @@ yarrなどで生成した列数不定の入力の整形に向く。
 
 
 
-関連: tateyoko, yarr
+.LINK
+    tateyoko, yarr
 
-
-.DESCRIPTION
--
 
 .PARAMETER NaN
 欠損セルに埋める文字列を指定する

@@ -9,9 +9,12 @@
     "input" | han | zen -k
     → 英数字記号を半角に、カナのみ全角に変換
 
+.LINK
+    han, zen, vbStrConv
+
     Regex.Replace Method (.NET 7)  - Replace(String, String, MatchEvaluator)
-      - https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regex.replace
-      - https://learn.microsoft.com/ja-jp/dotnet/api/system.text.regularexpressions.regex.replace
+    https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regex.replace
+    https://learn.microsoft.com/ja-jp/dotnet/api/system.text.regularexpressions.regex.replace
 
 
 .PARAMETER Kana

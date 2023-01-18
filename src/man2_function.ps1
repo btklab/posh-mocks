@@ -9,11 +9,10 @@ Usage:
  man2
  man2 sm2 [-Paging]
  
-
  -lオプション：コマンド名を一列に出力 
  -pオプション：Out-Host -Paging
 
-依存: flat, tateyoko, keta
+Dependency: flat, tateyoko, keta
 
 .EXAMPLE
 man2

@@ -10,8 +10,6 @@ keta [-l]
 
  -l:左詰め（Left）
 
-.DESCRIPTION
--
 
 .EXAMPLE
 PS C:\>cat a.txt

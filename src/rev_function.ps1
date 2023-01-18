@@ -5,6 +5,9 @@
 
 rev
 
+.LINK
+    rev, rev2
+
 .EXAMPLE
 PS C:\>Write-Output あいうえお | rev
 おえういあ

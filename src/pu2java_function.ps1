@@ -31,12 +31,14 @@ plantuml.jarファイルの置き場所は、-Jar <path>で指定する。
 出力形式はファイルの拡張子から自動判別。
 日本語を使う場合、引数でUTF-8を指定すること
 
-関連: mkdotfm, dot2gviz
 
 hint:
   人物相関図 -> package, objectを用いたオブジェクト図
   歴史年表   -> シーケンス図
   業務フロー -> スイムレーン+アクティビティ図
+
+.LINK
+    pu2java, dot2gviz, pert, pert2dot, pert2gantt2pu, mind2dot, mind2pu, gantt2pu, logi2dot, logi2dot2, logi2dot3, logi2pu, logi2pu2, flow2pu
 
 .PARAMETER InputFile
 入力ファイル。

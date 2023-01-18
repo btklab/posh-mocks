@@ -10,6 +10,10 @@
     - Narrow
     - Hiragana
     - Katakana
+
+.LINK
+    han, zen, vbStrConv
+
 #>
 function vbStrConv {
     #Requires -Version 5.0

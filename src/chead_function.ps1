@@ -7,8 +7,8 @@
 
 chead [+h] [-n num]
 
-.DESCRIPTION
--
+.LINK
+    head, tail, chead, ctail, ctail2
 
 .EXAMPLE
 PS C:\> cat a.txt | chead

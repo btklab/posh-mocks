@@ -17,7 +17,8 @@ graphviz：dotコマンドのラッパー
 日本語を使う場合、windowsではdotファイルもしくはdotコマンドの引数で
 fontnameで日本語フォントを指定しないとうまくいかない点に注意する
 
-関連: mkdotfm, normalization, pert, mkpert2dot, logitree
+.LINK
+    pu2java, dot2gviz, pert, pert2dot, pert2gantt2pu, mind2dot, mind2pu, gantt2pu, logi2dot, logi2dot2, logi2dot3, logi2pu, logi2pu2, flow2pu
 
 
 .PARAMETER InputFile

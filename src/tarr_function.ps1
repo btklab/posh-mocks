@@ -10,6 +10,9 @@ tarr - Expand wide data to long
 事前ソート不要。
 大文字小文字を区別しない。
 
+.LINK
+    tarr, yarr
+
 .EXAMPLE
 cat a.txt
 2018 1 2 3

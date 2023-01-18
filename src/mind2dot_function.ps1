@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
 
-md2mindmap - Generate graphviz script to draw a mind map from list data in markdown format
+mind2dot - Generate graphviz script to draw a mind map from list data in markdown format
 
 markdown形式のリストデータからマインドマップを描画するgraphvizスクリプトを生成する
 
@@ -64,8 +64,8 @@ PS> cat input.txt
 {rank=same; "[対策案]",ID0002,ID0004}
 {rank=same; "[懸念点]",ID0003,ID0005}
 
-cat input.txt | md2mindmap
-cat input.txt | md2mindmap -o a.dot; dot2gviz a.dot a.png | ii
+cat input.txt | mind2dot
+cat input.txt | mind2dot -o a.dot; dot2gviz a.dot png | ii
 
 ## output -- GraphViz用dot（一部抜粋）
   // set node
@@ -105,7 +105,8 @@ cat input.txt | md2mindmap -o a.dot; dot2gviz a.dot a.png | ii
 {rank=same; "[懸念点]",ID0003,ID0005}
 
 
-関連: pert, mkpert2dot, dot2gviz, logitree
+.LINK
+    pu2java, dot2gviz, pert, pert2dot, pert2gantt2pu, mind2dot, mind2pu, gantt2pu, logi2dot, logi2dot2, logi2dot3, logi2pu, logi2pu2, flow2pu
 
 
 .PARAMETER OutputFile
@@ -188,7 +189,7 @@ legend right
 this is legend
 end legend
 
-cat a.md | md2mindmap
+cat a.md | mind2dot
 graph mindmap {
  // graph settings
  graph [
@@ -289,8 +290,8 @@ PS> cat input.txt
 {rank=same; "[懸念点]",ID0003,ID0005}
 
 
-cat input.txt | md2mindmap
-cat input.txt | md2mindmap -o a.dot; dot2gviz a.dot a.png | ii
+cat input.txt | mind2dot
+cat input.txt | mind2dot -o a.dot; dot2gviz a.dot png | ii
 
 ## output -- GraphViz用dot（一部抜粋）
   // set node
@@ -330,7 +331,7 @@ cat input.txt | md2mindmap -o a.dot; dot2gviz a.dot a.png | ii
 {rank=same; "[懸念点]",ID0003,ID0005}
 
 .EXAMPLE
-cat a.md | md2mindmap -LayoutEngine twopi > a.dot; dot2gviz a.dot a.svg | ii
+cat a.md | mind2dot -LayoutEngine twopi > a.dot; dot2gviz a.dot svg | ii
 
 説明
 ============
@@ -339,7 +340,7 @@ cat a.md | md2mindmap -LayoutEngine twopi > a.dot; dot2gviz a.dot a.svg | ii
 
 
 #>
-function md2mindmap {
+function mind2dot {
     Param(
         [Parameter( Mandatory=$False)]
         [Alias('o')]

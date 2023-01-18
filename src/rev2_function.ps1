@@ -8,7 +8,8 @@ rev2 [-e]
 
  -e: echo: 入力データも出力する
 
-関連コマンド: stair, cycle
+.LINK
+    rev, rev2, stair, cycle
 
 .DESCRIPTION
 ref:
