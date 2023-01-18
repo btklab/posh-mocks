@@ -720,7 +720,7 @@ Examples detail:
     - `delf <num> <num>...`
 - Examples
     - `"1 2 3","4 5 6","7 8 9" | delf 1 3`
-        - **How to read** : Delete fields from 1st column to 3rd column.
+        - **How to read** : Delete fields 1st and 3rd column.
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `delf`
@@ -1071,7 +1071,7 @@ PS> cat a.txt | grep . | sort | count -c 1 2
         - `<k1>`列から`<k2>`列をキーとみなす
 - Examples
     - `cat a.txt | getfirst 1 2`
-        - **How to read** : Get only the first row with the same key, using the value obtained by concatenating from 1st to 2nd columns as a key.
+        - **How to read** : Get only the first row with the same key with the value concatenated from 1st to 2nd column as the key.
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `getfirst`
