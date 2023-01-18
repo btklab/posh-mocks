@@ -25,6 +25,10 @@ A B C D
 
 title
 
+.LINK
+    addt, addb, addl, addr
+
+
 #>
 function addb {
 

@@ -15,7 +15,8 @@ reference:
 ただし、filenameに半角スペースを含まないこと。
 
 
-関連: lincextract, linkcheck2
+.LINK
+    lincextract, linkcheck2
 
 
 .PARAMETER Header

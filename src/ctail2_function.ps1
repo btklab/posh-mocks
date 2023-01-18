@@ -14,6 +14,8 @@ file を指定した場合、
 file を指定する場合の方が
 指定しない場合よりおそらく高速。
 
+.LINK
+    head, tail, chead, ctail, ctail2
 
 .EXAMPLE
 PS C:\> cat a.txt | ctail2

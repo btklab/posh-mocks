@@ -6,8 +6,6 @@
 
 tateyoko [-Separator <String>]
 
-.DESCRIPTION
--
 
 .PARAMETER Separator
 区切り文字を指定する。

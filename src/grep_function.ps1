@@ -61,9 +61,16 @@ Days Hours Minutes Seconds Milliseconds
 0    0     0       1       183
 
 
-ref:
-about Select-String: https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-string?view=powershell-7.3
-about splatting: https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_splatting?view=powershell-7.3
+.LINK
+    grep, sed
+
+    about Select-String
+    https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-string?view=powershell-7.3
+
+    about splatting
+    https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_splatting?view=powershell-7.3
+
+
 
 .EXAMPLE
 # Find a case-sensitive match (grep 'regex' -CaseSensitive)

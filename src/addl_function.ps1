@@ -26,6 +26,9 @@ PS C:\>Write-Output "A B C D" | addl '0 '
 PS C:\>Write-Output "A B C D" | addl '0' -Delimiter ' '
 0 A B C D E
 
+.LINK
+    addt, addb, addl, addr
+
 #>
 function addl {
 

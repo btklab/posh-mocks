@@ -29,6 +29,8 @@ retu - Count column number
 3 c c c
 2 d d
 
+.LINK
+    gyo, retu
 
 .EXAMPLE
 10..20 | retu

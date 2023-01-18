@@ -4,9 +4,6 @@
 
 Add-CrLf-EndOfFile
 
-.DESCRIPTION
--
-
 #>
 function Add-CrLf-EndOfFile {
     begin  {}

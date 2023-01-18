@@ -4,14 +4,11 @@ Tea timeが来たらタスクトレイから通知してくれる。
 処理が完了するまでプロンプトが戻ってこないので、
 専用の窓が必要な点に注意する。
 
-## Reference
-* https://devblogs.microsoft.com/scripting/weekend-scripter-tea-time/
-* Weekend Scripter: Tea Time!
-* October 2nd, 2010
-* Microsoft Scripting Guy Ed Wilson
-
-.DESCRIPTION
--
+Reference:
+    - https://devblogs.microsoft.com/scripting/weekend-scripter-tea-time/
+    - Weekend Scripter: Tea Time!
+    - October 2nd, 2010
+    - Microsoft Scripting Guy Ed Wilson
 
 .PARAMETER Minutes
 今から何分後に通知するかを指定する
@@ -52,38 +49,38 @@ Exclamation, Hand, Information, Question,
 Shield, Warning, WinLog
 
 .EXAMPLE
-PS C:\> teatimer
+PS > teatimer
 オプションを指定しなければ、直ちに通知する
 
 .EXAMPLE
-PS C:\> teatimer -Minutes 90
+PS > teatimer -Minutes 90
 90分後に通知してくれる
 
 .EXAMPLE
-PS C:\> teatimer -Hours 1 -Minutes 90
+PS > teatimer -Hours 1 -Minutes 90
 1時間と90分後に通知してくれる
 
 .EXAMPLE
-PS C:\> teatimer -At 10:30
+PS > teatimer -At 10:30
 本日の10:30に通知してくれる
 ただし、設定時点で10:30が過ぎていた場合、
 翌日の10:30に通知してくれる
 
 .EXAMPLE
-PS C:\> teatimer -At "2019/3/20 10:30"
+PS > teatimer -At "2019/3/20 10:30"
 クオートすれば、日付指定も可能
 
 .EXAMPLE
-PS C:\> teatimer -Minutes 90 -Title "そろそろ休憩しませんか？" -Text "もう90分も仕事しています"
+PS > teatimer -Minutes 90 -Title "そろそろ休憩しませんか？" -Text "もう90分も仕事しています"
 通知のタイトルと文章を指定
 
 .EXAMPLE
-PS C:\> teatimer -Minutes 90 -ShowPastTime
+PS > teatimer -Minutes 90 -ShowPastTime
 90分後に通知してくれる
 通知メッセージに設定してからの経過時間も表示する
 
 .EXAMPLE
-PS C:\> teatimer -Minutes 90 -IconType Error
+PS > teatimer -Minutes 90 -IconType Error
 アイコンのタイプを変更する
 
 

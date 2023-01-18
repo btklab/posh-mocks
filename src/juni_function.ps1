@@ -6,8 +6,6 @@ juni [-z]
 
  -z: ゼロ始まり
 
-.DESCRIPTION
-行数を付与する
 
 .EXAMPLE
 PS C:\>cat a.txt | juni
@@ -23,15 +21,15 @@ function juni {
             if($args[0] -eq '-z'){$zeroFlag = $True}
         }
         if($zeroFlag){
-            $i = -1
+            [int] $i = -1
         }else{
-            $i = 0
+            [int] $i = 0
         }
     }
 
     process
     {
         $i++
-        [string]$i + ' ' + [string]$_
+        Write-Output "$i $_"
     }
 }

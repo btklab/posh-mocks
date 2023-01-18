@@ -14,7 +14,8 @@ htmlで文末が「、」で終わる場合、
 それぞれ"\."、"\-"、"\$"、"\\"とエスケープする。
 
 
-関連: list2txt, csv2txt
+.LINK
+    list2txt, csv2txt
 
 
 .DESCRIPTION

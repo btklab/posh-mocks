@@ -29,7 +29,8 @@ thanks:
   PowerShellでファイル内の文字列置換 (sed -i) をする -- 晴耕雨読
   https://tex2e.github.io/blog/powershell/sed
 
-関連: sed
+.LINK
+    sed, sed-i
 
 info:
   sed -i と同じようにファイル内の文字列を置換するときは、以下のように複数のコマンドを組み合わせる。

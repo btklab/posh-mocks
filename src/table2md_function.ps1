@@ -18,7 +18,8 @@ csv,tsvはヘッダありデータのみ受付。
 
 用法: cat a.csv | table2md -Delimiter "," -Caption "titlle"
 
-関連: md2import, table2md, md2tex, md2html
+.LINK
+    md2import, table2md, md2tex, md2html
 
 .EXAMPLE
 cat a.tsv | table2md -Caption "title"

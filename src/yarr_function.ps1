@@ -10,6 +10,9 @@ yarr - Expand long data to wide
 事前ソート不要
 大文字小文字を区別しない
 
+.LINK
+    tarr, yarr
+
 .EXAMPLE
 cat a.txt
 2018 1
@@ -29,12 +32,6 @@ PS> cat a.txt | grep . | yarr -n 1
 2022 1 2
 
 ※ grep . で空行をスキップ（＝1文字以上の行のみヒット）
-
-
-
-.EXAMPLE
-PS C:\>cat a.txt | yarr -n 2
-1列目から2列目をキーとして折り返す
 
 #>
 function yarr {

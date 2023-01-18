@@ -3,31 +3,30 @@
 
 clipwatch -- A clipboard watcher using Compare-Object
 
-関連: fwatch
-
+.LINK
+    fwatch
 
 .PARAMETER Action
-Action(ScriptBlock) when change detected
+    Action(ScriptBlock) when change detected
 
 .PARAMETER Interval
-Loop interval (seconds)
+    Loop interval (seconds)
 
 .PARAMETER Quiet
-Do not show status info
+    Do not show status info
 
 .PARAMETER Log
-Output Log
+    Output Log
 
 .PARAMETER OutOnlyLog
-Action | Out-Null
+    Action | Out-Null
 
 
 .EXAMPLE
-clipwatch -Action {Get-ClipBoard | say}
+    clipwatch -Action {Get-ClipBoard | say}
 
-=====
-watch and say
-
+    =====
+    watch and say
 
 #>
 function clipwatch {
@@ -92,4 +91,3 @@ function clipwatch {
         Start-Sleep -Second $interval
     }
 }
-

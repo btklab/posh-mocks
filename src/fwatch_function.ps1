@@ -7,7 +7,6 @@ fwatch -- A filewatcher using LastWriteTime
 
 note: watch only changed, not created, not deleted.
 
-関連: Start-Watcher, Remove-Watcher
 
 .PARAMETER Path
 Input file or directory

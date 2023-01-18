@@ -9,6 +9,9 @@ getlast - Get the last row of the same key
 
 getlast <k1> <k2>
 
+.LINK
+    getfirst, getlast
+
 .EXAMPLE
 cat a.txt
 01 埼玉県 01 さいたま市 100

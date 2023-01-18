@@ -13,23 +13,20 @@ uniq [-c | -d]
  -d: 重複している列のみ出力する
 
 
-.DESCRIPTION
--
-
 .EXAMPLE
-PS C:\>cat a.txt
+PS > cat a.txt
 A 1 10
 B 1 10
 A 1 10
 C 1 10
 
-PS C:\>cat a.txt | sort | uniq
+PS > cat a.txt | sort | uniq
 A 1 10
 B 1 10
 C 1 10
 
 .EXAMPLE
-PS C:\>cat a.txt | uniq
+PS > cat a.txt | uniq
 A 1 10
 B 1 10
 A 1 10
@@ -41,7 +38,7 @@ C 1 10
 
 
 .EXAMPLE
-PS C:\>cat a.txt | sort | uniq -c
+PS > cat a.txt | sort | uniq -c
 2 A 1 10
 1 B 1 10
 1 C 1 10
@@ -52,7 +49,7 @@ PS C:\>cat a.txt | sort | uniq -c
 
 
 .EXAMPLE
-PS C:\>cat a.txt | sort | uniq -d
+PS > cat a.txt | sort | uniq -d
 A 1 10
 
 説明

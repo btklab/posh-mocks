@@ -8,6 +8,10 @@ delf - delete fields
 
 delf <num> <num>...
 
+.LINK
+    self, delf
+
+
 .EXAMPLE
 "1 2 3","4 5 6","7 8 9" | delf 1 2
 3

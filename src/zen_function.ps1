@@ -12,6 +12,9 @@
       - https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regex.replace
       - https://learn.microsoft.com/ja-jp/dotnet/api/system.text.regularexpressions.regex.replace
 
+.LINK
+    han, zen, vbStrConv
+
 
 .PARAMETER Kana
     Convert only half-width kana to full-width kana

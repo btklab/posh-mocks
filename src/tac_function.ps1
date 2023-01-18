@@ -2,10 +2,8 @@
 .SYNOPSIS
 tac -- print lines in reverse
 
-関連: rev
-
-.DESCRIPTION
--
+.LINK
+    rev
 
 .EXAMPLE
 1..5 | tac

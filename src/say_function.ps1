@@ -19,7 +19,8 @@ thanks:
   Microsoftリファレンス SpeechSynthesizer クラス
   https://learn.microsoft.com/ja-jp/dotnet/api/system.speech.synthesis.speechsynthesizer?view=netframework-4.8
 
-関連: clipwatch
+.LINK
+    clipwatch
 
 
 .PARAMETER ListUpVoices

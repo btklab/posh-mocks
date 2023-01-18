@@ -169,8 +169,8 @@ ip = "10.0.0.2"
 role = "backend"
 
 
-
-関連: convToml, mdgrep
+.LINK
+    convToml, mdgrep
 
 
 .PARAMETER NoPoshListAndHash

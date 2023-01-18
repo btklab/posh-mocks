@@ -4,14 +4,12 @@ Tea timeが来たらタスクトレイから通知してくれる。
 処理が完了するまでプロンプトが戻ってこないので、
 専用の窓が必要な点に注意する。
 
-## Reference
-* https://devblogs.microsoft.com/scripting/weekend-scripter-tea-time/
-* Weekend Scripter: Tea Time!
-* October 2nd, 2010
-* Microsoft Scripting Guy Ed Wilson
+Reference:
+    - https://devblogs.microsoft.com/scripting/weekend-scripter-tea-time/
+    - Weekend Scripter: Tea Time!
+    - October 2nd, 2010
+    - Microsoft Scripting Guy Ed Wilson
 
-.DESCRIPTION
--
 
 .PARAMETER Minutes
 今から何分後に通知するかを指定する

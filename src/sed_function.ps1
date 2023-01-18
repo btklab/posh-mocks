@@ -42,6 +42,9 @@ sed 'd;出力開始行キーワード;出力終了行キーワード;'
     - 出力開始ワードから出力終了ワードまでの行を
       削除して出力する
 
+.LINK
+    grep, sed, sed-i
+
 .EXAMPLE
 PS C:\>Write-Output 'a1b1c1' | sed 's;1;2;g'
 a2b2c2

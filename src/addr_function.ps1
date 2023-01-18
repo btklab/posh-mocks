@@ -26,6 +26,9 @@ A B C D E
 PS C:\>Write-Output "A B C D" | addr 'E' -Delimiter ' '
 A B C D E
 
+.LINK
+    addt, addb, addl, addr
+
 #>
 function addr {
 
