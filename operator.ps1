@@ -54,6 +54,8 @@ if ($IsWindows){
 . $pwshSrcDir/getfirst_function.ps1
 . $pwshSrcDir/getlast_function.ps1
 
+. $pwshSrcDir/lcalc_function.ps1
+
 . $pwshSrcDir/han_function.ps1
 . $pwshSrcDir/zen_function.ps1
 . $pwshSrcDir/vbStrConv_function.ps1
