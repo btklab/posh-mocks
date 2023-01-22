@@ -25,6 +25,7 @@ if ($IsWindows){
 
     . $pwshSrcDir/cat2_function.ps1
     . $pwshSrcDir/tac_function.ps1
+    . $pwshSrcDir/rev_function.ps1
 
     ## misc
     . $pwshSrcDir/say_function.ps1
@@ -54,18 +55,22 @@ if ($IsWindows){
 . $pwshSrcDir/getfirst_function.ps1
 . $pwshSrcDir/getlast_function.ps1
 
+. $pwshSrcDir/Add-CrLf_function.ps1
+. $pwshSrcDir/Add-CrLf-EndOfFile_function.ps1
+
+. $pwshSrcDir/lcalc_function.ps1
+. $pwshSrcDir/pawk_function.ps1
+
 . $pwshSrcDir/han_function.ps1
 . $pwshSrcDir/zen_function.ps1
 . $pwshSrcDir/vbStrConv_function.ps1
 
 . $pwshSrcDir/flat_function.ps1
-
-. $pwshSrcDir/Add-CrLf_function.ps1
-. $pwshSrcDir/Add-CrLf-EndOfFile_function.ps1
 . $pwshSrcDir/addb_function.ps1
 . $pwshSrcDir/addl_function.ps1
 . $pwshSrcDir/addr_function.ps1
 . $pwshSrcDir/addt_function.ps1
+. $pwshSrcDir/rev2_function.ps1
 
 
 ## graph and chart

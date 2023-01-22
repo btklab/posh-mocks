@@ -307,6 +307,8 @@ function grep {
             (Select-String @splatting).FileName | Sort-Object -Stable -Unique; return
         } elseif ($FileNameAndLineNumber){
             Select-String @splatting | Out-String -Stream  ; return
+        } elseif ($Context){
+            Select-String @splatting | Out-String -Stream  ; return
         } else {
             (Select-String @splatting).Line; return
         }
