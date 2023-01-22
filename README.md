@@ -941,7 +941,7 @@ C 1 10
 
 #### `pawk` - Pattern-Action processor like GNU AWK
 
-半角スペース区切りの標準入力に対する行志向パターンマッチングプロセッサ。
+半角スペース区切りの標準入力に対する行指向のパターンマッチングプロセッサ。
 
 ```powershell
 pawk [-fs "delim"] [-Pattern { condition }] -Action { action }
