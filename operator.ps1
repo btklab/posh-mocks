@@ -72,6 +72,8 @@ if ($IsWindows){
 . $pwshSrcDir/addt_function.ps1
 . $pwshSrcDir/rev2_function.ps1
 
+### gdate includes thisyear, nextyear, lastyear
+. $pwshSrcDir/gdate_function.ps1
 
 ## graph and chart
 . $pwshSrcDir/dot2gviz_function.ps1
