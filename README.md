@@ -2040,11 +2040,11 @@ Input
 シンプルな日付の入力（e.g. 1/23）に年を付与して出力。
 筆者は「年数」をしばしばミスタイプしてしまうため。
 
-Add last year to month/day input.
+Add this/next/last year to month/day input.
 To prevent mistyping the number of year.
 
 Output to both clipboard and stdout by default.
-with -stdin switch, output only to stdout.
+with `-stdout` switch, output only to stdout.
 
 ```powershell
 # Result of execution on a certain day in **2023**.
