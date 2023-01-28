@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lcalc`, `linkcheck`, `man2`, `mind2dot`, `mind2pu`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `man2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
 
 Inspired by:
 
@@ -163,7 +163,7 @@ Linuxでいう`sed -i`（の劣化コピー）。ただし誤爆防止のため`
 - Inspired by Unix/Linux Commands
     - Command: `sed`
 
-#### `grep` - Seaches for regex patterns
+#### `grep` - Searches for regex patterns
 
 文字列の検索とヒット行の出力。Windows用。
 Linux環境で使う`grep`のような使用感で文字列を検索するが、劣化コピーである。
@@ -189,7 +189,7 @@ Linux環境で使う`grep`のような使用感で文字列を検索するが、
 検索速度は遅い。筆者の環境ではシンプルに`Select-String`を用いた方が速い。
 したがって、あまり引数をもちいないシンプルな用途であれば、
 `Set-Alias -name grep -value Select-String`としたほうがより速く動作する
-（むしろ`grep`よりも`sls`の方が文字数が少ないので、何もせずそのまま`sls`を用いてもよい）。
+（むしろ`grep`よりも`sls`の方が文字数が少ないため、何もせずそのまま`sls`を用いてもよい）。
 
 
 ```powershell
@@ -228,6 +228,19 @@ Days Hours Minutes Seconds Milliseconds
 0    0     0       1       183
 ```
 
+`grep`, `Select-String`ともにパイプライン経由の入力を読むよりも、引数にファイルを指定して検索する方が高速。
+そのため、大きなデータを処理する場合は、
+最初のコマンドで引数にファイルを指定する形で処理量を減らしてからパイプラインにつなぐとよい。
+
+```powershell
+# slow
+cat big.data | grep "hoge" | grep "piyo"
+cat big.data | sls  "hoge" | sls  "piyo"
+
+# fast!
+grep "hoge" big.data | grep "piyo"
+sls  "hoge" big.data | sls  "piyo"
+```
 
 Examples
 
@@ -524,7 +537,7 @@ Examples:
 "aiueo" | rev
 oeuia
 ```
-#### `rev2` - Reverse strings
+#### `rev2` - Reverse columns
 
 半角スペースで区切られた列をリバースする。
 列内の文字列はリバースしない。
@@ -589,30 +602,43 @@ Examples:
 
 - Usage
     - `man2 fillretu`
-    - `cat a.txt | fillretu`
+    - `cat dat.txt | fillretu`
 
 Input:
 
 ```powershell
-cat a.txt
+PS > cat dat.txt
+2018 3
+2018 3
+2018 3
+2017 1
+2017 1
+2017 1
+2017 1
+2017 1
+2022 5
+2022 5
+
+PS > cat dat.txt | grep . | yarr
 2018 3 3 3
 2017 1 1 1 1 1
 2022 5 5
-```
 
-Output:
-
-```powershell
-cat a.txt | fillretu
+PS > cat dat.txt | grep . | yarr | fillretu
 2018 3 3 3 _ _
 2017 1 1 1 1 1
 2022 5 5 _ _ _
+
+PS > cat dat.txt | grep . | yarr | fillretu -NaN 0
+2018 3 3 3 0 0
+2017 1 1 1 1 1
+2022 5 5 0 0 0
 ```
 
 `tateyoko`とのコンビネーション。
 
 ```powershell
-cat a.txt | fillretu | tateyoko | keta
+PS > cat dat.txt | yarr | fillretu | tateyoko | keta
 2018 2017 2022
    3    1    5
    3    1    5
@@ -961,10 +987,10 @@ jkl,mno,pqr
 stu,vwz,012
 
 # apply rev commnand only 2nd columns
-PS> $dat | pawk -fs "," -Pattern {$1 -match "^j"} -Action {$2=$2|rev;$0}
+PS> $dat | pawk -fs "," -Pattern {$1 -match "^j"} -Action { $2=$2|rev;$0 }
 jkl,onm,pqr
 
-# -Begin, -Process,, -End block like AWK
+# -Begin, -Process and -End block like AWK
 PS> 1..10 | pawk -Begin { $sum=0 } -Action { $sum+=$1 } -End { $sum }
 55
 ```
@@ -1196,7 +1222,7 @@ aaa,h,i,3
 
 # Pattern match and replace 1st field and output all rows,
 # but -Action script is applied only pattern matched rows.
-PS> $dat | pawk -fs "," -Pattern {$NF -gt 1} -Action {$1="aaa";$0}
+PS> $dat | pawk -fs "," -Pattern {$NF -gt 1} -Action {$1="aaa"} -AllLine
 a,b,c,1
 aaa,e,f,2
 aaa,h,i,3
@@ -1256,9 +1282,16 @@ stu,vwz,012
 
 # Apply rev commnand only 2nd columns
 PS> $dat | pawk -fs "," -Action {$2=$2|rev;$0}
+PS> $dat | pawk -fs "," -Action {$2=$2|rev} -AllLine
 abc,fed,ghi # reverse 2nd column
 jkl,onm,pqr # reverse 2nd column
 stu,zwv,012 # reverse 2nd column
+
+# Apply rev commnand only 2nd columns and only pattern matched rows
+PS> $dat | pawk -fs "," -Action {$2=$2|rev} -Pattern {$1 -match '^j'} -AllLine
+abc,def,ghi  # not match
+jkl,onm,pqr  # reverse 2nd column
+stu,vwz,012  # not match
 ```
 
 ```powershell
@@ -1349,7 +1382,7 @@ PS> $dat = "001,aaa,2022-01-01","002,bbb,2022-01-02","003,ccc,2022-01-03","005,d
 003,ccc,2022-01-03
 005,ddd,2022-01-04
 
-# Add days +1 to 3rd column
+# Add days -10 to 3rd column (cast [datetime])
 PS> $dat | pawk -fs "," -Action {$3=(Get-Date $3).AddDays(-10).ToString('yyyy-MM-dd')} -AllLine
 001,aaa,2021-12-22
 002,bbb,2021-12-23
@@ -1901,7 +1934,7 @@ gyo *.*
 Examples:
 
 ```powershell
-"パピプペポ０１２３４５６７８９＝Ａ" | han | zen -k
+"パピプペポ１２３４５６７８９＝Ａ" | han | zen -k
 パピプペポ0123456789=A
 
 説明
@@ -2002,6 +2035,59 @@ Examples:
 Input
 ```
 
+#### `thisyear`, `nextyear`, `lastyear` - Add this/next/last year to month/day input. To prevent mistyping the number of year.
+
+シンプルな日付の入力（e.g. 1/23）に年を付与して出力。
+筆者は「年数」をしばしばミスタイプしてしまうため。
+
+Add last year to month/day input.
+To prevent mistyping the number of year.
+
+Output to both clipboard and stdout by default.
+with -stdin switch, output only to stdout.
+
+```powershell
+# Result of execution on a certain day in **2023**.
+
+thisyear 2/28
+2023-02-28
+
+nextyear 2/29
+2024-02-29
+
+lastyear 2/28
+2022-02-28
+```
+
+- Usage
+    - `man2 thisyear`
+    - `man2 nextyear`
+    - `man2 lastyear`
+    - `man2 *year`
+- Syntax
+    - `thisyear [-Date] <String[]> [-RedirectTo <String>] [-Prefix <String>] [-Suffix <String>] [-Format <String>] [-FormatJP] [-FormatJPZeroPadding] [-Slash] [-GetDateTimeFormat] [-Year2] [-DayOfWeek] [-DayOfWeekWithRound] [-AddDays <Int32>] [-AddMonths <Int32>] [-AddYears <Int32>] [-Duplicate <Int32>] [-NoSeparator] [-EndOfMonth]`
+    - `nextyear [-Date] <String[]> [-RedirectTo <String>] [-Prefix <String>] [-Suffix <String>] [-Format <String>] [-FormatJP] [-FormatJPZeroPadding] [-Slash] [-GetDateTimeFormat] [-Year2] [-DayOfWeek] [-DayOfWeekWithRound] [-AddDays <Int32>] [-AddMonths <Int32>] [-AddYears <Int32>] [-Duplicate <Int32>] [-NoSeparator] [-EndOfMonth]`
+    - `lastyear [-Date] <String[]> [-RedirectTo <String>] [-Prefix <String>] [-Suffix <String>] [-Format <String>] [-FormatJP] [-FormatJPZeroPadding] [-Slash] [-GetDateTimeFormat] [-Year2] [-DayOfWeek] [-DayOfWeekWithRound] [-AddDays <Int32>] [-AddMonths <Int32>] [-AddYears <Int32>] [-Duplicate <Int32>] [-NoSeparator] [-EndOfMonth]`
+- Examples
+    - `thisyear 1/23`
+    - `nextyear 1/23`
+    - `lastyear 1/23`
+
+Examples:
+
+```powershell
+# Result of execution on a certain day in **2023**.
+
+thisyear 2/28 -s "_this_year"
+2023-02-28_this_year
+
+nextyear 2/29 -s "_next_year"
+2024-02-29_next_year
+
+lastyear 2/28 -s "_last_year"
+2022-02-28_last_year
+```
+
 
 ### Plot chart and graph
 
@@ -2045,7 +2131,7 @@ Input
 
 [plantuml](https://plantuml.com/en/)形式の`.pu`ファイルを読み取り実行するラッパースクリプト。日本語WindowsでUTF-8な環境下での使用を想定。グラフ（棒グラフのグラフではなく、箱と矢印・ノードとエッジのほうのグラフ）を描画する。`java -jar plantuml.jar -charset "UTF-8" -t"svg" a.pu`と等価。日本語を用いるときは`-charset "UTF-8"`を指定する。
 
-`dot2gviz`と同じくコマンド文字列が長くて覚えられないため、このラッパースクリプトを作成した。最もシンプルに書くと`pu2java a.pu`。デフォルトで入力ファイル名と同ファイル名の`png`画像をカレントディレクトリに出力する。
+`dot2gviz`と同じくコマンド文字列が長くて覚えられないため、このラッパースクリプトを作成した。もっともシンプルに書くと`pu2java a.pu`。デフォルトで入力ファイル名と同ファイル名の`png`画像をカレントディレクトリに出力する。
 
 `plantuml.jar`ファイルの場所はデフォルトで`${HOME}/bin/plantuml.jar`を期待する。`-Jar <path/to/the/jar>`で任意の場所の`jar`ファイルを指定することもできる。
 
@@ -2060,7 +2146,7 @@ Input
     - `pu2java a.pu -OutputFileType svg`
         - `java -jar plantuml.jar" -charset "UTF-8" -t"svg" a.pu`と等価
 - Options
-    - `-ErrorCheck`スイッチで、等価なdotコマンド文字列が出力される
+    - `-ErrorCheck`スイッチで、等価なplantumlコマンド文字列が出力される
         - `pu2java a.pu svg -ErrorCheck`
             - 出力: `java -jar plantuml.jar" -charset "UTF-8" -t"svg" a.pu`
 - Dependencies
@@ -2486,17 +2572,17 @@ skinparam DefaultFontName "Meiryo"
 画像の回転、リサイズ、拡大縮小、形式変換。Assembly:`System.Drawing`を用いる。
 画像の形式変換は入出力に指定するファイルの拡張子から自動認識する
 
- 「リサイズ」と「回転・反転」は同時にはできない点に注意する。
+ 「リサイズ」と「回転・反転」は同時に指定できない点に注意する。
  出力ファイルと同名ファイルがあると強制上書きされる点にも注意する。
 
 
 - Usage
-    - `man2 pu2java`
+    - `man2 ConvImage`
     - `ConvImage [-inputFile] <String[]> [-outputFile] <String[]> [-resize <String>] [-rotate <String>] [-flip] [-flop] [-Exif] [-ExifOrientationOnly] [-notOverWrite]`
 - Examples
     - `ConvImage -inputFile <file> -outputFile <file> [-notOverWrite]`
-    - `ConvImage -inputFile <file> -outputFile <file> -resize <num>x<num> [-notOverWrite]`
-    - `ConvImage -inputFile <file> -outputFile <file> -rotate <num> [-flip] [-flop] ] [-notOverWrite]`
+    - `ConvImage -inputFile <file> -outputFile <file> -resize <height>x<width> [-notOverWrite]`
+    - `ConvImage -inputFile <file> -outputFile <file> -rotate <degrees> [-flip] [-flop] ] [-notOverWrite]`
 - Dependencies
     - PowerShell
         - Assembly: `System.Drawing`
@@ -2761,7 +2847,7 @@ csv, tsvは**ヘッダありデータ**のみ受付（1行目をヘッダ行と�
 - Options
     - `-Caption <caption>`で表にmarkdown形式のキャプションを追加
 - Examples
-    - `cat a.csv | table2md -Delimiter "," -Caption "titlle"`
+    - `cat dat.csv | table2md -Delimiter "," -Caption "title"`
 
 Examples:
 
@@ -2830,11 +2916,11 @@ Detect broken links in m.html
 ```
 
 
-#### `jl` - Join the next Line with the keyword
+#### `jl` - Join the next Line if line ends with the keyword
 
-キーワードで終わる行に次の行を連結する。たとえばHTMLで日本語を使うとき、「、」で改行した場合に余計な空白がはいることがあるが、このコマンドで下処理しておけば大丈夫。
+キーワードで終わる行に次の行を連結する。たとえばHTMLで日本語を使うとき、
+「、」で改行した場合に余計な空白がはいることがあるが、このコマンドで下処理しておけば大丈夫。
 デフォルトで「、」で終わる行のみ検知して次の行を連結。そうでない行はそのまま出力。
-
 
 - Usage
     - `man2 jl`
@@ -3047,7 +3133,7 @@ cat a.json | json2txt
 .widget.text.onMouseUp = "sun1.opacity = (sun1.opacity / 100) * 90;"
 ```
 
-#### `csv2txt` - Parse csv to text
+#### `csv2txt` - Convert CSV to TSV
 
 CSVを半角スペース区切りの1行1レコード形式（SSV）に変換する。
 改行含みのCSVデータを1行にして`grep`する、などの用途に便利。
@@ -3059,6 +3145,41 @@ CSVを半角スペース区切りの1行1レコード形式（SSV）に変換す
 - Inspired by [csv2txt.py - ryuichiueda/MyCommands - GitHub](https://github.com/ryuichiueda/MyCommands)
     - The MIT License: Copyright (C) 2014, Ryuichi Ueda
 
+Example:
+
+```powershell
+PS > cat dat.csv
+id,main,id2,sub,val
+01,aaa,01,xxx,10
+01,aaa,02,yyy,10
+01,aaa,03,zzz,10
+02,bbb,01,xxx,10
+02,bbb,02,yyy,10
+02,bbb,03,zzz,10
+01,aaa,04,ooo,10
+03,ccc,01,xxx,10
+03,ccc,02,yyy,10
+03,ccc,03,zzz,10
+04,ddd,01,xxx,10
+04,ddd,02,yyy,10
+04,ddd,03,zzz,10
+
+PS > cat dat.csv | csv2txt | keta
+id main id2 sub val
+01  aaa  01 xxx  10
+01  aaa  02 yyy  10
+01  aaa  03 zzz  10
+02  bbb  01 xxx  10
+02  bbb  02 yyy  10
+02  bbb  03 zzz  10
+01  aaa  04 ooo  10
+03  ccc  01 xxx  10
+03  ccc  02 yyy  10
+03  ccc  03 zzz  10
+04  ddd  01 xxx  10
+04  ddd  02 yyy  10
+04  ddd  03 zzz  10
+```
 #### `catcsv` - Concatenate csv files
 
 任意のフォルダにあるUTF-8なCSVファイル群をひとつのCSVファイルにまとめる。
