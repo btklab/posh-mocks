@@ -143,6 +143,59 @@ Linux環境で使う`sed`のような使用感で文字列を置換するが、�
 - Inspired by Unix/Linux Commands
     - Command: `sed`
 
+Examples:
+
+```powershell
+# g flag - replace all strings mathing pattern
+'a1b1c1' | sed 's;1;2;g'
+a2b2c2
+
+# replace only first match
+'a1b1c1' | sed 's;1;2;'
+a2b1c1
+
+# delete tab
+cat a.txt | sed "s;`t;;g"
+
+# replace CrFl to space
+cat a.txt | sed "s; ;`r`n;g"
+```
+
+```powershell
+# print mode.
+
+# input data
+$dat = "aaa", "bbb", "ccc", "ddd", "eee"
+aaa
+bbb
+ccc
+ddd
+eee
+
+# Output between "bbb" and "ddd"
+$dat | sed 'p;^bbb;^ddd;'
+bbb
+ccc
+ddd
+```
+
+```powershell
+# delete mode.
+
+# input data
+$dat = "aaa", "bbb", "ccc", "ddd", "eee"
+aaa
+bbb
+ccc
+ddd
+eee
+
+    # Delete between "bbb" and "ddd"
+    $dat | sed 'p;^bbb;^ddd;'
+    aaa
+    eee
+```
+
 #### `sed-i` - Edit files in place
 
 文字列を置換し、かつファイルを上書き。
@@ -151,17 +204,52 @@ Linuxでいう`sed -i`（の劣化コピー）。ただし誤爆防止のため`
 
 - Usage
     - `man2 sed-i`
-    - `sed-i 's;<before>;<after>;g' file [-Execute] [-Overwrite|-OverwriteBackup]`
+    - `sed-i 's;pattern;replace;g' file [-Execute] [-DoNotCreateBackup|-OverwriteBackup]`
     - デフォルトでdry run、かつ、バックアップ作成（.bak）ありの安全動作
 - Examples
     - `sed-i 's;abc;def;g' file -Execute`
         - Linux: `sed -i.bak 's;abc;def;g' file` と等価（`.bak`ファイルにオリジナルファイルをバックアップ）
-    - `sed-i 's;abc;def;g' file -Execute -OverWrite`
+    - `sed-i 's;abc;def;g' file -Execute -DoNotCreateBackup`
         - Linux: `sed -i 's;abc;def;g' file` と等価（上書き）↓
-    - `sed-i 's;<before>;<after>;g','s;<before>;<after>;g',... file`
+    - `sed-i 's;pattern1;replace1;g','s;pattern2;replace2;g',... file`
         - 置換文字列はカンマ区切りで複数指定できる
 - Inspired by Unix/Linux Commands
     - Command: `sed`
+
+Examples:
+
+```powershell
+PS > "abcde" > a.txt; sed-i 's;abc;def;g' a.txt
+ifile: ./a.txt
+ofile: ./a.txt.bak
+defde
+```
+
+```powershell
+PS > ls *.txt
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---          2022/09/29    21:41              7 a.txt
+-a---          2022/09/29    21:41              7 b.txt
+
+PS > ls *.txt | %{ sed-i 's;abc;def;g' $_.FullName }
+ifile: a.txt
+ofile: a.txt.bak
+defde
+```
+
+```powershell
+# Replace and overwrite original file and create backup
+PS > ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute }
+./a.txt > ./a.txt.bak
+./b.txt > ./b.txt.bak
+
+# Replace and overwrite original file and *do not* create backup
+PS > ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute -DoNotCreateBackup }
+./a.txt > ./a.txt
+./b.txt > ./b.txt
+```
+
 
 #### `grep` - Searches for regex patterns
 

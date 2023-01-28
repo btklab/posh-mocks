@@ -1,187 +1,176 @@
 <#
 .SYNOPSIS
+    sed - a  Stream EDitor
+    
+    String replacer. Degraded copy of GNU sed.
 
-sed: stream editor - 行単位での文字列置換
+    Basically case-insensitive, but case-sensitive whtn
+    the "g" flag (described later) is specified.
 
-大文字小文字を区別しない
-ただしgフラグ（globalフラグ）をつけない場合の置換では
-大文字小文字が区別される点に注意する
-置換対象は正規表現で指定する。
+    Usage:
+        sed 's;pattern;replace;g' : global replace
+        sed 's;oattern;replace;'  : replace first match only
 
-■置換モード
+        Use double quotes to handle control characters such as
+        Tab, LineFeed.
 
-sed 's;置換対象;置換後;g'
-sed 's;置換対象;置換後;'
+            sed "s;`t;,;g"  : replace tab to comma
+            sed "s;`r`n;;g" : remove CrLf
 
-  - 末尾に g をつけると該当文字列をすべて置換(globalのg)
-  - 末尾に g をつけないと行の左から検索し
-      最初に該当した文字列のみ置換する
+        The second character from the left of the statement is
+        taken as the delimiter between the pattern and the
+        replacement strings. (It does not necessarily have to
+        be ";"). Any of the following are equivalent.
 
-sed "s;`t;;"
+            sed 's;hello;world;g'
+            sed 's@hello@world@g'
+            sed 's_hello_world_g'
+    
+    Print mode:
+        sed 'p;pattern for start-of-output;pattern for start-of-output;'
 
-    - タブを削除
-    - `tや`r`nなどの制御文字を扱う場合はダブルクオートでくくる
+        Output only the lines from the output start-pattern to the
+        output end-pattern. Specifying different patterns for the
+        start key and end key makes it easier to get the expected
+        output.
 
-■指定行出力モード
+        (If you spesify the same patterns for the start key and the
+        end key, output only the linse containing that pattern, and
+        the line in between will not be output.)
 
-sed 'p;出力開始行キーワード;出力終了行キーワード;'
-
-    - 出力開始ワードから出力終了ワードまでの行のみ
-      出力する
-    - 開始keyと終了keyに異なる文字列を指定すると、
-      思うような出力が得られやすい
-
-      （開始keyと終了keyに同じ文字列を指定すると、
-      「その文字列を含む行だけ」が出力され、
-      その間の行は出力されない）
-
-■指定行削除モード
-
-sed 'd;出力開始行キーワード;出力終了行キーワード;'
-
-    - 出力開始ワードから出力終了ワードまでの行を
-      削除して出力する
+    Delete mode:
+        sed 'd;pattern for start-of-deletion;pattern for end-of-deletion;'
 
 .LINK
     grep, sed, sed-i
 
 .EXAMPLE
-PS C:\>Write-Output 'a1b1c1' | sed 's;1;2;g'
-a2b2c2
+    # g flag - replace all strings mathing pattern
+    'a1b1c1' | sed 's;1;2;g'
+    a2b2c2
 
-説明
----------------
-すべての 1 を 2 に置換
+    # replace only first match
+    'a1b1c1' | sed 's;1;2;'
+    a2b1c1
+
+    # delete tab
+    cat a.txt | sed "s;`t;;g"
+
+    # replace CrFl to space
+    cat a.txt | sed "s; ;`r`n;g"
+
+.EXAMPLE
+    # print mode
+
+    # input data
+    $dat = "aaa", "bbb", "ccc", "ddd", "eee"
+    aaa
+    bbb
+    ccc
+    ddd
+    eee
+
+    # Output between "bbb" and "ddd"
+    $dat | sed 'p;^bbb;^ddd;'
+    bbb
+    ccc
+    ddd
 
 
 .EXAMPLE
-PS C:\>Write-Output 'a1b1c1' | sed 's;1;2;'
-a2b1c1
+    # delete mode
 
-説明
----------------
-最初にヒットした 1 のみ 2 に置換
+    # input data
+    $dat = "aaa", "bbb", "ccc", "ddd", "eee"
+    aaa
+    bbb
+    ccc
+    ddd
+    eee
 
-
-.EXAMPLE
-PS C:\>cat a.txt | sed "s;`t;;g"
-
-説明
----------------
-タブを削除
-
-.EXAMPLE
-PS C:\>cat a.txt | sed "s; ;`r`n;g"
-
-説明
----------------
-空白を改行に置換
-
-.EXAMPLE
-PS C:\>cat a.txt
-aaa
-bbb
-ccc
-ddd
-eee
-
-PS C:\>cat a.txt | sed 'p;^bbb;^ddd;'
-bbb
-ccc
-ddd
-
-説明
----------------
-指定行出力モード。文字列bbbを含む行から
-文字列dddを含む行までを出力
-
-PS C:\>cat a.txt | sed 'p;^bbb;^ddd;'
-aaa
-eee
-
-説明
----------------
-指定行削除モード。文字列bbbを含む行から
-文字列dddを含む行までを削除
-
+    # Delete between "bbb" and "ddd"
+    $dat | sed 'p;^bbb;^ddd;'
+    aaa
+    eee
 #>
 function sed {
     begin {
-        ## flagのセット
-        $gflag = $false
-        $sflag = $false
-        $pflag = $false
-        $dflag = $false
-        $pReadFlag = $false
+        ## set flags
+        [bool] $gflag     = $False
+        [bool] $sflag     = $False
+        [bool] $pflag     = $False
+        [bool] $dflag     = $False
+        [bool] $pReadFlag = $False
         
-        ## 引数のテスト
+        ## test args
         if($args.Count -ne 1){
-            Write-Error "引数が不足しています." -ErrorAction Stop}
-        [string]$OptStr = ($args[0]).Substring(0,1)
+            Write-Error "Insufficient args." -ErrorAction Stop
+        }
+        [string] $OptStr = ([string]($args[0])).Substring(0,1)
         if( ($OptStr -ne "s") -and `
             ($OptStr -ne "p") -and `
             ($OptStr -ne "d") ){
-            Write-Error "引数が不正です." -ErrorAction Stop
+            Write-Error "Invalid args." -ErrorAction Stop
         }
         
-        ## セパレータ文字の取得（2文字目がセパレータ）
-        [string]$SepStr = ($args[0]).Substring(1,1)
+        ## get separator
+        ## The second character from the left of the statement.
+        [string] $SepStr = ([string]($args[0])).Substring(1,1)
         
-        # 置換対象文字列の取得
-        $regexstr = ($args[0]).Split("$SepStr")
+        # get regex pattern
+        $regexstr = ([string]($args[0])).Split("$SepStr")
         if($regexstr.Count -ne 4){
-            Write-Error "引数が不正です."  -ErrorAction Stop}
-        
-        $srcptn = $regexstr[1]
-        $repptn = $regexstr[2]
-        #$repptn = $repptn -replace '\\n', '`r`n'
-        #$repptn = $repptn -replace '\\t', '`t'
-        if(! $srcptn){
-            Write-Error "引数が不正です." -ErrorAction Stop}
-        
-        # s（置換）とg（global）の指定確認
-        if($regexstr[0] -like 's'){$sflag = $true}
-        if($regexstr[0] -like 'p'){
-            $pflag = $true
-            $pReadFlag = $false
+            Write-Error "Invalid args."  -ErrorAction Stop
         }
-        if($regexstr[0] -like 'd'){
-            $dflag = $true
-            $pReadFlag = $true
+        [string] $srcptn = $regexstr[1]
+        [string] $repptn = $regexstr[2]
+        if( $srcptn -eq '' ){
+            Write-Error "Invalid args." -ErrorAction Stop
         }
-        if($regexstr[3] -like 'g'){
-            $gflag = $true
+        
+        # test args
+        if( [string]($regexstr[0]) -eq 's' ){
+            [bool] $sflag = $True
+        }
+        if( [string]($regexstr[0]) -eq 'p' ){
+            [bool] $pflag = $True
+            [bool] $pReadFlag = $False
+        }
+        if( [string]($regexstr[0]) -eq 'd' ){
+            [bool] $dflag = $True
+            [bool] $pReadFlag = $True
+        }
+        if( [string]($regexstr[3]) -eq 'g' ){
+            [bool] $gflag = $True
         }else{
-            $regex = [Regex]$srcptn
+            [regex] $regex = $srcptn
         }
         if(!($sflag) -and !($pflag) -and !($dflag)){
-            Write-Error "引数が不正です." -ErrorAction Stop}
-        #Write-Output $srcptn, $repptn
+            Write-Error "Invalid args" -ErrorAction Stop}
+        Write-Debug "$srcptn, $repptn"
     }
 
     process {
         if($sflag){
-            # sフラグ：置換モード
+            # s flag : replacement mode
             if($gflag){
-                $line = $_ -replace "$srcptn", "$repptn"
+                [string] $line = $_ -replace "$srcptn", "$repptn"
             }else{
-                $line = $regex.Replace("$_", "$repptn", 1)
+                [string] $line = $regex.Replace("$_", "$repptn", 1)
             }
             Write-Output $line
         }elseif($pflag){
-            # pフラグ：マッチした行のみ表示するモード
-            $line = [string]$_
-            if($line -match "$srcptn" ){$pReadFlag = $true}
-            #$pReadFlag
+            # p flag : print only matched line
+            [string] $line = [string]$_
+            if($line -match "$srcptn" ){$pReadFlag = $True}
             if($pReadFlag){Write-Output $line}
-            if($line -match "$repptn" ){$pReadFlag = $false}
-            #$pReadFlag
+            if($line -match "$repptn" ){$pReadFlag = $False}
         }elseif($dflag){
-            # dフラグ：マッチした行のみ削除するモード
-            $line = [string]$_
-            if($line -match "$srcptn" ){$pReadFlag = $false}
+            # d flag : delete mode
+            [string] $line = [string] $_
+            if($line -match "$srcptn" ){$pReadFlag = $False}
             if($pReadFlag){Write-Output $line}
-            if($line -match "$repptn" ){$pReadFlag = $true}
+            if($line -match "$repptn" ){$pReadFlag = $True}
         }
     }
 }
