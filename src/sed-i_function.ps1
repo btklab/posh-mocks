@@ -1,114 +1,123 @@
 <#
 .SYNOPSIS
+    sed-i - Edit files in place
 
-sed-i -- ファイルの文字列置換と上書き(sed -i)
-ただし上書きするのは-Executeスイッチを指定したときのみ。
-これは、望まない置換を予防するため。
+    Pattern match replace and overwrite files at onece.
 
-Usage:
+    Files are not overwritten unless "-Execute" switch is
+    specified. This is to prevent unexpected replacements.
 
-sed-i 's;abc;def;g' file -Execute
-    sed -i.bak 's;abc;def;g' file と等価（.bakでバックアップ）
+    Create a backup file (.bak) by default unless specified
+    "-DoNotCreateBackup" switch. (so the original file can be restored
+    from the .bak file)
 
-sed-i 's;abc;def;g' file -Execute -OverWrite
-    sed -i 's;abc;def;g' file と等価（上書き）↓
+    Usage:
+        sed-i 's;abc;def;g' file -Execute
+            equivalent to sed -i.bak 's;abc;def;g' file in GNU sed
+        
+        sed-i 's;abc;def;g' file -Execute -DoNotCreateBackup
+            equivalent to sed -i 's;abc;def;g' file in GNU sed
+            
+        sed-i 's;<before>;<after>;g' file [-Execute] [-DoNotCreateBackup|-OverwriteBackup]
+        sed-i 's;<before>;<after>;g','s;<before>;<after>;g',... file
+    
+    Options:
+        -Patterns : specify patterns using regex
+            - Multiple statements can be specified by separate with commas.
+        -Execute : execute replace and overwrite files
+        -DoNotCreateBackup : do not create backup
+        -OverWriteBackup : overwrite .bak file even if there is already exist.
+        -Encoding : UTF-8 (default)
+        -MatchFileOnly : outputs only files to be replaced during dry run
+    
+    Hint:
+        Below is a roughly equibalent PowerShell scripts without using
+        this function. The point is to wrap Get-Content commandlet
+        in parentheses.
 
-sed-i 's;<before>;<after>;g' file [-Execute] [-Overwrite|-OverwriteBackup]
-sed-i 's;<before>;<after>;g','s;<before>;<after>;g',... file
-    置換文字列はカンマ区切りで複数指定できる
+        PS > (Get-Content file) | foreach { $_ -replace "pattern","replace" } | Set-Content file
 
-デフォルトでdry run、かつ、バックアップ作成（.bak）ありの安全動作。
-  -Patternsはカンマ区切りで複数指定できる
-  -Executeスイッチで実行
-  -OverWriteスイッチで上書き
-  -OverWriteBackupスイッチで、.bakファイルがあった場合も上書き
-  -EncodingはデフォルトでUTF8
-  -MatchFileOnlyで、dry run時に変換対象ファイルのみ出力
+        another one:
 
-thanks:
-  PowerShellでファイル内の文字列置換 (sed -i) をする -- 晴耕雨読
-  https://tex2e.github.io/blog/powershell/sed
+        PS > $Target = "test.txt"
+        PS > $ENCODING = "UTF8"
+        PS > (Get-Content $Target -Encoding $ENCODING) `
+                | ForEach-Object { $_ -replace "http:","https:" } `
+                | Set-Content $Target -Encoding $ENCODING
+        
+        If you do not enclose Get-Content process in parentheses,
+        process will grap it and will not be able to overwrite the
+        file. This is because the file reading of Get-Content is
+        lazily evaluated line by line due to pipeline processing.
+
+        Parentheses control the order of evaluation of expressins,
+        but they can also be used to evaluate expressions immediately
+        without lazy evaluation. If they used before the pipeline,
+        it reads all the contents of the file and converts it to
+        String type before passin it to the next prcess. This allows
+        two commnands (Get-Content and Set-Content) to refer to the
+        same file.
+
+    thanks:
+        https://tex2e.github.io/blog/powershell/sed
 
 .LINK
     sed, sed-i
 
-info:
-  sed -i と同じようにファイル内の文字列を置換するときは、以下のように複数のコマンドを組み合わせる。
-
-  (Get-Content ファイル名) | foreach { $_ -replace "置換前","置換後" } | Set-Content ファイル名
-
-  以下は、UTF-8 でエンコードされた text.txt ファイル内の「http:」を「https:」に置換する例
-
-  $Target = "test.txt"
-  $ENCODING = "UTF8"
-  (Get-Content $Target -Encoding $ENCODING) `
-      | % { $_ -replace "http:","https:" } `
-      | Set-Content $Target -Encoding $ENCODING
-
-
-補足:
-  Get-Contentの処理を丸括弧で囲まないと別のプロセスが掴んでファイル書き込みができなくなる
-  パイプライン処理によって、Get-Content のファイル読み込みが1行1行で遅延評価されているため。
-  丸括弧は式の評価順を制御するためのものだが、遅延評価させずにすぐに式を評価するためにも使用できる。
-  パイプラインの前で使用すると、ファイルの中身を全て読み込んで String 型にしてから次の処理に渡す。
-  これにより、2つのコマンドが同じファイルを参照できるようになる。
-
 .PARAMETER Patterns
-sed形式で置換前後regexを指定。
-カンマ区切りで複数指定できる。
+    set pattern using regex.
+    Multiple statements can be specified by
+    separate with commas.
 
-'s;hoge;fuga;g'
-'s;hoge;fuga;g','s;f(uga);h$1;'
+        's;hoge;fuga;g'
+        's;hoge;fuga;g','s;f(uga);h$1;'
 
 .PARAMETER Execute
-上書きの実行
+    Execute replacement
 
-.PARAMETER OverWrite
-バックアップファイルを作成せずにファイルを上書き
+.PARAMETER DoNotCreateBackup
+    Overwrite original files without creation of .bak files.
 
 .PARAMETER SkipError
-エラーがあっても処理を継続
-デフォルトでエラー発生時停止
+    Continue processing even if an error occurs
 
 .PARAMETER OverWriteBackup
-バックアップファイルが存在していても強制上書き。
-デフォルトではバックアップファイルが存在すると
-エラーで処理が止まる
+    overwrite .bak file even if there is already exist.
+    By defalut, if .bak file exists, processing stops
+    with an error.
 
 .PARAMETER BackupExtension
-バックアップ拡張子を指定。
+    Specify backup file extension.
+    .bak by default.
 
 .EXAMPLE
-"abcde" > a.txt; sed-i 's;abc;def;g' a.txt
-ifile: ./a.txt
-ofile: ./a.txt.bak
-defde
+    "abcde" > a.txt; sed-i 's;abc;def;g' a.txt
+    ifile: ./a.txt
+    ofile: ./a.txt.bak
+    defde
 
 .EXAMPLE
-ls *.txt
-Mode                 LastWriteTime         Length Name
-----                 -------------         ------ ----
--a---          2022/09/29    21:41              7 a.txt
--a---          2022/09/29    21:41              7 b.txt
+    ls *.txt
+    Mode                 LastWriteTime         Length Name
+    ----                 -------------         ------ ----
+    -a---          2022/09/29    21:41              7 a.txt
+    -a---          2022/09/29    21:41              7 b.txt
 
-PS> ls *.txt | %{ sed-i 's;abc;def;g' $_.FullName }
-ifile: a.txt
-ofile: a.txt.bak
-defde
-
-ifile: C:\Users\btklab\cms\drafts\tmp\b.txt
-ofile: C:\Users\btklab\cms\drafts\tmp\b.txt.bak
-defde
+    PS> ls *.txt | %{ sed-i 's;abc;def;g' $_.FullName }
+    ifile: a.txt
+    ofile: a.txt.bak
+    defde
 
 .EXAMPLE
-ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute }
-./a.txt > ./a.txt.bak
-./b.txt > ./b.txt.bak
+    # Replace and overwrite original file and create backup
+    ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute }
+    ./a.txt > ./a.txt.bak
+    ./b.txt > ./b.txt.bak
 
-.EXAMPLE
-ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute -OverWrite }
-./a.txt > ./a.txt
-./b.txt > ./b.txt
+    # Replace and overwrite original file and *do not* create backup
+    ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute -DoNotCreateBackup }
+    ./a.txt > ./a.txt
+    ./b.txt > ./b.txt
 
 #>
 function sed-i {
@@ -135,7 +144,7 @@ function sed-i {
         [switch] $OverWriteBackup,
 
         [Parameter(Mandatory=$False)]
-        [switch] $OverWrite,
+        [switch] $DoNotCreateBackup,
 
         [Parameter(Mandatory=$False)]
         [switch] $MatchFileOnly,
@@ -149,7 +158,7 @@ function sed-i {
             Write-Error "$Target is not exists." -ErrorAction Stop
         }
     }
-    if ($OverWrite){
+    if ($DoNotCreateBackup){
         [string] $BackupTarget = "$Target"
     } else {
         [string] $BackupTarget = "$Target" + "$BackupExtension"
@@ -168,33 +177,40 @@ function sed-i {
         if( ($OptStr -ne "s") -and `
             ($OptStr -ne "p") -and `
             ($OptStr -ne "d") ){
-            Write-Error "引数が不正です." -ErrorAction Stop
+            Write-Error "Invalid args." -ErrorAction Stop
         }
         ## get separator string (2nd letter from the left)
         [string] $SepStr = ($Patn).Substring(1,1)
-        # 置換対象文字列の取得
+        # get regex pattern
         [string[]] $regexstr = ($Patn).Split("$SepStr")
-        if($regexstr.Count -ne 4){Write-Error "引数が不正です." -ErrorAction Stop}
+        if($regexstr.Count -ne 4){
+            Write-Error "Invalid args." -ErrorAction Stop
+        }
         [regex] $srcptn = $regexstr[1]
         [regex] $repptn = $regexstr[2]
-        if(! $srcptn){Write-Error "引数が不正です." -ErrorAction Stop}
-        # s（置換）とg（global）の指定確認
-        if($regexstr[0] -like 's'){
-            $sflag = $True}
-        if($regexstr[0] -like 'p'){
-            $pflag = $True
-            $pReadFlag = $False}
-        if($regexstr[0] -like 'd'){
-            $dflag = $True
-            $pReadFlag = $True}
-        if($regexstr[3] -like 'g'){
-            $gflag = $True
-        }else{
-            $regex = [Regex]$srcptn        
+        if( $srcptn -eq ''){
+            Write-Error "Invalid args" -ErrorAction Stop
         }
-        # sed
+        # parse flags
+        if( [string]($regexstr[0]) -eq 's' ){
+            [bool] $sflag = $True
+        }
+        if( [string]($regexstr[0]) -eq 'p' ){
+            [bool] $pflag = $True
+            [bool] $pReadFlag = $False
+        }
+        if( [string]($regexstr[0]) -eq 'd' ){
+            [bool] $dflag = $True
+            [bool] $pReadFlag = $True
+        }
+        if($regexstr[3] -like 'g'){
+            [bool] $gflag = $True
+        }else{
+            [regex] $regex = [regex]$srcptn        
+        }
+        # main
         if($sflag){
-            # sフラグ：置換モード
+            # s flag : replacement mode
             if($gflag){
                 [string] $writeLine = $Line -replace "$srcptn", "$repptn"
             }else{
@@ -202,12 +218,12 @@ function sed-i {
             }
             Write-Output $writeLine
         }elseif($pflag){
-            # pフラグ：マッチした行のみ表示するモード
+            # p flag : print only matched line
             if($Line -match "$srcptn" ){$pReadFlag = $True}
             if($pReadFlag){Write-Output $Line}
             if($Line -match "$repptn" ){$pReadFlag = $False}
         }elseif($dflag){
-            # dフラグ：マッチした行のみ削除するモード
+            # d flag : delete mode
             if($Line -match "$srcptn" ){$pReadFlag = $False}
             if($pReadFlag){Write-Output $Line}
             if($Line -match "$repptn" ){$pReadFlag = $True}
@@ -223,23 +239,27 @@ function sed-i {
         if( ($OptStr -ne "s") -and `
             ($OptStr -ne "p") -and `
             ($OptStr -ne "d") ){
-            Write-Error "引数が不正です." -ErrorAction Stop
+            Write-Error "Invalid args." -ErrorAction Stop
         }
         ## get separator string (2nd letter from the left)
         [string] $SepStr = ($Patn).Substring(1,1)
-        # 置換対象文字列の取得
+        # get regex pattern
         [string[]] $regexstr = ($Patn).Split("$SepStr")
-        if($regexstr.Count -ne 4){Write-Error "引数が不正です." -ErrorAction Stop}
+        if($regexstr.Count -ne 4){
+            Write-Error "Invalid args." -ErrorAction Stop
+        }
         [string] $srcptn = $regexstr[1]
         [string] $repptn = $regexstr[2]
-        if(! $srcptn){Write-Error "引数が不正です." -ErrorAction Stop}
+        if( $srcptn -eq '' ){
+            Write-Error "Invalid args." -ErrorAction Stop
+        }
         return $srcptn
     }
 
     # main
     if ($Execute){
         # exec sed -i
-        if (-not $OverWrite){
+        if (-not $DoNotCreateBackup){
             if (-not $OverWriteBackup){
                 if (Test-Path -LiteralPath "$BackupTarget"){
                     $bfile = "$BackupTarget".Replace('\','/')
