@@ -8,7 +8,7 @@ function gdate {
             # Result of execution on a certain day in **2023**.
 
         Output to both clipboard and stdout by default.
-        with -stdin switch, output only to stdout.
+        with -stdout switch, output only to stdout.
 
     .EXAMPLE
         # Result of execution on a certain day in **2023**.
@@ -230,7 +230,7 @@ function thisyear {
             # Result of execution on a certain day in **2023**.
 
         Output to both clipboard and stdout by default.
-        with -stdin switch, output only to stdout.
+        with -stdout switch, output only to stdout.
 
     .EXAMPLE
         # Result of execution on a certain day in **2023**.
@@ -373,7 +373,7 @@ function nextyear {
             # Result of execution on a certain day in **2023**.
 
         Output to both clipboard and stdout by default.
-        with -stdin switch, output only to stdout.
+        with -stdout switch, output only to stdout.
 
     .EXAMPLE
         # Result of execution on a certain day in **2023**.
@@ -515,7 +515,7 @@ function lastyear {
             # Result of execution on a certain day in **2023**.
 
         Output to both clipboard and stdout by default.
-        with -stdin switch, output only to stdout.
+        with -stdout switch, output only to stdout.
 
     .EXAMPLE
         # Result of execution on a certain day in **2023**.
