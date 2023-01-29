@@ -1,12 +1,11 @@
 <#
 .SYNOPSIS
+    tex2pdf - Compile tex to pdf
 
-tex2pdf - Compile tex to pdf
-
-tex2pdf [tex_file]
+        tex2pdf [tex_file]
 
 .EXAMPLE
-tex2pdf a.tex
+    tex2pdf a.tex
 
 #>
 function tex2pdf {
@@ -37,7 +36,6 @@ function tex2pdf {
             Write-Error 'could not find "uplatex"' -ErrorAction Stop
         }
     }
-
     # is .tex file exist?
         if( -not (Test-Path -LiteralPath "$file")){
             Write-Error "could not open $file" -ErrorAction Stop

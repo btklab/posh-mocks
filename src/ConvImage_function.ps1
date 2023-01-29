@@ -1,162 +1,161 @@
 <#
 .Synopsis
+    ConvImage - Image rotation, flipping, scaling
 
-ConvImage - Image rotation, flipping, scaling
+    Image format conversion is automatically recognized
+    form the extension of the filenames.
 
-   画像の回転、リサイズ、形式を変換する。
-   画像の形式変換は入出力に指定するファイルの拡張子から自動認識する
+    ConvImage -i <file> -o <file> [-notOverWrite]
+    ConvImage -i <file> -o <file> -resize <height>x<width> [-notOverWrite]
+    ConvImage -i <file> -o <file> -rotate <degrees> [-flip] [-flop] ] [-notOverWrite]
 
-   「リサイズ」と「回転・反転」は同時にはできない点に注意する。
-   出力ファイルと同名ファイルがあると強制上書きされる点にも注意する。
+    Inspired by:
 
-   ConvImage -inputFile <file> -outputFile <file> [-notOverWrite]
-   ConvImage -inputFile <file> -outputFile <file> -resize <num>x<num> [-notOverWrite]
-   ConvImage -inputFile <file> -outputFile <file> -rotate <num> [-flip] [-flop] ] [-notOverWrite]
-
-   Inspired by:
-   
-   - Get-Draw.ps1 - miyamiya/mypss: My PowerShell scripts - GitHub
-       - https://github.com/miyamiya/mypss
-       - License: The MIT License (MIT): Copyright (c) 2013 miyamiya
-   - ImageMagick (command)
-       - https://imagemagick.org/index.php
-
+    Get-Draw.ps1 - miyamiya/mypss: My PowerShell scripts - GitHub
+        - https://github.com/miyamiya/mypss
+        - License: The MIT License (MIT): Copyright (c) 2013 miyamiya
+    ImageMagick (command)
+        - https://imagemagick.org/index.php
 
 .Parameter inputFile
-    入力ファイル。
+    Input image file.
 
 .Parameter outputFile
-    出力ファイル。
-    指定した拡張子に変換して出力。
-
-    使用できる拡張子
+    Output image file
+    
+    Convert to the specified format from file extension.
+    Extensions that can be used:
+    
     jpg,png,bmp,emf,gif,tiff,wmf,exif,guid,icon,...
 
 .Parameter Exif
-    Exif情報などの画像ファイルのプロパティをできるだけ引き継ぐ
-    画像のリサイズ時のみ対応
+    Inherit image file properties such as Exif information
+    as much as possible.
+
+    Supported only when resizing image.
 
 .Parameter ExifOrientationOnly
-    画像の方向（上下左右）のプロパティ（Exif情報）のみ引き継ぐ
-    画像のリサイズ時のみ対応
+    Inherit only the properties (Exif information) of the
+    image orientation (up, down, left and right)
+
+    Supported only when resizing image.
 
 .Parameter resize
-    縦x横でサイズを指定。
-    アスペクト比（縦横比）は維持される。
-    縦x横で指定した場合、
-    長辺を基準にアスペクト比を保持してリサイズされる。
+    Specify the output image size in <height>x<width>
+    e.g. 200x100 or 200
 
-    ピクセル指定：100x100
-    ピクセル指定：100（高さのみ指定）
-    比率指定：50%（高さのみ指定）
+    Aspect ratio is preserved. if size is specified by
+    <height>x<width>, the aspect ratio is maintained
+    and resized based on the longest side.
+
+    e.g.
+    100x100 : Pixel specification
+    100     : Pixel specification (height only)
+    50%     : Ratio specification (height only)
 
 .Parameter rotate
-    回転角度を指定
+    Specify rotation angle.
 
 .Parameter flip
-    上下反転
+    flip top/bottom
 
 .Parameter flop
-    左右反転
+    Invert left/right
 
 .Parameter notOverWrite
-    ファイルを強制的に上書きしない
-
+    If the output file already exists,
+    do not overwrite it.
 
 .EXAMPLE
 PS > ConvImage before.jpg after.png
 
-説明
+Description
 ========================
-最も簡単な例。
-before.jpg を after.png に形式変換する。
+Easiest example.
+Convert format "before.jpg" to "after.png".
 
 .EXAMPLE
 PS > ConvImage before.jpg after.png -resize 500x500
 
-説明
+Description
 ========================
-最も簡単な例その2。
-before.jpg を after.png に形式変換し、かつ、
-サイズが 500px×500pxに収まるように
-アスペクト比（縦横比）を保ちリサイズする
-
+The simplest example #2.
+Convert format "before.jpg" to  "after.png", and
+resize the image to fit in the 500x500 px.
+Acpect ratio is preserved.
 
 .EXAMPLE
-PS > ConvImage -inputFile before.jpg -outputFile after.png -resize 100x100
+PS > ConvImage -i before.jpg -o after.png -resize 100x100
 
-説明
+Description
 ========================
-オプションを正確に記述した例。上記「簡単な例その2」と同じ結果を得る。
-before.jpg を after.png に形式変換し、かつ、
-サイズが 100px×100pxに収まるように、
-アスペクト比（縦横比）を保ちリサイズする
+Option names are described without omission.(but use alias)
+The results is the same as above example.
 
 .EXAMPLE
-PS > ConvImage -inputFile before.jpg -outputFile after.png -resize 100x100 -notOverWrite
+PS > ConvImage -i before.jpg -o after.png -resize 100x100 -notOverWrite
 
-説明
+Description
 ========================
-before.jpg を after.png に形式変換し、かつ、
-サイズが 100px×100pxに収まるように、
-アスペクト比（縦横比）を保ちリサイズする
--notOverWriteオプションにより、
-もし after.png が存在していても上書きしない.
+Convert format ".jpg" to ".png",
+Resize to 100x100 px with keeoing the aspect ratio,
+do not overwrite if "after.png" already exist.
 
 .EXAMPLE
 PS > ConvImage before.jpg after.png -resize 10%
 
-説明
+Description
 ========================
-before.jpg を after.png に形式変換し、かつ、
-縦横のピクセルが 10%（1/10）に縮小される
-アスペクト比（縦横比）は保たれる
+Convert format ".jpg" to ".png",
+Scale down to 10% (1/10) of the pixels in height and width.
+Acpect ratio is preserved.
 
 .EXAMPLE
 PS > ConvImage before.jpg after.png -resize 100
 
-説明
+Description
 ========================
-before.jpg を after.png に形式変換し、かつ、
-縦（高さ）のピクセルが 100pxにリサイズされる
-アスペクト比（縦横比）は保たれる
+Convert format ".jpg" to ".png",
+Resize 1o 100px in height (vertical),
+Aspect ratio is preserved.
 
 .EXAMPLE
 PS > ConvImage before.jpg after.png -rotate 90
 
-説明
+Description
 ========================
-before.jpg を after.png に形式変換し、かつ、
-90度回転される
+Convert format ".jpg" to ".png",
+Rotate 90 degrees.
 
 .EXAMPLE
 PS > ConvImage before.jpg after.png -rotate 90 -flip
 
-説明
+Description
 ========================
-before.jpg を after.png に形式変換し、かつ、
-90度回転され、かつ、
-上下反転される
+Convert format ".jpg" to ".png",
+Rotate 90 degrees and
+Flip upside down.
 
 .EXAMPLE
 PS > ConvImage before.jpg after.png -rotate 90 -flop
 
-説明
+Description
 ========================
-before.jpg を after.png に形式変換し、かつ、
-90度回転され、かつ、
-左右反転される
+Convert format ".jpg" to ".png",
+Rotate 90 degrees,
+Flip left and right
 
 #>
-function ConvImage
-{
+function ConvImage {
     [CmdletBinding()]
     param
     (
         [parameter(Mandatory = $True,Position=0)]
+        [Alias('i')]
         [string[]]$inputFile,
 
         [parameter(Mandatory = $True,Position=1)]
+        [Alias('o')]
         [string[]]$outputFile,
 
         [parameter(Mandatory = $False)]
@@ -182,54 +181,54 @@ function ConvImage
         [switch]$notOverWrite
     )
 
-    # カレントディレクトリの取得
+    # get current directory path
     $str_path = (Convert-Path .)
 
-    # inputFileが絶対パスでなければ、絶対パスを追加
+    # if input file is not an absolute path,
+    # add an absolute path
     if($inputFile -eq ''){
-        Write-Error '-inputFile の指定が不正です.' -ErrorAction Stop}
+        Write-Error 'Invalid input file path.' -ErrorAction Stop
+    }
     if(($inputFile -notmatch '^[A-Z]:\\.*') -and ($inputFile -notmatch '^\\\\')){
         $inputFilePath = (Join-Path "$str_path" "$inputFile")
     }else{
         $inputFilePath = $inputFile
     }
-    #Write-Output $inputFilePath
 
-    # outputFileが絶対パスでなければ、絶対パスを追加
+    # if output file is not an absolute path,
+    # add an absolute path
     if($outputFile -eq ''){
-        Write-Error '-outputFile の指定が不正です.' -ErrorAction Stop}
+        Write-Error 'Invalid output file path.' -ErrorAction Stop}
     if(($outputFile -notmatch '^[A-Z]:\\.*') -and ($outputFile -notmatch '^\\\\')){
         $outputFilePath = (Join-Path "$str_path" "$outputFile")
     }else{
         $outputFilePath = $outputFile
     }
-    #Write-Output $outputFilePath
 
-    # inputFileの存在チェックとフルパスの取得
-    #$inputFilePath = (Get-ChildItem $inputFile | %{ $_.FullName })
-    if(!(Test-Path "$inputFilePath")){
-        Write-Error "$inputFile が存在していません." -ErrorAction Stop}
-
-    # -notOverWriteオプションがあれば上書きしないモード
-    if($notOverWrite){
-        if((Test-Path "$outputFilePath")){
-            Write-Error "$outputFile が存在しています." -ErrorAction Stop}
+    # test existence of input file
+    # and get full path
+    if( ! (Test-Path "$inputFilePath") ){
+        Write-Error "$inputFile is not exist." -ErrorAction Stop
+    }
+    # is no overwrite mode?
+    if( $notOverWrite ){
+        if( (Test-Path "$outputFilePath") ){
+            Write-Error "$outputFile is already exist." -ErrorAction Stop
+        }
     }
 
-    # もしinputFileとoutputFileが同じならば終了
+    # if input -eq output, exit
     if("$outputFilePath" -eq "$inputFilePath"){
-        Write-Error "入出力で同じファイルを指定できません." -ErrorAction Stop}
-    #Write-Output $inputFile,$outputFile
-    #throw
+        Write-Error "The same file is specified for input and output." -ErrorAction Stop
+    }
 
-    # ファイル拡張子の取得
+    # get file extenxtion
     $inputExt = $inputFile -Replace '^.*\.([^.]*)$','$1'
-    #$inputExt = $inputExt.ToLower()
+    $inputExt = $inputExt.ToLower()
     $outputExt = $outputFile -Replace '^.*\.([^.]*)$','$1'
-    #$outputExt = $outputExt.ToLower()
-    #Write-Output $inputExt,$outputExt
+    $outputExt = $outputExt.ToLower()
 
-    # 出力ファイル拡張子のImageFormat形式変換
+    # format conversion of output file extensions
     if($outputExt -eq 'jpg' ) { $ImageFormatExt = 'Jpeg' }
     if($outputExt -eq 'jpeg') { $ImageFormatExt = 'Jpeg' }
     if($outputExt -eq 'png' ) { $ImageFormatExt = 'Png'  }
@@ -242,7 +241,7 @@ function ConvImage
     if($outputExt -eq 'guid') { $ImageFormatExt = 'Guid' }
     if($outputExt -eq 'icon') { $ImageFormatExt = 'Icon' }
 
-    # ファイル拡張子のテスト
+    # test file extension
     $iExtFlag = $false
     $oExtFlag = $false
     [string[]]$extLists = @("jpg","jpeg","png","bmp","emf","gif","tiff","wmf","exif","guid","icon") 
@@ -251,24 +250,24 @@ function ConvImage
         if($ex -eq $outputExt){$oExtFlag = $true}
     }
     if(!$iExtFlag){
-        Write-Error "$inputFile の拡張子が正しくありません." -ErrorAction Stop }
+        Write-Error "Incorrect extension of input file." -ErrorAction Stop
+    }
     if(!$oExtFlag){
-        Write-Error "$outputFile の拡張子が正しくありません." -ErrorAction Stop }
+        Write-Error "Incorrect extension of output file." -ErrorAction Stop
+    }
+    # create output file path
+    [string] $tmpFileName = $outputFilePath -Replace '^(.*\.)[^.]*$','$1'
+    [string] $outputFilePath = $tmpFileName + $outputExt
 
-    # outputFileの拡張子を小文字に変換する
-    $tmpFileName = $outputFilePath -Replace '^(.*\.)[^.]*$','$1'
-    $outputFilePath = [string]$tmpFileName + $outputExt
-    #Write-Output $inputFilePath,$outputFilePath
-
-    # 回転オプションの整形（RotateFlipType対応文字列の生成）
-    # rotate：回転
+    # generate rotate flip type compatible strings
+    # rotate
     if($rotate -eq 'None'){
-        $rotateStr = 'Rotate' + "$rotate"
+        [string] $rotateStr = 'Rotate' + "$rotate"
     }else{
-        $rotateStr = 'Rotate' + [string]$rotate
+        [string] $rotateStr = 'Rotate' + [string]$rotate
     }    
 
-    # flip,flop：上下左右反転
+    # flip,flop
     if($flip -and $flop){
         $flipStr = 'FlipXY'
     }elseif($flip -and (!$flop)){
@@ -279,106 +278,90 @@ function ConvImage
         $flipStr = 'FlipNone'
     }
 
-    # 回転オプション
+    # Parse rotate option
     $RotateFlipTypeStr = $rotateStr + $flipStr
-    #Write-Output $rotateFlag,$flipFlag,$RotateFlipTypeStr
     if($RotateFlipTypeStr -eq "RotateNoneFlipNone"){
-        $rotateFlag = $false
+        [bool] $rotateFlag = $false
     }else{
-        $rotateFlag = $true
+        [bool] $rotateFlag = $true
     }
-
-    # resizeオプションの解析    
-    #    縦x横でサイズを指定。
-    #    アスペクト比（縦横比）は維持される。
-    #    つまり長辺が指定サイズで出力される
-    #
-    #    ピクセル指定：100x100
-    #    ピクセル指定：100
-    #    比率指定：50%
-    $resizeFlag = $false
-    $percentFlag = $false
-    $splitFlag = $false
-
-    # "%"の文字を含むか：%での値指定か
+    # parse resize option
+    #     100x100 : Pixel specification
+    #     100     : Pixel specification (height only)
+    #     50%     : Ratio specification (height only)
+    [bool] $resizeFlag  = $false
+    [bool] $percentFlag = $false
+    [bool] $splitFlag   = $false
+    # is '%' include?
     if([string]$resize -match '%'){
         $percentFlag = $true
         $resize = $resize -Replace '%',''
     }
-
-    # "x"の文字を含むか：縦x横の両方の値指定か
+    # is 'x' include?
     if([string]$resize -match 'x'){
-        $resizeFlag = $true
-        $splitFlag = $true
+        $resizeFlag  = $true
+        $splitFlag   = $true
         $splitResize = $resize -Split 'x'
         if($splitResize.Count -ne 2){
-            Write-Error "$resize `の指定が不正です." -ErrorAction Stop}
+            Write-Error "Incorrect -Resize option." -ErrorAction Stop
+        }
         $TateNum = [int]$splitResize[0]
         $YokoNum = [int]$splitResize[1]
-        #Write-Output $TateNum,$YokoNum,$percentFlag
     }elseif($resize -ne 'None'){
         $resizeFlag = $true
         $TateYokoNum = [int]$resize
-        #Write-Output $TateYokoNum,$percentFlag
     }
-
-    #Write-Output $rotateFlag,$resizeFlag
-    # 当スクリプトは「リサイズ」と「回転、反転」のどちらかしか実行できない
+    # only one of "Resize" and "Rotate, Flip, Flop" can be executed
     if($rotateFlag -and $resizeFlag){
-        Write-Error '当スクリプトは「リサイズ」と「回転、反転」のどちらかしか実行できません.'  -ErrorAction Stop}
-
-
+        Write-Error 'only one of "Resize" and "Rotate, Flip, Flop" can be executed.'  -ErrorAction Stop
+    }
     #
-    # MAIN処理
+    # main
     #
-    # アセンブリの読み込み
     Add-Type -AssemblyName System.Drawing
-
-    # 画像ファイルの読み込み
+    # load input image file
     $image = New-Object System.Drawing.Bitmap("$inputFilePath")
-
-    ## 画像の回転、反転
+    ## Rotate, Flip, Flop
     if($rotateFlag){
-        # 回転
+        # Rotate
         $image.RotateFlip("$RotateFlipTypeStr") 
-
-        # 保存
+        # save image
         $image.Save("$outputFilePath", [System.Drawing.Imaging.ImageFormat]::"$ImageFormatExt")
-
-        # オブジェクトの破棄
+        # dispose object
         $image.Dispose()
-
-    ## 画像のリサイズ
+    ## Resize image
     }elseif($resizeFlag){
-        # 縮小先のオブジェクトを生成
+        # generate object to be shrunk
         if($splitFlag){
-            # 縦x横指定
+            # Case: <height>x<width>
             if($percentFlag){
-                # "%"指定：高さのみ指定
+                # include '%'
+                # percent specification
                 $tateRatio = $TateNum / 100
                 $yokoRatio = $YokoNum / 100
                 $ratio = $tateRatio
             }else{
-                # ピクセル指定：指定したサイズの箱に収まるようにする
-                # つまり縮小率の高い方の値を採用する
+                # Pixel specification
+                # fit into a specified size
+                # adopt the value with the higher
+                # reduction ratio in height and width.
                 $tateRatio = $TateNum / $image.Height
                 $yokoRatio = $YokoNum / $image.Width
-                #Write-Output $image.Height,$image.Width
-                #Write-Output $tateRatio,$yokoRatio
                 if($tateRatio -gt $yokoRatio){
-                    # 縦 > 横の場合
+                    # height -gt width
                     $ratio = $yokoRatio
                 }else{
                     $ratio = $tateRatio
                 }
             }
         }else{
-            # 数値のみ（高さのみ）指定
+            # numerical value only (height only) specified
             if($percentFlag){
-                # "%"指定
+                # include '%'
+                # percent specification
                 $ratio = $TateYokoNum / 100
             }else{
-                # ピクセル指定：高さ指定
+                # Pixel specification
                 $ratio = $TateYokoNum / $image.Height
             }
         }
@@ -388,21 +371,24 @@ function ConvImage
         #$canvas = New-Object System.Drawing.Bitmap([int]($image.Width / 2), [int]($image.Height / 2))
         $canvas = New-Object System.Drawing.Bitmap([int]($resizeWidthPixel), [int]($resizeHeightPixel))
 
-        # 縮小先へ描画
+        # drawing to reduced destination
         $graphics = [System.Drawing.Graphics]::FromImage($canvas)
         $graphics.DrawImage($image, (New-Object System.Drawing.Rectangle(0, 0, $canvas.Width, $canvas.Height)))
 
-        # 属性の引継ぎ(Exifや回転情報などが引き継がれるはず)
+        # transfer of attributes
+        # (Exif, rotate information, etc.)
         if ($Exif){
             foreach($item in $image.PropertyItems) {
                 $canvas.SetPropertyItem($item)
             }
         }
         if ($ExifOrientationOnly){
-            ## 画像の方向のみ引き継ぎ。
-            ## Exifの中でorientation情報(ID)は0x0112（10進数で274）
-            ## https://www.media.mit.edu/pia/Research/deepview/exif.html
-            ## https://blog.shibayan.jp/entry/20140428/1398688687
+            ## only the orientation of the image
+            ## is taken over.
+            ## in Exif, orientation information (ID)
+            ## is 0x0112 (274 in decimal)
+            ## ref: https://www.media.mit.edu/pia/Research/deepview/exif.html
+            ## ref: https://blog.shibayan.jp/entry/20140428/1398688687
             foreach($item in $image.PropertyItems) {
                 if ($item.Id -eq 0x0112){
                     $canvas.SetPropertyItem($item)
@@ -410,20 +396,20 @@ function ConvImage
             }
         }
 
-        # 保存
+        # save image
         $canvas.Save("$outputFilePath", [System.Drawing.Imaging.ImageFormat]::"$ImageFormatExt")
 
-        # オブジェクトの破棄
+        # dispose objects
         $graphics.Dispose()
         $canvas.Dispose()
         $image.Dispose()
 
-    ## 画像形式の変換のみ
+    ## Image format conversion only
     }else{
-        # 保存
+        # save image
         $image.Save("$outputFilePath", [System.Drawing.Imaging.ImageFormat]::"$ImageFormatExt")
 
-        # オブジェクトの破棄
+        # dispose object
         $image.Dispose()
     }
 }

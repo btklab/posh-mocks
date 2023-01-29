@@ -1,49 +1,53 @@
 <#
 .SYNOPSIS
+    jl - Join the next Line if line ends with the keyword
 
-jl -- join-line : 指定した文字列で終わる行に次の行を連結する
+    Concatenate the next line to the current line
+    ending with the specified string "、".
 
-デフォルトで全角読点「、」で終わる行に次の行を連結する。
-htmlで文末が「、」で終わる場合、
-レンダリング後に不要な半角スペースが入るのを抑制する。
-標準入力のみ受け付け。
+    The purpose of this function is to suppress
+    unnecessary space after rendering when a
+    sentence ends with "、" in html.
 
-文字列は「正規表現」で指定する点に注意する。
-デフォルトは「、」でおわる行。
-半角ドット"."、半角ハイフン"-"、ドルマーク"$"、バックスラッシュ"\"などは、
-それぞれ"\."、"\-"、"\$"、"\\"とエスケープする。
-
+    Note that ending character string treated as
+    regular expressions. Use escape mark "\" to 
+    search for symbols as character, for example,
+    
+        "." to "\."
+        "-" to "\-"
+        "$" to "\$"
+        "\" to "\\"
 
 .LINK
     list2txt, csv2txt
 
-
-.DESCRIPTION
--
-
 .PARAMETER Key
-次の行をつなげるキーとなる末尾文字列を正規表現で指定。
-デフォルトで「、」（全角読点が末尾にある）。
+    Specify the end string that coonects
+    the next line with a regular expression.
+
+    Defalut: "、"
 
 .PARAMETER Delimiter
-入力データの区切り文字を指定する。
-デフォルトで空文字。
+    Specifies delimiter.
+    
+    Default: ''
 
 .PARAMETER AddCrLf
-最終行に空行を挿入する。
+    Insert a blank line end of input.
 
 .PARAMETER SkipBlank
-空行があればそこでいったん出力する。
+    If detect a blank line,
+    output once there.
 
 .EXAMPLE
-Write-Output "あいう、","えお”,"かきくけ","こさし","すせそたちつてと"
+"あいう、","えお”,"かきくけ","こさし","すせそたちつてと"
 あいう、
 えお
 かきくけ
 こさし
 すせそたちつてと
 
-Write-Output "あいう、","えお”,"かきくけ","こさし","すせそたちつてと" | jl
+PS > "あいう、","えお”,"かきくけ","こさし","すせそたちつてと" | jl
 あいう、えお
 かきくけ
 こさし
@@ -54,10 +58,10 @@ Write-Output "あいう、","えお”,"かきくけ","こさし","すせそた�
 デフォルトで、全角読点「、」で終わる行に次の行を連結する
 
 .EXAMPLE
-Write-Output "あいう、","えお”,"かきくけ","こさし","すせそたちつてと" | jl ’'
+"あいう、","えお”,"かきくけ","こさし","すせそたちつてと" | jl ’'
 あいう、えおかきくけこさしすせそたちつてと
 
-Write-Output "あいう、","えお”,"かきくけ","こさし","すせそたちつてと" | jl ’.'
+PS > "あいう、","えお”,"かきくけ","こさし","すせそたちつてと" | jl ’.'
 あいう、えおかきくけこさしすせそたちつてと
 
 説明
@@ -65,9 +69,8 @@ Write-Output "あいう、","えお”,"かきくけ","こさし","すせそた�
 第一引数はリテラル文字列ではなく正規表現として解釈される。
 ドット"."やハイフン"-"は、"\."、"\-"などエスケープすること。
 
-
 .EXAMPLE
-Write-Output "あいう、","えお”,"","かきくけ","こさし","すせそたちつてと" | jl -Delimiter "@"
+"あいう、","えお”,"","かきくけ","こさし","すせそたちつてと" | jl -Delimiter "@"
 あいう、@えお
 
 かきくけ
@@ -79,7 +82,7 @@ Write-Output "あいう、","えお”,"","かきくけ","こさし","すせそ�
 Delimiterオプションで、行連結時の区切り文字を指定できる。
 
 .EXAMPLE
-Write-Output "あいう、","えお”,"","かきくけ","こさし","すせそたちつてと" | jl -Key "" -Delimiter "@"
+"あいう、","えお”,"","かきくけ","こさし","すせそたちつてと" | jl -Key "" -Delimiter "@"
 あいう、@えお@@かきくけ@こさし@すせそたちつてと
 
 説明
@@ -87,7 +90,7 @@ Write-Output "あいう、","えお”,"","かきくけ","こさし","すせそ�
 jl -Key "" 空文字を指定すると全行連結
 
 .EXAMPLE
-Write-Output "a","b","c","d","","e","f","g","h" | jl -Key "" -SkipBlank -Delimiter ","
+"a","b","c","d","","e","f","g","h" | jl -Key "" -SkipBlank -Delimiter ","
 a,b,c,d
 
 e,f,g,h
@@ -116,7 +119,7 @@ tank
 fuga
 fuga
 
-cat data.txt | jl . -d "`t"
+PS > cat data.txt | jl . -d "`t"
 bumon-A filter  17:45 2017/05/10        hoge    fuga
 bumon-B eva     17:46 2017/05/10        piyo    piyo
 bumon-C tank    17:46 2017/05/10        fuga    fuga
@@ -126,15 +129,13 @@ bumon-C tank    17:46 2017/05/10        fuga    fuga
 空行区切りレコードをタブ区切りに変換
 
 .EXAMPLE
-Write-Output "あいう、","えお”,"かきくけ","","こさし","すせそたちつてと" | jl ’' -SkipBlank
+"あいう、","えお”,"かきくけ","","こさし","すせそたちつてと" | jl ’' -SkipBlank
 あいう、えおかきくけ
 
 こさしすせそたちつてと
 
-
-
 #>
-function jl{
+function jl {
     Param(
         [Parameter(Mandatory=$False, Position=0)]
         [Alias('k')]
@@ -154,17 +155,17 @@ function jl{
     )
     begin{
         ## init var
-        [string]$readLine = ""
-        [string]$writeLine = ""
-        [bool]$bufFlag = $False
-        [int]$counter = 0
-        [Regex]$reg = $Key + '$'
+        [int] $counter      = 0
+        [bool] $bufFlag     = $False
+        [Regex] $reg        = $Key + '$'
+        [string] $readLine  = ""
+        [string] $writeLine = ""
     }
     process{
         # increment counter
         $counter++
         # read a line
-        $readLine = $_
+        [string] $readLine = $_
         if (($SkipBlank) -and ($readLine -eq '')) {
             # skip blank
             if ($bufFlag) {

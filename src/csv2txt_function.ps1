@@ -1,153 +1,143 @@
 <#
 .SYNOPSIS
-CSVデータをSSVに変換する
+    csv2txt - Convert CSV to SSV
 
-csv2txt [-z|-NaN]
+    Convert Comma-Separated-Values to Space-Separated-Values
 
--z :データのない列をゼロ0で表現する
--NaN :データのない列をNaNで表現する
+    csv2txt [-z|-NaN]
+        -z : Fill blank data with zeros
+        -NaN : Fill blank data with "NaN"
 
-エクセルからのCSV出力にも対応している
-セル内改行vbLFは文字列\nに変換される
+    LF in cells in CSV output from Excel are
+    converted to "\n".
 
-変換上の注意点
---------------------------------
- * 空白区切りでフィールド、改行でレコードを表現する
- * データ中の\は\\に変換する
- * データ中の改行コードは文字列\nに変換する
- * データ中の半角スペースは_に変換する
- * データ中のアンダーバー_は\_に変換する
- * データのないフィールドはアンダーバーで表現する
-
-入力されるCSVファイルの構造
---------------------------------
- * フィールドをカンマで区切る。レコードの終わりに改行をいれる
- ただし、カンマ／ダブルクォート／改行のあるフィールドは必ず
- * ダブルクオートで囲う。これらの記号がなくてもダブルクォート
- で囲っている場合がある
- * データ中のダブルクォートはフィールドを囲うために使うものと
- 区別するために、""と2文字で書いてエスケープする"
+    Notes:
+        - Output is space delimited
+        - "\" convert to "\\"
+        - LF convert to "\n"
+        - Space in the data is converted to "_"
+        - "_" in data is convert to "\_"
+        - Empty fields are represented by "_"
+    
+    Structure of the input CSV file
+        - Separate fields with commas
+        - Put line breaks at the end of records
+        - Fields with commas/double quotes/line breaks
+          should always be enclosed in double quotes.
+          even if these sybols are not present,
+          they may be enclosed in double quotes
+        - Double quotes in data should be escaped
+          with consecutive double quotes like ""
 
 .LINK
     csv2txt, json2txt
 
 .EXAMPLE
-PS C:\>cat a.csv | csv2txt
+cat a.csv | csv2txt
 
-説明
--------------
-CSVデータをSSVデータに変換する。
-空の要素はアンダースコア(_)に変換される。
+PS > cat a.csv | csv2txt -z
 
-.EXAMPLE
-PS C:\>cat a.csv | csv2txt -z
-
-説明
--------------
-CSVデータをSSVデータに変換する。
-空の要素はゼロ 0 に変換される。
+PS > cat a.csv | csv2txt -NaN
 
 #>
 function csv2txt {
 
     begin
     {
-        if($args[0] -eq "-z"){
-            $nulldata = '0'
-        }elseif($args[0] -eq "-NaN"){
-            $nulldata = 'NaN'
+        if( [string] ($args[0]) -eq "-z"){
+            [string] $nulldata = '0'
+        }elseif( [string] ($args[0]) -eq "-NaN"){
+            [string] $nulldata = 'NaN'
         }else{
-            $nulldata = '_'
+            [string] $nulldata = '_'
         }
 
-        # 変数の初期化
-        $cnt = 0
-        $tmpBuf = ''
+        # init var
+        [int] $cnt = 0
+        [string] $tmpBuf = ''
     }
 
     process
     {
+        # Count whether the double quote is even or odd
         $strLen = $_.Length
-
-        # ダブルクオートが偶数か奇数か数える
         for($i = 0; $i -lt $strLen; $i++){
-            $strWord = $_[$i]
+            [string] $strWord = $_[$i]
             if($strWord -eq '"'){ $cnt += 1 }
-
-            #ダブルクオート数が奇数の場合のカンマを別文字に変換
-            #また、\マークを別文字に変換しておく
+            # counting double quotes as even or odd
+            # if the number of double quotes is odd,
+            # convert the comma to another symbol.
+            # Also, convert "\" to different symbol
             if($cnt % 2 -eq 1){
                 if($strWord -eq ','){
-                    $addWord = '\c'
+                    [string] $addWord = '\c'
                 }elseif($strWord -eq '\'){
-                    $addWord = '@y@y@'
+                    [string] $addWord = '@y@y@'
                 }else{
-                    $addWord = [string]$strWord
+                    [string] $addWord = $strWord
                 }
             }else{
-                # ダブルクオート数が偶数の場合
+                # if the number of double quotes is even
                 if($strWord -eq '\'){
-                    $addWord = '@y@y@'
+                    [string] $addWord = '@y@y@'
                 }else{
-                    $addWord = [string]$strWord
+                    [string] $addWord = $strWord
                 }
             }
             $tmpBuf = [string]$tmpBuf + [string]$addWord
         }
-
-        # ダブルクオートカウンタが偶数なら出力
-        # そうでないなら次の行を読み込み
+        # if the double-quote counter is even, output,
+        # otherwise read next line
         if($cnt % 2 -eq 0){
 
-            # 各種文字列変換処理
-
-            # 行頭の"を削除
+            # various string conversion
+            # Remove double-quote at the beginning of a line
             $tmpBuf = $tmpBuf -Replace '^"', ''
 
-            # 行末の"を削除
+            # Remove double-quote at the end of a line
             $tmpBuf = $tmpBuf -Replace '"$', ''
 
-            # 行中の",を,に変換
+            # Convert '",' to ',' in a line
             $tmpBuf = $tmpBuf.Replace('",', ',')
 
-            # 行中の,"を,に変換
+            # Convert ',"' to ',' in a line
             $tmpBuf = $tmpBuf.Replace(',"', ',')
 
-            # 文字列としての"を別文字に置換
+            # Replace double quote to another symbol
             $tmpBuf = $tmpBuf.Replace('""', '\d')
 
-            # アンダースコアの処理
+            # Replace underscore
             $tmpBuf = $tmpBuf.Replace('_', '\_')
 
-            # 半角スペースの処理
+            # Replace spaces
             $tmpBuf = $tmpBuf.Replace(' ', '_')
 
-            # 行末のカンマの処理
+            # Replace comma at the end of lines
             $addNull = ',' + [string]$nulldata
             $tmpBuf = $tmpBuf -Replace ',$', $addNull
 
-            # 行頭のカンマの処理
+            # Replace comma at the beginning of lines
             $addNull = [string]$nulldata + ','
             $tmpBuf = $tmpBuf -Replace '^,', $addNull
 
-            # 連続するカンマの処理
+            # Replace consecutive commas (empty data cell)
             $addNull = ',' + [string]$nulldata + ','
             $tmpBuf = $tmpBuf.Replace(',,', $addNull)
             $tmpBuf = $tmpBuf.Replace(',,', $addNull)
 
-            # 残っているカンマを別文字に変換
+            # Replace reamaining commas
             $tmpBuf = $tmpBuf.Replace(',', '\s')
 
-            # 別文字を元の文字に再変換
-            # \s セパレータ
+            # Re-converts symbols
+            # \s separator
             $tmpBuf = $tmpBuf.Replace('\s', ' ')
-            # \c カンマ
+            # \c commas
             $tmpBuf = $tmpBuf.Replace('\c', ',')
-            # \d ダブルクオート
+            # \d double-quotes
             $tmpBuf = $tmpBuf.Replace('\d', '"')
-            # @y@y@を\\に
+            # Replace "@y@y@" to "\\"
             $tmpBuf = $tmpBuf.Replace('@y@y@', '\\')
-
+            # output
             Write-Output $tmpBuf
             $tmpBuf = ''
         }else{

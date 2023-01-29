@@ -1,40 +1,41 @@
 <#
 .SYNOPSIS
+    tarr - Expand wide data to long
 
-tarr - Expand wide data to long
+    Convert wide data to long data using the specified
+    columns as a key.
 
-横長（ワイド型）の半角スペース区切りレコードを、
-指定列をキーに縦長（ロング型）に変換する。
-
-ヘッダなし半角スペース区切り入力を期待。
-事前ソート不要。
-大文字小文字を区別しない。
+    Expects space-separated input without headers.
+    No pre-sort required.
+    Ignore case.
 
 .LINK
     tarr, yarr
 
 .EXAMPLE
-cat a.txt
-2018 1 2 3
-2017 1 2 3 4
-2022 1 2
+    cat a.txt
+    2018 1 2 3
+    2017 1 2 3 4
+    2022 1 2
 
-PS> cat a.txt | grep . | tarr -n 1
-2018 1
-2018 2
-2018 3
-2017 1
-2017 2
-2017 3
-2017 4
-2022 1
-2022 2
+    PS > cat a.txt | grep . | tarr -n 1
+    2018 1
+    2018 2
+    2018 3
+    2017 1
+    2017 2
+    2017 3
+    2017 4
+    2022 1
+    2022 2
 
-※ grep . で空行をスキップ（＝1文字以上の行のみヒット）
-
-.EXAMPLE
-PS C:\>cat a.txt | tarr -n 2
-1列目から2列目をキーとして折り返す
+    PS > cat a.txt | grep . | tarr -n 2
+    2018 1 2
+    2018 1 3
+    2017 1 2
+    2017 1 3
+    2017 1 4
+    2022 1 2
 
 #>
 function tarr {
@@ -51,14 +52,14 @@ function tarr {
         [string[]] $Text
     )
     process {
-        [string]$line = $_
+        [string] $readLine = $_
         # is line empty?
-        if ($line -eq ''){
+        if ( $readLine -eq '' ){
             Write-Error "detect empty row: $line" -ErrorAction Stop
         }
         # split key
-        $keyValAry = $line -split "$Delimiter"
-        if ($keyValAry.Count -le $num){
+        [string[]] $keyValAry = $readLine -split "$Delimiter"
+        if ( $keyValAry.Count -le $num ){
             Write-Error "Detect key-only lines: $line"  -ErrorAction Stop
         }
         # set key, val into hashtable

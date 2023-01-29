@@ -1,24 +1,23 @@
 <#
 .SYNOPSIS
-改行（CrLf）の挿入
-文字列中に`r`nを見つけるとそこに改行を挿入する
-
-Add-CrLf
+    Add-CrLf - Insert a newline when it finds "`r`n" in a strings
 
 .EXAMPLE
-PS C:\>Write-Output 'abc`r`n'def' | Add-CrLf
+'abc`r`ndef',"ghi jkl" | Add-CrLf
 abc
 def
+ghi jkl
 
 #>
 filter Add-CrLf {
-  if($_ -match '`r?`n'){
-      $splitbuf = $_ -Split '`r?`n'
-      for($i = 0; $i -lt $splitbuf.Count; $i++){
-          Write-Output $splitbuf[$i]
-      }
-  }else{
-      Write-Output $_
-  }
+    [string] $readLine = [string] $_
+    if($readLine -match '`r?`n'){
+        $splitbuf = $readLine -Split '`r?`n'
+        foreach ($elem in $splitbuf){
+            Write-Output $elem
+        }
+    }else{
+        Write-Output $readLine
+    }
 }
 

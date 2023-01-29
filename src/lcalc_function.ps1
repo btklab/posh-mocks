@@ -1,13 +1,14 @@
 <#
 .SYNOPSIS
+    lcalc - Column-to-column calculator
+    
+    Column-to-column calcurations on space delimited
+    standart input.
+    
+    lcalc [-d] 'expr; expr;...'
 
-lcalc - Column-to-column calculator
-
-半角スペース区切りの標準入力における列同士の計算
-
-lcalc [-d] 'expr; expr;...'
-
-    ";"で区切ることで複数の計算式を指定可能。
+    Multiple expressions can be specified by separating
+    expr with ";".
 
     計算列の指定
       $1,$2,... : 列指定は$記号+列数
@@ -27,65 +28,75 @@ lcalc [-d] 'expr; expr;...'
 
 
 .EXAMPLE
-"8.3 70","8.6 65","8.8 63"
-8.3 70
-8.6 65
-8.8 63
+    "8.3 70","8.6 65","8.8 63"
+    8.3 70
+    8.6 65
+    8.8 63
 
-"8.3 70","8.6 65","8.8 63" | lcalc '$1+1;$2/10'
-9.3 7
-9.6 6.5
-9.8 6.3
-
-.EXAMPLE
-lcalc -d '1+1'
-2
-
-# calculator mode does not require
-# standard input (from pipline)
-
-lcalc -d '1+sqrt(4)'
-3
-
-lcalc -d 'pi'
-3.14159265358979
-
-# 短縮形で使用できる関数以外の関数も使用できる
-lcalc -d '[math]::Ceiling(1.1)'
-2
+    "8.3 70","8.6 65","8.8 63" | lcalc '$1+1;$2/10'
+    9.3 7
+    9.6 6.5
+    9.8 6.3
 
 .EXAMPLE
-# calc average with sm2 and lcalc command
+    lcalc -d '1+1'
+    2
 
-## input
-"A 1 10","B 1 10","A 1 10","C 1 10"
-A 1 10
-B 1 10
-A 1 10
-C 1 10
+    # calculator mode does not require
+    # standard input (from pipline)
 
-## sum up
-"A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3
-2 A 1 20
-1 B 1 10
-1 C 1 10
+    lcalc -d '1+sqrt(4)'
+    3
 
-## calc average
-"A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3 | lcalc '$0;$NF/$1'
-2 A 1 20 10
-1 B 1 10 10
-1 C 1 10 10
+    lcalc -d 'pi'
+    3.14159265358979
+
+    # 短縮形で使用できる関数以外の関数も使用できる
+    lcalc -d '[math]::Ceiling(1.1)'
+    2
+
+.EXAMPLE
+    # calc average with sm2 and lcalc command
+
+    ## input
+    "A 1 10","B 1 10","A 1 10","C 1 10"
+    A 1 10
+    B 1 10
+    A 1 10
+    C 1 10
+
+    ## sum up
+    "A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3
+    2 A 1 20
+    1 B 1 10
+    1 C 1 10
+
+    ## calc average
+    "A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3 | lcalc '$0;$NF/$1'
+    2 A 1 20 10
+    1 B 1 10 10
+    1 C 1 10 10
 
 #>
 function lcalc {
-
     begin
     {
-        if($args.Count -lt 1){ throw "引数が不足しています." }
-        if($args.Count -eq 1){$exStr = $args[0]; $dflag = $false}
-        if($args[0] -eq "-d"){$exStr = $args[1]; $dflag = $true}
+        if( $args.Count -lt 1 ){
+            Write-Error "Insufficient args." -ErrorAction Stop
+        }
+        if( $args.Count -eq 1 ){
+            [string] $exStr = $args[0]
+            [bool] $dflag = $False
+        }
+        if( [string]($args[0]) -eq "-d" ){
+            if( $args.Count -lt 2 ){
+                Write-Error "Insufficient args." -ErrorAction Stop
+            }
+            $exStr = $args[1]
+            $dflag = $True
+        }
         
-        # 引数を列指定文字列に変換
+        # Convert expr
         $tmpScript = $exStr -replace ' ',''
         $tmpScript = $tmpScript -replace 'round\(','[decimal][math]::round('
         $tmpScript = $tmpScript -replace 'PI','[decimal][math]::PI'
@@ -104,18 +115,15 @@ function lcalc {
         $tmpScript = $tmpScript -replace 'log\[decimal\]2\((.*?)\)','log($1, 2)'
         
         $tmpScript = $tmpScript -replace '\$NF','[decimal]$splitLine[$splitLine.Count-1]'
-        #Write-Output $tmpScript;
         
         $splitTmp = $tmpScript.Split(";")
-        #Write-Output $splitTmp.Count
     }
-
     process
     {
-        if(!($dflag)){
-            [string]$writeLine = ''
-            [string[]]$splitLine = $_ -Split ' '
-            for($i=0;$i -lt $splitTmp.Count; $i++){
+        if( -not ($dflag) ){
+            [string]   $writeLine = ''
+            [string[]] $splitLine = $_ -Split ' '
+            for( $i=0;$i -lt $splitTmp.Count; $i++ ){
                 [string]$tmpWriteLine = Invoke-Expression $splitTmp[$i]
                 $writeLine += ' ' + $tmpWriteLine
             }
@@ -124,9 +132,10 @@ function lcalc {
             $writeLine = ''
         }
     }
-
     end
     {
-        if($dflag -eq $true){ Invoke-Expression $tmpScript}
+        if( $dflag ){
+            Invoke-Expression $tmpScript
+        }
     }
 }

@@ -1,42 +1,45 @@
 <#
 .SYNOPSIS
+    catcsv - Concatenate csv files
 
-catcsv - concatenate csv files
+    Combine UTF-8 CSV files in any directory
+    into single CSV file.
 
-任意のフォルダにあるUTF-8なCSVファイル群を
-ひとつのCSVファイルにまとめる。
+    Blank lines are automatically skipped.
+    CSV headers must be standardized to
+    either "present or absent". 
 
-空行は自動でスキップする
-CSVヘッダは「有or無」どちらかに統一されている必要あり。
-ヘッダ「無」の場合は-NoHeaderオプションをつける
+    Add the -NoHeader switch when reading
+    a CSV files without headers.
 
-Get-Contentによる単純なテキスト結合のため区切り文字の指定はない。
-出力ファイルがすでに存在しておれば、エラーで止まる。
-Listスイッチで、処理せずにターゲットファイルだけをリスト。
+    If output file already exists, it will stop
+    with an error without overwiting.
 
-Usage: catcsv
-    * カレントディレクトリの'*.csv'を'out.csv'に出力する
+    -Dry run with -List siwtch.
 
 .LINK
     catcsv.py, catcsv_function.ps1, (python csvkit)csvsql, in2csv
 
 .PARAMETER List
-処理をせずにターゲットファイルだけを列挙
+    Dryrun (output only target file names without execute command)
 
 .PARAMETER NoHeader
-ヘッダなしCSVを連結する
+    Concatenate headerless CSV files.
 
 .EXAMPLE
 catcsv
--> カレントディレクトリの'*.csv'を'out.csv'に出力する
-
-.EXAMPLE
-catcsv -NoHeader
--> インプットCSVがすべてヘッダなしの場合
+# Concatenate "*.csv" in the current directory
+# to 'out.csv'
 
 .EXAMPLE
 catcsv a*.csv
--> 'a*.csv'に該当するCSVファイルを結合し'out.csv'に出力する
+# Concatenate "a*.csv" in the current directory
+# to 'out.csv'
+
+.EXAMPLE
+catcsv -NoHeader
+# Concatenate headerless "*.csv" in the current
+# directory to 'out.csv'
 
 #>
 function catcsv {

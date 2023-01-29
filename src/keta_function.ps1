@@ -1,48 +1,31 @@
 <#
 .SYNOPSIS
+    keta - Padding per columns
 
-keta - 桁：標準出力の整形
+    Display each column right-justified with spaces
+    filled in according to the number of characters
+    in each column.
 
-列ごとに文字数に合わせて半角スペース埋めにて右詰め表示する。
-端末上で標準出力を目視確認しやすくなる。
+    Make the standard output easier to read for human
+    on the terminal.
 
-keta [-l]
-
- -l:左詰め（Left）
-
+    keta [-l]
+    -l: left padding
 
 .EXAMPLE
-PS C:\>cat a.txt
-01 埼玉県 01 さいたま市 100
-01 埼玉県 02 川越市 100
-01 埼玉県 03 熊谷市 100
-02 東京都 04 新宿区 100
-02 東京都 05 中央区 100
-02 東京都 06 港区 100
-02 東京都 07 八王子市 100
-02 東京都 08 立川市 100
-03 千葉県 09 千葉市 100
-03 千葉県 10 市川市 100
-03 千葉県 11 柏市 100
-04 神奈川県 12 横浜市 100
-04 神奈川県 13 川崎市 100
-04 神奈川県 14 厚木市 100
+    "aaa bbb ccc","dddddd eeee ffff"
+    aaa bbb ccc
+    dddddd eeee ffff
 
-PS C:\>cat a.txt | keta
-01   埼玉県 01 さいたま市 100
-01   埼玉県 02     川越市 100
-01   埼玉県 03     熊谷市 100
-02   東京都 04     新宿区 100
-02   東京都 05     中央区 100
-02   東京都 06       港区 100
-02   東京都 07   八王子市 100
-02   東京都 08     立川市 100
-03   千葉県 09     千葉市 100
-03   千葉県 10     市川市 100
-03   千葉県 11       柏市 100
-04 神奈川県 12     横浜市 100
-04 神奈川県 13     川崎市 100
-04 神奈川県 14     厚木市 100
+    # right padding (default)
+    PS > "aaa bbb ccc","dddddd eeee ffff" | keta
+       aaa  bbb  ccc
+    dddddd eeee ffff
+
+    # left padding (-l switch)
+    PS > "aaa bbb ccc","dddddd eeee ffff" | keta -l
+    aaa    bbb  ccc 
+    dddddd eeee ffff
 
 #>
 function keta {
@@ -50,7 +33,7 @@ function keta {
     begin
     {
         # get args
-        if(($args.Count) -and ([string]$args[0] -eq '-l')){
+        if(($args.Count) -and ( [string]($args[0]) -eq '-l' )){
             $leftPaddingFlag = $True
         } else {
             $leftPaddingFlag = $False
@@ -69,9 +52,9 @@ function keta {
     {
         # 1st pass
         $readRow++
-        $line = [string] $_
-        $hashRow[$readRow] = $line
-        $splitLine = $line -Split $Delimiter
+        [string] $readLine = [string] $_
+        $hashRow["key$readRow"] = $readLine
+        [string[]] $splitLine = $readLine -Split $Delimiter
 
         # get number of columns
         if($readRow -eq 1){$retu = $splitLine.Count}
@@ -93,12 +76,12 @@ function keta {
         # 2nd pass
         for($i = 1; $i -le $readRow; $i++){
             # reload the line and getting the number of character width
-            $splitLine = $hashRow[$i] -Split $Delimiter
+            $splitLine = $hashRow["key$i"] -Split $Delimiter
 
             # get number of character width per column
             for($j = 0; $j -lt $splitLine.Count; $j++){
                 [string] $colStr = $splitLine[$j]
-                [int] $colWidth = [System.Text.Encoding]::GetEncoding("Shift_Jis").GetByteCount($colStr)
+                [int] $colWidth = [System.Text.Encoding]::GetEncoding("Shift_JIS").GetByteCount($colStr)
 
                 # padding
                 [int] $setByteNum = [int]($hashColByte[$j]) - [int]($colWidth)
@@ -118,13 +101,13 @@ function keta {
 
                 # output
                 if($j -eq 0){
-                    $writeLine = $tmpWriteLine
+                    [string] $writeLine = $tmpWriteLine
                 }else{
-                    $writeLine = $writeLine + $Delimiter + $tmpWriteLine
+                    [string] $writeLine = $writeLine + $Delimiter + $tmpWriteLine
                 }
             }
             Write-Output $writeLine
-            $writeLine = ''
+            [string] $writeLine = ''
         }
     }
 }

@@ -1,107 +1,119 @@
 <#
 .SYNOPSIS
-行頭から指定した行数のみ出力する
-デフォルトで10行
+    head - Output the first part of files
 
-head [-n num] [file]...
+    Output only the specified number of lines
+    from the beginning of lines.
 
-file を指定しなかった場合、
-標準入力から読み込み。
+    Defaults to 10 lines of output.
+    
+    head [-n num] [file]...
 
-file を指定した場合、
-ファイル名とともに指定した行数を出力する。
+    If file is not specified, it is read from
+    the pipeline input.
 
-file を指定する場合の方が
-指定しない場合よりおそらく高速だが、
-標準入力からはデータを受け付けない点に注意。
+    If file is specified, outputs the specified
+    number of lines along with the file name.
 
 .LINK
     head, tail, chead, ctail, ctail2
 
+.EXAMPLE
+1..20 | head
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+PS > 1..20 | head -n 5
+1
+2
+3
+4
+5
 
 .EXAMPLE
-PS C:\> cat a.txt | head
-a.txt の最初の 10 行を出力
+head head*.ps1
+==> C:\Users\btklab\cms\bin\pwsh\src\head_function.ps1 <==
+<#
+    head - Output the first part of files
+
+    Output only the specified number of lines
+    from the beginning of lines.
+
+    Defaults to 10 lines of output.
+
+    head [-n num] [file]...
 
 
-.EXAMPLE
-PS C:\> cat a.txt | head -n 10
-a.txt の最初の 10 行を出力
+PS > head -n 5 head*.ps1
+==> C:\Users\btklab\cms\bin\pwsh\src\head_function.ps1 <==
+<#
+    head - Output the first part of files
 
-.EXAMPLE
-PS C:\> head *.txt
-拡張子が.txt のファイルのファイル名と
-最初の 10 行を出力
-
-.EXAMPLE
-PS C:\> head -n 10 *.txt
-拡張子が.txt のファイルのファイル名と
-最初の 10 行を出力
-
-
-.EXAMPLE
-PS C:\> head -n 10 onemil.txt | chead | ctail
-ファイルを一つだけ指定し、
-最初の行（ファイル名）と最後の行（空行）を削除すれば、
-大きいファイルからでも行頭を素早く取得できる。
-（ただしワイルドカードや複数ファイル指定の場合、
-このワンライナーは使えない点に注意する）
-
+    Output only the specified number of lines
 
 #>
-function head{
+function head {
 
   begin
   {
-    $stdinFlag      = $false
-    $readFileFlag   = $false
-    $setNumFlag     = $false
-    $oldVersionFlag = $false
-    $readRowCounter = 0
+    [int] $readRowCounter  = 0
+    [bool] $stdinFlag      = $False
+    [bool] $readFileFlag   = $False
+    [bool] $setNumFlag     = $False
+    [bool] $oldVersionFlag = $False
 
-    # バージョン確認
-    # Get-Content -LiteralPath file -Head <n> は v5.0以降でしか使用できない
-    $ver = [int]$PSVersionTable.PSVersion.Major
-    if($ver -le 2){ $oldVersionFlag = $true }
+    # get PowerShell version
+    # Get-Content -LiteralPath file -Head <n> is only available after v5.0
+    [int] $ver = $PSVersionTable.PSVersion.Major
+    if($ver -le 2){ $oldVersionFlag = $True }
 
-    # 入力形式と出力行数を引数から得る
-    if($args.Count -eq 0){
-      # 引数なしの場合：標準入力からデータを得る
-      $stdinFlag = $true
-      $dispRowNum = 10
-    }elseif($args[0] -eq '-n'){
-      # -n 行数指定ありの場合
+    # get input format and number of output lines from args
+    if( $args.Count -eq 0 ){
+      # without args: get input from pipeline
+      [bool] $stdinFlag = $True
+      [int] $dispRowNum = 10
+    } elseif ( [string]($args[0]) -eq '-n' ){
+      # "-n <n>" if the number of rows is specified
       if($args.Count -lt 2){
-        Write-Error "引数が不足しています." -ErrorAction Stop }
-      $setNumFlag = $true
-      $dispRowNum = [int]$args[1]
-    }else{
-      # 行数指定なしの場合:引数はすべてファイル名とみなす
-      $readFileFlag = $true
-      $dispRowNum = 10
-      $fileArryStartCounter = 0
+        Write-Error "Insufficient args." -ErrorAction Stop
+      }
+      [bool] $setNumFlag = $True
+      [int] $dispRowNum = [int]($args[1])
+    } else {
+      # If no not specified number of rows,
+      # all args treat as files.
+      [bool] $readFileFlag = $True
+      [int] $dispRowNum = 10
+      [int] $fileArryStartCounter = 0
     }
-
-    # -n で行数指定ありの場合の入力形式判断
-    if($setNumFlag){
-      if($args.Count -eq 2){
-        # 引数の数が2つの場合(-n num)：標準入力からデータを得る
-        $stdinFlag = $true
-      }else{
-        # 引数の数が2つ以上場合：3つめ以降の引数はファイル名
-        $readFileFlag = $true
+    # Input format for "-n <n>"
+    if( $setNumFlag ){
+      if( $args.Count -eq 2 ){
+        # If args.count -eq 2,
+        # get data from pipeline
+        $stdinFlag = $True
+      } else {
+        # If args.count -gt 2,
+        # remaining args treat as files.
+        $readFileFlag = $True
         $fileArryStartCounter = 2
       }
     }
-    #Write-Output $stdinFlag,$readFileFlag,$dispRowNum,$fileArryStartCounter
-
   } # end of begin block
 
   process
   {
-    if($stdinFlag){
+    if( $stdinFlag ){
       $readRowCounter++
-      if($readRowCounter -le $dispRowNum){
+      if( $readRowCounter -le $dispRowNum ){
         Write-Output $_
       }
     }
@@ -111,17 +123,14 @@ function head{
   {
     if($readFileFlag){
       for($i = $fileArryStartCounter; $i -lt $args.Count; $i++){
-        $fileList = (Get-ChildItem $args[$i] | %{ $_.FullName })
+        $fileList = (Get-ChildItem -Path $args[$i] | ForEach-Object { $_.FullName } )
         foreach($f in $fileList){
-          # ファイル名出力
-          #$dispFileName = (Split-Path -Leaf "$f")
+          # output file name
           $dispFileName = "$f"
-          #$dispFileName = (Resolve-Path "$f" -Relative)
           Write-Output ('==> ' + "$dispFileName" + ' <==')
-          # バージョンに応じて指定行を出力
-          #$oldVersionFlag = $true
+          # output lines according to PowerShell version
           if($oldVersionFlag){
-            # v2.0 以下
+            # -le v2.0
             $tmpDispRowNum = $dispRowNum - 1
             #@(Get-Content -LiteralPath "$f" -Encoding oem)[0..$tmpDispRowNum]
             @(Get-Content -LiteralPath "$f" -Encoding UTF8)[0..$tmpDispRowNum]
@@ -129,7 +138,7 @@ function head{
             #Get-Content -LiteralPath "$f" -Encoding oem -Head $dispRowNum
             Get-Content -LiteralPath "$f" -Encoding UTF8 -Head $dispRowNum
           }
-          # ファイルの区切りとして空行を一行出力
+          # Output empty line as a display separator
           Write-Output ''
         }
       }

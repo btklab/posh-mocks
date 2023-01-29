@@ -1,21 +1,24 @@
 <#
 .SYNOPSIS
-tac -- print lines in reverse
+    tac -- print lines in reverse
+
+        1..5 | tac
+        5
+        4
+        3
+        2
+        1
 
 .LINK
     rev
 
 .EXAMPLE
-1..5 | tac
-5
-4
-3
-2
-1
-
-.EXAMPLE
-tac a.txt
-
+    1..5 | tac
+    5
+    4
+    3
+    2
+    1
 #>
 function tac {
     Param(

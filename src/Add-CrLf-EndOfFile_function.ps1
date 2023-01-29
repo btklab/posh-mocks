@@ -1,13 +1,10 @@
 <#
 .SYNOPSIS
-ファイル末尾に改行（CrLf）を挿入
-
-Add-CrLf-EndOfFile
+    Add-CrLf-EndOfFile - Add a blank line to the bottom of stdin
 
 #>
 function Add-CrLf-EndOfFile {
-    begin  {}
-    process{Write-Output $_}
-    end    {Write-Output ''}
+    process { Write-Output $_ }
+    end     { Write-Output '' }
 }
 

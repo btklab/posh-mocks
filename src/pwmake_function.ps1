@@ -1,359 +1,337 @@
 <#
 .SYNOPSIS
+    pwmake -- Pwsh implementation of GNU make command
 
-pwmake -- Pwsh implementation of GNU make command
+    Read and execute Makefile in current directory.
+    
+    Usage:
+        - man2 pwmake
+        - pwmake (find and execute Makefile in the current directory)
+        - pwmake -f path/to/Makefile (specify external Makefile path)
+        - pwmake -Help (get help comment written at the end of each target line)
+        - pwmake -DryRun
+    
+    Detail:
+        - Makefile format roughly follows GNU make
+            - but spaces at the beginning of the line are
+              accepted with Tab or Space
+            - to define variables, use ${} instead of $()
+            - if @() is used, it is interpreted as a Subexpression
+              operator (described later)
+        - If no target is pecified in args, the first target is executed.
+        - Since it operates in the current process, dot sourcing functions
+          read in current process can also be described in Makefile.
+        - If the file path specified in Makefile is not an absolute
+          path, it is regarded as a relative path.
+        - [-n|-DryRun] switch available.
+            - [-toposort] switch show Makefile dependencies.
+        - Comment with "#"
+            - only the target line can be commented at the end of theline.
+            - end-of-line commnent not allowed in command line.
+            - do not comment out if the rightmost character of the comment
+              line is double-quote or single-quote. for example, following
+              command interpreted as "#" in a strings.
+                - "# this is not a comment"
+            - but also following is not considered a comment. this is
+              unexpected result.
+                - key = val ## note grep "hoge"
+            - Any line starting with whitespaces and "#" is treated as a
+              comment line regardress of the rightmost character.
+            - The root directory of the relative path written in the Makefile is
+              where the pwmake command was executed.
+            - "-f <file>" read external Makefile.
+                - the root directory of relative path in the external Makefile
+                  is the Makefile path.
+            
+        Commentout example:
+            target: deps  #comment
+                command \
+                    | sed 's;^#;;' \
+                    #| grep -v 'hoge'  <-- comment
+                    > a.md
+        
+    Tips:
+        If you put "## comment..." at the end of each target line
+        in Makefile, you can get the comment as help message for
+        each target with pwmake -Help [-f MakefilePath]
 
-カレントディレクトリにあるMakefileを読み実行する
+            ```Makefile
+            target: [dep dep ...] ## this is help message
+            ```
 
-Usage
+            ```powershell
+            $ pwmake -Help
+            ##
+            ## target synopsis
+            ## ------ --------
+            ## help   help message
+            ## new    create directory and set skeleton files
+            ```
+            
+    Note:
+        - Variables can be declared between the first line and the line
+          containing colon ":"
+        - Lines containing a colon ":" are considered target lines, and
+          all other lines that beginning with whitespaces are command lines.
+        - Do not include spaces in file path and target nemes.
+        - Command lines are preceded by one or more spaces or tabs.
+        - If "@" is added to the begining of the command line, the command
+          line will not be echoed to the output.
+        - Use ${var} when using the declared variables. Do not use @(var).
+        - but $(powershell-command) can be used for the value to be
+          assigned to the variable. for example,
+            - DATE := $((Get-Date).ToString('yyyy-MM-dd'))
+                - assigns with expands the right side
+            - DATE := ${(Get-Date).ToString('yyyy-MM-dd')}
+                - assigns without expanding the right side
+            - DATE  = $((Get-Date).ToString('yyyy-MM-dd'))
+                - assigns without expanding the right side
+            - DATE  = ${(Get-Date).ToString('yyyy-MM-dd')}
+                - assigns without expanding the right side
+            - Note: except for the first example, variables are expanded at runtime.
+        - Only one shell-command is accepted per line when assigning variables
+        - Shell variable assignment foo := $(Get-Date).ToString('yyyy-MM-dd')
+            - executes the shell before assigning to the variable and store it in
+              the variable.
+            - executes the shell when it is used by assigning it as an expression.
+            - if a variable assigned with "=" is assigned to another variable,
+              the expression is assigned to that variable with either "=" or ":=".
+        - If there is no paticular reason, it may be easier to understand variables
+          by immediately evaluating them with ":=", such as vat := str, var = $(),
+          and then assigning them.
+        - Variables that are evaluated when used, such as var = $(), can behave in
+          unexpected ways unless you understand them well.
+        - Shell variable assignment foo := Get-Date assigns as a simple strings.
+          If the character string on the right side can be interpreted as a
+          powershell command, it may be executed when used line foo = $(Get-Command).
+          However, it is safer to wrap powershell commands in $().
+        
+        - The linefeed escape character is following:
+            - backslash
+            - backquote
+            - pipeline (vertical bar)
 
-- man2 pwmake
-- pwmake 引数なしでカレントディレクトリの`Makefile`を探し実行
-- pwmake -f path/to/Makefile ファイル指定
-- pwmake -Help 各target行末尾の「` ## コメント`」部をヘルプとして出力
-- pwmake -DryRun
+        - Only the following automatic variables are impremented:
+            - $@ : Target file name
+            - $< : The name of the first dependent file
+            - $^ : Names of all dependent file
+            - %.ext : Replace with a string with the extension removed
+                  from the target name. Only target line can be used.
 
-Detail
+        ```Makefile
+        # '%' example:
+        %.tex: %.md
+            cat $< | md2html > $@
+        ```
 
-- Makefileの記法はおおよそGNU makeにしたがう
-    - ただし行頭の空白はTabでもSpaceでも受付
-    - ただし変数の定義には$()ではなく${}を使う
-      $()とした場合Subexpression演算子として解釈される（後述）
-- targetを指定しなかった場合は最初のtargetが実行される
-- カレントプロセスで読み込んだドットソースfunctionもMakefileに記述できる
-- ファイルは絶対パス指定でない場合はカレントディレクトリからの相対パスで探す
-- -n（-DryRun）でコマンドを実行せずにログやエラーを出力できる
-- 「toposort」で事前にMakefileの依存関係をチェックしてもよい
-- 「#」でコメント
-    - ターゲット行のみ行末コメント可能
-    - コマンド行には行末コメント不可
-    - コメント行の最右文字が"または'の場合はコメントアウトしない
-      このケースは、"# this is not a comment"のように
-      文字列内にある#だと解釈する
-    - しかしkey = val ## note grep "hoge"のようなケースも
-      コメントとみなさないので、注意する
-    - 左が空白かつ#から始まる行は最右文字にかかわらず全行コメント行とみなす
-- Makefile中のパスは、「makeコマンドを実行したディレクトリ」がルートになる
-- include file file ...で外部Makefile読み込み
-    - 外部Makefile中のパスは「呼び出し元のMakefileの場所」がルートになる
+    references:
+        - https://www.gnu.org/software/make/
+        - https://www.oreilly.co.jp/books/4873112699/
 
-# comment out example
-target: deps  #comment
-    command \
-        | sed 's;^#;;' \
-        #| grep -v 'hoge'  <-- comment
-        > a.md
+    Makefile example1:
 
-Tips:
-Makefileの各target行末尾に「 ## コメント」としておくと、
-pwmake -Helpで、targetごとのコメントを取得できる。
+    ```Makefile
+    .PHONY: all
+    all: hoge.txt
 
-```Makefile
-target: [dep dep ...] ## this is help message
-```
+    hoge.txt: log.txt
+        1..10 | grep 10 >> hoge.txt
 
-## $ pwmake -Help
-##
-## target synopsis
-## ------ --------
-## help   help message
-## new    create directory and set skeleton files
+    log.txt:
+        (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') | sed 's;2022;2000;' | md2html >> log.txt
+    ```
 
+    Makefile example2:
 
-Note:
+    ```Makefile
+    min = 10  ## min
+    max = 100 ## max
+    epochs = 3
+    lr = 1e-5
 
-- 最初行からコロン「:」を含む行までの間に変数を宣言することができる
-- コロン「:」を含む行をターゲット行とみなし、それ以外の行をコマンド行とみなす
-- ファイル名やターゲット名に空白（半角スペース）を含めない
-- コマンド行は1つ以上の空白又はタブを行頭におく
-- コマンドラインの行頭に@をつけると出力にコマンドラインをechoしない
+    ## output files
+    OUT_DIR = min_${min}_max_${max}
+    PARSED_FILE = ${OUT_DIR}/parsed.txt
+    DATASET_DIR = ${OUT_DIR}/dataset
+    DATASET = ${DATASET_DIR}/train.tsv ${DATASET_DIR}/dev.tsv ${DATASET_DIR}/test.tsv
+    LOG_FILE = output/min_${min}_max_${max}.log
 
-- 宣言した変数を用いるときは${ver}とする。$(ver)は用いない。
-- ただし変数に代入する値には$(shell command)としてもよい。たとえば：
-    - DATE := $((Get-Date).ToString('yyyy-MM-dd'))は、右辺を展開して代入
-    - DATE := ${(Get-Date).ToString('yyyy-MM-dd')}は、右辺を展開せず代入
-    - DATE  = $((Get-Date).ToString('yyyy-MM-dd'))は、右辺を展開せず代入
-    - DATE  = ${(Get-Date).ToString('yyyy-MM-dd')}は、右辺を展開せず代入
-    - 注：最初の例以外は、変数は実行時に展開される点に気をつける
-- 変数代入時のシェルコマンドは1行に1つだけしか受け付けない
+    .PHONY: all
 
-- シェル変数代入 foo := $(Get-Date) は
-  変数に代入する前にシェルを実行した上で変数に格納する
+    all: ${LOG_FILE}
+      cat ${LOG_FILE}
 
-- シェル変数代入 foo  = $(Get-Date) は、
-  式として変数に代入し使用されるタイミングでシェルを実行
-  =で代入したシェル変数をさらに別の変数に代入すると、
-  その変数に=と:=どちらで代入しても式が代入される点に注意。
-  要は、var=$()の形で代入したvarの扱いは注意する
+    ${PARSED_FILE}: input.txt
+      python parse.py input.txt --min ${min} --max ${max} > ${PARSED_FILE}
 
-- とくに理由がなければ変数はvar:=str, var:=$()のように:=で
-  即時評価してから代入する形がわかりやすいかもしれない。
-  var=$()のような使用時に評価される変数は、よく理解してから
-  用いないと、思わぬ動作をすることがある
+    ${DATASET}: ${PARSED_FILE}
+      python dataset.py ${PARSED_FILE} ${DATASET_DIR}
 
-- シェル変数代入 foo := Get-Date とすると単純な文字列として代入
-  ただし右辺文字列がシェルコマンドとして解釈できる場合は
-  foo=$(Get-Date)のように使用されるタイミングで実行されることもある
-  しかしシェルコマンドは$()でくるむようにしたほうが安全である
-
-- 改行区切り文字は以下のいずれか
-    バックスラッシュ
-    バッククオート
-    パイプライン（縦棒）
-
-- 自動変数は以下のもののみ実装
-    $@ : ターゲットファイル名
-    $< : 最初の依存するファイルの名前
-    $^ : すべての依存するファイルの名前
-
-
-Todo:
-
-- シェル関数
-  未: $(shell command)
-
-- 変数宣言
-  未: 「:=」構文
-
-- 自動変数の対応状況
-  済: $@ : ターゲットファイル名
-  済: $< : 最初の依存するファイルの名前
-  済: $^ : すべての依存するファイルの名前
-  未: $? : ターゲットより新しいすべての依存するファイル名
-  未: $+ : Makefileと同じ順番の依存するファイルの名前
-  未: $* : サフィックスを除いたターゲットの名前
-  未: $% : ターゲットがアーカイブメンバだったときのターゲットメンバ名
-
-  済: %.ext : ターゲット名から拡張子を削除した文字列と置換。
-          ターゲットラインのみ使用可。コマンドラインは使用不可。
-
-  - '%'の使用例：拡張子をくっつけて利用する
-    %.tex: %.md
-        cat $< | md2html > $@
-
-- サフィックスルール
-  未
-
-- マクロ置換
-  未 
-
-
-参考:
-- https://www.gnu.org/software/make/
-- https://www.oreilly.co.jp/books/4873112699/
-
-
-Makefileの例1：
-
-```Makefile
-.PHONY: all
-all: hoge.txt
-
-hoge.txt: log.txt
-    1..10 | grep 10 >> hoge.txt
-
-log.txt:
-    (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') | sed 's;2022;2000;' | md2html >> log.txt
-```
-
-
-Makefileの例2：
-
-```Makefile
-min = 10  ## min
-max = 100 ## max
-epochs = 3
-lr = 1e-5
-
-## output files
-OUT_DIR = min_${min}_max_${max}
-PARSED_FILE = ${OUT_DIR}/parsed.txt
-DATASET_DIR = ${OUT_DIR}/dataset
-DATASET = ${DATASET_DIR}/train.tsv ${DATASET_DIR}/dev.tsv ${DATASET_DIR}/test.tsv
-LOG_FILE = output/min_${min}_max_${max}.log
-
-.PHONY: all
-
-all: ${LOG_FILE}
-  cat ${LOG_FILE}
-
-${PARSED_FILE}: input.txt
-  python parse.py input.txt --min ${min} --max ${max} > ${PARSED_FILE}
-
-${DATASET}: ${PARSED_FILE}
-  python dataset.py ${PARSED_FILE} ${DATASET_DIR}
-
-${LOG_FILE}: ${DATASET}
-  python run.py ${DATASET_DIR} \
-    --epochs ${epochs} --lr ${lr} \
-    --do_train --do_eval --do_test
-```
-
+    ${LOG_FILE}: ${DATASET}
+      python run.py ${DATASET_DIR} \
+        --epochs ${epochs} --lr ${lr} \
+        --do_train --do_eval --do_test
+    ```
 
 .LINK
     toposort, pwmake
 
 .EXAMPLE
-cat Makefile
+    cat Makefile
 
-min = 10  ## min
-max = 100 ## max
-epochs = 3
-lr = 1e-5
+    min = 10  ## min
+    max = 100 ## max
+    epochs = 3
+    lr = 1e-5
 
-## output files
-OUT_DIR = min_${min}_max_${max}
-PARSED_FILE = ${OUT_DIR}/parsed.txt
-DATASET_DIR = ${OUT_DIR}/dataset
-DATASET = ${DATASET_DIR}/train.tsv ${DATASET_DIR}/dev.tsv ${DATASET_DIR}/test.tsv
-LOG_FILE = output/min_${min}_max_${max}.log
+    ## output files
+    OUT_DIR = min_${min}_max_${max}
+    PARSED_FILE = ${OUT_DIR}/parsed.txt
+    DATASET_DIR = ${OUT_DIR}/dataset
+    DATASET = ${DATASET_DIR}/train.tsv ${DATASET_DIR}/dev.tsv ${DATASET_DIR}/test.tsv
+    LOG_FILE = output/min_${min}_max_${max}.log
 
-.PHONY: all
+    .PHONY: all
 
-all: ${LOG_FILE}
-  cat ${LOG_FILE}
+    all: ${LOG_FILE}
+      cat ${LOG_FILE}
 
-${PARSED_FILE}: input.txt
-  python parse.py input.txt --min ${min} --max ${max} > ${PARSED_FILE}
+    ${PARSED_FILE}: input.txt
+      python parse.py input.txt --min ${min} --max ${max} > ${PARSED_FILE}
 
-${DATASET}: ${PARSED_FILE}
-  python dataset.py ${PARSED_FILE} ${DATASET_DIR}
+    ${DATASET}: ${PARSED_FILE}
+      python dataset.py ${PARSED_FILE} ${DATASET_DIR}
 
-${LOG_FILE}: ${DATASET}
-  python run.py ${DATASET_DIR} \
-    --epochs ${epochs} --lr ${lr} \
-    --do_train --do_eval --do_test
+    ${LOG_FILE}: ${DATASET}
+      python run.py ${DATASET_DIR} \
+        --epochs ${epochs} --lr ${lr} \
+        --do_train --do_eval --do_test
 
-.EXAMPLE
-pwmake -Variables max=100,min=99,epochs=8
+    PS > pwmake -Variables max=100,min=99,epochs=8
+    ######## override args ##########
+    max=100
+    min=99
+    epochs=8
+    ######## argblock ##########
+    min=10
+    max=100
+    epochs=3
+    lr=1e-5
+    OUT_DIR=min_99_max_100
+    PARSED_FILE=min_99_max_100/parsed.txt
+    DATASET_DIR=min_99_max_100/dataset
+    DATASET=min_99_max_100/dataset/train.tsv min_99_max_100/dataset/dev.tsv min_99_max_100/dataset/test.tsv
+    LOG_FILE=output/min_99_max_100.log
+    ######## phonies ##########
+    all
+    ######## comBlock ##########
 
-######## override args ##########
-max=100
-min=99
-epochs=8
-######## argblock ##########
-min=10
-max=100
-epochs=3
-lr=1e-5
-OUT_DIR=min_99_max_100
-PARSED_FILE=min_99_max_100/parsed.txt
-DATASET_DIR=min_99_max_100/dataset
-DATASET=min_99_max_100/dataset/train.tsv min_99_max_100/dataset/dev.tsv min_99_max_100/dataset/test.tsv
-LOG_FILE=output/min_99_max_100.log
-######## phonies ##########
-all
-######## comBlock ##########
+    all: output/min_99_max_100.log
+     cat output/min_99_max_100.log
 
-all: output/min_99_max_100.log
- cat output/min_99_max_100.log
+    min_99_max_100/parsed.txt: input.txt
+     python parse.py input.txt --min 99 --max 100 > min_99_max_100/parsed.txt
 
-min_99_max_100/parsed.txt: input.txt
- python parse.py input.txt --min 99 --max 100 > min_99_max_100/parsed.txt
+    min_99_max_100/dataset/train.tsv min_99_max_100/dataset/dev.tsv min_99_max_100/dataset/test.tsv: min_99_max_100/parsed.txt
+     python dataset.py min_99_max_100/parsed.txt min_99_max_100/dataset
 
-min_99_max_100/dataset/train.tsv min_99_max_100/dataset/dev.tsv min_99_max_100/dataset/test.tsv: min_99_max_100/parsed.txt
- python dataset.py min_99_max_100/parsed.txt min_99_max_100/dataset
-
-output/min_99_max_100.log: min_99_max_100/dataset/train.tsv min_99_max_100/dataset/dev.tsv min_99_max_100/dataset/test.tsv
- python run.py min_99_max_100/dataset --epochs 8 --lr 1e-5 --do_train --do_eval --do_test
+    output/min_99_max_100.log: min_99_max_100/dataset/train.tsv min_99_max_100/dataset/dev.tsv min_99_max_100/dataset/test.tsv
+     python run.py min_99_max_100/dataset --epochs 8 --lr 1e-5 --do_train --do_eval --do_test
 
 
-====
-override variables
+    ====
+    override variables
 
 
 .EXAMPLE
-cat Makefile
-# use uplatex
-file    := a
-texfile := ${file}.tex
-dvifile := ${file}.dvi
-pdffile := ${file}.pdf
-date    := $((Get-Date).ToString('yyyy-MM-dd (ddd) HH:mm:ss'))
+    cat Makefile
+    # use uplatex
+    file    := a
+    texfile := ${file}.tex
+    dvifile := ${file}.dvi
+    pdffile := ${file}.pdf
+    date    := $((Get-Date).ToString('yyyy-MM-dd (ddd) HH:mm:ss'))
 
-.PHONY: all
-all: ${pdffile} ## Generate pdf file and open.
-    @echo ${date}
+    .PHONY: all
+    all: ${pdffile} ## Generate pdf file and open.
+        @echo ${date}
 
-${pdffile}: ${dvifile} ## Generate pdf file from dvi file.
-    dvipdfmx -o $@ $<
+    ${pdffile}: ${dvifile} ## Generate pdf file from dvi file.
+        dvipdfmx -o $@ $<
 
-${dvifile}: ${texfile} ## Generate dvi file from tex file.
-    uplatex $<
-    uplatex $<
+    ${dvifile}: ${texfile} ## Generate dvi file from tex file.
+        uplatex $<
+        uplatex $<
 
-.PHONY: clean
-clean: ## Remove cache files.
-    Remove-Item -Path *.aux,*.dvi,*.log -Force
-
-
-# Makefileの各target列末尾に「` ## コメント`」としたので、`pwmake -Help`で、targetごとのヘルプを取得できる。
-PS > make -f Makefile -Help
-PS > pwmake -Help # デフォルトでカレントディレクトリのMakefileを探す
-
-target synopsis
------- --------
-all    Generate pdf file and open.
-a.pdf  Generate pdf file from dvi file.
-a.dvi  Generate dvi file from tex file.
-clean  Remove cache files.
+    .PHONY: clean
+    clean: ## Remove cache files.
+        Remove-Item -Path *.aux,*.dvi,*.log -Force
 
 
-# -DryRunでコマンドを実行せずに実行ログのみ出力
-pwmake -DryRun
+    PS > pwmake -f Makefile -Help
+    PS > pwmake -Help
 
-######## override args ##########
-None
-
-######## argblock ##########
-file=a
-texfile=a.tex
-dvifile=a.dvi
-pdffile=a.pdf
-date=2023-01-15 (Sun) 10:26:09
-
-######## phonies ##########
-all
-clean
-
-######## comBlock ##########
-all: a.pdf
- @echo 2023-01-15 (Sun) 10:26:09
-
-a.pdf: a.dvi
- dvipdfmx -o $@ $<
-
-a.dvi: a.tex
- uplatex $<
- uplatex $<
-
-clean:
- Remove-Item -Path *.aux,*.dvi,*.log -Force
-
-######## topological sorted target lines ##########
-a.tex
-a.dvi
-a.pdf
-all
-
-######## topological sorted command lines ##########
-uplatex a.tex
-uplatex a.tex
-dvipdfmx -o a.pdf a.dvi
-@echo 2023-01-15 (Sun) 10:26:09
-
-######## execute commands ##########
-uplatex a.tex
-uplatex a.tex
-dvipdfmx -o a.pdf a.dvi
-@echo 2023-01-15 (Sun) 10:26:09
+    target synopsis
+    ------ --------
+    all    Generate pdf file and open.
+    a.pdf  Generate pdf file from dvi file.
+    a.dvi  Generate dvi file from tex file.
+    clean  Remove cache files.
 
 
-# 実行時エラーが発生すると処理は停止する
-PS > pwmake
-> uplatex a.tex
-pwmake: The term 'uplatex' is not recognized as a name of a cmdlet, function, script file, or executable program.
-Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+    PS > pwmake -DryRun
+    ######## override args ##########
+    None
+
+    ######## argblock ##########
+    file=a
+    texfile=a.tex
+    dvifile=a.dvi
+    pdffile=a.pdf
+    date=2023-01-15 (Sun) 10:26:09
+
+    ######## phonies ##########
+    all
+    clean
+
+    ######## comBlock ##########
+    all: a.pdf
+     @echo 2023-01-15 (Sun) 10:26:09
+
+    a.pdf: a.dvi
+     dvipdfmx -o $@ $<
+
+    a.dvi: a.tex
+     uplatex $<
+     uplatex $<
+
+    clean:
+     Remove-Item -Path *.aux,*.dvi,*.log -Force
+
+    ######## topological sorted target lines ##########
+    a.tex
+    a.dvi
+    a.pdf
+    all
+
+    ######## topological sorted command lines ##########
+    uplatex a.tex
+    uplatex a.tex
+    dvipdfmx -o a.pdf a.dvi
+    @echo 2023-01-15 (Sun) 10:26:09
+
+    ######## execute commands ##########
+    uplatex a.tex
+    uplatex a.tex
+    dvipdfmx -o a.pdf a.dvi
+    @echo 2023-01-15 (Sun) 10:26:09
+
+
+    # Processing stops when a run-time error occurs
+    PS > pwmake
+    > uplatex a.tex
+    pwmake: The term 'uplatex' is not recognized as a name of a cmdlet, function, script file, or executable program.
+    Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
 
 #>
 function pwmake {

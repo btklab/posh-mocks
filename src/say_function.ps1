@@ -1,76 +1,76 @@
 <#
 .SYNOPSIS
+    say - Speech Synthesizer
 
-say - 標準入力からの文字列を音声出力に変換する
+    Speaks input string.
+    (Convert strings to speech)
+    
+    Usage:
+        Get-Clipboard | say -JA
+        clipwatch -Action {Get-Clipboard | say -EN -Speed 2}
+    
+    Implementation:
+        Audio file output (specified -ToWavFile) is synchronous
+        processing like "$synth.Speak($readLine)".
 
-Get-Clipboard | say -JA
-clipwatch -Action {Get-Clipboard | say -EN -Speed 2}
+        Speaker output is asynchronous processing like
+        "$synth.SpeakAsync($readLine) > $Null"
 
+    thanks:
+        PowerShell SpeechSynthesizer @ssashir06 - Qiita
+        https://qiita.com/ssashir06/items/35910394a1137cb19a63
 
-動作としては：
-  音声ファイル出力（-ToWavFile指定）は同期的処理 $synth.Speak($_)
-  スピーカ出力の場合は非同期処理 $synth.SpeakAsync($line) | Out-Null
-
-
-thanks:
-  PowerShellでSpeechSynthesizerを使う @ssashir06 -- Qiita
-  https://qiita.com/ssashir06/items/35910394a1137cb19a63
-
-  Microsoftリファレンス SpeechSynthesizer クラス
-  https://learn.microsoft.com/ja-jp/dotnet/api/system.speech.synthesis.speechsynthesizer?view=netframework-4.8
+        Microsoft reference SpeechSynthesizer class
+        https://learn.microsoft.com/ja-jp/dotnet/api/system.speech.synthesis.speechsynthesizer
 
 .LINK
     clipwatch
 
 
 .PARAMETER ListUpVoices
-インストールされている音声の一覧を返す。
-好きなものを-SelectVoice <str>で指定する
+    Return a list of installed voices.
+    Specify with -SelectVoice <str>
 
 .PARAMETER SelectVoice
-音声を選択肢の中から選択する
+    Select voice from list.
 
 .PARAMETER CustomVoice
--SelectVoiceの選択肢にない音声を
-自由に指定する
+    Specify voice that are not in the -SelectVoice
 
 .PARAMETER EN
-英語音声 "Microsoft Zira Deskto" を指定
+    Specify english voice "Microsoft Zira Deskto"
 
 .PARAMETER JA
-日本語音声 "Microsoft Haruka Desktop" を指定
+    Specify japanese voice "Microsoft Haruka Desktop"
 
 .PARAMETER Speed
-速度を-10から10の範囲で指定。
-デフォルトで0
 
 .PARAMETER Volume
-音量を1から10の範囲で指定。
-デフォルトで100
+    Specify the reading speed in the range of -10 to 10.
+    0 by Default
 
 .PARAMETER ToWavFile
-音声を.wav形式のファイルに出力
-同期的処理 $synth.Speak($_)
+    Output to .wav file with synchronous processing.
 
 .EXAMPLE
-"Today's date is $((Get-Date).ToShortDateString())" | say -EN
+    "Today's date is $((Get-Date).ToShortDateString())" | say -EN
 
 .EXAMPLE
-"Today's date is $((Get-Date).ToShortDateString())" | say -JA
+    "Today's date is $((Get-Date).ToShortDateString())" | say -JA
 
 .EXAMPLE
-"Today's date is $((Get-Date).ToShortDateString())" | say -EN -ToWavFile a.wav | ii
+    "Today's date is $((Get-Date).ToShortDateString())" | say -EN -ToWavFile a.wav | ii
 
-    Directory: C:\Users\btklab\cms\drafts
+        Directory: C:\Users\btklab\cms\drafts
 
-Mode                 LastWriteTime         Length Name
-----                 -------------         ------ ----
--a---          2022/10/01    13:48         169122 a.wav
+    Mode                 LastWriteTime         Length Name
+    ----                 -------------         ------ ----
+    -a---          2022/10/01    13:48         169122 a.wav
 
 .EXAMPLE
-clipwatch -Action {Get-Clipboard | say -EN -Speed 2}
+    clipwatch -Action {Get-Clipboard | say -EN -Speed 2}
 
-ClipBoard Changed...
+    ClipBoard Changed...
 
 #>
 function say {
@@ -162,7 +162,6 @@ function say {
             $synth.Dispose()
         }
         #$synth
-
     }
     process {
         foreach ($line in $Text){
@@ -174,7 +173,7 @@ function say {
                     $synth.Dispose()
                 }
             } else {
-                $synth.SpeakAsync($line) | Out-Null
+                $synth.SpeakAsync($line) > $Null
             }
         }
     }

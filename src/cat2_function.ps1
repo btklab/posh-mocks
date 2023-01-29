@@ -1,55 +1,34 @@
 <#
 .SYNOPSIS
-指定したファイルの順序でファイルのコンテンツを出力する。
-ファイル指定は空白スペース区切り。
+    cat2 - Concatenate files and print on the standard output
 
-cat2 [file]...
+    cat2 file2 file2...
 
-通常の Get-Content では引数はカンマ区切りで指定する。
-ワイルドカード（*）は使用できるが、
-ファイル名は辞書順固定となってしまう。
+    cat2 reads and outputs the specified text files in order.
+    When read multiple files, use spaces instead of commas
+    as delimiter. (in Get-Content commandlet, arguments are
+    delimited by commas.)
 
-cat2 を使用することで、
-半角空白区切りで複数ファイルの指定でき、また、
-出力する順序も指定できる。
-ハイフン(-)指定で標準入力からも受付可能。
+    Wildcard (*) can be used, but files are read in
+    lexicographical order.
 
-
-.EXAMPLE
-PS C:\>cat2 b.txt a.txt
-
-説明
-----------------------------
-b.txt と a.txt の中身をこの順序で出力する
-これは以下のコマンドと等価
-
-PS C:\>Get-Content b.txt,a.txt
+    By using hyphen (-), read form stdin.
 
 .EXAMPLE
-PS C:\>Get-Content a.txt | cat2 b.txt -
-
-説明
-----------------------------
-b.txt と 、標準入力からパイプを通ってきたa.txt の中身を
-この順序で出力する
-
+echo "hoge" | cat2 b.txt a.txt -
 
 .EXAMPLE
-PS C:\>cat2 *.txt
-
-説明
-----------------------------
-Get-Content *.txt と同じ出力を得る。
-
+cat2 *.txt
 
 #>
 function cat2 {
-
-    if($args.Count -lt 1){ throw "引数が不正です." }
-
-    # ファイル中身の取得
+    # test args
+    if($args.Count -lt 1){
+        Write-Error "Invalid args." -ErrorAction Stop
+    }
+    # get content of each files
     foreach ($f in $args){
-        if($f -like '-'){
+        if($f -eq '-'){
             $input
         }else{
             $fileList = (Get-ChildItem -Path "$f" | ForEach-Object { $_.FullName })

@@ -1,49 +1,61 @@
 <# 
 .SYNOPSIS
-clip2img -- clip boardのデータを画像ファイルとして保存
+    clip2img -- Save clip board image as an image file
 
-clip2img [directory] [-DirView] [-MSPaint] [-View]
-clip2img -d ~/Documents
-clip2img -n a.png
+    clip2img [directory] [-DirView] [-MSPaint] [-View]
+    clip2img -d ~/Documents
+    clip2img -n a.png
 
-デフォルトの保存場所は"~/Pictures"
-デフォルトのファイル名は"clip-yyyy-MM-dd-HHmmssfff.png"
-同じファイル名がすでに存在した場合は上書きされる点に注意する
+    "~/Pictures" is the default image save location.
+    "clip-yyyy-MM-dd-HHmmssfff.png" is the default
+    save file name.
+
+    Note that if output file already exists,
+    it will be overwritten
 
 .PARAMETER Name
-ファイル名を指定する
+    Specify the output file name.
 
 .PARAMETER MSPaint
-ファイル保存しつつMSPaintでファイルを開く
+    Save image file and open file using MSPaint.
 
 .PARAMETER Clip
-ファイル名をクリップボードにコピー
+    Save image file and copy file name to clipboard.
 
 .PARAMETER View
-ファイル保存しつつファイルを開く
+    Save file and open file using default viewer.
 
 .PARAMETER Directory
-フォルダを指定する
+    Specify directory to save image file.
 
 .PARAMETER Prefix
-ファイル名プレフィクスを指定
+    Specify filename prefix.
 
 .PARAMETER DirView
-保存先フォルダをエクスプローラで開く
+    Open the folder using explorer
+    where the image file is saved.
 
 .EXAMPLE
 clip2img
+
 ====
-カレントディレクトリに"clip-yyyy-MM-dd-HHmmssfff.png"出力
-.EXAMPLE
-clip2img -d ~/Picture
+Save image file as "clip-yyyy-MM-dd-HHmmssfff.png"
+to the current directory.
+
+
+PS > clip2img -d ~/Picture
+
 ====
-Pictureディレクトリに"clip-yyyy-MM-dd-HHmmssfff.png"出力
+Save image file as "clip-yyyy-MM-dd-HHmmssfff.png"
+to "~/Pictures" directory.
+
 
 .EXAMPLE
 clip2img -n a.png
+
 ====
-カレントディレクトリに"a.png"出力
+Save image file as "a.png" in
+the current directory.
 
 #>
 function clip2img {
@@ -90,8 +102,8 @@ function clip2img {
         [string]$saveFileName = "$Prefix" + "$saveFileName"
         ## set output dir path
         if ( -not (Test-Path -LiteralPath "$Directory") ){
-            ## 存在しないディレクトリ名はエラー
-            throw "存在しないディレクトリが指定されました. "
+            ## Non-existent directory name is an error.
+            Write-Error "The specified directory does not exist. ($Directory)" -ErrorAction Stop
         }
         $outputDir = Resolve-Path -LiteralPath "$Directory"
         $saveFilePath = Join-Path $outputDir $saveFileName
@@ -117,4 +129,3 @@ function clip2img {
         Write-Error "No image in clip board." -ErrorAction Stop
     }
 }
-

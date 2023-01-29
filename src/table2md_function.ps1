@@ -1,53 +1,61 @@
 <#
 .SYNOPSIS
+    table2md - Convert tab and csv delimited tables to markdown table format
 
-table2md - Convert tab and csv delimited tables to markdown table format
+    Convert tab-separated-values(TSV) and comma-separated-values(CSV)
+    to markdown table format.
 
-tab区切り・csv区切りの表をmarkdown形式に変換する
-標準入力、第一引数で何も指定ない場合はクリップボードの値を使おうとする。
+        cat a.csv | table2md -Delimiter "," -Caption "title"
 
-csv,tsvはヘッダありデータのみ受付。
-デフォルトでタブ区切り(-Delimiter "\t")
+    Tab delimited by default (-Delimiter "`t")
 
-エクセル表を直接コピーして変換する用途を想定している。
-ただしセル内改行やセル結合した入力はうまく変換できない。
+    If there is no input specification in the standard input and the
+    first argument, try to use the clipboard value.
 
-  - csv,tsvは数字・ハイフン・ドットだけのセルは自動で右寄せ
-  - 単位つきcsvカラム（列）も、-Units unit1,unit2,...指定で右寄せ
-  - 半角スペース+kg,ml,CFU,RLUなどいくつかの単位は標準で右寄せ。
+    Input csv/tsc data accept only with header.
 
-用法: cat a.csv | table2md -Delimiter "," -Caption "titlle"
+    It is assumed to be used for copy and convert data from an
+    Excel table. However, line breaks in cells and merged cell cannot
+    be converted well.
+
+    Note:
+        - For csv and tscv data, cells with only numbers, hyphens adn dots
+          are automatically aligned to the right.
+
+        - Some columns with units are also right aligned. Units can be
+          specified with -Units "unit1", "unit2",....
+          (Default -Units " kg"," ml", " CFU", "RLU", etc...)
 
 .LINK
     md2import, table2md, md2tex, md2html
 
 .EXAMPLE
-cat a.tsv | table2md -Caption "title"
+    cat iris.tsv | table2md -Caption "title" | keta -l
 
-Table: title
+    Table: title
 
-|sepal_length|sepal_width|petal_length|petal_width|species|
-|---:|---:|---:|---:|:---|
-|5.1|3.5|1.4|0.2|setosa|
-|4.9|3.0|1.4|0.2|setosa|
-|4.7|3.2|1.3|0.2|setosa|
-|4.6|3.1|1.5|0.2|setosa|
-|5.0|3.6|1.4|0.2|setosa|
-
+    | s_l  | s_w  | p_l  | p_w  | species |
+    | ---: | ---: | ---: | ---: | :---    |
+    | 5.1  | 3.5  | 1.4  | 0.2  | setosa  |
+    | 4.9  | 3.0  | 1.4  | 0.2  | setosa  |
+    | 4.7  | 3.2  | 1.3  | 0.2  | setosa  |
+    | 4.6  | 3.1  | 1.5  | 0.2  | setosa  |
+    | 5.0  | 3.6  | 1.4  | 0.2  | setosa  |
 
 .EXAMPLE
-cat a.tsv | table2md -Units "CFU","kg" | head -n 15
+    cat a.tsv | table2md -Units "CFU","kg" | head -n 15
 
-単位つきcsvカラム（列）は、-Units unit-name1,unit-name2,... 指定で右寄せ
+    | s_l  | s_w     | p_l    | p_w  | species |
+    | ---: | ---:    | ---:   | ---: | :---    |
+    | 5.1  | 3.5 CFU | 1.4 kg | 0.2  | setosa  |
+    | 4.9  | 3.0 CFU | 1.4 kg | 0.2  | setosa  |
+    | 4.7  | 3.2 CFU | 1.3 kg | 0.2  | setosa  |
+    | 4.6  | 3.1 CFU | 1.5 kg | 0.2  | setosa  |
+    | 5.0  | 3.6 CFU | 1.4 kg | 0.2  | setosa  |
 
-|sepal_length|sepal_width|petal_length|petal_width|species|
-|---:|---:|---:|---:|:---|
-|5.1|3.5 CFU|1.4 kg|0.2|setosa|
-|4.9|3.0 CFU|1.4 kg|0.2|setosa|
-|4.7|3.2 CFU|1.3 kg|0.2|setosa|
-|4.6|3.1 CFU|1.5 kg|0.2|setosa|
-|5.0|3.6 CFU|1.4 kg|0.2|setosa|
-
+    # Some columns with units are also right aligned. Units can be
+    # specified with -Units "unit1", "unit2",....
+    # (Default -Units " kg"," ml", " CFU", "RLU", etc...)
 #>
 function table2md {
     Param(
@@ -104,14 +112,16 @@ function table2md {
         return $uflag
     }
     function parseTable {
-        Param ( [string[]]$readLines)
-        [string[]]$retAry = @()
+        Param (
+            [string[]] $readLines
+        )
+        [string[]] $retAry = @()
         ## set option (e.g. caption="caption")
         if($Caption){
              $retAry += ,"Table: $Caption"
              $retAry += ,"" }
         ## replace delimiter to pipe
-        $rcnt = 0
+        [int] $rcnt = 0
         foreach ($csvLine in $readLines) {
             $rcnt++
             if($rcnt -eq 2){
@@ -169,7 +179,7 @@ function table2md {
     ## Output header
     if ($headerFlag){
         [string[]]$readHeaders = @()
-        $readHeaders = $readListHeader.ToArray()
+        [string[]] $readHeaders = $readListHeader.ToArray()
         foreach ($rHeader in $readHeaders){
           Write-Output $rHeader
         }
@@ -177,7 +187,7 @@ function table2md {
     ## Output markdown table
     if ($tableFlag){
         [string[]]$readLines = @()
-        $readLines = $readList.ToArray()
+        [string[]] $readLines = $readList.ToArray()
         parseTable $readLines
     }
 }
