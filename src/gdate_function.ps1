@@ -43,7 +43,7 @@ function gdate {
     param (
         [parameter(Mandatory=$False, Position=0, ValueFromPipeline=$True)]
         [Alias('d')]
-        [string[]] $Date = $((Get-Date).ToString('M/d')),
+        [string[]] $Date = @($((Get-Date).ToString('M/d'))),
         
         [Parameter(Mandatory=$False)]
         [ValidateSet('clipboard', 'stdout')]
@@ -79,6 +79,9 @@ function gdate {
         
         [Parameter(Mandatory=$False)]
         [switch] $Year2,
+        
+        [Parameter(Mandatory=$False)]
+        [int] $BaseYear = 0,
         
         [Parameter(Mandatory=$False)]
         [Alias('w')]
@@ -175,10 +178,26 @@ function gdate {
         if ( $iMonth -eq 0 -or $iDay -eq 0 ) {
             Write-Error "Invalid date. set month and date like ""1/23"" or ""1-23""" -ErrorAction Stop
         }
+        # set ymd
+        ## set base year (default = thisyear)
+        [int] $iYear = (Get-Date).AddYears($BaseYear).Year
         if ( $AddYears ){
-            [int] $iYear  = (Get-Date).AddYears($AddYears).Year
-        } else {
-            [int] $iYear  = (Get-Date).Year
+            [datetime] $tmpDate = (Get-Date "$iYear/$iMonth/$iDay").AddYears($AddYears)
+            [int] $iYear  = $tmpDate.Year
+            [int] $iMonth = $tmpDate.Month
+            [int] $iDay   = $tmpDate.Day
+        }
+        if ( $AddMonths ){
+            [datetime] $tmpDate = (Get-Date "$iYear/$iMonth/$iDay").AddMonths($AddMonths)
+            [int] $iYear  = $tmpDate.Year
+            [int] $iMonth = $tmpDate.Month
+            [int] $iDay   = $tmpDate.Day
+        }
+        if ( $AddDays ){
+            [datetime] $tmpDate = (Get-Date "$iYear/$iMonth/$iDay").AddDays($AddDays)
+            [int] $iYear  = $tmpDate.Year
+            [int] $iMonth = $tmpDate.Month
+            [int] $iDay   = $tmpDate.Day
         }
         if ( $EndOfMonth ){
             [int] $iDay = 1
@@ -265,7 +284,7 @@ function thisyear {
     param (
         [parameter(Mandatory=$False, Position=0, ValueFromPipeline=$True)]
         [Alias('d')]
-        [string[]] $Date = $((Get-Date).ToString('M/d')),
+        [string[]] $Date = @($((Get-Date).ToString('M/d'))),
         
         [Parameter(Mandatory=$False)]
         [ValidateSet('clipboard', 'stdout')]
@@ -301,6 +320,9 @@ function thisyear {
         
         [Parameter(Mandatory=$False)]
         [switch] $Year2,
+        
+        [Parameter(Mandatory=$False)]
+        [int] $BaseYear = 0,
         
         [Parameter(Mandatory=$False)]
         [Alias('w')]
@@ -341,6 +363,7 @@ function thisyear {
         Slash = $Slash
         GetDateTimeFormat = $GetDateTimeFormat
         Year2 = $Year2
+        BaseYear = $BaseYear
         DayOfWeek = $DayOfWeek
         DayOfWeekWithRound = $DayOfWeekWithRound
         NoSeparator = $NoSeparator
@@ -407,7 +430,7 @@ function nextyear {
     param (
         [parameter(Mandatory=$False, Position=0, ValueFromPipeline=$True)]
         [Alias('d')]
-        [string[]] $Date = $((Get-Date).ToString('M/d')),
+        [string[]] $Date = @($((Get-Date).ToString('M/d'))),
         
         [Parameter(Mandatory=$False)]
         [ValidateSet('clipboard', 'stdout')]
@@ -445,6 +468,9 @@ function nextyear {
         [switch] $Year2,
         
         [Parameter(Mandatory=$False)]
+        [int] $BaseYear = 1,
+        
+        [Parameter(Mandatory=$False)]
         [Alias('w')]
         [switch] $DayOfWeek,
         
@@ -459,7 +485,7 @@ function nextyear {
         [int] $AddMonths,
         
         [Parameter(Mandatory=$False)]
-        [int] $AddYears = 1,
+        [int] $AddYears,
         
         [Parameter(Mandatory=$False)]
         [ValidateScript({[int]($_) -gt 0})]
@@ -483,6 +509,7 @@ function nextyear {
         Slash = $Slash
         GetDateTimeFormat = $GetDateTimeFormat
         Year2 = $Year2
+        BaseYear = $BaseYear
         DayOfWeek = $DayOfWeek
         DayOfWeekWithRound = $DayOfWeekWithRound
         NoSeparator = $NoSeparator
@@ -549,7 +576,7 @@ function lastyear {
     param (
         [parameter(Mandatory=$False, Position=0, ValueFromPipeline=$True)]
         [Alias('d')]
-        [string[]] $Date = $((Get-Date).ToString('M/d')),
+        [string[]] $Date = @($((Get-Date).ToString('M/d'))),
         
         [Parameter(Mandatory=$False)]
         [ValidateSet('clipboard', 'stdout')]
@@ -587,6 +614,9 @@ function lastyear {
         [switch] $Year2,
         
         [Parameter(Mandatory=$False)]
+        [int] $BaseYear = -1,
+        
+        [Parameter(Mandatory=$False)]
         [Alias('w')]
         [switch] $DayOfWeek,
         
@@ -601,7 +631,7 @@ function lastyear {
         [int] $AddMonths,
         
         [Parameter(Mandatory=$False)]
-        [int] $AddYears = -1,
+        [int] $AddYears,
         
         [Parameter(Mandatory=$False)]
         [ValidateScript({[int]($_) -gt 0})]
@@ -625,6 +655,7 @@ function lastyear {
         Slash = $Slash
         GetDateTimeFormat = $GetDateTimeFormat
         Year2 = $Year2
+        BaseYear = $BaseYear
         DayOfWeek = $DayOfWeek
         DayOfWeekWithRound = $DayOfWeekWithRound
         NoSeparator = $NoSeparator
