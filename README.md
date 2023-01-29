@@ -158,7 +158,7 @@ a2b1c1
 cat a.txt | sed "s;`t;;g"
 
 # replace CrLf to space (use double quote)
-cat a.txt | sed "s; ;`r`n;g"
+cat a.txt | sed "s;`r`n; ;g"
 ```
 
 ```powershell
