@@ -41,9 +41,9 @@ function gdate {
 
     #>
     param (
-        [parameter(Mandatory=$True, Position=0, ValueFromPipeline=$True)]
+        [parameter(Mandatory=$False, Position=0, ValueFromPipeline=$True)]
         [Alias('d')]
-        [string[]] $Date,
+        [string[]] $Date = $((Get-Date).ToString('M/d')),
         
         [Parameter(Mandatory=$False)]
         [ValidateSet('clipboard', 'stdout')]
@@ -263,9 +263,9 @@ function thisyear {
 
     #>
     param (
-        [parameter(Mandatory=$True, Position=0, ValueFromPipeline=$True)]
+        [parameter(Mandatory=$False, Position=0, ValueFromPipeline=$True)]
         [Alias('d')]
-        [string[]] $Date,
+        [string[]] $Date = $((Get-Date).ToString('M/d')),
         
         [Parameter(Mandatory=$False)]
         [ValidateSet('clipboard', 'stdout')]
@@ -405,9 +405,9 @@ function nextyear {
 
     #>
     param (
-        [parameter(Mandatory=$True, Position=0, ValueFromPipeline=$True)]
+        [parameter(Mandatory=$False, Position=0, ValueFromPipeline=$True)]
         [Alias('d')]
-        [string[]] $Date,
+        [string[]] $Date = $((Get-Date).ToString('M/d')),
         
         [Parameter(Mandatory=$False)]
         [ValidateSet('clipboard', 'stdout')]
@@ -547,9 +547,9 @@ function lastyear {
 
     #>
     param (
-        [parameter(Mandatory=$True, Position=0, ValueFromPipeline=$True)]
+        [parameter(Mandatory=$False, Position=0, ValueFromPipeline=$True)]
         [Alias('d')]
-        [string[]] $Date,
+        [string[]] $Date = $((Get-Date).ToString('M/d')),
         
         [Parameter(Mandatory=$False)]
         [ValidateSet('clipboard', 'stdout')]
