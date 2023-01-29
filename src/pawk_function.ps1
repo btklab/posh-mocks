@@ -1,9 +1,8 @@
 <#
 .SYNOPSIS
-
     pawk - Pattern-Action processor like GNU AWK
 
-    pawk -Pattern { condition } -Action { action }
+        pawk -Pattern { condition } -Action { action }
 
     pawk reads the input a line at a time, scans for pattern,
     and executes the associated action if pattern matched.
@@ -11,19 +10,25 @@
     As a feature, pipeline processing can be applied only to
     specific columns for multiple column inputs, like below.
 
-    # input line (csv: comma separated values)
-    PS> $dat = "abc,def,ghi","jkl,mno,pqr","stu,vwz,012"
-    abc,def,ghi
-    jkl,mno,pqr
-    stu,vwz,012
+        # input line (csv: comma separated values)
+        PS> $dat = "abc,def,ghi","jkl,mno,pqr","stu,vwz,012"
+        abc,def,ghi
+        jkl,mno,pqr
+        stu,vwz,012
 
-    # apply rev commnand only 2nd columns
-    PS> $dat | pawk -fs "," -Pattern {$1 -match "^j"} -Action {$2=$2|rev;$0}
-    jkl,onm,pqr
+        # apply rev commnand only 2nd columns
+        PS> $dat | pawk -fs "," -Pattern {$1 -match "^j"} -Action {$2=$2|rev;$0}
+        jkl,onm,pqr
 
-    # -Begin, -Process,, -End block like AWK
-    PS> 1..10 | pawk -Begin { $sum=0 } -Action { $sum+=$1 } -End { $sum }
-    55
+        # apply rev commnand only 2nd columns and output all lines
+        PS> $dat | pawk -fs "," -Pattern {$1 -match "^j"} -Action {$2=$2|rev} -AllLine
+        abc,def,ghi
+        jkl,onm,pqr
+        stu,vwz,012
+    
+        # -Begin, -Process and -End block like AWK
+        PS> 1..10 | pawk -Begin { $sum=0 } -Action { $sum+=$1 } -End { $sum }
+        55
 
     options:
         - [[-a|-Action] <ScriptBlock>] ...action script
@@ -42,11 +47,18 @@
         - [-SkipBlank] ...continue processing when empty row is detected
     
     note:
-        -Action, -Pattern, -Begin, -End options should be specified in the script block.
+        -Action, -Pattern, -Begin, -End options should be specified in 
+        the script block.
 
-        The column specification symbols are $1,$2,...,$NF. (The left most column number is 1 and counts up to the right.) Specifying $0 means the entire row. Note that it is not allowed to assign value to $0 (do not use $0=$val in script block).
+        The column specification symbols are $1,$2,...,$NF. (The left most
+        column number is 1 and counts up to the right.) Specifying $0 means
+        the entire row. Note that it is not allowed to assign value to $0
+        (do not use $0=$val in script block).
 
-        Each column value is interpreted as System.Double if it looks like a number, and otherwise, as System.String. Note that zero starting numbers are treated as system.string exceptionally. Underscore(_) can also be used as a numeric delimiter. (e.g. 123_456)
+        Each column value is interpreted as System.Double if it looks like
+        a number, and otherwise, as System.String. Note that zero starting
+        numbers are treated as system.string exceptionally. 
+        Underscore(_) can also be used as a numeric delimiter. (e.g. 123_456)
 
         Built-in variables and options:
             - $NF : the last element of the current line
@@ -132,52 +144,68 @@
 .PARAMETER Action
     [-a|-Action] <ScriptBlock>
 
-    Apply <scriptblock> to rows and columns matching the condition of -Pattern option.
+    Apply <scriptblock> to rows and columns matching the condition of
+    -Pattern option.
 
     Without -Pattern option, apply <scriptblock> to all records.
 
-    The column specification symbols are $1,$2,...,$NF. (The left most column number is 1 and counts up to the right.)
+    The column specification symbols are $1,$2,...,$NF. (The left most
+    column number is 1 and counts up to the right.)
 
-    Specifying $0 means the entire row. Note that it is not allowed to assign value to $0 (do not use $0=$val in script block).
+    Specifying $0 means the entire row. Note that it is not allowed to
+    assign value to $0 (do not use $0=$val in script block).
 
 .PARAMETER Pattern
     [-p|-Pattern] <ScriptBlock>
 
-    Output only rows that matches <scriptblock> conditions. With -Action option, apply -Action <scriptblock> to match rows.
+    Output only rows that matches <scriptblock> conditions. 
+    With -Action option, apply -Action <scriptblock> to match rows.
 
-    With -AllLine switch, all rows are output regardless of whether matches pattern or not. Note that even in this case, the -Action <scriptblock> is only applied to rows that match -Pattern option.
+    With -AllLine switch, all rows are output regardless of whether
+    matches pattern or not. Note that even in this case,
+    the -Action <scriptblock> is only applied to rows that match
+    -Pattern option.
 
-    The column specification symbols are $1,$2,...,$NF. (The left most column number is 1 and counts up to the right.)
+    The column specification symbols are $1,$2,...,$NF.
+    (The left most column number is 1 and counts up to the right.)
 
-    Specifying $0 means the entire row. Note that it is not allowed to assign value to $0 (do not use $0=$val in script block).
+    Specifying $0 means the entire row. Note that it is not allowed
+    to assign value to $0 (do not use $0=$val in script block).
 
 .PARAMETER Begin
     [-b|-Begin] <ScriptBlock>
 
-    A scriptblock to run before reading any input. For example, it is used for init variables, adding headers, and more...
+    A scriptblock to run before reading any input.
+    For example, it is used for init variables, adding headers, and more...
 
 .PARAMETER End
     [-e|-End] <ScriptBlock>
 
-    A scriptblock to run after reading all input. For example, it is used for output/format results, adding footers, and more...
+    A scriptblock to run after reading all input.
+    For example, it is used for output/format results, adding footers, and more...
 
 .PARAMETER [-fs|-Delimiter]
     [-fs|-Delimiter] <String>
 
-    Specifies the input/output delimiter. Default is a space.(default: -fs " ")
+    Specifies the input/output delimiter. Default is a space.
+    (default: -fs " ")
 
-    When specifying special characters like tabs and line feeds, wrap them in double quotes.
+    When specifying special characters like tabs and line feeds,
+    wrap them in double quotes.
 
-    If -ifs or -ofs are not specified, this -fs delimiter will be used as both the input and output delimiter.
+    If -ifs or -ofs are not specified, this -fs delimiter will be
+    used as both the input and output delimiter.
 
-    If -ifs and/or -ofs are specified together, this -fs value will be overridden.
+    If -ifs and/or -ofs are specified together, this -fs value will
+    be overridden.
 
 .PARAMETER [-ifs|-InputDelimiter]
     [-ifs|-InputDelimiter] <String>
 
     Specifies the input delimiter.
 
-    When specifying special characters like tabs and line feeds, wrap them in double quotes.
+    When specifying special characters like tabs and line feeds,
+    wrap them in double quotes.
     
     If -fs and -ifs are specified at the same time, -ifs is selected.
 
@@ -186,12 +214,16 @@
 
     Specifies the output delimiter.]
 
-    When specifying special characters like tabs and line feeds, wrap them in double quotes.
+    When specifying special characters like tabs and line feeds,
+    wrap them in double quotes.
     
     If -fs and -ofs are specified at the same time, -ofs is selected.
 
 .PARAMETER -AllLine
-    With -AllLine switch, all rows are output regardless of whether matches pattern or not. Note that even in this case, the -Action <scriptblock> is only applied to rows that match -Pattern option.
+    With -AllLine switch, all rows are output regardless of whether
+    matches pattern or not. Note that even in this case,
+    the -Action <scriptblock> is only applied to rows that match
+    -Pattern option.
 
 .PARAMETER -SkipBlank
     Continue processing even if an empty line is detected.
@@ -388,7 +420,7 @@ aaa,h,i,3
 
 # Pattern match and replace 1st field and output all rows,
 # but -Action script is applied only pattern matched rows.
-PS> $dat | pawk -fs "," -Pattern {$NF -gt 1} -Action {$1="aaa";$0}
+PS> $dat | pawk -fs "," -Pattern {$NF -gt 1} -Action {$1="aaa"} -AllLine
 a,b,c,1
 aaa,e,f,2
 aaa,h,i,3
@@ -445,9 +477,16 @@ stu,vwz,012
 
 # Apply rev commnand only 2nd columns
 PS> $dat | pawk -fs "," -Action {$2=$2|rev;$0}
+PS> $dat | pawk -fs "," -Action {$2=$2|rev} -AllLine
 abc,fed,ghi # reverse 2nd column
 jkl,onm,pqr # reverse 2nd column
 stu,zwv,012 # reverse 2nd column
+
+# Apply rev commnand only 2nd columns and only pattern matched rows
+PS> $dat | pawk -fs "," -Action {$2=$2|rev} -Pattern {$1 -match '^j'} -AllLine
+abc,def,ghi  # not match
+jkl,onm,pqr  # reverse 2nd column
+stu,vwz,012  # not match
 
 
 .EXAMPLE
@@ -555,7 +594,8 @@ PS> $dat = "001,aaa,20220101","002,bbb,20220102","003,ccc,20220103","005,ddd,202
 
 # Format date for 3rd column.
 # (Column symbols ($1,$2,...) in single quotes are escaped.
-# so that $1,$2,... symbols in the ForEach-Object command has the expected behavior.)
+# so that $1,$2,... symbols in the ForEach-Object command 
+# has the expected behavior.)
 $dat | pawk -fs "," -Action {$3=$3|ForEach-Object{$_ -replace '([0-9]{4})([0-9]{2})([0-9]{2})','$1-$2-$3'}; $0}
 001,aaa,2022-01-01
 002,bbb,2022-01-02

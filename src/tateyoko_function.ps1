@@ -1,69 +1,82 @@
 <#
 .SYNOPSIS
-行列の転置
-列数は不揃いでもよいがややこしいので、
-列数はそろえておく方がよい
+    tateyoko - Transpose rows and columns
 
-tateyoko [-Separator <String>]
+        tateyoko [-d|-Delimiter <String>]
+    
+    Expects space-separated values as input.
+    The number of columns can be irregular.
 
+.EXAMPLE
+    "1 2 3","4 5 6","7 8 9"
+    1 2 3
+    4 5 6
+    7 8 9
 
-.PARAMETER Separator
-区切り文字を指定する。
-デフォルトで半角スペース
+    PS > "1 2 3","4 5 6","7 8 9" | tateyoko
+    1 4 7
+    2 5 8
+    3 6 9
+
+.EXAMPLE
+    "1,2,3", "4,5", "7,8,9"
+    1,2,3
+    4,5
+    7,8,9
+
+    "1,2,3", "4,5", "7,8,9" | tateyoko -d ","
+    1,4,7
+    2,5,8
+    3,,9
 
 #>
 function tateyoko{
-  Param (    
-    [Parameter(Mandatory=$false)]
-    [ValidateLength(1,1)]
-    [string] $Separator = ' ',
-    
-    [parameter(ValueFromPipeline=$true)]
-    [string[]] $Text
-  )
-
-  begin
-  {
-    [string[]]$RowAry = @()
-    $MaxColNum = 1
-    $writeLine = ''
-    $RowList = New-Object 'System.Collections.Generic.List[System.String]'
-  }
-
-  process
-  {
-	# 1st pass
-    $readLine = [string]$_
-    $RowList.Add($readLine)
-    
-    # get max col num
-    $ColAry = $readLine -Split "$Separator"
-    [int]$tmpColNum = @($ColAry).Count
-    if($tmpColNum -gt $MaxColNum){
-      $MaxColNum = $tmpColNum
+    Param (    
+        [Parameter( Mandatory=$False )]
+        [Alias('d')]
+        [string] $Delimiter = ' ',
+        
+        [parameter( ValueFromPipeline=$True )]
+        [string[]] $Text
+    )
+    begin
+    {
+        [string[]] $RowAry = @()
+        [int] $MaxColNum = 1
+        [string] $writeLine = ''
+        $RowList = New-Object 'System.Collections.Generic.List[System.String]'
     }
-  }
-
-  end
-  {
-    # get max row
-    $RowAry = $RowList.ToArray()
-    $MaxRowNum = @($RowAry).Count
-    
-    # 行と列の転置
-    for($j = 0; $j -lt $MaxColNum; $j++){
-      $outputList = New-Object 'System.Collections.Generic.List[System.String]'
-      [string[]]$outputAry = @()
-      
-      for($i = 0; $i -lt $MaxRowNum; $i++){
-          $outputList.Add(@($RowAry)[$i].Split($Separator)[$j])
-      }
-      $outputAry = $outputList.ToArray()
-      $writeLine = $outputAry -Join "$Separator"
-      #$writeLine = $writeLine.Trim()
-      $writeLine = $writeLine -Replace "($Separator)+$",''
-      Write-Output $writeLine
-      $writeLine = ''
+    process
+    {
+        # 1st pass
+        [string] $readLine = [string] $_
+        $RowList.Add($readLine)
+        # get max col num
+        [string[]] $ColAry = $readLine -Split "$Delimiter"
+        [int] $tmpColNum = @($ColAry).Count
+        if( $tmpColNum -gt $MaxColNum ){
+            [int] $MaxColNum = $tmpColNum
+        }
     }
-  }
+    end
+    {
+        # get max row
+        [string[]] $RowAry = $RowList.ToArray()
+        [int] $MaxRowNum = @($RowAry).Count
+        # transpose rows and columns
+        for( $j = 0; $j -lt $MaxColNum; $j++ ){
+            $outputList = New-Object 'System.Collections.Generic.List[System.String]'
+            [string[]]$outputAry = @()
+            for( $i = 0; $i -lt $MaxRowNum; $i++ ){
+                $outputList.Add(@($RowAry)[$i].Split($Delimiter)[$j])
+            }
+            [string[]] $outputAry = $outputList.ToArray()
+            [string] $writeLine = $outputAry -Join "$Delimiter"
+            # trim
+            [string] $writeLine = $writeLine -Replace "($Delimiter)+$",''
+            # output
+            Write-Output $writeLine
+            [string] $writeLine = ''
+        }
+    }
 }

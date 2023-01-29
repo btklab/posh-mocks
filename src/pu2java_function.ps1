@@ -1,82 +1,65 @@
 <#
 .SYNOPSIS
+    pu2java - Wrapper for plantuml.jar command
 
-pu2java - Wrapper for plantuml.jar command
+    Prerequisit: java, graphviz, plantuml.jar are installed.
 
-plantuml.jarコマンドを実行するラッパー
+        - plantuml official site
+            - https://plantuml.com/en/
+        - graphviz
+            - https://graphviz.org/
+        - java
+            - https://www.java.com/en/download/
+        - plantuml.jar
+            - https://sourceforge.net/projects/plantuml/files/plantuml.jar/download
+    
+    -Jar <path> specifies the "plantuml.jar" file location.
+    IF it is in the following location, it will be automatically
+    recognized, so you don't neet to specify it with -Jar <path>.
 
-前提: java, graphviz, plantuml.jarがインストールされていること
-
-- plantuml official site
-    - https://plantuml.com/en/
-- graphviz
-    - https://graphviz.org/
-- java
-    - https://www.java.com/en/download/
-- plantuml.jar
-    - https://sourceforge.net/projects/plantuml/files/plantuml.jar/download
-
-plantuml.jarファイルの置き場所は、-Jar <path>で指定する。
-以下の場所にあれば、自動で認識するので-Jarによる指定は不要。
-
-- Windwos/Linux
-    - ./plantuml.jar
-- Windows:
-    - ${HOME}/bin/plantuml.jar
-- Linux:
-    - /usr/local/bin/plantuml.jar
-
-
-入力するファイルはBOMなしUTF-8のみ
-出力形式はファイルの拡張子から自動判別。
-日本語を使う場合、引数でUTF-8を指定すること
-
-
-hint:
-  人物相関図 -> package, objectを用いたオブジェクト図
-  歴史年表   -> シーケンス図
-  業務フロー -> スイムレーン+アクティビティ図
+        - Windwos/Linux
+            - ./plantuml.jar
+        - Windows:
+            - ${HOME}/bin/plantuml.jar
+        - Linux:
+            - /usr/local/bin/plantuml.jar
+    
+    The input file is UTF-8 NoBOM.
+    The output format is automatically determined from the output
+    file extension.
 
 .LINK
     pu2java, dot2gviz, pert, pert2dot, pert2gantt2pu, mind2dot, mind2pu, gantt2pu, logi2dot, logi2dot2, logi2dot3, logi2pu, logi2pu2, flow2pu
 
-.PARAMETER InputFile
-入力ファイル。
-文字コードはBOMなしUTF-8のみ
-
-.PARAMETER ConfigFile
-設定ファイル。
-文字コードはBOMなしUTF-8のみ
 
 .PARAMETER OutputFileType
-出力するファイル形式。default="png"
-ファイル名は入力ファイル+出力形式の拡張子
+    Default = "png"
 
 .PARAMETER OutputDir
-出力するディレクトリ
+    Output directory
 
 .PARAMETER Charset
-入力ファイルのエンコードの指定
-UTF-8固定
+    Input file encode.
+    Default = UTF-8
 
 .PARAMETER Jar
-JAR実行ファイルの指定。
-デフォルトで${HOME}/bin/plantuml.jar
+    Sppecifying JAR executable file path.
+    Default = ${HOME}/bin/plantuml.jar
 
 .PARAMETER TestDot
-graphvizとの連携をチェック
+    Test integration with graphviz.
 
 .PARAMETER CheckOnly
-To check the syntax of files without generating images
+    To check the syntax of files without generating images
 
 .PARAMETER NoMetadata
-PNG/SVG 出力にメタデータを含めない
+    Do not include metadata in PNG/SVG output.
 
 .PARAMETER NotOverWrite
-出力ファイルの上書き禁止
+    Do not overwrite if output file already exists.
 
 .PARAMETER ErrorCheck
-コマンドを実行せずにコマンド文字列を表示する
+    Print the command without execuitng the command.
 
 #>
 function pu2java {

@@ -154,10 +154,10 @@ a2b2c2
 'a1b1c1' | sed 's;1;2;'
 a2b1c1
 
-# delete tab
+# delete tab (use double quote)
 cat a.txt | sed "s;`t;;g"
 
-# replace CrFl to space
+# replace CrLf to space (use double quote)
 cat a.txt | sed "s; ;`r`n;g"
 ```
 
@@ -559,7 +559,7 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 - Inspired by Unix/Linux Commands
     - Command: `chead`
 
-#### `uniq` - Report or omit repeated lines
+#### `uniq` -   
 
 入力から隣接する（連続する）重複行をなくし一意とする。大文字小文字は区別しない。事前ソート必要。
 `Group-Object -NoElement`と同じ効果。
@@ -2941,31 +2941,34 @@ Examples:
 
 ```powershell
 # input: tab separated values
-cat a.tsv | table2md -Caption "title"
+cat iris.tsv | table2md -Caption "title" | keta -l
 
 Table: title
 
-|sepal_length|sepal_width|petal_length|petal_width|species|
-|---:|---:|---:|---:|:---|
-|5.1|3.5|1.4|0.2|setosa|
-|4.9|3.0|1.4|0.2|setosa|
-|4.7|3.2|1.3|0.2|setosa|
-|4.6|3.1|1.5|0.2|setosa|
-|5.0|3.6|1.4|0.2|setosa|
+| s_l  | s_w  | p_l  | p_w  | species |
+| ---: | ---: | ---: | ---: | :---    |
+| 5.1  | 3.5  | 1.4  | 0.2  | setosa  |
+| 4.9  | 3.0  | 1.4  | 0.2  | setosa  |
+| 4.7  | 3.2  | 1.3  | 0.2  | setosa  |
+| 4.6  | 3.1  | 1.5  | 0.2  | setosa  |
+| 5.0  | 3.6  | 1.4  | 0.2  | setosa  |
 ```
-
 
 ```powershell
 # 単位つきcsvカラム（列）:-Units unit-name1,unit-name2,... 指定で右寄せ
-cat a.tsv | table2md -Units "CFU","kg" | head -n 15
+cat iris.csv | table2md -d "," -Units "CFU","kg" | head -n 7
 
-|sepal_length|sepal_width|petal_length|petal_width|species|
-|---:|---:|---:|---:|:---|
-|5.1|3.5 CFU|1.4 kg|0.2|setosa|
-|4.9|3.0 CFU|1.4 kg|0.2|setosa|
-|4.7|3.2 CFU|1.3 kg|0.2|setosa|
-|4.6|3.1 CFU|1.5 kg|0.2|setosa|
-|5.0|3.6 CFU|1.4 kg|0.2|setosa|
+| s_l  | s_w     | p_l    | p_w  | species |
+| ---: | ---:    | ---:   | ---: | :---    |
+| 5.1  | 3.5 CFU | 1.4 kg | 0.2  | setosa  |
+| 4.9  | 3.0 CFU | 1.4 kg | 0.2  | setosa  |
+| 4.7  | 3.2 CFU | 1.3 kg | 0.2  | setosa  |
+| 4.6  | 3.1 CFU | 1.5 kg | 0.2  | setosa  |
+| 5.0  | 3.6 CFU | 1.4 kg | 0.2  | setosa  |
+
+# Some columns with units are also right aligned. Units can be
+# specified with -Units "unit1", "unit2",....
+# (Default -Units " kg"," ml", " CFU", "RLU", etc...)
 ```
 
 
@@ -3111,7 +3114,7 @@ Input(TOML-like format):
 
 ```
 ## comment
-[あいうえお]
+[aiue.o]
     bumon = haccp # comment
     cat   = "haccp"
     act   = review
@@ -3136,7 +3139,7 @@ Output(PSObject):
 ```powershell
 cat a.toml | toml2psobject
 
-id    : あいうえお
+id    : aiue.o
 bumon : haccp
 cat   : "haccp"
 act   : review
@@ -3145,7 +3148,9 @@ tag   : @("haccp", "verification")
 stat  : True
 ref   : 224617.445991228
 link  : @{y2021="https://github.com/"; y2022="https://github.com/"; rep = @("hoge", "fuga")}
-note  : multi-line note1\nmulti-line note2\nmulti-line note3
+note  : multi-line note1
+        multi-line note2
+        multi-line note3
 ```
 
 #### `json2txt` - Transform json into key-value format with one record per line.

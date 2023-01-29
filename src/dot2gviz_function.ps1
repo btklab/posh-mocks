@@ -1,60 +1,65 @@
 <#
 .SYNOPSIS
+    dot2gviz - Wrapper for Graphviz:dot command
 
-dot2gviz - Wrapper for Graphviz:dot command
+    Prerequisite: graphviz must be installed
+    Note: input dot file must be UTF-8 without BOM
 
-graphviz：dotコマンドのラッパー
+    Install Graphviz
+        - uri: https://graphviz.org/
+            - winget install --id Graphviz.Graphviz --source winget
+        - and execute cmd with administrator privileges
+            - dot -c
 
-前提: graphvizがインストールされていること
-注意: 入力するdotファイルはBOMなしUTF-8のみ
-
-- Install Graphviz
-    - uri: https://graphviz.org/
-    - winget install --id Graphviz.Graphviz --source winget
-- and execute cmd with administrator privileges
-    - dot -c
-
-日本語を使う場合、windowsではdotファイルもしくはdotコマンドの引数で
-fontnameで日本語フォントを指定しないとうまくいかない点に注意する
+    When using japanese in dot file on windows,
+    japanese fonts must be specified in the "fontname"
+    of the dot file to be desplayed properly.
 
 .LINK
     pu2java, dot2gviz, pert, pert2dot, pert2gantt2pu, mind2dot, mind2pu, gantt2pu, logi2dot, logi2dot2, logi2dot3, logi2pu, logi2pu2, flow2pu
 
 
 .PARAMETER InputFile
-入力するdotファイル。
-文字コードはBOMなしUTF-8のみ
+    DOT file to be input.
+    Encode is UTF-8 without BOM only.
 
 .PARAMETER OutputFileType
-出力するファイル形式
+    Output file Format
 
 .PARAMETER FontName
-出力するフォント名の指定
-
-BIZ UDGothic, BIZ UDGothic Bold, BIZ UDPGothic, BIZ UDPGothic Bold,
-BIZ UDMincho Medium, BIZ UDPMincho Medium, Meiryo, Meiryo Italic,
-Meiryo Bold, Meiryo Bold Italic, Meiryo UI, Meiryo UI Italic,
-Meiryo UI Bold, Meiryo UI Bold Italic, MS Gothic, MS PGothic,
-MS UI Gothic, MS Mincho, MS PMincho, Yu Mincho Light,
-Yu Mincho Regular, Yu Mincho Demibold, Myrica M, Myrica M Bold,
+    Specify the fontname.
+    default: Meiryo
 
 .PARAMETER LayoutEngine
-レイアウトエンジンの指定
+    Specify layout engine.
 
-circo     円形のグラフ.
-dot     階層型のグラフ. 有向グラフ向き. デフォルトのレイアウトエンジン
-fdp     スプリング(ばね)モデルのグラフ. 無向グラフ向き.
-neato     スプリング(ばね)モデルのグラフ. 無向グラフ向き.
-osage     配列型のグラフ.
-sfdp     fdpのマルチスケール版. 大きな無向グラフ向き.
-twopi    放射型のグラフ. ノードは同心円状に配置される.
-patchwork    パッチワーク風
+    circo ...A circular graph.
+
+    dot   ...A hierarchical graph.
+             oriented twoards directed graphs.
+             default layout engine.
+
+    fdp   ...Spring model graph.
+             for undirected graphs
+
+    neato ...Spring model graph.
+             for undirected graphs
+
+    osage ...Array type graph.
+
+    sfdp  ...A multiscale version of fdp.
+             Suitable for large undirected graphs.
+
+    twopi ...Radial graph.
+             Nodes are arranged in concentric circles.
+
+    patchwork ...Patchwork-like graph.
 
 .PARAMETER NotOverWrite
-出力ファイルの上書き禁止
+    Overwrite prohibition
 
 .PARAMETER ErrorCheck
-コマンドを実行せずにコマンド文字列を表示する
+    Output dot command without execute.
 
 #>
 function dot2gviz {
@@ -94,11 +99,11 @@ function dot2gviz {
     )
     # private function
     function isCommandExist ($cmd) {
-      try { Get-Command $cmd -ErrorAction Stop | Out-Null
-        return $True
-      } catch {
-        return $False
-      }
+        try { Get-Command $cmd -ErrorAction Stop | Out-Null
+            return $True
+        } catch {
+            return $False
+        }
     }
     ## cmd test
     if ( -not (isCommandExist "dot")){
@@ -129,7 +134,6 @@ function dot2gviz {
 
     ## execute command
     #Usage: dot [-Vv?] [-(GNE)name=val] [-(KTlso)<val>] <dot files>
-
     if( ($FontName -eq '') -and ($LayoutEngine -eq '') ){
         ## No FontName, No LayoutEngine
         [string] $CommandLineStr  = "dot"

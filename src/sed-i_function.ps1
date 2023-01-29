@@ -88,7 +88,7 @@
 
 .PARAMETER BackupExtension
     Specify backup file extension.
-    .bak by default.
+    ".bak" by default.
 
 .EXAMPLE
     "abcde" > a.txt; sed-i 's;abc;def;g' a.txt
@@ -111,13 +111,13 @@
 .EXAMPLE
     # Replace and overwrite original file and create backup
     ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute }
-    ./a.txt > ./a.txt.bak
-    ./b.txt > ./b.txt.bak
+    a.txt > a.txt.bak
+    b.txt > b.txt.bak
 
     # Replace and overwrite original file and *do not* create backup
     ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute -DoNotCreateBackup }
-    ./a.txt > ./a.txt
-    ./b.txt > ./b.txt
+    a.txt > a.txt
+    b.txt > b.txt
 
 #>
 function sed-i {

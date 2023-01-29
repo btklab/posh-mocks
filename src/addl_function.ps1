@@ -1,22 +1,10 @@
 <#
 .SYNOPSIS
+    addl - Add text leftmost of the line
 
-addl: add-left
-
-標準入力の最左列に任意の文字列行を追加する
-区切り文字はデフォルトで空文字
-
-.DESCRIPTION
-引用:
-https://qiita.com/greymd/items/3515869d9ed2a1a61a49
-シェルの弱点を補おう！"まさに"なCLIツール、egzact
-Qiita:greymd氏, 2016/05/12, accessed 2017/11/13
-
-.PARAMETER AddText
-追加する文字列を指定する
-
-.PARAMETER Delimiter
-区切り文字を指定する
+    Inspired by:
+        greymd/egzact: Generate flexible patterns on the shell - GitHub
+        https://github.com/greymd/egzact
 
 .EXAMPLE
 PS C:\>Write-Output "A B C D" | addl '0 '
@@ -44,14 +32,13 @@ function addl {
     [Parameter(ValueFromPipeline=$True)]
     [string[]] $Body
   )
-
   begin {
-	  $writeLine = ''
+	  [string] $writeLine = ''
   }
 
   process {
-	  [string]$tmpLine = $_
-	  $writeLine = "$AddText" + "$Delimiter" + "$tmpLine"
+	  [string] $tmpLine = [string] $_
+	  [string] $writeLine = "$AddText" + "$Delimiter" + "$tmpLine"
 	  Write-Output $writeLine
   }
 

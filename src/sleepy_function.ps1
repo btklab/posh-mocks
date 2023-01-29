@@ -1,35 +1,35 @@
 <#
 .SYNOPSIS
+    sleepy - Sleep with progress bar
 
-sleepy - sleep with progress bar
+    thanks:
+        mattn/sleepy - GitHub https://github.com/mattn/sleepy
+        License: The MIT License (MIT): Copyright (c) 2022 Yasuhiro Matsumoto
 
-.LINLK
+.LINK
     Write-Progress
-    https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/write-progress?view=powershell-7.3
+    https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/write-progress
 
 .PARAMETER Minutes
-Default set to 25 minutes (as pomodoro timer)
+    Default set to 25 minutes (as pomodoro timer)
 
 .PARAMETER TeaTimer
-call teatimer function after specified time has elapsed. 
+    Call teatimer function after specified time has elapsed. 
 
 .PARAMETER Past
-Display elapsed time since the specified time.
+    Display elapsed time since the specified time.
 
 .EXAMPLE
-sleepy -s 3 -p
+    # examples
 
-count 3 sec and past timer
+    # count 3 sec and past timer
+    sleepy -s 3 -p
 
-.EXAMPLE
-sleepy -i
+    # infinit
+    sleepy -i
 
-infinit
-
-.EXAMPLE
-cls;cal;sleepy -c
-
-as clock
+    # clock mode
+    sleepy -c
 
 #>
 function sleepy {
@@ -78,7 +78,7 @@ function sleepy {
             return $False
         }
     }
-
+    # convert timespan to strings
     function span2str ($timespan){
         if ($timespan.Days -ge 1){
             [string] $sStr = $timespan.ToString("dd\.hh\:mm\:ss")

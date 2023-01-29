@@ -1,59 +1,59 @@
 <#
 .SYNOPSIS
+    Get-OGP - Make Link with markdown format
 
-Get-OGP - 指定したURIからサイトプレビュー用 Open Graph protocol（OGP）を取得する
+    If Uri is not specified in the args or pipline input,
+    it tries to use the value from the clipboard.
 
-標準入力、第一引数でUriを指定しない場合はクリップボードの値を使おうとする
+    Pick up the following metadata:
+      <meta property="og:title" content="Build software better, together">
+      <meta property="og:url" content="https://github.com">
+      <meta property="og:image" content="https://github.githubassets.com/images/modules/open_graph/github-octocat.png">
+      <meta property="og:description" content="GitHub is where people build software. More than 94 million people use GitHub to discover, fork, and contribute to over 330 million projects.">
+      <title>site_title</title>
 
-拾うのは以下のmetadata:
-  <meta property="og:title" content="Build software better, together">
-  <meta property="og:url" content="https://github.com">
-  <meta property="og:image" content="https://github.githubassets.com/images/modules/open_graph/github-octocat.png">
-  <meta property="og:description" content="GitHub is where people build software. More than 94 million people use GitHub to discover, fork, and contribute to over 330 million projects.">
-  <title>site_title</title>
+    -AllMetaData : output all metadata
+    -Card: output in BlogCard style html link (no css required)
 
--AllMetaDataで、すべてのメタデータを出力
--Cardで、BlogCardスタイルのhtmlリンク形式で出力
-  (css不要)
+    -DownloadMetaImage : Download image in the "~/Downloads" and
+    resize image to 600x600px. If you only need to acquire
+    images without shrinking, add "-NoShrink" option as well.
 
--DownloadMetaImageオプションをつけると、
-画像を~/Downloadsフォルダに格納し、かつ、600x600サイズに縮小する。
-縮小せず画像取得だけ必要な場合は、併せて-NoShrinkオプションも追加。
+    Title is retrieved in the following order:
+      <meta property="og:title"... />
+      <title>site_title</title>
 
-タイトルは、以下の順で取得
-  <meta property="og:title"... />
-  <title>site_title</title>
+    Description is obtained in the following order:
+      <meta property="og:description"... />
+      <meta name="description"... />
 
-説明は、以下の順でcontent="cont"を取得
-  <meta property="og:description"... />
-  <meta name="description"... />
+    -ImagePathOverwrite '/img/2022/' -Card would change
+    the image file path in the card style html link to
+    any path.
 
--ImagePathOverwrite '/img/2022/' -Cardとすると、
-Cardスタイルのhtmlリンクの中のimageファイルパスを任意のパスに変更できる。
-
--Markdownスイッチで、[label](uri)形式で出力
- thanks: goark/ml: Make Link with Markdown Format
- <https://github.com/goark/ml>
+    -Markdown switch to output in [label](uri) format.
+    thanks: goark/ml: Make Link with Markdown Format
+      <https://github.com/goark/ml>
 
 
 .PARAMETER Canonical
-canonical uriを取得する
+    get canonical uri
 
 .PARAMETER Markdown
-markdown形式のリンクを返す
-
-[title](uri)
+    Return links in markdown format
+    like: [title](uri)
 
 .PARAMETER Id
--Markdownスイッチと併用で別行リンクを返す
+    Returns a separate line link when used in
+    conjunction with the -Markdown switch
 
-[title][key]
-[key]: <uri>
+      [title][key]
+      [key]: <uri>
 
--Id "" とすると：
+    If -Id "" and then:
 
-[GitHub: Let’s build from here][]
-[GitHub: Let’s build from here]: <https://github.com/>
+      [GitHub: Let’s build from here][]
+      [GitHub: Let’s build from here]: <https://github.com/>
 
 .EXAMPLE
 "https://github.com/" | Get-OGP | fl
@@ -117,10 +117,10 @@ uri         : https://github.com/
 image       : ~/Downloads/hoge.png
 OutputImage : ~/Downloads/campaign-social_s.png
 
-説明
+Description
 ============
--Image <image_file> で、imageをローカルの画像ファイルと差し替え。
-かつ、差し替えたローカル画像ファイルを600x600にシュリンク。
+-Image <image_file> to replace image with a local image file,
+and shrink the replaced local image file to 600x600px.
 
 .EXAMPLE
 Get-OGP "https://github.com/"-DownloadMetaImage -Card | fl
@@ -156,21 +156,18 @@ curl https://www.maff.go.jp/j/shokusan/sdgs/
     </div>
     <div style="margin-left: 10px;">
         <h2 style="margin: 0;padding-bottom: 13px;border: none;font-size: 16px;">
-            SDGs×食品産業：農林水産省
+            SDGs x maff
         </h2>
         <p style="margin: 0;font-size: 13px;word-break: break-word;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;">
-            農林水産省・新事業・食品産業部では、食品産業によるSDGs関連の取組を、実例とともに国民にわかりやすく発信し、我が国の食品産業が社会問題の解決に貢献していることを伝えるために特設サイトを開設しました。
+            description
         </p>
     </div>
 </a>
 
-説明
+Description
 ============
--Card -ImagePathOverwrite <path> で、Card形式に埋め込む画像の
-ディレクトリパスを<path>に置換。
-出力したデータを書き換える必要がなくなるが、事前に指定する必要があるので、
-手間はとくに変わらない。ただ、画像パスがどこに埋め込まれたかを目視で
-探さなくて済む。
+-Card -ImagePathOverwrite <path> to replace the directory path of the
+image to be embedded in the Card format/
 
 .EXAMPLE
 Get-OGP "https://github.com/" -Canonical -Markdown | Set-Clipboard
@@ -178,11 +175,10 @@ curl https://github.com/
 200 OK
 [GitHub: Let’s build from here](https://github.com/)
 
-説明
+Description
 ============
--Canonicalスイッチでcanonical uriの取得を試みる。
-見つからなければ、入力されたuriをそのまま出力
-
+Attempt to retrieve the canonical uri with "-Canonical" switch.
+If not found canonical uri, output the input uri as is.
 
 .EXAMPLE
 Get-OGP "https://github.com/" -Canonical -Markdown -id ""

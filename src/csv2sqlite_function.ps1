@@ -1,49 +1,59 @@
 <#
 .SYNOPSIS
+    csv2sqlite - Apply sqlite-sql to csv files
 
-csv2sqlite - csvファイルにsqlite的sqlを適用する
+    Usage:
+      csv2sqlite csv,csv,... -q "<sqlstring>"
+      csv2sqlite csv,csv,... -ReadFile <sqlfile>
+      "<sqlstring>" | csv2sqlite csv,csv,...
+      cat <sqlfile> | csv2sqlite csv,csv,...
 
-csvファイルを読み込んだ場合はcsvファイル名がDB名
-csvファイルかそれ以外かは入力ファイル拡張子で判断
-csvファイルはカンマ区切りで複数指定可能。
-  NATURAL JOINなど複数テーブルを結合できる。
-
-Usage:
-  csv2sqlite csv,csv,... "<sqlstring>"
-  csv2sqlite csv,csv,... -ReadFile <sqlfile>
-  "<sqlstring>" | csv2sqlite csv,csv,...
-  cat <sqlfile> | csv2sqlite csv,csv,...
-
-  csv2sqlite db "<sqlstring>"
-  csv2sqlite db -ReadFile <sqlfile>
-  "<sqlstring>" | csv2sqlite db
-  cat <sqlfile> | csv2sqlite db
-
-  -Coms '<com>','<com>',... 手動でコマンドを指定してもよい。
-    たとえば、-Coms '.tables','.show','.mode markdown'
-
-  -ComsBefore '<com>','<com>',... で、csvのインポート前のセッティングができる
-    たとえば以下のようにすればヘッダレスcsvデータをa.dbの既存テーブルに取り込める：
-    https://qiita.com/Kunikata/items/61b5ee2c6a715f610493
+      csv2sqlite db -q "<sqlstring>"
+      csv2sqlite db -ReadFile <sqlfile>
+      "<sqlstring>" | csv2sqlite db
+      cat <sqlfile> | csv2sqlite db
     
-    csv2sqlite a.db -noheader -ComsBefore '.mode csv','.separator ","','.import table.csv' -SQL "SELECT * FROM table"
+    If csv file is specified, the csv file treated as DB name.
 
-CSVファイルのインポートは、インポート先のテーブルが既に存在しているかどうかで挙動が違う
+    Whether the input format is CSV or other is
+    determined by the input file extension.
 
-- テーブルが存在しない場合
-  - CSVファイルの先頭行がカラム名の定義に使われる
-  - データ型は全てTEXTになる
+    Multiple CSV files can be specified by separating
+    with commas.
 
-- テーブルが存在する場合
-  - CSVファイルの先頭行もデータとして扱われる
-  - 先頭行を無視するオプションは存在しないので、
-    先頭行があるCSVファイルの場合は事前に先頭行を削除しておく必要がある
-  - すでにデータが入っている場合は追記される
+    Multiple tables can be joined using NATURAL JOIN statement, etc...
+
+    -Coms '<com>','<com>',... Commands can also be specified manually.
+    e.g. -Coms '.tables','.show','.mode markdown'
+
+    -ComsBefore '<com>','<com>',... Settings before CSV import.
+    for example, you can import headerless CSV data
+    into an existing "table" in "a.db" as follows
+
+        csv2sqlite a.db -noheader -ComsBefore '.mode csv','.separator ","','.import table.csv' -SQL "SELECT * FROM table"
+    
+    thanks:
+        https://qiita.com/Kunikata/items/61b5ee2c6a715f610493
+    
+    Behavior of importing CSV files depends on whether the table
+    to import already exists or not
+
+        - If the table does not exist
+            - The fiest row of the CSV file is used to
+              define column names
+            - All data types will be recognized as TEXT.
+        
+        - If the table already exists
+            - The first row of the CSV file is also treated as part of data.
+            - Since tThere is no option to skip the first row, it is
+              necessary to delete the header row before reading CSV
+              files with a header row.
+            - If the table already contains data, new data will be appended.
 
 .EXAMPLE
 cat create_table.sql
 
--- ユーザーテーブルの作成
+-- create users table
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,35 +64,51 @@ CREATE TABLE users (
     updated_at TEXT NOT NULL DEFAULT '0000-00-00 00:00:00',
     deleted INTEGER NOT NULL DEFAULT 0
 );
--- インデックスの作成
+-- create index
 CREATE INDEX IF NOT EXISTS idx_department_id_on_users ON users (department_id);
 
 -- https://qiita.com/Kunikata/items/61b5ee2c6a715f610493
--- primary keyには自動的にインデックスが張られるので改めてインデックスを作成する必要はありません
--- インポートの際にはCSVで未入力の箇所には空白文字列が入るのでDEFAULT制約で設定した値にはなりません
--- コンマの数が足りない場合は残りがNULLで埋められますが、その時にNOT NULL制約がかかっていると
--- DEFAULT制約を設定していてもエラーになる
+-- primary key is automatically indexed, so there is no need to index it again.
+-- blanks are inserted in the un-enterd fields during import, 
+-- not the value set by the DEFAULT constraint.
+-- If there are not enough commas, the rest will be filled with NULLs,
+-- but if a NOT NULL constraint is applied at that time,
+-- an error occur even if a DEFAULT constraint is set.
 
 .EXAMPLE
-csv2sqlite data.csv "select omise,sum(val) from data group by omise;" -OutputFile o.csv | cat
+cat dat.csv
+id,main,id2,sub,val
+01,aaa,01,xxx,10
+01,aaa,02,yyy,10
+01,aaa,03,zzz,10
+02,bbb,01,xxx,10
+02,bbb,02,yyy,10
+02,bbb,03,zzz,10
+01,aaa,04,ooo,10
+03,ccc,01,xxx,10
+03,ccc,02,yyy,10
+03,ccc,03,zzz,10
+04,ddd,01,xxx,10
+04,ddd,02,yyy,10
+04,ddd,03,zzz,10
 
-omise  sum(val)
------  --------
-上野店    247
-新宿店    184
-新橋店    219
-池袋店    166
+PS > csv2sqlite dat.csv -q "select main,sum(val) from dat group by main;" -OutputFile o.csv | cat
+main  sum(val)
+----  --------
+aaa   40
+bbb   30
+ccc   30
+ddd   30
+
+
+PS > "select *,sum(val) from dat where main like '%b%' group by main;" | csv2sqlite dat.csv -o o.csv | cat
+id  main  id2  sub  val  sum(val)
+--  ----  ---  ---  ---  --------
+02  bbb   01   xxx  10   30
+
 
 .EXAMPLE
-"select *,sum(val) from data where omise like '%新%' group by omise;" | csv2sqlite data.csv -OutputFile o.csv | cat
-
-data  omise  date      val  sum(val)
-----  -----  --------  ---  --------
-0003  新宿店    20060201  82   184
-0001  新橋店    20060201  91   219
-
-.EXAMPLE
-csv2sqlite titanic.csv "select * from titanic limit 5;"
+csv2sqlite titanic.csv -q "select * from titanic limit 5;"
 
 survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 --------  ------  ------  ----  -----  -----  -------  --------  -----
@@ -103,7 +129,7 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 0         3       male    35.0  0      0      8.05     S         Third
 
 .EXAMPLE
-csv2sqlite .\diamonds.csv "select * from diamonds limit 5"
+csv2sqlite diamonds.csv -q "select * from diamonds limit 5"
 
 carat  cut        color  clarity  depth  table  price  x     y     z
 -----  ---------  -----  -------  -----  -----  -----  ----  ----  ----
@@ -114,7 +140,7 @@ carat  cut        color  clarity  depth  table  price  x     y     z
 0.31   Good       J      SI2      63.3   58     335    4.34  4.35  2.75
 
 .EXAMPLE
-csv2sqlite b.db "select *,strftime('%Y-%m-%d',created_at) as modtime from order_records;"
+csv2sqlite b.db -q "select *,strftime('%Y-%m-%d',created_at) as modtime from order_records;"
 
 id  customer_name  product_name  unit_price  qty  created_at            modtime
 --  -------------  ------------  ----------  ---  -------------------   ----------
@@ -133,7 +159,7 @@ id  year  month  day  customer_name  product_name  unit_price  qty  created_at  
 3   2020  7      27   kaneko         orange B      1.2         8    2022-10-06 22:38:09  2022-10-06 22:38:09
 4   2020  7      28   miyamoto       Apple L       3.0         1    2022-10-06 22:38:09  2022-10-06 22:38:09
 
-PS> cat a.sql
+PS > cat a.sql
 
 DROP TABLE IF EXISTS order_records;
 CREATE TABLE order_records (
@@ -199,17 +225,17 @@ cnt
 
 users_id  users_name  langs_id  langs_name
 --------  ----------  --------  ----------
-1         太郎          1         C
-1         太郎          2         C++
-1         太郎          5         PHP
-2         次郎          3         Java
-2         次郎          4         Perl
-2         次郎          5         PHP
+1         John         1         C
+1         John         2         C++
+1         John         5         PHP
+2         Mark         3         Java
+2         Mark         4         Perl
+2         Mark         5         PHP
 
 PS> cat users.csv
 users_id,users_name
-1,太郎
-2,次郎
+1,John
+2,Mark
 
 PS> cat langs.csv
 langs_id,langs_name
@@ -241,8 +267,8 @@ INSERT INTO langs VALUES(3,'Java');
 INSERT INTO langs VALUES(4,'Perl');
 INSERT INTO langs VALUES(5,'PHP');
 
-INSERT INTO users VALUES(1,'太郎');
-INSERT INTO users VALUES(2,'次郎');
+INSERT INTO users VALUES(1,'John');
+INSERT INTO users VALUES(2,'Mark');
 
 INSERT INTO binds VALUES(1,1);
 INSERT INTO binds VALUES(1,2);
@@ -252,17 +278,16 @@ INSERT INTO binds VALUES(2,4);
 INSERT INTO binds VALUES(2,5);
 ```
 
-.EXAMPLE
- "SELECT users_name,lang_names FROM users NATURAL JOIN (SELECT users_id,json_group_array(langs_name) as lang_names FROM binds NATURAL JOIN langs GROUP BY users_id);" | csv2sqlite users.csv,langs.csv,binds.csv -OutputFile o.csv | cat
+
+PS > "SELECT users_name,lang_names FROM users NATURAL JOIN (SELECT users_id,json_group_array(langs_name) as lang_names FROM binds NATURAL JOIN langs GROUP BY users_id);" | csv2sqlite users.csv,langs.csv,binds.csv -OutputFile o.csv | cat
 
 users_name  lang_names
 ----------  ---------------------
-太郎          ["C","C++","PHP"]
-次郎          ["Java","Perl","PHP"]
+John        ["C","C++","PHP"]
+Mark        ["Java","Perl","PHP"]
 
-
-https://qiita.com/SoraKumo/items/ecaeeea51297cb6896c9
-グループ化とjson_group_arrayを組み合わせ、JSONの配列にまとめることが出来た
+thanks:
+    https://qiita.com/SoraKumo/items/ecaeeea51297cb6896c9
 
 #>
 function csv2sqlite {
@@ -289,8 +314,7 @@ function csv2sqlite {
             "list",
             "markdown",
             "quote",
-            "table"
-            )]
+            "table")]
         [string] $Mode = 'column',
 
         [Parameter(Mandatory=$False)]

@@ -1,81 +1,84 @@
 <#
 .SYNOPSIS
+    json2txt - transform json into key-value format with one record per line.
 
-json2txt - transform json into key-value format with one record per line.
+    Convert Json format to one record per element for easy grep.
+    Reverse conversion is not possible.
 
-Json形式のテキスト入力を1行1レコード形式に変換しgrepしやすくする。
-逆変換はできない。
-PowerShell7.3以降に実装されたConvertFrom-Json -AsHashTableを使用する。
+    Use ConvertFrom-Json -AsHashTable implemented in
+    PowerShell 7.3 or later.
 
-Inspired by:
-
-- tomnomnom/gron: Make JSON greppable! - GitHub
-    - https://github.com/tomnomnom/gron
-
-- jiro4989/gsv: gsv transforms a multi-line CSV into one-line JSON to make it easier to grep - GitHub
-    - https://github.com/jiro4989/gsv
+    Error if key string contains symbols such as (,),-.
+    
+    Inspired by:
+    - tomnomnom/gron: Make JSON greppable! - GitHub
+        - https://github.com/tomnomnom/gron
+    - jiro4989/gsv: gsv transforms a multi-line CSV into one-line JSON to make it easier to grep - GitHub
+        - https://github.com/jiro4989/gsv
 
 .LINK
     csv2txt
 
 .EXAMPLE
-cat a.json
-{"widget": {
-    "debug": "on",
-    "window": {
-        "title": "Sample Konfabulator Widget",
-        "name": "main_window",
-        "width": 500,
-        "height": 500
-    },
-    "image": {
-        "src": "Images/Sun.png",
-        "name": "sun1",
-        "hOffset": 250,
-        "vOffset": 250,
-        "alignment": "center"
-    },
-    "text": {
-        "data": "Click Here",
-        "size": 36,
-        "style": "bold",
-        "name": "text1",
-        "hOffset": 250,
-        "vOffset": 100,
-        "alignment": "center",
-        "onMouseUp": "sun1.opacity = (sun1.opacity / 100) * 90;"
-    }
-}}
+    cat a.json
+    {"widget": {
+        "debug": "on",
+        "window": {
+            "title": "Sample Konfabulator Widget",
+            "name": "main_window",
+            "width": 500,
+            "height": 500
+        },
+        "image": {
+            "src": "Images/Sun.png",
+            "name": "sun1",
+            "hOffset": 250,
+            "vOffset": 250,
+            "alignment": "center"
+        },
+        "text": {
+            "data": "Click Here",
+            "size": 36,
+            "style": "bold",
+            "name": "text1",
+            "hOffset": 250,
+            "vOffset": 100,
+            "alignment": "center",
+            "onMouseUp": "sun1.opacity = (sun1.opacity / 100) * 90;"
+        }
+    }}
 
-from: https://json.org/example.html
+    from: https://json.org/example.html
 
-.EXAMPLE
-cat a.json | json2txt
-(dot)widget.debug = on
-(dot)widget.window.title = "Sample Konfabulator Widget"
-(dot)widget.window.name = "main_window"
-(dot)widget.window.width = 500
-(dot)widget.window.height = 500
-(dot)widget.image.src = "Images/Sun.png"
-(dot)widget.image.name = "sun1"
-(dot)widget.image.hOffset = 250
-(dot)widget.image.vOffset = 250
-(dot)widget.image.alignment = "center"
-(dot)widget.text.data = "Click Here"
-(dot)widget.text.size = 36
-(dot)widget.text.style = "bold"
-(dot)widget.text.name = "text1"
-(dot)widget.text.hOffset = 250
-(dot)widget.text.vOffset = 100
-(dot)widget.text.alignment = "center"
-(dot)widget.text.onMouseUp = "sun1.opacity = (sun1.opacity / 100) * 90;"
 
-.EXAMPLE
-(cat a.json | ConvertFrom-Json).firstName
-John
+    PS > cat a.json | json2txt
+    .widget.debug = on
+    .widget.window.title = "Sample Konfabulator Widget"
+    .widget.window.name = "main_window"
+    .widget.window.width = 500
+    .widget.window.height = 500
+    .widget.image.src = "Images/Sun.png"
+    .widget.image.name = "sun1"
+    .widget.image.hOffset = 250
+    .widget.image.vOffset = 250
+    .widget.image.alignment = "center"
+    .widget.text.data = "Click Here"
+    .widget.text.size = 36
+    .widget.text.style = "bold"
+    .widget.text.name = "text1"
+    .widget.text.hOffset = 250
+    .widget.text.vOffset = 100
+    .widget.text.alignment = "center"
+    .widget.text.onMouseUp = "sun1.opacity = (sun1.opacity / 100) * 90;"
+
+
+    PS > (cat a.json | ConvertFrom-Json).firstName
+    John
 
 #>
 function json2txt {
+    #Requires -Version 7.3
+
     Param(
         [Parameter(Position=0,Mandatory=$False)]
         [Alias('p')]
@@ -91,7 +94,6 @@ function json2txt {
         [parameter(Mandatory=$False,ValueFromPipeline=$True)]
         [string[]] $Text
     )
-    #Requires -Version 7.3
 
     # private functions
     ## is file exists?
@@ -173,9 +175,6 @@ function json2txt {
             }
             $exp = $expAry -Join '.'
         }
-        #$exp = $exp.Replace('.','"."')
-        #$exp = $exp -replace '^(\$contents)"','$contents'
-        #$exp = "$exp"""
         Write-Debug $exp
         $con = Invoke-Expression $exp
         switch -Exact (retArrayOrHashOrValue $con) {

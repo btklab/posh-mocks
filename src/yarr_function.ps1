@@ -1,37 +1,34 @@
 <#
 .SYNOPSIS
+    yarr - Expand long data to wide
 
-yarr - Expand long data to wide
+    Convert long data to wide data using the specified
+    columns as a key.
 
-縦型（ロング型）の半角スペース区切りレコードを、
-指定列をキーに横型（ワイド型）に変換する。
-
-指定列をキーとして横に並べる
-事前ソート不要
-大文字小文字を区別しない
+    Expects space-separated input without headers.
+    No pre-sort required.
+    Ignore case.
 
 .LINK
     tarr, yarr
 
 .EXAMPLE
-cat a.txt
-2018 1
-2018 2 9
-2018 3
-2017 1
-2017 2
-2017 3
-2017 4
-2017 5 6
-2022 1
-2022 2
+    cat a.txt
+    2018 1
+    2018 2 9
+    2018 3
+    2017 1
+    2017 2
+    2017 3
+    2017 4
+    2017 5 6
+    2022 1
+    2022 2
 
-PS> cat a.txt | grep . | yarr -n 1
-2018 1 2 9 3
-2017 1 2 3 4 5 6
-2022 1 2
-
-※ grep . で空行をスキップ（＝1文字以上の行のみヒット）
+    PS > cat a.txt | grep . | yarr -n 1
+    2018 1 2 9 3
+    2017 1 2 3 4 5 6
+    2022 1 2
 
 #>
 function yarr {
@@ -53,15 +50,15 @@ function yarr {
         $hash = [ordered] @{}
     }
     process {
-        [string]$line = $_
+        [string] $readLine = $_
         # is line empty?
-        if ($line -eq ''){
-            Write-Error "Detect empty line: $line" -ErrorAction Stop
+        if ($readLine -eq ''){
+            Write-Error "Detect empty line: $readLine" -ErrorAction Stop
         }
         # split key
-        $keyValAry = $line -split "$Delimiter"
+        $keyValAry = $readLine -split "$Delimiter"
         if ($keyValAry.Count -le $num){
-            Write-Error "Detect key-only line: $line"  -ErrorAction Stop
+            Write-Error "Detect key-only line: $readLine"  -ErrorAction Stop
         }
         # set key, val into hashtable
         [int] $sKey = 0
@@ -72,7 +69,7 @@ function yarr {
         [string] $val = $keyValAry[($sVal..$eVal)] -Join "$Delimiter"
         if ($hash.Contains($key)){
             # if key already exist
-            $val = $hash["$key"] + "$Delimiter" + $val
+            [string] $val = $hash["$key"] + "$Delimiter" + $val
             $hash["$key"] = $val
         } else {
             $hash.Add($key, $val)

@@ -1,37 +1,32 @@
 <#
 .SYNOPSIS
+    flat - Flat columns
 
-flat - Flat columns
+    Wraps space-separated input into an arbitrary
+    number of columns.
 
-半角スペース区切りの入力を任意列数で折り返す
-引数を何も指定しなければ全行1列に整形して出力
+    If no argument, all lines  are formatted into
+    a single line.
 
-
-.DESCRIPTION
-
-inspired by:
-シェルの弱点を補おう！"まさに"なCLIツール、egzact
-https://qiita.com/greymd/items/3515869d9ed2a1a61a49
-Qiita:greymd氏, 2016/05/12, accessed 2017/11/13
+    Inspired by:
+        greymd/egzact: Generate flexible patterns on the shell - GitHub
+        https://github.com/greymd/egzact
 
 .PARAMETER Delimiter
-Field separator. -fs
-Default value is space " ".
+    Field separator. -fs
+    Default value is space " ".
 
 .PARAMETER InputDelimiter
-Input field separator. -ifs
-If fs is already set, this option is primarily used.
+    Input field separator. -ifs
+    If fs is already set, this option is primarily used.
 
 .PARAMETER OutoputDelimiter
-Output field separator. -ofs
-If fs is already set, this option is primarily used.
-
-
+    Output field separator. -ofs
+    If fs is already set, this option is primarily used.
 
 .EXAMPLE
 1..9 | flat
 1 2 3 4 5 6 7 8 9
-
 
 .EXAMPLE
 1..9 | flat 4

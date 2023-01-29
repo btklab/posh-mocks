@@ -1,64 +1,64 @@
 <#
 .SYNOPSIS
+    grep - Searches for regex patterns
 
-grep - similar to grep in UNIX
+    Output lines that match pattern.
 
-指定した文字列にヒットする行を出力
+    Case-insensitive by default, but can be made
+    Case-sensitive with the "-CaseSensitive" switch.
 
-デフォルトで大文字小文字を区別しないが、
--CaseSensitiveスイッチで大文字小文字を区別する
+    Interprets pattern as regular expressions by default.
+    [-s|-SimpleMatch] switch recognizes the pattern 
+    as a string.
 
-デフォルトでパターンを正規表現として解釈するが、
-[-s|-SimpleMatch]オプションでパターンを文字列として認識する
+    cat file1,file2,... | grep '<regex>' [-v][-f][-s][-C <int>]
+    cat file1,file2,... | grep '<regex>' [-o]
+    grep '<regex>' -H file1,file2,...
 
-cat file1,file2,... | grep '<regex>' [-v][-f][-s][-C <int>]
-cat file1,file2,... | grep '<regex>' [-o]
-grep '<regex>' -H file1,file2,...
+        -v: output not-match line (invert match)
+        -o: output only match strings
+        -f: specify (regex) patterns from file
+        -H: search pattern in the specified file
+            -Recurse: search files recursively
+            -FileNameOnly: uniquely output only file names
+                that contain lines matching the pattern
+            -FileNameAndLineNumber: output filename, number
+                of lines, and match lines
+    
+    The search speed is slow because of the wrapping
+    of Select-String commandlet.
 
-    -v: 指定文字にヒットしない行を出力
-    -o: ヒットした文字のみ出力
-    -f: ファイルから検索文字列（regex）を指定
-    -H: 指定されたファイル内を検索
-        -Recurseで再帰的にファイルを検索
-        -FileNameOnlyでファイル名のみ一意に出力
-        -FileNameAndLineNumberでファイル名と列数を出力
+    ## speed test
 
-検索速度は（ラップしているため）遅い。
-筆者の環境ではシンプルにSelect-Stringを用いた方が早かった。
+    Select-String (fast)
+    PS> 1..10 | %{ Measure-Command{ 1..100000 | sls 99999 }} | ft
+    Days Hours Minutes Seconds Milliseconds
+    ---- ----- ------- ------- ------------
+    0    0     0       0       437
+    0    0     0       0       386
+    0    0     0       0       394
+    0    0     0       0       385
+    0    0     0       0       407
+    0    0     0       0       715
+    0    0     0       0       424
+    0    0     0       0       424
+    0    0     0       0       443
+    0    0     0       0       423
 
-Select-String
-
-PS> 1..10 | %{ Measure-Command{ 1..100000 | sls 99999 }} | ft
-
-Days Hours Minutes Seconds Milliseconds
----- ----- ------- ------- ------------
-0    0     0       0       437
-0    0     0       0       386
-0    0     0       0       394
-0    0     0       0       385
-0    0     0       0       407
-0    0     0       0       715
-0    0     0       0       424
-0    0     0       0       424
-0    0     0       0       443
-0    0     0       0       423
-
-grep
-
-1..10 | %{ Measure-Command{ 1..100000 | grep 99999 }} | ft
-
-Days Hours Minutes Seconds Milliseconds
----- ----- ------- ------- ------------
-0    0     0       1       84
-0    0     0       1       74
-0    0     0       1       287
-0    0     0       1       81
-0    0     0       1       186
-0    0     0       1       186
-0    0     0       1       79
-0    0     0       1       382
-0    0     0       1       178
-0    0     0       1       183
+    grep (slow)
+    1..10 | %{ Measure-Command{ 1..100000 | grep 99999 }} | ft
+    Days Hours Minutes Seconds Milliseconds
+    ---- ----- ------- ------- ------------
+    0    0     0       1       84
+    0    0     0       1       74
+    0    0     0       1       287
+    0    0     0       1       81
+    0    0     0       1       186
+    0    0     0       1       186
+    0    0     0       1       79
+    0    0     0       1       382
+    0    0     0       1       178
+    0    0     0       1       183
 
 
 .LINK
@@ -146,7 +146,7 @@ Cmdlet          Write-Warning                                      7.0.0.0    Mi
 .EXAMPLE
 # Use double quotes when searching for tab characters (grep "`t")
 
- "1,2,3", "4,5,6", "7,8,9", "" | %{ $_ -replace ',', "`t" } | grep "`t[28]"
+"1,2,3", "4,5,6", "7,8,9", "" | %{ $_ -replace ',', "`t" } | grep "`t[28]"
 
 1       2       3
 7       8       9
@@ -172,7 +172,6 @@ cat .\Command.txt | grep 'Get\-Computer' -C 2, 3 | oss | grep '>'
 
 .EXAMPLE
 # Find all pattern matches (grep 'regex' -o)
-
 cat "$PSHOME\en-US\*.txt" | grep "PowerShell"
 
     PowerShell Help System
@@ -185,7 +184,7 @@ cat "$PSHOME\en-US\*.txt" | grep "PowerShell"
       Get-Help About_Modules : Displays help about PowerShell modules.
 
 
-cat "$PSHOME\en-US\*.txt" | grep "PowerShell" -o
+cat "$PSHOME\en-US\*.txt" | grep -o "PowerShell"
 PowerShell
 PowerShell
 PowerShell
@@ -198,7 +197,6 @@ PowerShell
 
 .EXAMPLE
 # Convert pipeline objects to strings using Out-String -Stream
-
 $hash = @{
     Name = 'foo'
     Category = 'bar'

@@ -53,10 +53,10 @@
     'a1b1c1' | sed 's;1;2;'
     a2b1c1
 
-    # delete tab
+    # delete tab (use double quote)
     cat a.txt | sed "s;`t;;g"
 
-    # replace CrFl to space
+    # replace CrLf to space (use double quote)
     cat a.txt | sed "s; ;`r`n;g"
 
 .EXAMPLE

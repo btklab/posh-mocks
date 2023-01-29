@@ -1,41 +1,40 @@
 <#
 .SYNOPSIS
+    getlast - Get the last row of the same key
 
-getlast - Get the last row of the same key
+    Get the last row of the same key from
+    a space-separated input. Case-insensitive
+    
+    getlast <k1> <k2>
 
-半角スペース区切り入力から、
-同一キーの最下行のデータを出力。
-大文字小文字を区別しない
-
-getlast <k1> <k2>
+    How to read command:
+       Get only the last row with the same key with the value
+       concatenated from 1st to 2nd column as the key.
 
 .LINK
     getfirst, getlast
 
 .EXAMPLE
-cat a.txt
-01 埼玉県 01 さいたま市 100
-01 埼玉県 02 川越市 100
-01 埼玉県 03 熊谷市 100
-02 東京都 04 新宿区 100
-02 東京都 05 中央区 100
-02 東京都 06 港区 100
-02 東京都 07 千代田区 100
-02 東京都 08 八王子市 100
-02 東京都 09 立川市 100
-03 千葉県 10 千葉市 100
-03 千葉県 11 市川市 100
-03 千葉県 12 柏市 100
-04 神奈川県 13 横浜市 100
-04 神奈川県 14 川崎市 100
-04 神奈川県 15 厚木市 100
-04 神奈川県 16 小田原市 100
+cat dat.txt
+01 aaa 01 xxx 10
+01 aaa 02 yyy 10
+01 aaa 03 zzz 10
+02 bbb 01 xxx 10
+02 bbb 02 yyy 10
+02 bbb 03 zzz 10
+01 aaa 04 ooo 10
+03 ccc 01 xxx 10
+03 ccc 02 yyy 10
+03 ccc 03 zzz 10
+04 ddd 01 xxx 10
+04 ddd 02 yyy 10
+04 ddd 03 zzz 10
 
-cat a.txt | getlast 1 2
-01 埼玉県 03 熊谷市 100
-02 東京都 09 立川市 100
-03 千葉県 12 柏市 100
-04 神奈川県 16 小田原市 100
+PS > cat dat.txt | sort | getlast 1 2
+01 aaa 04 ooo 10
+02 bbb 03 zzz 10
+03 ccc 03 zzz 10
+04 ddd 03 zzz 10
 
 #>
 function getlast {

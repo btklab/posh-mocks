@@ -1,212 +1,158 @@
 <#
 .SYNOPSIS
+    mind2pu - Generate plantuml script to draw a mind map from list data in markdown format
 
-mind2pu - Generate plantuml script to draw a mind map from list data in markdown format
+    Mindmapping a hierarchical structure described in
+    markdown list format. Input data is represented by
+    "4 spaces" followed by "-,+,*". like:
 
-markdown形式のリストデータからマインドマップを描画するplantumlスクリプトを生成する
+        - root
+            - child1
+                - child1-1
+            - child2
+            - child3
+    
+    The hierarchical structure is expressed as
+    "4 spaces" and "hyphen" like:
 
-マークダウンのリスト形式で記述された階層構造をマインドマップ化する
-入力データは「半角スペース4つ」に「-,+,*」で階層構造を表す
+        - root
+            - child1
+                - child1-1
+            - child2
+            - child3
+    
+    Underscore "_" at the end of a sentence, makes it
+    a string without frame (as plaintext.) like:
 
-文末にアンダースコア「_」を入れると、枠なし文字列になる
--Space 2 とすると、ハイフンの前の半角スペースは2つとして認識する
+        - root
+            - this is plain text_
+    
+    The 1st line begins with "# ", it is considered as a title.
+    Blank lines are ignored.
+    Lines beginning with "//" are treated as comments.
+    
+    Legend can be output by writing the following:
 
-空行は無視、
-「//」で始まる行はコメントとみなして無視
+        legend right|left
+        this is legend
+        end legend
+    
+    Fill color can be specified by prepending or postponing
+    [#color] to the label. For example:
 
-一行目かつ「# 」で始まる場合は、タイトルとみなす。
+        - [#orange] label
+        - label [#blue]
 
--WBSスイッチでWork Breakdown Structure形式の図を出力
-@startuml,@endumlの代わりに@startwbs, @endwbsを先頭と末尾に追加
+    With -WBS switch, output Work Breakdown Structure diagram.
+    (Add @startwbs and @endwbs instead of @startuml and @enduml)
 
-mindmapでleft sideやright sideと指定すると、要素の左右方向を制御できる
-（mind2puのみ。mind2dotではコメントアウトされる）
+    If you replace '*' with '-', it becomes a map that extends from
+    right to left. This is equivalent to specifying -RightToLeft switch.
 
-"*"マークを"-"に置換する（sed 's;\*;-;g'）と、
-右から左方向に伸びるマップになる
-これは-RightToLeftスイッチを指定した場合と等価。
+    Legend can be output by writing the following:
 
-塗りつぶし色は[#color]をラベルに前置または後置で指定できる。
-たとえば、- [#red] label または- label [#red]
+        legend right|left
+        this is legend
+        end legend
+    
+    Fill color can be specified by prepending or postponing
+    [#color] to the label. For example:
 
-＊＊＊
-
-PS> cat input.txt
-# title 
-
-- hogehoge
-    - hoge1
-        - [#orange] hoge2
-        - hoge2 [#red]
-        - hoge2_
-
-    - hogepiyo
-        - hoge2_
-        - hoge2_
-        - hoge2_
-
-    - fugafuga
-    - fuga1
-        - fuga1-2
-            - fuga2
-    - fuga3_
-
-cat input.txt | mind2pu
-cat input.txt | mind2pu -o a.pu; pu2java a.pu | ii
-
-## output -- plantUMLスクリプト
-@startmindmap a
-
-'title none
-skinparam DefaultFontName "BIZ UDPGothic"
-'skinparam monochrome true
-'skinparam handwritten true
-
-* hogehoge
-** hoge1
-***_ hoge2
-***_ hoge2
-***_ hoge2
-** hogepiyo
-***_ hoge2
-***_ hoge2
-***_ hoge2
-** fugafuga
-** fuga1
-*** fuga1-2
-**** fuga2
-**_ fuga3
-
-@endmindmap
+        - [#orange] label
+        - label [#blue]
 
 .LINK
     pu2java, dot2gviz, pert, pert2dot, pert2gantt2pu, mind2dot, mind2pu, gantt2pu, logi2dot, logi2dot2, logi2dot3, logi2pu, logi2pu2, flow2pu
 
-.PARAMETER OutputFile
-出力するファイル名
 
 .PARAMETER Title
-図にタイトルを挿入する
+    insert title
 
 .PARAMETER Scale
-出力する図の大きさ
-デフォルト=1.0
-
-.PARAMETER Monochrome
-白黒
+    default = 1.0
 
 .PARAMETER WBS
-Work Breakdown Structure形式の出力
-
-.PARAMETER HandWritten
-手書き風
+    Output Work Breakdown Structure diagram
 
 .PARAMETER FoldLabel
-指定文字数で強制的に折り返し。
-（指定文字数ごとに"\n"を挿入）
+    Fold label at specified number of characters.
 
-.PARAMETER FoldLabelOnlyPlainText
-プレーンテキストのみ折り返し
 
 .PARAMETER Kinsoku
-禁則文字を考慮した
-折り返し文字数の指定
-半角1文字、全角2文字として数値を指定
-kiosoku_function.ps1に依存
+    Wrapping of character string considering japanese KINSOKU rules.
+    Specify numerical value as 1 for ASCII characters
+    and 2 for mulibyte characters.
 
-.PARAMETER KinsokuOnlyPlainText
-禁則文字を考慮し
-プレーンテキストのみ折り返し
-半角1文字、全角2文字として数値を指定
-kiosoku_function.ps1に依存
+    Depends on kinsoku_function.ps1
+
 
 .PARAMETER LegendRight
-右下に参考文献を挿入
+    Insert legend in bottom right
 
 .PARAMETER LegendLeft
-左下に参考文献を挿入
+    Insert legend in bottom left
 
 .PARAMETER RightToLeft
-左に向かって伸ばす
+    Right to left graph
 
 .EXAMPLE
-PS> cat input.txt
-# title
+    cat input.txt
+    # title
 
-- hogehoge
-    - hoge1
-        - hoge2_
-        - hoge2_
-        - hoge2_
+    - hogehoge
+        - hoge1
+            - hoge2_
+            - hoge2_
+            - hoge2_
+        - hogepiyo
+            - hoge2_
+            - hoge2_
+            - hoge2_
+        - fugafuga
+        - fuga1
+            - fuga1-2
+                - fuga2
+        - fuga3_
 
-//comment
+    cat input.txt | mind2pu
+    cat input.txt | mind2pu > a.pu; pu2java a.pu | ii
+    @startmindmap
 
-    - hogepiyo
-        - hoge2_
-        - hoge2_
-        - hoge2_
+    title title
+    skinparam DefaultFontName "Meiryo"
 
-    - fugafuga
-    - fuga1
-        - fuga1-2
-            - fuga2
-    - fuga3_
+    * hogehoge
+    ** hoge1
+    ***_ hoge2
+    ***_ hoge2
+    ***_ hoge2
+    ** hogepiyo
+    ***_ hoge2
+    ***_ hoge2
+    ***_ hoge2
+    ** fugafuga
+    ** fuga1
+    *** fuga1-2
+    **** fuga2
+    **_ fuga3
 
-cat input.txt | mind2pu
-cat input.txt | mind2pu -o a.pu; pu2java a.pu | ii
-
-## output -- plantUMLスクリプト
-@startmindmap a
-
-'title none
-skinparam DefaultFontName "BIZ UDPGothic"
-'skinparam monochrome true
-'skinparam handwritten true
-
-* hogehoge
-** hoge1
-***_ hoge2
-***_ hoge2
-***_ hoge2
-** hogepiyo
-***_ hoge2
-***_ hoge2
-***_ hoge2
-** fugafuga
-** fuga1
-*** fuga1-2
-**** fuga2
-**_ fuga3
-
-@endmindmap
+    @endmindmap
 
 .EXAMPLE
-cat wbs.md | mind2pu -WBS | Tee-Object -FilePath a.pu ; pu2java a.pu -OutputFileType svg | ii
-# WBSの例
+    cat wbs.md | mind2pu -WBS | Tee-Object -FilePath a.pu ; pu2java a.pu -OutputFileType svg | ii
+    # WBS
 
-+ <&flag>社長
-    + 業務本部
-        + 総務部
-            + SO
-            + SO
-            + SO
-        + 営業部
-            + EI
-        + 物流
-            + LOGI
-    + 生産本部
-        + 1st
-            + A
-            + P
-            + S
-        + 2nd
-            + T
-            + E
-    + 研究所
-        - ISO
-        + LAB
-            + LAB
-            + QC
+    + <&flag>Presidend
+        + hoge
+            + piyo
+        + fuga
+            + 1st
+                + A
+                + P
+                + S
+            + 2nd
+                + T
+                + E
 #>
 function mind2pu {
     Param(
@@ -276,8 +222,8 @@ function mind2pu {
     begin{
         ## init var
         $lineCounter = 0
-        $isFirstRowEqTitle = $false
-        $isLegend = $false
+        $isFirstRowEqTitle = $False
+        $isLegend = $False
         $readLineAry = @()
         $readLineAryNode = @()
         ## test and dot sourcing kinsoku command
@@ -295,8 +241,8 @@ function mind2pu {
                 Width = $Kinsoku
                 Join = '\n'
             }
-            $KinsokuParams.Set_Item('Expand', $true)
-            $KinsokuParams.Set_Item('OffTrim', $true)
+            $KinsokuParams.Set_Item('Expand', $True)
+            $KinsokuParams.Set_Item('OffTrim', $True)
             $str = Write-Output "$str" | kinsoku @KinsokuParams
             return $str
         }
@@ -305,36 +251,36 @@ function mind2pu {
     process{
         $lineCounter++
         $rdLine = [string]$_
-        ## 一行目をタイトルとみなす場合
+        ## first line title
         if (($lineCounter -eq 1) -and ($rdLine -match '^# ')) {
             $fTitle = $rdLine -replace '^# ', ''
-            $isFirstRowEqTitle = $true
-        ## "+","-","*"で始まる行がターゲット
+            $isFirstRowEqTitle = $True
+        ## target rows are beginning with "+" or "-" or "*"
         } elseif (($rdLine -match '^\s*[-+*]+') -and (-not $isLegend)){
-            ## set str
             $ast = $rdLine -replace '^(\s*)([-+*]+).*$','$1'
             if($WBS){
                 $repMark = $rdLine -replace '^(\s*)([-+*]+).*$','$2'
             } else {
                 $repMark = '*'
             }
-            ## 先頭の空白の処理
+            ## Handling leading whitespace
             $ast += $repMark
             $ast = $ast -replace (' ' * $Space),"$repMark"
             $contents = $rdLine -replace '^\s*[-+*]+\s*(.*)$','$1'
             if ($contents -match '^\[#'){
-                ## 色指定がある場合（前置） - [#orange] contents
+                ## if color specifiacation (prefix) e.g. [#orange] contents
                 $colorName = $contents -replace '^(\[#[^\]]+\])(..*)$','$1'
                 $contents  = $contents -replace '^(\[#[^\]]+\])(..*)$','$2'
                 $ast = $ast + $colorName.Trim()
             }elseif ($contents -match '\[#[^\]]+]$'){
-                ## 色指定がある場合（後置） - contents [#orange]
+                ## if color specifiacation (postfix) e.g. contents [#orange]
                 $colorName = $contents -replace '^(..*)(\[#[^\]]+\])$','$2'
                 $contents  = $contents -replace '^(..*)(\[#[^\]]+\])$','$1'
                 $ast = $ast + $colorName.Trim()
             }
             $contents = $contents.Trim()
-            ## 文末にアンダースコアで枠なし文字列
+            ## Underscore at the end of a sentence for
+            ## "plain text without borders"
             $plainTextFlag = $False
             if ($contents -match '_$'){
                 $plainTextFlag = $True
@@ -343,7 +289,7 @@ function mind2pu {
             } else {
                 $ast = $ast -replace '$',' '
             }
-            ## コンテンツを指定文字数で折り返し
+            ## fold strings
             if (($FoldLabelOnlyPlainText) -and ($plainTextFlag)) {
                 $regStr = '('
                 $regStr += '.' * $FoldLabelOnlyPlainText
@@ -361,20 +307,20 @@ function mind2pu {
                 $contents = $contents -Replace '\\n$',''
                 $contents = $contents -Replace '$','\n'
             }
-            ## 値の折り返し（禁則処理あり）
+            ## Apply kinsoku
             if (($KinsokuOnlyPlainText) -and ($plainTextFlag)) {
                 $contents = execKinsoku $contents
             } elseif ($Kinsoku) {
                 $contents = execKinsoku $contents
             }
-            ## ノードのセット
+            ## set node
             $readLineAryNode += $ast + $contents
         } else {
-            ## それ以外はそのまま出力
+            ## output as is
             $readLineAryNode += $rdLine
-            ## 参考文献か？
+            ## is legend block?
             if (($lineCounter -gt 1) -and ($rdLine -match '^legend (right|left)$')){
-                $isLegend = $true
+                $isLegend = $True
             }
         }
     }
@@ -472,17 +418,17 @@ function mind2pu {
         }
         if($OutputFile){
             if($IsWindows){
-                ## BOMなしUTF-8(CRLF)形式で保存
+                ## save in UTF-8 (CRLF) without BOM
                 $readLineAry -Join "`r`n" `
                     | Out-File "$OutputFile" -Encoding UTF8
             } else {
-                ## BOMなしUTF-8(LF)形式で保存
+                ## save in UTF-8 (LF) without BOM
                 $readLineAry -Join "`n" `
                     | Out-File "$OutputFile" -Encoding UTF8
             }
             Get-Item $OutputFile
         }else{
-            ## 標準出力
+            ## standard output
             foreach($rdStr in $readLineAry){
                 Write-Output $rdStr
             }

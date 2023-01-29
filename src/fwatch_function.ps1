@@ -1,40 +1,40 @@
 <#
 .SYNOPSIS
+    fwatch - A filewatcher using LastWriteTime
 
-fwatch -- A filewatcher using LastWriteTime
+    -Hash option: using "Get-FileHash -Algorithm SHA256"
 
--Hash option -> using "Get-FileHash -Algorithm SHA256"
-
-note: watch only changed, not created, not deleted.
+    Note:
+        Watch only changed, not created, not deleted.
 
 
 .PARAMETER Path
-Input file or directory
+    Input file or directory
 
 .PARAMETER Action
-ScriptBlock when change watched
+    ScriptBlock when change watched
 
 .PARAMETER Interval
-Loop interval
+    Loop interval
 
 .PARAMETER Hash
-Use FileHash for detect changed
+    Use FileHash for detect changed
 
 .PARAMETER Quiet
-Do not status info
+    Do not status info
 
 .PARAMETER Log
-Output Log
+    Output Log
 
 .PARAMETER OutOnlyLog
-Action | Out-Null
+    Action | Out-Null
 
 .PARAMETER Recurse
-Recurse Directory
+    Recurse Directory
 
 
 .EXAMPLE
-fwatch -Path a.md -Action {cat a.md | md2html > a.html; firefox a.html}
+fwatch -Path a.md -Action {cat a.md | md2html > a.html; ii a.html}
 
 Watching... B51565E0F209DC192494C97989D68A299D790ED25EDB16FE888AC115D62E0D4C .\a.md
 
@@ -44,7 +44,7 @@ Watching... B51565E0F209DC192494C97989D68A299D790ED25EDB16FE888AC115D62E0D4C .\a
 watch only a.md file and if changed, run action
 
 .EXAMPLE
-fwatch -Path . -Action {cat a.md | md2html > a.html; firefox a.html} -Recurse
+fwatch -Path . -Action {cat a.md | md2html > a.html; ii a.html} -Recurse
 
 Watching... 3F86ECD8F17648F29E94242E8E912CFF8CBA5482C7590C1DC6F02AADEEF9FF24 .\a.html
 Watching... 3D1725FC9C79C17610B14B259DE5E2A74E37C603A1DCE568B3B1751F63BFC624 .\a.md
@@ -166,4 +166,3 @@ function fwatch {
         }
     }
 }
-

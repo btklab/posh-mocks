@@ -1,343 +1,267 @@
 <#
 .SYNOPSIS
+    mind2dot - Generate graphviz script to draw a mindmap from list data in markdown format
 
-mind2dot - Generate graphviz script to draw a mind map from list data in markdown format
+    Mindmapping the hierarchical structure described in
+    makdown list format.
 
-markdown形式のリストデータからマインドマップを描画するgraphvizスクリプトを生成する
+    The hierarchical structure is expressed as
+    "4 spaces" and "hyphen" like:
 
-マークダウンのリスト形式で記述された階層構造をマインドマップ化する。
-入力データは「半角スペース4つ」に「ハイフン」で階層構造を表す
-文末にアンダースコア「_」を入れると、枠なし文字列になる
--Space 2 とすると、ハイフンの前の半角スペースは2つとして認識する
+        - root
+            - child1
+                - child1-1
+            - child2
+            - child3
+    
+    Underscore "_" at the end of a sentence, makes it
+    a string without frame (as plaintext.) like:
 
-空行は無視する、
-「//」で始まる行はコメントとみなして無視する
-改行は\nでセンタリング、\lで左寄せ、\rで右寄せ
+        - root
+            - this is plain text_
+    
+    The 1st line begins with "# ", it is considered as a title.
+    Blank lines are ignored.
+    Lines beginning with "//" are treated as comments.
+    
+    With "\n" newline are centered
+    With "\l" newline are left-aligned
+    With "\r" newline are right-aligned
 
-一行目かつ「# 」で始まる場合は、タイトルとみなす。
--FirstNodeShapeオプションで、最初のノードの形状を指定できる
+    Lines wrapped in braces"{.*}" are treated as option,
+    and will be output without modification. like:
 
-波かっこ{.*}で始まり、終わる行はオプションとみなす。
-    {rank=same; ID0001,ID0002}などの制御を追加できる。
+        {rank=same; ID0001,ID0002}
 
-以下のように書けば参考文献を出力できる。
+    Legend can be output by writing the following:
 
-    legend right|left
-    参考文献
-    end legend
+        legend right|left
+        this is legend
+        end legend
+    
+    Fill color can be specified by prepending or postponing
+    [#color] to the label. For example:
 
-塗りつぶし色は[#color]をラベルに前置または後置で指定できる。
-たとえば、- [#red] label または- label [#red]
+        - [#orange] label
+        - label [#blue]
 
--SolarizedDark, -SolarizedLightスイッチで
-Solarizedカラースキーマを適用する
+    -SolarizedDark, -SolarizedLight switch to apply the
+    Solarized color schema.
 
-CREDIT:
- Solarized color palette from:
-    - https://github.com/altercation/solarized
-    - http://ethanschoonover.com/solarized
-    - License: MIT License Copyright (c) 2011 Ethan Schoonover
-
-＊＊＊
-
-PS> cat input.txt
-# title
-
-- hogehoge
-    - hoge1
-        - [#red] hoge2
-        - hoge3 [#red]
-        - hoge4_
-
-    - hogepiyo
-        - hoge2_
-        - hoge2_
-        - hoge2_
-
-    - fugafuga
-    - fuga1
-        - fuga1-2
-            - fuga2
-    - fuga3_
-
-{rank=same; "[問題]",ID0001}
-{rank=same; "[対策案]",ID0002,ID0004}
-{rank=same; "[懸念点]",ID0003,ID0005}
-
-cat input.txt | mind2dot
-cat input.txt | mind2dot -o a.dot; dot2gviz a.dot png | ii
-
-## output -- GraphViz用dot（一部抜粋）
-  // set node
-"ID0001" [label="hogehoge", shape="box"];
-"ID0002" [label="hoge1", shape="box"];
-"ID0003" [label="hoge2", shape="plaintext"];
-"ID0004" [label="hoge2", shape="plaintext"];
-"ID0005" [label="hoge2", shape="plaintext"];
-"ID0006" [label="hogepiyo", shape="box"];
-"ID0007" [label="hoge2", shape="plaintext"];
-"ID0008" [label="hoge2", shape="plaintext"];
-"ID0009" [label="hoge2", shape="plaintext"];
-"ID0010" [label="fugafuga", shape="box"];
-"ID0011" [label="fuga1", shape="box"];
-"ID0012" [label="fuga1-2", shape="box"];
-"ID0013" [label="fuga2", shape="box"];
-"ID0014" [label="fuga3", shape="plaintext"];
-
- // set edge
-"ID0001" -> "ID0002" [style="solid"];
-"ID0002" -> "ID0003" [style="solid"];
-"ID0002" -> "ID0004" [style="solid"];
-"ID0002" -> "ID0005" [style="solid"];
-"ID0001" -> "ID0006" [style="solid"];
-"ID0006" -> "ID0007" [style="solid"];
-"ID0006" -> "ID0008" [style="solid"];
-"ID0006" -> "ID0009" [style="solid"];
-"ID0001" -> "ID0010" [style="solid"];
-"ID0001" -> "ID0011" [style="solid"];
-"ID0011" -> "ID0012" [style="solid"];
-"ID0012" -> "ID0013" [style="solid"];
-"ID0001" -> "ID0014" [style="solid"];
-
-// set option
-{rank=same; "[問題]",ID0001}
-{rank=same; "[対策案]",ID0002,ID0004}
-{rank=same; "[懸念点]",ID0003,ID0005}
-
+        CREDIT:
+        Solarized color palette from:
+            - https://github.com/altercation/solarized
+            - http://ethanschoonover.com/solarized
+            - License: MIT License Copyright (c) 2011 Ethan Schoonover
 
 .LINK
     pu2java, dot2gviz, pert, pert2dot, pert2gantt2pu, mind2dot, mind2pu, gantt2pu, logi2dot, logi2dot2, logi2dot3, logi2pu, logi2pu2, flow2pu
 
 
-.PARAMETER OutputFile
-出力するファイル名
-
 .PARAMETER GraphType
-グラフのタイプ。
-  graph (default)
-  digraph
-  strict graph
-  strict digraph
-
-.PARAMETER LeftToRight
-左→右に流れるように変える
-デフォルトで上→下
+    graph (default)
+    digraph
+    strict graph
+    strict digraph
 
 .PARAMETER ReverseEdge
-矢印の向きを反対向きにする
+    Invert edge direction.
 
 .PARAMETER DotFile
-追加設定の書かれたdotファイルを読み込み
+    Reads a DOT file with additional settings.
 
 .PARAMETER NodeShape
-Nodeの形状を指定。
-デフォルトで"ellipse"（楕円）
+    Specify the node shape.
+    Default: ellipse
 
 .PARAMETER FirstNodeShape
-最初のNodeの形状を指定。
-デフォルトで"ellipse"（楕円）
+    Specify the first node shape.
+    Default: "ellipse"
 
 .PARAMETER OffRounded
-Nodeの角を丸くするのを解除。
+    Release rounding of node corners.
 
 .PARAMETER Title
-図にタイトルを挿入する
+    Insert title
 
 .PARAMETER FontName
-フォント名を指定。
-デフォルトで"Meiryo"
+    Set fontname
+    Default: "Meiryo"
 
 .PARAMETER FoldLabel
-指定文字数で強制的に折り返し。
-（指定文字数ごとに"\l"を挿入）
+    Fold label at specified number of characters.
 
 .PARAMETER Kinsoku
-禁則文字を考慮した
-折り返し文字数の指定
-半角1文字、全角2文字として数値を指定
-kiosoku_function.ps1に依存
+    Wrapping of character string considering japanese KINSOKU rules.
+    Specify numerical value as 1 for ASCII characters
+    and 2 for mulibyte characters.
+
+    Depends on kinsoku_function.ps1
 
 .PARAMETER SkipTop
+    Set the character at the beginning of the line to
+    skip character count in the kinsoku filter.
 
-kinsokuフィルタで、
-文字数カウントをスキップする行頭文字をセット。
-デフォルトで色指定をスキップ：
-
- SkipTop = '\[#[^]]+\] '
-
-
-.PARAMETER LegendFontSize
-凡例のフォントサイズを指定。
-デフォルトで11
+    Default: SkipTop = '\[#[^]]+\] '
+            (Skip color symbol)
 
 .EXAMPLE
-cat a.md
-# What flavor would you like?
+    cat a.md
+    # What flavor would you like?
 
-- Flavors
-    - Chocolate
-        - Ice cream_
-        - Cake_
-    - Strawberry
-        - Ice cream_
-        - Cake_
-    - Vanilla
-        - Ice cream_
-        - Cake_
+    - Flavors
+        - Chocolate
+            - Ice cream_
+            - Cake_
+        - Strawberry
+            - Ice cream_
+            - Cake_
+        - Vanilla
+            - Ice cream_
+            - Cake_
 
-legend right
-this is legend
-end legend
+    legend right
+    this is legend
+    end legend
 
-cat a.md | mind2dot
-graph mindmap {
- // graph settings
- graph [
-  charset = "UTF-8";
-  fontname = "Meiryo";
-  label = "What flavor would you like?\n\n";
-  labelloc = "t";
-  labeljust = "c";
-  layout = "dot";
-  rankdir = "LR";
-  newrank = true;
-  overlap = "false";
- ];
- // node settings
- node [
-  fontname = "Meiryo";
-  shape = "plaintext";
-  style = "rounded";
- ];
- // edge settings
- edge [
-  fontname = "Meiryo";
- ];
+    PS > cat a.md | mind2dot
+    graph mindmap {
+     // graph settings
+     graph [
+      charset = "UTF-8";
+      fontname = "Meiryo";
+      label = "What flavor would you like?\n\n";
+      labelloc = "t";
+      labeljust = "c";
+      layout = "dot";
+      rankdir = "LR";
+      newrank = true;
+      overlap = "false";
+     ];
+     // node settings
+     node [
+      fontname = "Meiryo";
+      shape = "plaintext";
+      style = "rounded";
+     ];
+     // edge settings
+     edge [
+      fontname = "Meiryo";
+     ];
 
- subgraph cluster_legend {
+     subgraph cluster_legend {
 
+     // set node
+    "ID0001" [label="Flavors", shape="box" ];
+    "ID0002" [label="Chocolate", shape="box" ];
+    "ID0003" [label="Ice cream", shape="plaintext" ];
+    "ID0004" [label="Cake", shape="plaintext" ];
+    "ID0005" [label="Strawberry", shape="box" ];
+    "ID0006" [label="Ice cream", shape="plaintext" ];
+    "ID0007" [label="Cake", shape="plaintext" ];
+    "ID0008" [label="Vanilla", shape="box" ];
+    "ID0009" [label="Ice cream", shape="plaintext" ];
+    "ID0010" [label="Cake", shape="plaintext" ];
 
- // set node
-"ID0001" [label="Flavors", shape="box" ];
-"ID0002" [label="Chocolate", shape="box" ];
-"ID0003" [label="Ice cream", shape="plaintext" ];
-"ID0004" [label="Cake", shape="plaintext" ];
-"ID0005" [label="Strawberry", shape="box" ];
-"ID0006" [label="Ice cream", shape="plaintext" ];
-"ID0007" [label="Cake", shape="plaintext" ];
-"ID0008" [label="Vanilla", shape="box" ];
-"ID0009" [label="Ice cream", shape="plaintext" ];
-"ID0010" [label="Cake", shape="plaintext" ];
+     // set edge
+    "ID0001" -- "ID0002" [style="solid"];
+    "ID0002" -- "ID0003" [style="solid"];
+    "ID0002" -- "ID0004" [style="solid"];
+    "ID0001" -- "ID0005" [style="solid"];
+    "ID0005" -- "ID0006" [style="solid"];
+    "ID0005" -- "ID0007" [style="solid"];
+    "ID0001" -- "ID0008" [style="solid"];
+    "ID0008" -- "ID0009" [style="solid"];
+    "ID0008" -- "ID0010" [style="solid"];
 
- // set edge
-"ID0001" -- "ID0002" [style="solid"];
-"ID0002" -- "ID0003" [style="solid"];
-"ID0002" -- "ID0004" [style="solid"];
-"ID0001" -- "ID0005" [style="solid"];
-"ID0005" -- "ID0006" [style="solid"];
-"ID0005" -- "ID0007" [style="solid"];
-"ID0001" -- "ID0008" [style="solid"];
-"ID0008" -- "ID0009" [style="solid"];
-"ID0008" -- "ID0010" [style="solid"];
-
- // set option
-
- graph [
-   labelloc="b";
-   labeljust="r";
-   color="white";
-   label=<
-   <TABLE
-       BORDER="1"
-       CELLBORDER="0"
-       COLOR="gray15"
-       BGCOLOR="grey95"
-   >
-   <TR><TD ALIGN="LEFT"><FONT COLOR="gray15" POINT-SIZE="11">this is legend</FONT></TD></TR>
-   </TABLE>>;
- ];
-
- };
-
-}
+     // set option
+     graph [
+       labelloc="b";
+       labeljust="r";
+       color="white";
+       label=<
+       <TABLE
+           BORDER="1"
+           CELLBORDER="0"
+           COLOR="gray15"
+           BGCOLOR="grey95"
+       >
+       <TR><TD ALIGN="LEFT"><FONT COLOR="gray15" POINT-SIZE="11">this is legend</FONT></TD></TR>
+       </TABLE>>;
+     ];
+     };
+    }
 
 .EXAMPLE
-PS> cat input.txt
-# title
+    cat input.txt
+    # title
 
-- hogehoge
-    - hoge1
-        - hoge2_
-        - hoge2_
-        - hoge2_
+    - hogehoge
+        - hoge1
+            - hoge2_
+            - hoge2_
+            - hoge2_
 
-//comment
+    //comment
 
-    - hogepiyo
-        - hoge2_
-        - hoge2_
-        - hoge2_
+        - hogepiyo
+            - hoge2_
+            - hoge2_
+            - hoge2_
 
-    - fugafuga
-    - fuga1
-        - fuga1-2
-            - fuga2
-    - fuga3_
+        - fugafuga
+        - fuga1
+            - fuga1-2
+                - fuga2
+        - fuga3_
 
-// set option
-{rank=same; "[問題]",ID0001}
-{rank=same; "[対策案]",ID0002,ID0004}
-{rank=same; "[懸念点]",ID0003,ID0005}
+    // set option
+    {rank=same; "[problem]",ID0001}
+    {rank=same; "[countermeasure]",ID0002,ID0004}
+    {rank=same; "[risks]",ID0003,ID0005}
 
 
-cat input.txt | mind2dot
-cat input.txt | mind2dot -o a.dot; dot2gviz a.dot png | ii
+    PS > cat input.txt | mind2dot
+    PS > cat input.txt | mind2dot > a.dot; dot2gviz a.dot png | ii
+    ## output
+      // set node
+    "ID0001" [label="hogehoge", shape="box"];
+    "ID0002" [label="hoge1", shape="box"];
+    "ID0003" [label="hoge2", shape="plaintext"];
+    "ID0004" [label="hoge2", shape="plaintext"];
+    "ID0005" [label="hoge2", shape="plaintext"];
+    "ID0006" [label="hogepiyo", shape="box"];
+    "ID0007" [label="hoge2", shape="plaintext"];
+    "ID0008" [label="hoge2", shape="plaintext"];
+    "ID0009" [label="hoge2", shape="plaintext"];
+    "ID0010" [label="fugafuga", shape="box"];
+    "ID0011" [label="fuga1", shape="box"];
+    "ID0012" [label="fuga1-2", shape="box"];
+    "ID0013" [label="fuga2", shape="box"];
+    "ID0014" [label="fuga3", shape="plaintext"];
 
-## output -- GraphViz用dot（一部抜粋）
-  // set node
-"ID0001" [label="hogehoge", shape="box"];
-"ID0002" [label="hoge1", shape="box"];
-"ID0003" [label="hoge2", shape="plaintext"];
-"ID0004" [label="hoge2", shape="plaintext"];
-"ID0005" [label="hoge2", shape="plaintext"];
-"ID0006" [label="hogepiyo", shape="box"];
-"ID0007" [label="hoge2", shape="plaintext"];
-"ID0008" [label="hoge2", shape="plaintext"];
-"ID0009" [label="hoge2", shape="plaintext"];
-"ID0010" [label="fugafuga", shape="box"];
-"ID0011" [label="fuga1", shape="box"];
-"ID0012" [label="fuga1-2", shape="box"];
-"ID0013" [label="fuga2", shape="box"];
-"ID0014" [label="fuga3", shape="plaintext"];
+     // set edge
+    "ID0001" -> "ID0002" [style="solid"];
+    "ID0002" -> "ID0003" [style="solid"];
+    "ID0002" -> "ID0004" [style="solid"];
+    "ID0002" -> "ID0005" [style="solid"];
+    "ID0001" -> "ID0006" [style="solid"];
+    "ID0006" -> "ID0007" [style="solid"];
+    "ID0006" -> "ID0008" [style="solid"];
+    "ID0006" -> "ID0009" [style="solid"];
+    "ID0001" -> "ID0010" [style="solid"];
+    "ID0001" -> "ID0011" [style="solid"];
+    "ID0011" -> "ID0012" [style="solid"];
+    "ID0012" -> "ID0013" [style="solid"];
+    "ID0001" -> "ID0014" [style="solid"];
 
- // set edge
-"ID0001" -> "ID0002" [style="solid"];
-"ID0002" -> "ID0003" [style="solid"];
-"ID0002" -> "ID0004" [style="solid"];
-"ID0002" -> "ID0005" [style="solid"];
-"ID0001" -> "ID0006" [style="solid"];
-"ID0006" -> "ID0007" [style="solid"];
-"ID0006" -> "ID0008" [style="solid"];
-"ID0006" -> "ID0009" [style="solid"];
-"ID0001" -> "ID0010" [style="solid"];
-"ID0001" -> "ID0011" [style="solid"];
-"ID0011" -> "ID0012" [style="solid"];
-"ID0012" -> "ID0013" [style="solid"];
-"ID0001" -> "ID0014" [style="solid"];
-
-// set option
-{rank=same; "[問題]",ID0001}
-{rank=same; "[対策案]",ID0002,ID0004}
-{rank=same; "[懸念点]",ID0003,ID0005}
+    // set option
+    {rank=same; "[problem]",ID0001}
+    {rank=same; "[countermeasure]",ID0002,ID0004}
+    {rank=same; "[risks]",ID0003,ID0005}
 
 .EXAMPLE
-cat a.md | mind2dot -LayoutEngine twopi > a.dot; dot2gviz a.dot svg | ii
-
-説明
-============
--LayoutEngine twopiで、上下左右方向に広がるマインドマップになる。
-デフォルトのdotは、上下または左右方向のみ。
-
+    cat a.md | mind2dot -LayoutEngine twopi > a.dot; dot2gviz a.dot svg | ii
 
 #>
 function mind2dot {
@@ -553,22 +477,22 @@ function mind2dot {
             return $itemLevel
         }
         function setNodeStr ([string]$nodeId, [string]$nodeLabel, [bool]$plainTextFlag, [int]$scColNum){
-            ## 色指定がある場合
+            ## if a color is specified
             [string]$colorName = ''
             if ($nodeLabel -match '^\[#'){
-                ## 色指定がある場合（前置） - [#orange] contents
+                ## prefix - [#orange] contents
                 $colorName = $nodeLabel -replace '^\[#([^\]]+)\](..*)$','$1'
                 $colorName = $colorName.Trim()
                 $nodeLabel = $nodeLabel -replace '^\[#([^\]]+)\](..*)$','$2'
                 $nodeLabel = $nodeLabel.Trim()
             }elseif ($nodeLabel -match '\[#[^\]]+]$'){
-                ## 色指定がある場合（後置） - contents [#orange]
+                ## post placement - contents [#orange]
                 $colorName = $nodeLabel -replace '^(..*)\[#([^\]]+)\]$','$2'
                 $colorName = $colorName.Trim()
                 $nodeLabel = $nodeLabel -replace '^(..*)\[#([^\]]+)\]$','$1'
                 $nodeLabel = $nodeLabel.Trim()
             }
-            ## "E" [label="肉を切る", shape="box"];
+            ## "E" [label="label", shape="box"];
             [string] $nodeId    = """$nodeId"""
             [string] $nodeLabel = """$nodeLabel"""
             if ($plainTextFlag){
@@ -626,9 +550,8 @@ function mind2dot {
                 Join = '\n'
                 SkipTop = "$SkipTop"
             }
-            $KinsokuParams.Set_Item('Expand', $true)
-            $KinsokuParams.Set_Item('OffTrim', $true)
-            ## 入力文字列・デリミタはクオーティングで安全にくるむこと
+            $KinsokuParams.Set_Item('Expand', $True)
+            $KinsokuParams.Set_Item('OffTrim', $True)
             $str = Write-Output "$str" | kinsoku @KinsokuParams
             $str = $str + '\n'
             return $str
@@ -636,9 +559,9 @@ function mind2dot {
         ##
         ## Stack & Queue functions
         ##
-        $psStackAry = [string[]]@() ## スタック配列
-        $psStackMaxSize = 10  ## スタック配列の最大サイズ（10階層まで）
-        $psStackTop = 0       ## スタック配列の先頭を表すポインタ
+        $psStackAry = [string[]]@() ## stack array
+        $psStackMaxSize = 10  ## maximum stack array size (up to 10 levels)
+        $psStackTop = 0       ## pointer to the beginning of the stack array
         function stackInit {
             $psStackTop = 0
             $psStackAry = [string[]]@()
@@ -652,21 +575,26 @@ function mind2dot {
             return $psStackTop -eq $psStackMaxSize
         }
         function psStackPush ([string]$val) {
-            # push (top を進めて要素を格納)
-            if (isStackFull){throw "error: stack is full."}
+            # push (advances top to store element)
+            if (isStackFull){
+                Write-Error "error: stack is full." -ErrorAction Stop
+            }
             $psStackAry[$psStackTop] = $val
             $psStackTop++
             return $psStackTop, $psStackAry
         }
         function psStackPop {
-            # pop (top をデクリメントして、top の位置にある要素を返す)
-            if (isStackEmpty){throw "error: stack is empty."}
+            # pop (decrements top and returns the element at top position)
+            if (isStackEmpty){
+                Write-Error "error: stack is empty." -ErrorAction Stop
+            }
             $psStackTop--
             $ret = $psStackAry[$psStackTop]
             return $psStackTop, $ret
         }
         function psStackGetVal {
-            # topを増減せずに、topの位置にある要素を返す
+            # return the element at the top positoin without
+            # increasing or decreasing top
             return $psStackAry[$psStackTop-1]
         }
         ## init stack
@@ -674,18 +602,18 @@ function mind2dot {
     }
     process{
         $lineCounter++
-        $plainTextFlag = $False
-        $rdLine = [string]$_
+        [bool] $plainTextFlag = $False
+        [string] $rdLine = [string] $_
         ## ignore
         if ($rdLine -match '^\s*left side$') {$rdLine = '//' + $rdLine}
         if ($rdLine -match '^\s*right side$'){$rdLine = '//' + $rdLine}
-        ## 一行目をタイトルとみなす場合
+        ## is the 1st line is title?
         if (($lineCounter -eq 1) -and ($rdLine -match '^# ')) {
             $fTitle = $rdLine -replace '^# ', ''
             $fTitle = $fTitle + '\n\n'
-            $isFirstRowEqTitle = $true
+            $isFirstRowEqTitle = $True
         }
-        ## ハイフンもしくはアスタリスクで始まる行がターゲット
+        ## target line is beginning with a hyphen or asterisk
         if (($rdLine -match '^\s*\-|^\s*\*') -and (-not $isLegend)){
             ## set node id
             $idCounter++
@@ -693,12 +621,12 @@ function mind2dot {
             ## set str
             $whiteSpace = $rdLine -replace '^(\s*)[-*].*$','$1'
             $contents   = $rdLine -replace '^\s*[-*]\s*(.*)$','$1'
-            ## 文末にアンダースコアで枠なし文字列
+            ## plain text if line ends in underscore
             if ($contents -match '_$'){
                 $plainTextFlag = $True
                 $contents = $contents -replace '_$',''
             }
-            ## コンテンツを指定文字数で折り返し
+            ## fold label
             if($FoldLabel){
                 $regStr = '('
                 $regStr += '.' * $FoldLabel
@@ -708,13 +636,13 @@ function mind2dot {
                 $contents = $contents -Replace '\\l$',''
                 $contents = $contents + '\l'
             }
-            ## 値の折り返し（禁則処理あり）
+            ## wrap with kinsoku
             if ($Kinsoku) {
                 $contents = execKinsoku $contents
             }
-            ## 階層の変化に応じてノードIDをスタック（push & pop）
+            ## stack node IDs as hierarchy changes (push & pop)
             $newItemLevel = getItemLevel "$rdLine"
-            ## カラースキーマのセット
+            ## set color scheme
             if ($schemeFlag){
                 if ($newItemLevel -eq 0){
                     [int] $colorIndex = 0
@@ -727,33 +655,33 @@ function mind2dot {
                 [int] $colorNum = -1
             }
             if ($idCounter -eq 1){
-                ## 1行目のデータ
+                ## data on first line
                 $readLineAryNode += setNodeStr $newNodeId $contents $plainTextFlag $colorNum
                 $parentId = 'None'
             } else {
-                ## 2行目以降のデータ
+                ## data after the second line
                 if ($newItemLevel -eq $oldItemLevel){
-                    ## 階層変化なし: pushもpopもしない
+                    ## no hierarchy change: no push or pop
                     $readLineAryNode += setNodeStr $newNodeId $contents $plainTextFlag $colorNum
                     if ($parentId -ne 'None'){
                         $readLineAryEdge += setEdgeStr $parentId $newNodeId $colorNum
                     }
 
                 } elseif ($newItemLevel -eq $oldItemLevel + 1){
-                    ## 一つ深い階層へ移動: push
+                    ## move one level deeper: push
                     $readLineAryNode += setNodeStr $newNodeId $contents $plainTextFlag $colorNum
                     $parentId = $oldNodeId
                     $psStackTop, $psStackAry = psStackPush $parentId ## スタックに親IDをpush
                     $readLineAryEdge += setEdgeStr $parentId $newNodeId $colorNum
 
                 } elseif ($newItemLevel -gt $oldItemLevel + 1){
-                    #Write-Output "$oldItemLevel, $newItemLevel"
-                    throw "error: 階層レベルが2つ以上一気に深くなりました: $rdLine"
+                    Write-Error "error: Two or more hierarchical levels deep at once!: $rdLine" -ErrorAction Stop
 
                 } elseif ($newItemLevel -lt $oldItemLevel){
-                    ## 階層が浅くなった: pop
+                    ## The hierarchy has become shallower: pop
                     $readLineAryNode += setNodeStr $newNodeId $contents $plainTextFlag $colorNum
-                    ## 浅くなった階層レベル分の回数だけpop
+                    ## pop as many times as the hierarchical level
+                    ## that has become shallower.
                     $diffLevel = $oldItemLevel - $newItemLevel
                     for ($i = 1; $i -le $diffLevel; $i++){
                         $psStackTop, $ret = psStackPop
@@ -765,17 +693,17 @@ function mind2dot {
                     }
 
                 } else {
-                    throw "error: 不明なエラー。階層検知できず: $rdLine "
+                    Write-Error "error: Ubknown error. Unable to detect hierarchy: $rdLine" -ErrorAction Stop
                 }
             }
             $oldItemLevel = $newItemLevel
             $oldNodeId = $newNodeId
         }
         $plainTextFlag = $False
-        ## オプション文字列の取得（"{"始まりの行）
+        ## get options (lines beginning with "{")
         if ($rdLine -match '^\{..*\}$'){
             $readLineAryOpt += $rdLine }
-        ## legend文字列の取得
+        ## acquisition of legend strings
         if (($isLegend) -and ($rdLine -match '^end *legend$')){
             $isLegend = $false
         }
@@ -784,13 +712,13 @@ function mind2dot {
         }
         if (($lineCounter -gt 1) -and ($rdLine -match '^legend right$')){
             $readLineAryLeg = @()
-            $isLegendRight = $true
-            $isLegend = $true
+            $isLegendRight = $True
+            $isLegend = $True
         }
         if (($lineCounter -gt 1) -and ($rdLine -match '^legend left$')){
             $readLineAryLeg = @()
-            $isLegendLeft = $true
-            $isLegend = $true
+            $isLegendLeft = $True
+            $isLegend = $True
         }
     }
     end {
@@ -1012,17 +940,17 @@ function mind2dot {
         ## output
         if($OutputFile){
             if($IsWindows){
-                ## BOMなしUTF-8(CRLF)形式で保存
+                ## save in UTF-8 (CRLF) without BOM
                 $readLineAry -Join "`r`n" `
                     | Out-File "$OutputFile" -Encoding UTF8
             } else {
-                ## BOMなしUTF-8(LF)形式で保存
+                ## save in UTF-8 (LF) without BOM
                 $readLineAry -Join "`n" `
                     | Out-File "$OutputFile" -Encoding UTF8
             }
             Get-Item $OutputFile
         }else{
-            ## 標準出力
+            ## standard output
             foreach($rdStr in $readLineAry){
                 Write-Output $rdStr
             }

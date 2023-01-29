@@ -1,16 +1,15 @@
 <#
 .SYNOPSIS
-文字列をリバースする
-入力はパイプのみ受け付け
+    rev - Reverse strings
 
-rev
+    Reverse strings within a line.
 
 .LINK
     rev, rev2
 
 .EXAMPLE
-PS C:\>Write-Output あいうえお | rev
-おえういあ
+    "aiueo" | rev
+    oeuia
 
 #>
 filter rev {

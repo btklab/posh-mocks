@@ -1,91 +1,74 @@
 <#
 .SYNOPSIS
-Tea timeが来たらタスクトレイから通知してくれる。
-処理が完了するまでプロンプトが戻ってこないので、
-専用の窓が必要な点に注意する。
+    teatimer - notify tea-time from the task tray.
 
-Reference:
+    Reference:
     - https://devblogs.microsoft.com/scripting/weekend-scripter-tea-time/
     - Weekend Scripter: Tea Time!
     - October 2nd, 2010
     - Microsoft Scripting Guy Ed Wilson
 
 .PARAMETER Minutes
-今から何分後に通知するかを指定する
-Hours,Secondsと併用可能
+    Specify how many minutes from now to notify.
+    Can be used with Hours, Seconds.
 
 .PARAMETER Hours
-今から何時間に通知するかを指定する
-Minutes,Secondsと併用可能
+    Specify how many hours from now to notify.
+    Can be used with Minutes, Seconds.
 
 .PARAMETER Seconds
-今から何分後に通知するかを指定する
-Hours,Minutesと併用可能
+    Specify how many seconds from now to notify.
+    Can be used with Minutes, Hours.
 
 .PARAMETER At
-何時に通知するかを指定する
-現在時刻より前の値を指定した場合、
-翌日のその時刻になる
+    Specify when to notify.
+    If you specify a value before the current time,
+    it will be that time on the next day.
 
-Minutes,Hours,Secondsとは併用不可
-もし併用した場合はAtが優先される
+    Cannot be used with -Minutes, -Hours, -Seconds.
+    If used together, -At takes precedence.
 
 .PARAMETER Title
-メッセージのタイトル
-デフォルト値は、"Tea is ready"
+    The title of the message.
+    Default : "Tea is ready."
 
 .PARAMETER Text
-メッセージの本文
-デフォルト値は、"get your tea"
+    The body of the message.
+    Default : "get your tea."
 
 .PARAMETER ShowPastTime
-メッセージに経過時間を含める
+    Include elapsed time in the message.
 
 .PARAMETER IconType
-アイコンの種類
-デフォルト値は "Information"
-選択肢は、Application, Asterisk, Error,
-Exclamation, Hand, Information, Question,
-Shield, Warning, WinLog
+    Type of icon.
+    Default : "Information"
+
+    Choices are Application, Asterisk, Error,
+    Exclamation, Hand, Information, Question,
+    Shield, Warning, WinLog
 
 .EXAMPLE
-PS > teatimer
-オプションを指定しなければ、直ちに通知する
+teatimer
 
-.EXAMPLE
 PS > teatimer -Minutes 90
-90分後に通知してくれる
 
-.EXAMPLE
 PS > teatimer -Hours 1 -Minutes 90
-1時間と90分後に通知してくれる
 
-.EXAMPLE
 PS > teatimer -At 10:30
-本日の10:30に通知してくれる
-ただし、設定時点で10:30が過ぎていた場合、
-翌日の10:30に通知してくれる
+# Notification at 10:30 today.
+# If 10:30 has passed at the time of setting,
+# will be notified at 10:30 the next day.
 
-.EXAMPLE
 PS > teatimer -At "2019/3/20 10:30"
-クオートすれば、日付指定も可能
 
-.EXAMPLE
-PS > teatimer -Minutes 90 -Title "そろそろ休憩しませんか？" -Text "もう90分も仕事しています"
-通知のタイトルと文章を指定
+PS > teatimer -Minutes 90 -Title "this is the title" -Text "body"
 
-.EXAMPLE
 PS > teatimer -Minutes 90 -ShowPastTime
-90分後に通知してくれる
-通知メッセージに設定してからの経過時間も表示する
 
-.EXAMPLE
 PS > teatimer -Minutes 90 -IconType Error
-アイコンのタイプを変更する
-
 
 #>
-function teatimer{
+function teatimer {
   Param (
     [Parameter(Mandatory=$False)]
     [Alias('m')]
@@ -124,75 +107,75 @@ function teatimer{
 
     [Parameter(Mandatory=$False)]
     [ValidateSet(
-      "Application",
-      "Asterisk",
-      "Error",
-      "Exclamation",
-      "Hand",
-      "Information",
-      "Question",
-      "Shield",
-      "Warning",
-      "WinLogo")]
+      "Application", "Asterisk", "Error", "Exclamation",
+      "Hand", "Information", "Question", "Shield",
+      "Warning", "WinLogo")]
     [string] $IconType = "Information"
   )
 
   $nowDateTime = Get-Date
   if($At){
-    ## -At による日時指定
+    ## Date and time specification by -At option
     $alarmDateTime = (Get-Date $At)
     if($alarmDateTime -lt $nowDateTime){
-      ## 指定時間が過去の場合、日付を1加算
+      ## If the specified time is in the past,
+      ## add 1 to the date.
       $alarmDateTime = $alarmDateTime.AddDays(1)
       if($alarmDateTime -lt $nowDateTime){
-        ## それでも補正できない場合はエラー
+        ## Raise error if correction is still not possible.
         $errorDayTime = $At.ToString('yyyy-M-d (ddd) HH:mm:ss')
-        Write-Error "Error: 過去の日付 $errorDayTime が指定されました." -ErrorAction Stop
+        Write-Error "Error: specified the past datetime: $errorDayTime" -ErrorAction Stop
         return
       }
     }
     $objTimeSpan = New-TimeSpan -Start $nowDateTime -End $alarmDateTime
   }else{
-    ## 今から何分後か、という指定
+    ## Specify how many times from now
     $objTimeSpan = New-TimeSpan -Hours $Hours -Minutes $Minutes -Seconds $Seconds
   }
   $sleepSeconds = $objTimeSpan.TotalSeconds
-  #Write-Output $sleepSeconds
-  #Write-Output $displayAlartDateTime
 
-  ## teatimer_exec.ps1に渡す引数リスト文字列の生成
+  ## Generate argument list to pass to teatimer_exec.ps1
   $ArgumentList = @()
-  if($At){
-    $ArgumentList += '-At "' + $At + '"'
-  }else{
-    $ArgumentList += "-Minutes $Minutes"
-    $ArgumentList += "-Hours $Hours"
-    $ArgumentList += "-Seconds $Seconds"
+  $scrFile = "teatimer_exec.ps1"
+  $scrPath = Join-Path "$PSScriptRoot" "$scrFile"
+  if( -not ( Test-Path -LiteralPath $scrPath ) ){
+    Write-Error "$scrFile is not exists." -ErrorAction Stop
   }
-  $ArgumentList += '-Title "' + $Title + '"'
-  $ArgumentList += '-Text "' + $Text + '"'
-  $ArgumentList += "-Timeout $Timeout"
-  $ArgumentList += "-EventTimeout $EventTimeout"
+  $ArgumentList += $scrFile
+  if($At){
+    $ArgumentList += '-At'
+    $ArgumentList += "'$At'"
+  }else{
+    $ArgumentList += "-Minutes"
+    $ArgumentList += "$Minutes"
+    $ArgumentList += "-Hours"
+    $ArgumentList += "$Hours"
+    $ArgumentList += "-Seconds"
+    $ArgumentList += "$Seconds"
+  }
+  $ArgumentList += "-Title"
+  $ArgumentList += "'$Title'"
+  $ArgumentList += "-Text"
+  $ArgumentList += "'$Text'"
+  $ArgumentList += "-Timeout"
+  $ArgumentList += "$Timeout"
+  $ArgumentList += "-EventTimeout"
+  $ArgumentList += "$EventTimeout"
   if($ShowPastTime){
     $ArgumentList += "-ShowPastTime"
   }
-  $ArgumentList += "-IconType $IconType"
-  #Write-Output $ArgumentList
+  $ArgumentList += "-IconType"
+  $ArgumentList += "'$IconType'"
+  #Write-Debug $ArgumentList
+ 
 
-  $scrFile = "teatimer_exec.ps1"
-  $scrPath = Join-Path "$PSScriptRoot" "$scrFile"
-  if(!(Test-Path $scrPath)){
-    throw "$scrFile が存在していません."
-  }
-  #Write-Output "file: $scrFile"
-  #Write-Output "args: $ArgumentList"
-  Start-Process pwsh -ArgumentList "$scrPath","$ArgumentList" -WindowStyle Hidden
+  Start-Process pwsh -ArgumentList $ArgumentList -WindowStyle Hidden
 
-  ## 設定完了メッセージの出力
+  ## Output of setting completion message
   $displayAlartDateTime = $(Get-Date).AddSeconds(1) + $objTimeSpan
   $ymdhms = $displayAlartDateTime.ToString('yyyy-M-d (ddd) HH:mm:ss')
   if (-not $Quiet){
-    Write-Host "$ymdhms にアラームを設定しました."
+    Write-Host "Set an alerm for $ymdhms"
   }
 }
-

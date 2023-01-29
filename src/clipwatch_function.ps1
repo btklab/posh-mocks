@@ -1,7 +1,6 @@
 <#
 .SYNOPSIS
-
-clipwatch -- A clipboard watcher using Compare-Object
+    clipwatch -- A clipboard watcher using Compare-Object
 
 .LINK
     fwatch
@@ -20,7 +19,6 @@ clipwatch -- A clipboard watcher using Compare-Object
 
 .PARAMETER OutOnlyLog
     Action | Out-Null
-
 
 .EXAMPLE
     clipwatch -Action {Get-ClipBoard | say}

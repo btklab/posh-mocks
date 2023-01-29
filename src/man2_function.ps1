@@ -1,43 +1,40 @@
 <#
 .SYNOPSIS
+    man2 - Display function list and manual
 
-man2 - Display function list and manual
+    Usage:
+        man2
+        man2 sm2 [-Paging]
+    
+    Options:
+        -l: List commands in a column
+        -p: Out-Host -Paging
 
-拡張コマンドのリスト・マニュアルを表示する
-
-Usage:
- man2
- man2 sm2 [-Paging]
- 
- -lオプション：コマンド名を一列に出力 
- -pオプション：Out-Host -Paging
-
-Dependency: flat, tateyoko, keta
+    Dependency: flat, tateyoko, keta
 
 .EXAMPLE
-man2
-
-拡張コマンドをリストする
+    man2
 
 .EXAMPLE
-man2 getlast
+    man2 getlast
 
-getlast コマンドのヘルプを表示する
-
-.EXAMPLE
-man2 -c 3
-
-列数を指定
+    Get help for getlast command.
 
 .EXAMPLE
-man2 -Exclude 'Get'
+    man2 -c 3
 
-「Get」を含むコマンドを除外
+    Specify the number of columns to output.
 
 .EXAMPLE
-man2 -Include 'Get'
+    man2 -Exclude 'Get'
 
-「Get」を含むコマンドのみ出力
+    Exclude commands contains "Get".
+
+
+.EXAMPLE
+    man2 -Include 'Get'
+
+    Include commands contains "Get".
 
 #>
 function man2 {

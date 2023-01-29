@@ -1,90 +1,85 @@
 <#
 .SYNOPSIS
+    linkcheck - Broken link checker
 
-linkcheck - Broken link checker
+    Test the urri connection specified in the argument.
+    
+    reference:
+    - Invoke-WebRequest
+      https://docs.microsoft.com/ja-jp/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-7.2
 
-引数に指定したuriのリンク切れをチェックする
-
-reference:
-  - Invoke-WebRequest
-    https://docs.microsoft.com/ja-jp/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-7.2
-
--Headerオプションで、
-1列目をfilename、2列目をhrefとして認識する。
-出力にも、filenameをヘッダに付与する。
-ただし、filenameに半角スペースを含まないこと。
-
+    -Header: Recognize 1st column as filename, 2nd as href.
+      The filename is added to the leftmost of output.
+      The filename must not contain spaces. 
 
 .LINK
     lincextract, linkcheck2
 
-
 .PARAMETER Header
-1列目をfilename、2列目をhrefとして認識し、
-出力にも、filenameをヘッダに付与する
+    Recognize 1st column as filename, 2nd as href.
+    The filename is added to the leftmost of output.
+    The filename must not contain spaces. 
+    
+    Output example:
+    Case: -Header is specified
+    [ng] index.html www.microsoft.com/unkownhost
 
-出力例:
-[ng] index.html www.microsoft.com/unkownhost
-
-Headerオプションを指定しない場合：
-[ng] www.microsoft.com/unkownhost
-
+    Case: -Header is not specified:
+    [ng] www.microsoft.com/unkownhost
 
 .PARAMETER VerboseOutput
-エラー如何にかかわらず、すべての入力に
-[ng]または[ok]タグを付与して出力する
+    Regardless of errors, all input with [ng] or [ok] tag.
 
-出力の最後に、Broken linksのリストを返す。
-
+    Rerurn a list of broken links at the end of the output.
 
 .PARAMETER WaitSeconds
-1リンク検証ごとのスリープ時間（秒）を指定
-
-
-.EXAMPLE
-cat uri-list.txt
-https://www.example.com/
-www.microsoft.com/unkownhost
-
-linkcheck www.microsoft.com/unkownhost
-Detect broken links.
-[ng] www.microsoft.com/unkownhost
+    Sleep time (seconds) per link verification
 
 .EXAMPLE
-cat uri-list.txt | linkcheck
-Detect broken links.
-[ng] www.microsoft.com/unkownhost
+    cat uri-list.txt
+    https://www.example.com/
+    www.microsoft.com/unkownhost
+
+    linkcheck www.microsoft.com/unkownhost
+    Detect broken links.
+    [ng] www.microsoft.com/unkownhost
 
 .EXAMPLE
-linkcheck (cat uri-list.txt) -WaitSeconds 1
-Detect broken links.
-[ng] www.microsoft.com/unkownhost
+    cat uri-list.txt | linkcheck
+    Detect broken links.
+    [ng] www.microsoft.com/unkownhost
 
 .EXAMPLE
-linkcheck (cat uri-list.txt) -VerboseOutput
-[ok] https://www.example.com/
-[ng] www.microsoft.com/unkownhost
-Detect broken links.
-[ng] www.microsoft.com/unkownhost
+    linkcheck (cat uri-list.txt) -WaitSeconds 1
+    Detect broken links.
+    [ng] www.microsoft.com/unkownhost
 
 .EXAMPLE
-$uAry = @("https://www.example.com/","www.microsoft.com/unkownhost")
-linkcheck $uAry -VerboseOutput
-
-[ok] https://www.example.com/
-[ng] www.microsoft.com/unkownhost
-Detect broken links.
-[ng] www.microsoft.com/unkownhost
+    linkcheck (cat uri-list.txt) -VerboseOutput
+    [ok] https://www.example.com/
+    [ng] www.microsoft.com/unkownhost
+    Detect broken links.
+    [ng] www.microsoft.com/unkownhost
 
 .EXAMPLE
-cat uri-list.txt
-a.html https://www.example.com/
-a.html www.microsoft.com/unkownhost
+    $uAry = @("https://www.example.com/","www.microsoft.com/unkownhost")
+    linkcheck $uAry -VerboseOutput
 
-cat uri-list.txt | linkcheck
-Detect broken links.
-[ng] a.html https://www.example.com/
-[ng] a.html www.microsoft.com/unkownhost
+    [ok] https://www.example.com/
+    [ng] www.microsoft.com/unkownhost
+    Detect broken links.
+    [ng] www.microsoft.com/unkownhost
+
+.EXAMPLE
+    cat uri-list.txt
+    a.html https://www.example.com/
+    a.html www.microsoft.com/unkownhost
+
+    cat uri-list.txt | linkcheck
+    Detect broken links.
+    [ng] a.html https://www.example.com/
+    [ng] a.html www.microsoft.com/unkownhost
+
 #>
 function linkcheck {
     Param(

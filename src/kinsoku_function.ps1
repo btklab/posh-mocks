@@ -1,124 +1,116 @@
 <#
 .SYNOPSIS
+    kinsoku -- Japanese text wrapper
+    
+    入力行1行ごとに禁則処理を施す。
 
-kinsoku -- Japanese text wrapper
+    「-Width <int>」で折返し文字幅を指定（全角2、半角1）
+    「-Expand」でぶら下げ禁則処理ON
+    「-Yoon」で「ゃゅょ」と促音「っ」禁則処理 ON（デフォルトでON）
+    「-Join '\n'」で改行ポイントに'\n'を挿入。出力は改行なし
+    「-AddLastChar <str>」で行末のみに任意文字列を追加
 
-入力行1行ごとに禁則処理を施す。
+    禁則処理後、行の前後の空白は削除される。
+    「-OffTrim」で行頭行末の空白を削除しない。
 
-「-Width <int>」で折返し文字幅を指定（全角2、半角1）
-「-Expand」でぶら下げ禁則処理ON
-「-Yoon」で「ゃゅょ」と促音「っ」禁則処理 ON（デフォルトでON）
-「-Join '\n'」で改行ポイントに'\n'を挿入。出力は改行なし
-「-AddLastChar <str>」で行末のみに任意文字列を追加
+    thanks:
+    - 禁則処理 - PyJaPDF
+        - http://pyjapdf.linxs.org/home/kinsoku
+    - 【WEBツール】Unicode 変換 - お便利ツール.com （unicode変換）
+        - https://www.oh-benri-tools.com/tools/programming/unicode-escape-unescape
+    - ArrayList
+        - https://docs.microsoft.com/ja-jp/dotnet/api/system.collections.arraylist.remove?view=net-5.0
 
-禁則処理後、行の前後の空白は削除される。
-「-OffTrim」で行頭行末の空白を削除しない。
-
-thanks:
-
-- 禁則処理 - PyJaPDF
-    - http://pyjapdf.linxs.org/home/kinsoku
-- 【WEBツール】Unicode 変換 - お便利ツール.com （unicode変換）
-    - https://www.oh-benri-tools.com/tools/programming/unicode-escape-unescape
-- ArrayList
-    - https://docs.microsoft.com/ja-jp/dotnet/api/system.collections.arraylist.remove?view=net-5.0
-
-references:
-
-- 禁則処理 (Sep. 10, 2022, 09:31 UTC). In Wikipedia: The Free Encyclopedia.
-    - https://ja.wikipedia.org/wiki/%E7%A6%81%E5%89%87%E5%87%A6%E7%90%86
-- JISX4051:2004 日本語文書の組版方法 - kikakurui.com
-    - https://kikakurui.com/x4/X4051-2004-02.html
-
+    references:
+    - 禁則処理 (Sep. 10, 2022, 09:31 UTC). In Wikipedia: The Free Encyclopedia.
+        - https://ja.wikipedia.org/wiki/%E7%A6%81%E5%89%87%E5%87%A6%E7%90%86
+    - JISX4051:2004 日本語文書の組版方法 - kikakurui.com
+        - https://kikakurui.com/x4/X4051-2004-02.html
 
 .PARAMETER Width
-折り返し文字幅を、全角文字を2、半角文字を1として指定。
-たとえばひらがな5文字で折り返したいなら10を指定する
+    折り返し文字幅を、全角文字を2、半角文字を1として指定。
+    たとえばひらがな5文字で折り返したいなら10を指定する
 
 .PARAMETER Expand
-はみ出た文字列をぶら下げ（同じ行に出力）
+    はみ出た文字列をぶら下げ（同じ行に出力）
 
 .PARAMETER Yoon
-拗音と促音にも禁則処理を適用する
-デフォルトでTrue（ON）
+    拗音と促音にも禁則処理を適用する
+    デフォルトでTrue（ON）
 
 .PARAMETER Join
-改行ポイントに任意の文字列を挿入。
-このオプションを指定した場合、出力は改行なし
+    改行ポイントに任意の文字列を挿入。
+    このオプションを指定した場合、出力は改行なし
 
 .PARAMETER OffTrim
-行頭の空白を削除しない
+    行頭の空白を削除しない
 
 .PARAMETER SkipTop
-行頭から任意の正規表現にマッチする文字列を無視。
-行頭にID列があるデータなどに用いる。
-
+    行頭から任意の正規表現にマッチする文字列を無視。
+    行頭にID列があるデータなどに用いる。
 
 .PARAMETER SkipTopJoinStr
-SkipTopオプションで除外したID文字列の区切り文字を指定する。
-SkipTopオプションを指定しなかった場合、全行に任意の文字列を付与する。
+    SkipTopオプションで除外したID文字列の区切り文字を指定する。
+    SkipTopオプションを指定しなかった場合、全行に任意の文字列を付与する。
 
 .EXAMPLE
-"aa aa aa aaa aa aa, hoge fuga." | kinsoku 18
-PS > "aa aa aa aaa aa aa, hoge fuga." | kinsoku -Width 18
+    "aa aa aa aaa aa aa, hoge fuga." | kinsoku 18
+    PS > "aa aa aa aaa aa aa, hoge fuga." | kinsoku -Width 18
 
-aa aa aa aaa aa
-aa, hoge fuga.
+    aa aa aa aaa aa
+    aa, hoge fuga.
 
-PS > "aa aa aa aaa aa aa, hoge fuga." | kinsoku 18 -Expand
-aa aa aa aaa aa aa,
-hoge fuga.
-
-
-.EXAMPLE
-"あいうえおかきくけこ、さしすせそたち。" | kinsoku 20
-あいうえおかきくけ
-こ、さしすせそたち。
-
-PS > "あいうえおかきくけこ、さしすせそたち。" | kinsoku 22
-あいうえおかきくけこ、
-さしすせそたち。
-
-PS > "あいうえおかきくけこ、さしすせそたち。" | kinsoku 20 -Expand
-あいうえおかきくけこ、
-さしすせそたち。
-
+    PS > "aa aa aa aaa aa aa, hoge fuga." | kinsoku 18 -Expand
+    aa aa aa aaa aa aa,
+    hoge fuga.
 
 .EXAMPLE
-"あいうえおかきくけこ、さしすせそたち。" | kinsoku 20 -Expand -Join '\n'
-あいうえおかきくけこ、\nさしすせそたち。
+    "あいうえおかきくけこ、さしすせそたち。" | kinsoku 20
+    あいうえおかきくけ
+    こ、さしすせそたち。
+
+    PS > "あいうえおかきくけこ、さしすせそたち。" | kinsoku 22
+    あいうえおかきくけこ、
+    さしすせそたち。
+
+    PS > "あいうえおかきくけこ、さしすせそたち。" | kinsoku 20 -Expand
+    あいうえおかきくけこ、
+    さしすせそたち。
+
+.EXAMPLE
+    "あいうえおかきくけこ、さしすせそたち。" | kinsoku 20 -Expand -Join '\n'
+    あいうえおかきくけこ、\nさしすせそたち。
 
 
 .EXAMPLE
-"ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand
-ID0001:ああ
-あああ、い
-いいいい、
-ううううう
+    "ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand
+    ID0001:ああ
+    あああ、い
+    いいいい、
+    ううううう
 
 
-PS > "ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:'
-ID0001:あああああ、
-いいいいい、
-ううううう
+    PS > "ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:'
+    ID0001:あああああ、
+    いいいいい、
+    ううううう
 
 
-PS > "ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n'
-ID0001:\nあああああ、
-いいいいい、
-ううううう
+    PS > "ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n'
+    ID0001:\nあああああ、
+    いいいいい、
+    ううううう
 
-PS > "ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n'
-ID0001:\nあああああ、\nいいいいい、\nううううう
+    PS > "ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n'
+    ID0001:\nあああああ、\nいいいいい、\nううううう
 
-PS > "ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n' -AddLastChar '\r\n'
-ID0001:\nあああああ、\nいいいいい、\nううううう\r\n
+    PS > "ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n' -AddLastChar '\r\n'
+    ID0001:\nあああああ、\nいいいいい、\nううううう\r\n
 
-説明
-===============
--SkipTop 'ID....:'で、ID文字列はノーカウント。
-先頭にIDがあり、それをカウントしたくない場合などに使う。
-
+    説明
+    ===============
+    -SkipTop 'ID....:'で、ID文字列はノーカウント。
+    先頭にIDがあり、それをカウントしたくない場合などに使う。
 #>
 function kinsoku {
     Param(
@@ -382,8 +374,8 @@ function kinsoku {
         }
     }
     process {
-        [string] $line = [string] $_
-        [string[]] $outputLines = applyKinsoku $line
+        [string] $readLine = [string] $_
+        [string[]] $outputLines = applyKinsoku $readLine
         if ($Join){
             $outputLines -join "$Join"
         } else {
