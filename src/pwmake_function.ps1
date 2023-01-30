@@ -445,7 +445,7 @@ function pwmake {
     function AddEndOfFileMarkAndIncludeMakefile ([string]$mfile){
         [string[]]$lines = @()
         [string]$parentDir = Split-Path "$mfile" -Parent
-        $lines = Get-Content -LiteralPath "$mfile" -Encoding UTF-8 `
+        $lines = Get-Content -LiteralPath "$mfile" -Encoding utf8 `
             | ForEach-Object {
                 $mfileline = [string]$_
                 if ($mfileline -match '^include '){
@@ -455,7 +455,7 @@ function pwmake {
                     [string[]]$fListAry = $mfileline -split ' '
                     foreach ($f in $fListAry){
                         $fPath = Join-Path "$parentDir" "$f"
-                        Get-Content -Path "$fPath" -Encoding UTF8
+                        Get-Content -Path "$fPath" -Encoding utf8
                         Write-Output ''
                     }
                 } else {

@@ -150,7 +150,7 @@ function sed-i {
         [switch] $MatchFileOnly,
 
         [Parameter(Mandatory=$False)]
-        [string] $Encoding = 'UTF8'
+        [string] $Encoding = 'utf8'
     )
     # test path
     if (-not $SkipError){

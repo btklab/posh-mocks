@@ -27,19 +27,19 @@
     Concatenate headerless CSV files.
 
 .EXAMPLE
-catcsv
-# Concatenate "*.csv" in the current directory
-# to 'out.csv'
+    catcsv
+    # Concatenate "*.csv" in the current directory
+    # to 'out.csv'
 
 .EXAMPLE
-catcsv a*.csv
-# Concatenate "a*.csv" in the current directory
-# to 'out.csv'
+    catcsv a*.csv
+    # Concatenate "a*.csv" in the current directory
+    # to 'out.csv'
 
 .EXAMPLE
-catcsv -NoHeader
-# Concatenate headerless "*.csv" in the current
-# directory to 'out.csv'
+    catcsv -NoHeader
+    # Concatenate headerless "*.csv" in the current
+    # directory to 'out.csv'
 
 #>
 function catcsv {
@@ -54,8 +54,8 @@ function catcsv {
         [string] $Output = "./out.csv",
 
         [Parameter(Mandatory=$false)]
-        [ValidateSet('UTF-8', 'Shift_JIS')]
-        [string] $Encoding = 'UTF-8',
+        [ValidateSet('utf8', 'oem')]
+        [string] $Encoding = 'utf8',
 
         [Parameter(Mandatory=$false)]
         [Switch] $List,
