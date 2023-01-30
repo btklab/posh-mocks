@@ -142,7 +142,7 @@ function teatimer {
   if( -not ( Test-Path -LiteralPath $scrPath ) ){
     Write-Error "$scrFile is not exists." -ErrorAction Stop
   }
-  $ArgumentList += $scrFile
+  $ArgumentList += $scrPath
   if($At){
     $ArgumentList += '-At'
     $ArgumentList += "'$At'"
@@ -169,7 +169,7 @@ function teatimer {
   $ArgumentList += "'$IconType'"
   #Write-Debug $ArgumentList
  
-
+  Write-Debug $($ArgumentList -Join " ")
   Start-Process pwsh -ArgumentList $ArgumentList -WindowStyle Hidden
 
   ## Output of setting completion message

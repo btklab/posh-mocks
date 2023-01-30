@@ -183,6 +183,6 @@ function teatimer-exec {
 }
 
 $comStr = "teatimer-exec $args"
-Write-Host $comStr
+#Write-Host $comStr
 #sleep -seconds 3
 Invoke-Expression $comStr
