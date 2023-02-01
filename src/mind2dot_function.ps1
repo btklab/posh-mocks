@@ -283,6 +283,12 @@ function mind2dot {
         [switch]$TopToBottom,
 
         [Parameter( Mandatory=$False)]
+        [switch]$RightToLeft,
+
+        [Parameter( Mandatory=$False)]
+        [switch]$BottomToTop,
+
+        [Parameter( Mandatory=$False)]
         [Alias('r')]
         [switch]$ReverseEdge,
 
@@ -470,6 +476,13 @@ function mind2dot {
             [string] $txtColor = $FontColor
         }
         ## define private functions
+        function isCommandExist ([string]$cmd) {
+            try { Get-Command $cmd -ErrorAction Stop > $Null
+                return $True
+            } catch {
+                return $False
+            }
+        }
         function getItemLevel ([string]$rdLine){
             $whiteSpaces = $rdLine -replace '^(\s*)[-*]','$1'
             $whiteSpaceLength = $whiteSpace.Length
@@ -529,19 +542,23 @@ function mind2dot {
                 ## set color scheme
                 $opts += ", color=""$($colorSolarized[$scColNum])"""
             }
-            if($GraphType -match 'digraph'){
+            if( $GraphType -match 'digraph' ) {
                 return "$leftId -> $rightId [$($opts)];"
-            }else{
+            } else {
                 return "$leftId -- $rightId [$($opts)];"
             }
         }
         ## test and dot sourcing kinsoku command
         if ($Kinsoku){
-            $scrPath = Join-Path $PSScriptRoot "kinsoku_function.ps1"
-            if (-not (Test-Path -LiteralPath $scrPath)){
-                Write-Error "kinsoku command could not found." -ErrorAction Stop
+            if ( isCommandExist "kinsoku" ){
+                #pass
+            } else {
+                $scrPath = Join-Path $PSScriptRoot "kinsoku_function.ps1"
+                if (-not (Test-Path -LiteralPath $scrPath)){
+                    Write-Error "kinsoku command could not found." -ErrorAction Stop
+                }
+                . $scrPath
             }
-            . $scrPath
         }
         function execKinsoku ([string]$str){
             ## splatting
@@ -758,8 +775,12 @@ function mind2dot {
             $readLineAryHeader += "  labeljust = ""$TitleJust"";"
         }
         $readLineAryHeader += "  layout = ""$LayoutEngine"";"
-        if($TopToBottom){
+        if( $TopToBottom ){
             $readLineAryHeader += '  rankdir = "TB";'
+        } elseif( $RightToLeft ){
+            $readLineAryHeader += '  rankdir = "RL";'
+        } elseif( $BottomToTop ){
+            $readLineAryHeader += '  rankdir = "BT";'
         } else {
             $readLineAryHeader += '  rankdir = "LR";'
         }
