@@ -226,15 +226,26 @@ function mind2pu {
         $isLegend = $False
         $readLineAry = @()
         $readLineAryNode = @()
+        ## private function
+        function isCommandExist ([string]$cmd) {
+            try { Get-Command $cmd -ErrorAction Stop > $Null
+                return $True
+            } catch {
+                return $False
+            }
+        }
         ## test and dot sourcing kinsoku command
         if ($Kinsoku){
-            $scrPath = Join-Path $PSScriptRoot "kinsoku_function.ps1"
-            if (-not (Test-Path -LiteralPath $scrPath)){
-                Write-Error "kinsoku command could not found." -ErrorAction Stop
+            if ( isCommandExist "kinsoku" ){
+                #pass
+            } else {
+                $scrPath = Join-Path $PSScriptRoot "kinsoku_function.ps1"
+                if (-not (Test-Path -LiteralPath $scrPath)){
+                    Write-Error "kinsoku command could not found." -ErrorAction Stop
+                }
+                . $scrPath
             }
-            . $scrPath
         }
-        ## private function
         function execKinsoku ([string]$str){
             ## splatting
             $KinsokuParams = @{
