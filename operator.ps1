@@ -79,6 +79,7 @@ if ($IsWindows){
 . $pwshSrcDir/dot2gviz_function.ps1
 . $pwshSrcDir/pu2java_function.ps1
 
+. $pwshSrcDir/gantt2pu_function.ps1
 . $pwshSrcDir/mind2dot_function.ps1
 . $pwshSrcDir/mind2pu_function.ps1
 . $pwshSrcDir/logi2dot_function.ps1

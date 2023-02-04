@@ -7,7 +7,7 @@
     If there are multiple, separate them with comma.
 
     Usage:
-        cat a.txt | logi2pu -Kinsoku 10 > a.pu; pu2java a.pu svg
+        cat a.txt | logi2pu > a.pu; pu2java a.pu svg
 
     Reference:
         https://plantuml.com/ja/use-case-diagram
