@@ -2273,8 +2273,26 @@ Japanese "DANDORI" means "make arrangement", "take steps", "plan".
     - `cat a.txt | gantt2pu > a.pu`
     - `pu2java`との連携
         - `cat a.txt | gantt2pu > a.pu ; pu2java a.pu | ii`
+- Formats:
+    - `m`, `##` is a milestone. Specify with date as below.
+        - `m MileStoneName [yyyy-m-d]` or
+        - `## MileStoneName [yyyy-m-d]`
+    - `>` indicates task to be done after the milestone. Specify with task time as below.
+        - `> task name [1]`
+    - `<` indicates task to be done before the milestone. Specify with task time as below.
+        - `< task name [1]`
+    - `>>` is task to do after the previous task or milestone. Specify with task time as below.
+        - `>> task name [1]`
+    - `<<` is task to do before the previous task or milestone. Specify with task time as below.
+        - `<< task name [1]`
+    - `mm`, `###` puts the milestone on the start date or finish date of the previous task.
+        - Unlike `m` and `##`, no date specification is required.
+        - `mm` is cleard every milestone, but it is not cleared with
+          `-InheritTasks` switch, and all loaded tasks are memorized.
+        - However, in the `<` direction, regardless of whether `-InheritTasks` switch is
+          ON or OFF, the milestone is always placed at the "start position of the previous task".
 - Options
-    - `-CloseSatSun` ... 土日をクローzy
+    - `-CloseSatSun` ... 土日をクローズ
     - `-Today` ... 今日の日付をカラーリング
     - `-StartDate yyyy-m-d` ... プロジェクト開始日を指定
     - `-EndDate yyyy-m-d` ... プロジェクト終了日を指定
