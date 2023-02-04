@@ -52,6 +52,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `man2`
 - Added `mind2dot`
 - Added `mind2pu`
+- Added `logi2dot`
+- Added `logi2pu`
 - Added `pawk`
 - Added `pu2java`
 - Added `pwmake`

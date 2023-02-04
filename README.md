@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `man2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `logi2dot`, `logi2pu`, `man2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
 
 Inspired by:
 
@@ -2275,7 +2275,7 @@ markdown形式のリストデータからマインドマップを描画する`gr
     - `-FontName <fontname>`でフォントを指定可能
     - `-SolarizedDark`, `-SolarizedLight`スイッチでカラースキーマ「[Solarized](https://github.com/altercation/solarized)」をセット
     - `-NodeShape <String>`でノードの形状を変更可能
-        `-FirstNodeShape <String>`でルート（一番最初）のノードの形状のみ変更
+        - `-FirstNodeShape <String>`でルート（一番最初）のノードの形状のみ変更
     - `-Kinsoku <int>`で日本語文書に禁則処理を適用して任意の文字幅で折り返し
         - 全角文字幅は2、半角文字幅は1として折り返し文字幅を指定する
     - `-TopToBottom`スイッチで、レイアウトを左→右ではなく上→下に変更する
@@ -2314,10 +2314,9 @@ this is legend
 end legend
 ```
 
-```powershell
+```dot
 # output
 # Note that fontname="meiryo" is specified by default
-
 cat a.md | mind2dot
 graph mindmap {
  // graph settings
@@ -2651,6 +2650,435 @@ skinparam DefaultFontName "Meiryo"
 ```
 
 ![](img/mind2pu_WBS.png)
+
+
+#### `logi2dot` - Generate data for graphviz with simple format
+
+シンプルな記法で表現された論理ツリーデータを[Graphviz](https://graphviz.org/)形式（dot言語）に変換する。
+
+Convert the following input data to graphviz format.
+The rightmost column is preceded tasks.
+If there are multiple, separate them with comma.
+
+```
+# Input: id, task, [prectask1, prectask2,...]
+A task-A [-]
+B task-B [A]
+C task-C [A,B]
+```
+
+- Usage
+    - `man2 logi2dot`
+    - `logi2dot [[-Title] <String>] [[-LayoutEngine] <String>] [-LeftToRightDirection] [-RightToLeftDirection] [-BottomToTopDirection] [-ReverseEdgeDir] [[-FontName] <String>] [[-NodeShape] <String>] [[-NodeShapeFirst] <String>] [[-GroupShape] <String>] [[-Kinsoku] <Int32>] [[-KinsokuDelim] <String>] [[-GrepShape] <String>] [[-Grep] <Regex>] [[-GrepColor] <String>] [-AddStartNode] [-AddEdgeLabel] ...`
+- Examples
+    - `cat input.txt | logi2dot`
+    - `dot2gviz`との連携
+        - `cat input.txt | logi2dot > a.dot; dot2gviz a.dot svg | ii`
+- Options
+    - `-LayoutEngine (circo|dot|fdp|neato|osage|sfdp|twopi|patchwork)`でレイアウトエンジンを指定可能
+    - `-FontName <fontname>`でフォントを指定可能
+    - `-NodeShape <String>`でノードの形状を変更可能
+        - `-FirstNodeShape <String>`でルート（一番最初）のノードの形状のみ変更
+    - `-Kinsoku <int>`で日本語文書に禁則処理を適用して任意の文字幅で折り返し
+        - 全角文字幅は2、半角文字幅は1として折り返し文字幅を指定する
+    - `-TopToBottom`スイッチで、レイアウトを左→右ではなく上→下に変更する
+    - `-Grep pattern`で`regex-pattern`にマッチするラベルのノードの背景色や形を変える
+- Dependencies
+    - `dot2gviz` from posh-mocks (this repository)
+    - `kinsoku` from posh-mocks (this repository) if `-Kinsoku <int>` option used
+
+Input:
+
+```powershell
+cat input.txt
+# how to cook curry
+
+-- rice --
+A wash rice [-]
+B soak rice in fresh water [A]
+C cook rice [B]
+
+-- ccurry roux --
+D cut vegetables [-]
+E cut meat into cubes [-]
+F stew vegetables and meat [D,E]
+G add curry roux and simmer [F]
+
+H serve on plate [C,G]
+I complete! [H]
+
+B --> C : at least\n30 minutes
+
+//-- dot --
+{rank=same; A, E, D};
+```
+
+Output:
+
+```dot
+cat input.txt | logi2dot > a.dot; dot2gviz a.dot png | ii
+strict digraph logictree {
+
+ graph [
+  charset = "UTF-8";
+  compound = true;
+  fontname = "MS Gothic";
+  label = "how to cook curry";
+  rankdir = "TB";
+  newrank = true;
+ ];
+
+ node [
+  fontname = "MS Gothic";
+  shape = "rectangle";
+  style = "rounded,solid";
+ ];
+
+ edge [
+  fontname = "MS Gothic";
+  dir = forward;
+ ];
+
+ // Node settings
+
+ subgraph cluster_G1 {
+  label = "rice";
+  shape = "rectangle";
+  style = "dotted";
+  //fontsize = 11;
+  labelloc = "t";
+  labeljust = "l";
+  //-- rice --
+  "A" [label="A\lwash rice", shape="rectangle" ];
+  "B" [label="B\lsoak rice in fresh water", shape="rectangle" ];
+  "C" [label="C\lcook rice", shape="rectangle" ];
+ };
+
+ subgraph cluster_G2 {
+  label = "ccurry roux";
+  shape = "rectangle";
+  style = "dotted";
+  //fontsize = 11;
+  labelloc = "t";
+  labeljust = "l";
+  //-- ccurry roux --
+  "D" [label="D\lcut vegetables", shape="rectangle" ];
+  "E" [label="E\lcut meat into cubes", shape="rectangle" ];
+  "F" [label="F\lstew vegetables and meat", shape="rectangle" ];
+  "G" [label="G\ladd curry roux and simmer", shape="rectangle" ];
+ };
+
+ "H" [label="H\lserve on plate", shape="rectangle" ];
+ "I" [label="I\lcomplete!", shape="rectangle" ];
+
+
+ // Edge settings
+ "A" -> "B" [style=solid];
+ "B" -> "C" [style=solid];
+ "D" -> "F" [style=solid];
+ "E" -> "F" [style=solid];
+ "F" -> "G" [style=solid];
+ "C" -> "H" [style=solid];
+ "G" -> "H" [style=solid];
+ "H" -> "I" [style=solid];
+
+ // Edge optional settings
+ "B" -> "C" [label="at least\n30 minutes", style="solid", dir=forward];
+
+
+ // Dot settings
+ //-- dot --
+ {rank=same; A, E, D};
+
+}
+```
+
+![](img/logi2dot_1.png)
+
+Input2:
+
+```powershell
+cat input.txt
+# logick tree
+
+Goal Making a profit for the company  [ReqA, ReqB]
+
+-- GroupA --
+ReqA Secure sales [ActA]
+ActA Reduce the price [-]
+
+-- GroupB --
+ReqB Secure profits [ActB]
+ActB keep the price [-]
+
+ActA <-> ActB: conflict！
+
+//-- dot --
+{rank=same; ActA, ActB};
+```
+
+Output2:
+
+```dot
+cat input.txt | logi2dot -BottomToTopDirection -Kinsoku 10 > a.dot; dot2gviz a.dot png | ii
+strict digraph logictree {
+
+ graph [
+  charset = "UTF-8";
+  compound = true;
+  fontname = "MS Gothic";
+  label = "logick tree";
+  rankdir = "BT";
+  newrank = true;
+ ];
+
+ node [
+  fontname = "MS Gothic";
+  shape = "rectangle";
+  style = "rounded,solid";
+ ];
+
+ edge [
+  fontname = "MS Gothic";
+  dir = forward;
+ ];
+
+ // Node settings
+
+ "Goal" [label="Goal\lMaking a profit \lfor the company\l", shape="rectangle" ];
+
+ subgraph cluster_G1 {
+  label = "GroupA";
+  shape = "rectangle";
+  style = "dotted";
+  //fontsize = 11;
+  labelloc = "t";
+  labeljust = "l";
+  //-- GroupA --
+  "ReqA" [label="ReqA\lSecure sales\l", shape="rectangle" ];
+  "ActA" [label="ActA\lReduce the \lprice\l", shape="rectangle" ];
+ };
+
+ subgraph cluster_G2 {
+  label = "GroupB";
+  shape = "rectangle";
+  style = "dotted";
+  //fontsize = 11;
+  labelloc = "t";
+  labeljust = "l";
+  //-- GroupB --
+  "ReqB" [label="ReqB\lSecure profits\l", shape="rectangle" ];
+  "ActB" [label="ActB\lkeep the price\l", shape="rectangle" ];
+ };
+
+
+ // Edge settings
+ "ReqA" -> "Goal" [style=solid];
+ "ReqB" -> "Goal" [style=solid];
+ "ActA" -> "ReqA" [style=solid];
+ "ActB" -> "ReqB" [style=solid];
+
+ // Edge optional settings
+ "ActA" -> "ActB" [label="conflict！", style="solid", dir=both];
+
+
+ // Dot settings
+ //-- dot --
+ {rank=same; ActA, ActB};
+
+}
+```
+
+![](img/logi2dot_2.png)
+
+
+
+#### `logi2pu` - Generate data for PlantUML (usecase diagram) with simple format
+
+シンプルな記法で表現された論理ツリーデータを[PlantUML](https://plantuml.com/en/)形式に変換する。
+
+Convert the following input data to plantuml format.
+The rightmost column is preceded tasks.
+If there are multiple, separate them with comma.
+
+```
+# Input: id, task, [prectask1, prectask2,...]
+A task-A [-]
+B task-B [A]
+C task-C [A,B]
+```
+
+- Usage
+    - `man2 logi2pu`
+    - `logi2pu [[-Title] <String>] [-LeftToRightDirection] [-BottomToTopDirection] [-RightToLeftDirection] [-ReverseEdgeDir] [-Shadow] [[-Scale] <Double>] [[-Grep] <Regex>] [[-GrepShape] <String>] [[-GrepColor] <String>] [-Monochrome] [-HandWritten] [[-FontName] <St    ring>] [[-Theme] <String>] [[-NodeShape] <String>] [[-NodeShapeFirst] <String>] [[-GroupShape] <String>] [[-Kinsoku] <Int32>] [[-KinsokuDelim] <String>] ...`
+- Examples
+    - `cat input.txt | logi2pu`
+    - `pu2java`との連携
+        - `cat input.txt | logi2pu > a.pu; pu2java a.pu svg | ii`
+- Options
+    - `-FontName <fontname>`でフォントを指定可能
+    - `-NodeShape <String>`でノードの形状を変更可能
+        `-FirstNodeShape <String>`でルート（一番最初）のノードの形状のみ変更
+    - `-Kinsoku <int>`で日本語文書に禁則処理を適用して任意の文字幅で折り返し
+        - 全角文字幅は2、半角文字幅は1として折り返し文字幅を指定する
+    - `-TopToBottom`スイッチで、レイアウトを左→右ではなく上→下に変更する
+    - `-Grep pattern`で`regex-pattern`にマッチするラベルのノードの背景色や形を変える
+- Dependencies
+    - `pu2java` from posh-mocks (this repository)
+    - `kinsoku` from posh-mocks (this repository) if `-Kinsoku <int>` option used
+
+Input:
+
+```powershell
+cat input.txt
+# how to cook curry
+
+-- rice --
+A wash rice [-]
+note right
+  this is note
+end note
+B soak rice in fresh water [A]
+C cook rice [B]
+
+-- ccurry roux --
+D cut vegetables [-]
+E cut meat into cubes [-]
+F stew vegetables and meat [D,E]
+G add curry roux and simmer [F]
+
+H serve on plate [C,G]
+I complete! [H]
+
+B --> C #line:transparent : at least\n30 minutes
+
+legend right
+  this is legend
+end legend
+```
+
+Output:
+
+```
+cat input.txt | logi2dot > a.dot; dot2gviz a.dot png | ii
+@startuml
+
+title how to cook curry
+skinparam DefaultFontName "MS Gothic"
+skinparam roundCorner 15
+skinparam shadowing false
+
+
+'Node settings
+
+rectangle "rice" as G1 {
+'-- rice --
+  rectangle "**A**\nwash rice" as A
+  note right
+    this is note
+  end note
+  rectangle "**B**\nsoak rice in fresh water" as B
+  rectangle "**C**\ncook rice" as C
+}
+
+rectangle "ccurry roux" as G2 {
+'-- ccurry roux --
+  rectangle "**D**\ncut vegetables" as D
+  rectangle "**E**\ncut meat into cubes" as E
+  rectangle "**F**\nstew vegetables and meat" as F
+  rectangle "**G**\nadd curry roux and simmer" as G
+}
+
+rectangle "**H**\nserve on plate" as H
+rectangle "**I**\ncomplete!" as I
+
+
+'Edge settings
+A --> B
+B --> C
+D --> F
+E --> F
+F --> G
+C --> H
+G --> H
+H --> I
+
+'Edge optional settings
+B --> C #line:transparent : at least\n30 minutes
+
+legend right
+  this is legend
+end legend
+
+
+@enduml
+```
+
+![](img/logi2pu_1.png)
+
+Input2:
+
+```powershell
+cat input.txt
+# logick tree
+
+Goal Making a profit for the company [ReqA, ReqB]
+
+-- GroupA --
+ReqA Secure sales [ActA]
+ActA Reduce the price [-]
+
+-- GroupB --
+ReqB Secure profits [ActB]
+ActB keep the price [-]
+
+ActA <-> ActB #line:red : conflict！
+```
+
+Output2:
+
+```
+cat input.txt | logi2pu -BottomToTopDirection -Kinsoku 10 > a.pu; pu2java a.pu png | ii
+@startuml
+
+title logick tree
+skinparam DefaultFontName "MS Gothic"
+skinparam roundCorner 15
+skinparam shadowing false
+
+
+'Node settings
+
+rectangle "**Goal**\nMaking a profit \nfor the company" as Goal
+
+rectangle "GroupA" as G1 {
+'-- GroupA --
+  rectangle "**ReqA**\nSecure sales" as ReqA
+  rectangle "**ActA**\nReduce the \nprice" as ActA
+}
+
+rectangle "GroupB" as G2 {
+'-- GroupB --
+  rectangle "**ReqB**\nSecure profits" as ReqB
+  rectangle "**ActB**\nkeep the price" as ActB
+}
+
+
+'Edge settings
+ReqA -up-> Goal
+ReqB -up-> Goal
+ActA -up-> ReqA
+ActB -up-> ReqB
+
+'Edge optional settings
+ActA <-> ActB #line:red : conflict！
+
+
+@enduml
+```
+
+![](img/logi2pu_2.png)
+
 
 
 ### Image processing
