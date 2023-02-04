@@ -961,11 +961,11 @@ function mind2dot {
         ## output
         if($OutputFile){
             if($IsWindows){
-                ## save in UTF-8 (CRLF) without BOM
+                ## save as UTF-8 (CRLF) without BOM
                 $readLineAry -Join "`r`n" `
                     | Out-File "$OutputFile" -Encoding UTF8
             } else {
-                ## save in UTF-8 (LF) without BOM
+                ## save as UTF-8 (LF) without BOM
                 $readLineAry -Join "`n" `
                     | Out-File "$OutputFile" -Encoding UTF8
             }
