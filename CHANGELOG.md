@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `lcalc`
 - Added `linkcheck`
 - Added `man2`
+- Added `gantt2pu`
 - Added `mind2dot`
 - Added `mind2pu`
 - Added `logi2dot`

@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `logi2dot`, `logi2pu`, `man2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `logi2dot`, `logi2pu`, `man2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
 
 Inspired by:
 
@@ -2247,6 +2247,102 @@ lastyear 2/28 -s "_last_year"
     - Java
         - <https://www.java.com/en/download/>
 
+
+#### `gantt2pu` - Visualizatoin tool of DANDORI-chart (setup-chart) for PlantUML.
+
+段取表の作成支援ツール。
+期日からタスクとタスク時間を逆算して着手日を求めるガントチャートを描画する
+（PlantUMLスクリプトを生成する）。
+
+タスクを積み上げて期限を決めずに期日からの逆算で着手日を求める理由は、タスクの抜け漏れを防ぐためと、着手日を「**できるだけ遅らせる**」ため。そうしないならば、すべてのタスクは「**できるだけ早く着手**」されることになりがち。
+
+Calculate the task time backward from the GOAL (deadline) and
+draw a gantt-chart to find the start date.
+
+Reasons for working backwards from the goal to tasks and task times instead of piling up tasks to reach the goal:
+
+1. To eliminate omissions of tasks.
+2. To delay as much as possible the start date.<br />Otherwise, all tasks are "start as soon as possible".
+
+Japanese "DANDORI" means "make arrangement", "take steps", "plan".
+
+- Usage
+    - `man2 gantt2pu`
+    - `gantt2pu [[-Unit] <String>] [-Period <String>] [-Title <String>] [-StartDate <DateTime>] [-EndDate <DateTime>] [-MarkdownLevel2AsSeparator] [-SectionLv2] [-AsMilestone] [-TaskbarColor <String>] [-ArrowColor <String>] [-CloseSatSun] [-CloseDates <String[]>] [-CloseCalendar <String[]>] [-OpenDates <String[]>] [-OpenCalendar <String[]>] [-ColorDates <String[]>] [-NamedDates <String[]>] [-TodayColor <String>] [-Grep <Regex>] [-GrepColor <String>] [-GrepRes <Regex>] [-Zoom <Int32>] [-Scale <Int32>] [-ColorResult <String>] [-Today] [-Monochrome] [-HandWritten] [-InheritTasks] [-DuplicatedTaskMark <String>] [-DefaultFontName <String>] [-Theme <String>]`
+- Examples
+    - `cat a.txt | gantt2pu > a.pu`
+    - `pu2java`との連携
+        - `cat a.txt | gantt2pu > a.pu ; pu2java a.pu | ii`
+- Options
+    - `-CloseSatSun` ... 土日をクローzy
+    - `-Today` ... 今日の日付をカラーリング
+    - `-StartDate yyyy-m-d` ... プロジェクト開始日を指定
+    - `-EndDate yyyy-m-d` ... プロジェクト終了日を指定
+- Dependencies
+    - `pu2java` from posh-mocks (this repository)
+
+Input:
+
+```powershell
+cat input.txt
+# title
+
+## project name [2023-03-01]
+< task3-review [4]
+<< task3-2 [4]
+<< task3-1 [4]
+< task2-review [5]
+<< task2-2 [5]
+<< task2-1 [5]
+### sub milestone
+< task1-review [5]
+### task1 fin
+< task1-2 [4]
+<< task1-2-1 [4]
+< task1-1 [4]
+```
+
+Output:
+
+```
+PS > cat input.txt | gantt2pu -CloseSatSun -Today -StartDate 2023-1-18 > a.pu; pu2java a.pu png | ii
+@startgantt
+
+<style>
+ganttDiagram {
+    arrow {
+        LineColor Gray
+    }
+}
+</style>
+
+language ja
+printscale daily zoom 1
+scale 1
+
+project starts 2023-01-31
+
+title title
+
+-- project name [2023-03-01] --
+[fin] as [M1] happens 2023-03-01
+  [task3-review] as [T1] lasts 4 days and ends at [M1]'s start
+  [task3-2] as [T2] lasts 4 days and ends at [T1]'s start
+  [task3-1] as [T3] lasts 4 days and ends at [T2]'s start
+  [task2-review] as [T4] lasts 5 days and ends at [M1]'s start
+  [task2-2] as [T5] lasts 5 days and ends at [T4]'s start
+  [task2-1] as [T6] lasts 5 days and ends at [T5]'s start
+[sub milestone] as [M2] happens at [T6]'s start
+  [task1-review] as [T7] lasts 5 days and ends at [M2]'s start
+[task1 fin] as [M3] happens at [T7]'s start
+  [task1-2] as [T8] lasts 4 days and ends at [M3]'s start
+  [task1-2-1] as [T9] lasts 4 days and ends at [T8]'s start
+  [task1-1] as [T10] lasts 4 days and ends at [M3]'s start
+
+@endgantt
+```
+
+![](img/gantt2pu_1.png)
 
 #### `mind2dot` - Generate graphviz script to draw a mind map from list data in markdown format
 
