@@ -128,4 +128,5 @@ Set-Alias -name ml -value Get-OGP
 
 ## misc
 . $pwshSrcDir/sleepy_function.ps1
+. $pwshSrcDir/tenki_function.ps1
 

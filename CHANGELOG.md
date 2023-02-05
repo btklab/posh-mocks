@@ -66,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `sed`
 - Added `self`
 - Added `sleepy`
+- Added `tenki`
 - Added `sm2`
 - Added `table2md`
 - Added `tac`
