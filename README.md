@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `logi2dot`, `logi2pu`, `man2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `logi2dot`, `logi2pu`, `man2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
 
 Inspired by:
 
@@ -4048,6 +4048,37 @@ pwmake
 pwmake: The term 'uplatex' is not recognized as a name of a cmdlet, function, script file, or executable program.
 Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
 ```
+
+
+#### `tenki` - Open tenki.jp or jma.go.jp in browser
+
+日本・兵庫県の天気情報webページをブラウザで開く。毎日天気予報を確認するのは製造業のマネジメントの基本。
+
+Open Hyogo/Japan weather reports in browser (on windows).
+
+- Usage
+    - `man2 tenki`
+    - `tenki` ... open tenki.jp forecast and map
+    - `tenki -jma` ... open jma.go.jp forecast and map
+- Options (Open pages)
+    - `[-f|-Forecast]` (default)
+    - `[-m|-Map]` (default)
+    - `[-r|-Radar]`
+    - `[-c|-Cloud]`
+    - `[-a|-Amedas]`
+    - `[-t|-Typhoon]`
+    - `[-w|-Warning]`
+    - `[-n|-News]`
+    - `[-Top]`
+    - `[-Rss]`
+    - `[-All]`
+- Examples
+    - `tenki` ... open tenki.jp forecast and map
+    - `tenki -jma` ... open jma.go.jp forecast and map
+    - `tenki -All` ... open all registered uri
+    - `tenki -Firefox` ... open tenki.jp forecast and map in firefox
+    - `tenki -Chrome` ... open tenki.jp forecast and map in chrome
+    - `tenki -Edge` ... open tenki.jp forecast and map in edge
 
 
 #### `say` - Speech Synthesizer
