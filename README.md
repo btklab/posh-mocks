@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `logi2dot`, `logi2pu`, `man2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `i`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `logi2dot`, `logi2pu`, `man2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
 
 Inspired by:
 
@@ -4047,6 +4047,71 @@ pwmake
 > uplatex a.tex
 pwmake: The term 'uplatex' is not recognized as a name of a cmdlet, function, script file, or executable program.
 Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+```
+
+
+#### `i` - Invoke-Links - Read and execute links written in a text file.
+
+テキストファイルに記述されたリンクを任意のアプリで実行する。Windowsにおけるショートカットに対して`Invoke-Item(Alias:ii)`するのと似た挙動だが、リンクの実行に任意のアプリを用いたり、「ファイルの場所」をエクスプローラで開いたりできる。
+
+- Usage
+    - `man2 i`
+    - `i [[-File] <String>] [[-Command] <String>] [-Location] [-Edit] [-LinkCheck] [-DryRun]`
+    - `i` ... Equivalent to `Get-ChildItem .`
+    - `i <dir>` ... `Get-ChildItem <dir>`
+    - `i <file>` ... `Invoke-Item <links-writtein-in-text-file>`
+    - `i <file> <command>` ... `command <links-writtein-in-text-file>`
+    - `i <file> -l or -Location` ... Open `<link>` location in explorer
+    - `i <file> -q or -DryRun` ... DryRun (listup links)
+    - `i <file> -e or -Edit` ... Edit `<linkfile>` using text editor
+
+
+Input:
+
+```powershell
+cat ./link/about_Invoke-Item.txt
+https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.management/invoke-item
+```
+
+Output:
+
+```powershell
+# open link in default browser
+i ./link/about_Invoke-Item.txt
+
+# open link in "firefox" browser
+i ./link/about_Invoke-Item.txt firefox
+```
+
+Examples:
+
+```powershell
+# input text file
+cat ./link/rmarkdown_site.txt
+"C:\Users\btklab\cms\repos\rmarkdown-skeleton\docs\index.html"
+
+# Get-ChildItem <dir>
+i ./link/
+
+Mode         LastWriteTime Length Name
+----         ------------- ------ ----
+-a---  2023/02/07    23:21    102 hoge.md
+-a---  2023/02/07    23:31     97 about_Invoke-Item.txt
+-a---  2023/02/07    20:58     25 google
+
+# dry run
+i ./link/rmarkdown_site.txt -q
+.\link\rmarkdown.txt
+Invoke-Item 'C:\Users\btklab\cms\repos\rmarkdown-skeleton\docs\index.html'
+
+# open index.html in default browser
+i ./link/rmarkdown_site.txt
+
+# open index.html in VSCode
+i ./link/rmarkdown_site.txt code
+
+# open linked file location in explorer
+i ./link/rmarkdown_site.txt -l
 ```
 
 
