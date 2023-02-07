@@ -18,6 +18,7 @@
     Multiple links(lines) in a file available. Lines that empty or beginning
     with "#" are skipped.
 
+
     Usage:
         i                  ... Equivalent to Get-ChildItem .
         i <dir>            ... Get-ChildItem <dir>
@@ -146,6 +147,17 @@ function i {
                     return
                 }
                 Get-ChildItem -LiteralPath $File
+                return
+            }
+        }
+        # is windows shortcut?
+        [string] $ext = (Get-Item -LiteralPath $File).Extension
+        if ( ( $ext -eq '.lnk' ) -or ( $ext -eq '.url') ){
+            if ( $DryRun ){
+                "Invoke-Item -LiteralPath $File"
+                return
+            } else {
+                Invoke-Item -LiteralPath $File
                 return
             }
         }
