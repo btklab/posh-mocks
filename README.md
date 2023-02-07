@@ -4054,6 +4054,8 @@ Check the spelling of the name, or if a path was included, verify that the path 
 
 テキストファイルに記述されたリンクを任意のアプリで実行する。Windowsにおけるショートカットに対して`Invoke-Item(Alias:ii)`するのと似た挙動だが、リンクの実行に任意のアプリを用いたり、「ファイルの場所」をエクスプローラで開いたりできる。
 
+リンクとしてファイルを開きたいが、たまにエクスプローラで「ファイルの場所」を開きたいときがある場合に一つのファイルで済む。（ファイルとディレクトリ2つのショートカットを作りたくない人向け）
+
 - Usage
     - `man2 i`
     - `i [[-File] <String>] [[-Command] <String>] [-Location] [-Edit] [-LinkCheck] [-DryRun]`
