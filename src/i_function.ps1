@@ -6,6 +6,11 @@
     but also open the file location in explorer, or open the link
     with any command.
 
+    If you want to open a file as a link, but sometimes you want to
+    open the "file location" in explorer, you can do it with one file.
+    (For those who don't want to create two shortcuts for files and
+    directories)
+
     The link execution app can be any command if "-Command" option is
     specified, otherwise follow the rules below:
 
@@ -169,7 +174,7 @@ function i {
             }
             return
         }
-        [string[]] $linkLines = Get-Content -Literal $File -Encoding utf8 `
+        [string[]] $linkLines = Get-Content -LiteralPath $File -Encoding utf8 `
             | ForEach-Object {
                 [string] $linkLine = $_
                 if ( isCommentOrEmptyLine $linkLine ){
