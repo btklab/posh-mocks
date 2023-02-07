@@ -11,10 +11,12 @@
     Error if key string contains symbols such as (,),-.
     
     Inspired by:
-    - tomnomnom/gron: Make JSON greppable! - GitHub
-        - https://github.com/tomnomnom/gron
-    - jiro4989/gsv: gsv transforms a multi-line CSV into one-line JSON to make it easier to grep - GitHub
-        - https://github.com/jiro4989/gsv
+
+        - tomnomnom/gron: Make JSON greppable! - GitHub
+            - https://github.com/tomnomnom/gron
+        
+        - jiro4989/gsv: gsv transforms a multi-line CSV into one-line JSON to make it easier to grep - GitHub
+            - https://github.com/jiro4989/gsv
 
 .LINK
     csv2txt
@@ -52,24 +54,24 @@
 
 
     PS > cat a.json | json2txt
-    .widget.debug = on
-    .widget.window.title = "Sample Konfabulator Widget"
-    .widget.window.name = "main_window"
-    .widget.window.width = 500
-    .widget.window.height = 500
-    .widget.image.src = "Images/Sun.png"
-    .widget.image.name = "sun1"
-    .widget.image.hOffset = 250
-    .widget.image.vOffset = 250
-    .widget.image.alignment = "center"
-    .widget.text.data = "Click Here"
-    .widget.text.size = 36
-    .widget.text.style = "bold"
-    .widget.text.name = "text1"
-    .widget.text.hOffset = 250
-    .widget.text.vOffset = 100
-    .widget.text.alignment = "center"
-    .widget.text.onMouseUp = "sun1.opacity = (sun1.opacity / 100) * 90;"
+    (dot)widget.debug = on
+    (dot)widget.window.title = "Sample Konfabulator Widget"
+    (dot)widget.window.name = "main_window"
+    (dot)widget.window.width = 500
+    (dot)widget.window.height = 500
+    (dot)widget.image.src = "Images/Sun.png"
+    (dot)widget.image.name = "sun1"
+    (dot)widget.image.hOffset = 250
+    (dot)widget.image.vOffset = 250
+    (dot)widget.image.alignment = "center"
+    (dot)widget.text.data = "Click Here"
+    (dot)widget.text.size = 36
+    (dot)widget.text.style = "bold"
+    (dot)widget.text.name = "text1"
+    (dot)widget.text.hOffset = 250
+    (dot)widget.text.vOffset = 100
+    (dot)widget.text.alignment = "center"
+    (dot)widget.text.onMouseUp = "sun1.opacity = (sun1.opacity / 100) * 90;"
 
 
     PS > (cat a.json | ConvertFrom-Json).firstName

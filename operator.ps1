@@ -127,6 +127,7 @@ Set-Alias -name ml -value Get-OGP
 ## math
 
 ## misc
-. $pwshSrcDir/sleepy_function.ps1
+. $pwshSrcDir/i_function.ps1
 . $pwshSrcDir/tenki_function.ps1
+. $pwshSrcDir/sleepy_function.ps1
 
