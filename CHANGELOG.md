@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `delf`
 - Added `dot2gviz`
 - Added `fillretu`
+- Added `filehame`
 - Added `flat`
 - Added `fwatch`
 - Added `Get-OGP(Alias:ml)`
