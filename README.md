@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `i`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `logi2dot`, `logi2pu`, `man2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `filehame`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `i`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `logi2dot`, `logi2pu`, `man2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
 
 Inspired by:
 
@@ -30,7 +30,7 @@ Inspired by:
     - Commands: `grep`, `sed`, `head`, `tail`, `awk`, `make`, `uniq`, `self`, `delf`, `count`, `getfirst`, `getlast`, and more...
 - [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
-    - Commands: `man2`, `keta`, `tateyoko`, `gyo`, `fillretu`, `yarr`, `count`, `han`, `zen`, and more...
+    - Commands: `man2`, `keta`, `tateyoko`, `gyo`, `fillretu`, `yarr`, `count`, `han`, `zen`, `filehame`, and more...
 - [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
     - License: The MIT License (MIT): Copyright (c) 2016 Yasuhiro, Yamada
     - Commands: `flat`, `addt`, `addb`, `addr`, `addl`, `mirror`, and more...
@@ -3432,6 +3432,87 @@ ID0001:\nあああああ、\nいいいいい、\nううううう
 
 "ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n' -AddLastChar '\r\n'
 ID0001:\nあああああ、\nいいいいい、\nううううう\r\n
+```
+
+#### `filehame` - Insert contents into template
+
+テンプレートファイルの任意の文字列を含む行を見つけるとそこに別のテキストファイルを挿入する。
+「ファイルをはめ込む」ので`filehame`。
+
+引数にハイフン`-`を指定すると標準入力から読み込み。
+
+キーワードは大文字小文字を区別する（keyword is case-sensitive.）
+
+- Usage
+    - `man2 filehame`
+    - `filehame -l <keyword> <templateFile> <insertFile>`
+- Examples
+    - `cat contents.md | pandoc | filehame -l KEYWORD template.html -`
+-Notes:
+    - Keyword is case-sensitive
+    - If you specify a hyphen `-` in the argument, it means read from stdin
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `filehame`
+
+Examples:
+
+Input files (`template.html`, `contents.md`):
+
+`template.html`
+
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="styles.css" media="screen" />
+  <link rel="stylesheet" href="styles.css" media="print" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=4.0, user-scalable=yes" />
+</head>
+<body>
+
+<!-- TEXTBODY -->
+
+</body>
+</html>
+```
+
+`contents.md`
+
+```markdown
+# contents
+
+hoge
+```
+
+Output:
+
+```powershell
+cat contents.md | pandoc -f markdown -t html5 | filehame -l TEXTBODY template.html -
+# Meaning:
+#   Insert pandoc-converted content into the line
+#   containing the keyword "TEXTBODY" in template.html
+```
+
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="styles.css" media="screen" />
+  <link rel="stylesheet" href="styles.css" media="print" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=4.0, user-scalable=yes" />
+</head>
+<body>
+
+<h1 id="contents">contents</h1>
+<p>hoge</p>
+
+</body>
+</html>
 ```
 
 
