@@ -130,10 +130,11 @@ function filehame {
             $readFlag = $True
             Get-Content -LiteralPath $templateFile -Encoding UTF8 `
                 | ForEach-Object {
-                    if( $_ -cmatch $LineText ){ $readFlag = $False }
+                    if( "$_".Contains($LineText) ){ $readFlag = $False }
                     if( $readFlag ){ Write-Output $_ }
                 }
             ## read all of insertFile
+            if ( $readFlag ){ Write-Error "Could not find $LineText" -ErrorAction Stop}
             Get-Content -LiteralPath $insertFile -Encoding UTF8 `
                 | ForEach-Object { Write-Output $_ }
             ## read last half of templateFile
@@ -141,7 +142,7 @@ function filehame {
             Get-Content -LiteralPath $templateFile -Encoding UTF8 `
                 | ForEach-Object {
                     if( $readFlag ){ Write-Output $_ }
-                    if( $_ -cmatch $LineText ){ $readFlag = $True }
+                    if( "$_".Contains($LineText) ){ $readFlag = $True }
                 }
             return
         }
@@ -151,17 +152,18 @@ function filehame {
             $readFlag = $True
             Get-Content -LiteralPath $templateFile -Encoding UTF8 `
                 | ForEach-Object {
-                    if( $_ -cmatch $LineText ){ $readFlag = $False }
+                    if( "$_".Contains($LineText) ){ $readFlag = $False }
                     if( $readFlag ){ Write-Output $_ }
                 }
             ## read all of insertFile
+            if ( $readFlag ){ Write-Error "Could not find $LineText" -ErrorAction Stop}
             $textAry | ForEach-Object { Write-Output $_ }
             ## read last half of templateFile
             $readFlag = $False
             Get-Content -LiteralPath $templateFile -Encoding UTF8 `
                 | ForEach-Object {
                     if( $readFlag ){ Write-Output $_ }
-                    if( $_ -cmatch $LineText){ $readFlag = $True }
+                    if( "$_".Contains($LineText) ){ $readFlag = $True }
                 }
                 return
         }
@@ -171,10 +173,11 @@ function filehame {
             $readFlag = $True
             $textAry `
                 | ForEach-Object {
-                    if( $_ -cmatch $LineText ){ $readFlag = $False }
+                    if( "$_".Contains($LineText) ){ $readFlag = $False }
                     if( $readFlag ){ Write-Output $_ }
                 }
             ## read all of insertFile
+            if ( $readFlag ){ Write-Error "Could not find $LineText" -ErrorAction Stop}
             Get-Content -LiteralPath $insertFile -Encoding UTF8 `
                 | ForEach-Object { Write-Output $_ }
             ## read last half of templateFile
@@ -182,7 +185,7 @@ function filehame {
             $textAry `
                 | ForEach-Object {
                   if( $readFlag ){ Write-Output $_ }
-                  if( $_ -cmatch $LineText ){ $readFlag = $True }
+                  if( "$_".Contains($LineText) ){ $readFlag = $True }
                 }
 
         }

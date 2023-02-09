@@ -3448,7 +3448,7 @@ ID0001:\nあああああ、\nいいいいい、\nううううう\r\n
     - `filehame -l <keyword> <templateFile> <insertFile>`
 - Examples
     - `cat contents.md | pandoc | filehame -l KEYWORD template.html -`
--Notes:
+- Notes:
     - Keyword is case-sensitive
     - If you specify a hyphen `-` in the argument, it means read from stdin
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
