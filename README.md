@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `filehame`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `i`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `logi2dot`, `logi2pu`, `man2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `filehame`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `i`, `image2md`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `linkextract`, `logi2dot`, `logi2pu`, `man2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
 
 Inspired by:
 
@@ -3537,6 +3537,83 @@ cat contents.md | pandoc -f markdown -t html5 | filehame -l TEXTBODY template.ht
     - Command: `Get-OGP (Alias: ml)`
 
 
+#### `image2md` - Convert image filename and alt text to markdown format
+
+画像ファイル名とaltテキストをマークダウン形式に変換する。
+
+```powershell
+"a.png alt text" | image2md
+![alt text](a.png)
+```
+
+最初のスペースまでの文字列を画像ファイル名、それ以降の文字列をaltテキストと認識する。
+したがって、画像ファイル名に空白文字を含んではいけない。
+
+筆者はマークダウン形式で画像ファイルを指定するとき、`[ ]`と`( )`のどっちが`alt`でどっちが`imagefile`なのか、いつもすぐに思い出せない。（`![alt](image.png)`？ or `!(alt)[image.png]`？）
+
+- Usage
+    - `man2 image2md`
+    - `image2md [[-Flat] <Int32>] [[-Option] <String>] [-Table] [-Hugo] [-Html] [-Markdownify] [-NoTableHeader] [[-Step] <Int32>] [[-StepString] <String>]`
+- Examples
+    - `"a.png alt text" | image2md`
+        - Output: `![alt text](a.png)`
+- Options:
+    - `-Flat <int>` : Specify number of columns
+    - `-Table` : Output in markdown table format
+    - `-Option "width=100"` : Specify table options
+        - Output: `![alt text](a.png){width=100}`
+    - `-Step <int>` : Insert a blank line after every specified number of lines
+    - `-Html and -Markdownify` : Convert alt text to markdown using pandoc
+
+
+Input:
+
+```powershell
+cat a.txt
+path/to/img.png alt text
+path/to/img.png alt text
+path/to/img.png alt text
+path/to/img.png alt text
+path/to/img.png alt text
+path/to/img.png alt text
+path/to/img.png alt text
+```
+
+Output:
+
+```markdown
+# cat a.md | image2md -Table -Flat 2 -Option 'width=100'
+| image | image |
+| :---: | :---: |
+| ![alt text](path/to/img.png){width=100} | ![alt text](path/to/img.png){width=100} |
+| ![alt text](path/to/img.png){width=100} | ![alt text](path/to/img.png){width=100} |
+| ![alt text](path/to/img.png){width=100} | ![alt text](path/to/img.png){width=100} |
+| ![alt text](path/to/img.png){width=100} |  |
+```
+
+```markdown
+# cat a.md | image2md -Step 2
+![alt text](path/to/img.png)
+![alt text](path/to/img.png)
+
+![alt text](path/to/img.png)
+![alt text](path/to/img.png)
+
+![alt text](path/to/img.png)
+![alt text](path/to/img.png)
+
+![alt text](path/to/img.png)
+```
+
+```markdown
+# cat a.md | image2md -Step 2 -Flat 3
+![alt text](path/to/img.png) ![alt text](path/to/img.png) ![alt text](path/to/img.png)
+![alt text](path/to/img.png) ![alt text](path/to/img.png) ![alt text](path/to/img.png)
+
+![alt text](path/to/img.png)
+```
+
+
 #### `table2md` - Convert tab and csv delimited tables to markdown table format
 
 tab区切り・csv区切りの表をmarkdown形式に変換する。
@@ -3592,6 +3669,124 @@ cat iris.csv | table2md -d "," -Units "CFU","kg" | head -n 7
 # Some columns with units are also right aligned. Units can be
 # specified with -Units "unit1", "unit2",....
 # (Default -Units " kg"," ml", " CFU", "RLU", etc...)
+```
+
+#### `linkextract` - Extract links from html
+
+引数に指定したuriやhtmlファイルから外部uriのリストを取得する。`-Uris`が"http" or "www."で始まる場合はuri、それ以外はhtmlファイルとして解釈する。
+
+パイプラインで後ろに`linkcheck`コマンドを連結すれば、サイトやhtmlファイルに記載された外部リンクの検出＆リンク切れチェックができる。
+
+- Usage
+    - `man2 linkextract`
+    - `linkextract [-Html] <String[]> [-ExcludeUris <Regex[]>] [-DelIndexHtml] [-AddUri]`
+- Operation
+    - For uri:
+        - `(Invoke-WebRequest $uri).Links.href`    
+    - For file:
+        - `$reg = [Regex]'href="(http|www\.)[^"]+"'`
+        - `$reg.Matches( $_ ) | ForEach-Object { $_.Value }`
+- Options:
+    - `-AddUri` : Outputs specified uri in the 1st column, the external uri in the 2nd column
+    - `-ExcludeUris <reg>,<reg>,...` : allows to specify links to exclude
+    - `-Recurse` is not implemented
+
+By piping to the `linkcheck` command, you can check link-alive.
+
+```powershell
+ls docs/*.html | linkextract | linkcheck -VerboseOutput
+ls docs/*.html | linkextract -AddUri | linkcheck -Header -VerboseOutput
+```
+
+If you specify a directory, search for the "index.html" under it.
+
+```powreshell    
+ls index.html -Recurse | Split-Path -Parent | linkextract -AddUri
+./docs/posts/haccp_7_principles https://pandoc.org/
+```
+
+Examples:
+
+```powershell
+linkextract index.html
+
+https://www.google.com/
+https://translate.google.co.jp/?hl=ja
+https://www.deepl.com/translator
+www.microsoft.com/unkownhost
+```
+
+```powershell
+linkextract index.html　-AddUri
+
+index.html https://www.google.com/
+index.html https://translate.google.co.jp/?hl=ja
+index.html https://www.deepl.com/translator
+index.html www.microsoft.com/unkownhost
+```
+
+```powershell
+linkextract ./docs/*.html
+
+https://www.google.com/
+https://translate.google.co.jp/?hl=ja
+https://www.deepl.com/translator
+www.microsoft.com/unkownhost
+```
+
+```powershell
+ls docs/*.html | linkextract | linkcheck
+No broken links.
+```
+
+```powershell
+ls docs/index.html | linkextract
+
+https://www.google.com/
+https://translate.google.co.jp/?hl=ja
+https://www.deepl.com/translator
+```
+
+```powershell
+ls docs/*.html | linkextract -AddUri
+
+./docs/index.html https://www.google.com/
+./docs/index.html https://translate.google.co.jp/?hl=ja
+./docs/index.html https://www.deepl.com/translator
+./docs/index.html https://pandoc.org/
+./docs/index.html https://www.tohoho-web.com/www.htm
+```
+
+```powershell
+ls docs/*.html | linkextract -AddUri | linkcheck -Header -VerboseOutput
+
+[ok] ./docs/index.html https://www.google.com/
+[ok] ./docs/index.html https://translate.google.co.jp/?hl=ja
+[ok] ./docs/index.html https://www.deepl.com/translator
+[ok] ./docs/index.html https://pandoc.org/
+[ok] ./docs/index.html https://www.tohoho-web.com/www.htm
+```
+
+```powershell
+linkcheck (linkextract index.html) -VerboseOutput
+
+[ok] https://www.google.com/
+[ok] https://translate.google.co.jp/?hl=ja
+[ok] https://www.deepl.com/translator
+[ok] https://pandoc.org/
+No broken links.
+```
+
+```powershell
+linkcheck (linkextractor a.html | sed 's;tra;hoge;') -VerboseOutput
+
+[ok] https://www.google.com/
+[ng] https://hogenslate.google.co.jp/?hl=ja
+[ng] https://www.deepl.com/hogenslator
+[ok] https://pandoc.org/
+Detect broken links.
+[ng] https://hogenslate.google.co.jp/?hl=ja
+[ng] https://www.deepl.com/hogenslator
 ```
 
 

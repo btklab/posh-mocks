@@ -59,7 +59,7 @@
 
     # Get-ChildItem <dir>
     i ./link/
-
+    i ./link/ | Format-Wide
     Mode         LastWriteTime Length Name
     ----         ------------- ------ ----
     -a---  2023/02/07    23:21    102 hoge.md
