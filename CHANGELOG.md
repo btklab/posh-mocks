@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `kinsoku`
 - Added `lcalc`
 - Added `linkcheck`
+- Added `linkextract`
 - Added `man2`
 - Added `gantt2pu`
 - Added `mind2dot`
@@ -71,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `tenki`
 - Added `sm2`
 - Added `table2md`
+- Added `image2md`
 - Added `tac`
 - Added `tail`
 - Added `tarr`
