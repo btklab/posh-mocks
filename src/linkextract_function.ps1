@@ -46,7 +46,7 @@
     www.microsoft.com/unkownhost
 
 .EXAMPLE
-    linkextract index.html　-AddUri
+    linkextract index.html -AddUri
     index.html https://www.google.com/
     index.html https://translate.google.co.jp/?hl=ja
     index.html https://www.deepl.com/translator
@@ -94,7 +94,7 @@
     No broken links.
 
 .EXAMPLE
-    linkcheck (linkextractor a.html | sed 's;tra;hoge;') -VerboseOutput
+    linkcheck (linkextract a.html | sed 's;tra;hoge;') -VerboseOutput
     [ok] https://www.google.com/
     [ng] https://hogenslate.google.co.jp/?hl=ja
     [ng] https://www.deepl.com/hogenslator

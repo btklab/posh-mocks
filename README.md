@@ -3673,7 +3673,7 @@ cat iris.csv | table2md -d "," -Units "CFU","kg" | head -n 7
 
 #### `linkextract` - Extract links from html
 
-引数に指定したuriやhtmlファイルから外部uriのリストを取得する。`-Uris`が"http" or "www."で始まる場合はuri、それ以外はhtmlファイルとして解釈する。
+引数に指定したuriやhtmlファイルから外部uriのリストを取得する。`-Uris`が`http` or `www`で始まる場合はuri、それ以外はhtmlファイルとして解釈する。
 
 パイプラインで後ろに`linkcheck`コマンドを連結すれば、サイトやhtmlファイルに記載された外部リンクの検出＆リンク切れチェックができる。
 
@@ -3684,8 +3684,7 @@ cat iris.csv | table2md -d "," -Units "CFU","kg" | head -n 7
     - For uri:
         - `(Invoke-WebRequest $uri).Links.href`    
     - For file:
-        - `$reg = [Regex]'href="(http|www\.)[^"]+"'`
-        - `$reg.Matches( $_ ) | ForEach-Object { $_.Value }`
+        - `$reg = [Regex]'href="(http|www\.)[^"]+"'`<br />`$reg.Matches( $_ ) | ForEach-Object { $_.Value }`
 - Options:
     - `-AddUri` : Outputs specified uri in the 1st column, the external uri in the 2nd column
     - `-ExcludeUris <reg>,<reg>,...` : allows to specify links to exclude
@@ -3717,7 +3716,7 @@ www.microsoft.com/unkownhost
 ```
 
 ```powershell
-linkextract index.html　-AddUri
+linkextract index.html -AddUri
 
 index.html https://www.google.com/
 index.html https://translate.google.co.jp/?hl=ja
@@ -3778,7 +3777,7 @@ No broken links.
 ```
 
 ```powershell
-linkcheck (linkextractor a.html | sed 's;tra;hoge;') -VerboseOutput
+linkcheck (linkextract a.html | sed 's;tra;hoge;') -VerboseOutput
 
 [ok] https://www.google.com/
 [ng] https://hogenslate.google.co.jp/?hl=ja
