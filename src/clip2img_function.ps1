@@ -110,20 +110,20 @@ function clip2img {
         ## save as image file
         $clipImage.Save($saveFilePath)
         Get-Item $saveFilePath
+        if ($Clip){
+            Get-ChildItem -LiteralPath $saveFilePath -Name | Set-Clipboard
+        }
+        if ($DirView){
+            Invoke-Item "$outputDir"
+        }
         if ($View) {
             Invoke-Item $saveFilePath
         }elseif ($MSPaint){
             if ($IsWindows){
-                 & "${HOME}\AppData\Local\Microsoft\WindowsApps\mspaint.exe" "$saveFilePath"
+                 Start-Process -FilePath "${HOME}\AppData\Local\Microsoft\WindowsApps\mspaint.exe" -ArgumentList "$saveFilePath"
             } else {
                 Invoke-Item "$saveFilePath"
             }
-        }
-        if ($Clip){
-            Get-ChildItem -LiteralPath $saveFileName -Name | Set-Clipboard
-        }
-        if ($DirView){
-            Invoke-Item "$outputDir"
         }
     } else {
         Write-Error "No image in clip board." -ErrorAction Stop
