@@ -43,21 +43,21 @@
     https://www.google.com/
     https://translate.google.co.jp/?hl=ja
     https://www.deepl.com/translator
-    www.microsoft.com/unkownhost
+    www.microsoft.com/unknownhost
 
 .EXAMPLE
-    linkextract index.html　-AddUri
+    linkextract index.html -AddUri
     index.html https://www.google.com/
     index.html https://translate.google.co.jp/?hl=ja
     index.html https://www.deepl.com/translator
-    index.html www.microsoft.com/unkownhost
+    index.html www.microsoft.com/unknownhost
 
 .EXAMPLE
     linkextract ./docs/*.html
     https://www.google.com/
     https://translate.google.co.jp/?hl=ja
     https://www.deepl.com/translator
-    www.microsoft.com/unkownhost
+    www.microsoft.com/unknownhost
 
 .EXAMPLE
     ls docs/*.html | linkextract | linkcheck
@@ -68,7 +68,7 @@
     https://www.google.com/
     https://translate.google.co.jp/?hl=ja
     https://www.deepl.com/translator
-    www.microsoft.com/unkownhost
+    www.microsoft.com/unknownhost
 
 .EXAMPLE
     ls docs/*.html | linkextract -AddUri
@@ -94,7 +94,7 @@
     No broken links.
 
 .EXAMPLE
-    linkcheck (linkextractor a.html | sed 's;tra;hoge;') -VerboseOutput
+    linkcheck (linkextract a.html | sed 's;tra;hoge;') -VerboseOutput
     [ok] https://www.google.com/
     [ng] https://hogenslate.google.co.jp/?hl=ja
     [ng] https://www.deepl.com/hogenslator

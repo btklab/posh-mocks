@@ -22,10 +22,10 @@
     
     Output example:
     Case: -Header is specified
-    [ng] index.html www.microsoft.com/unkownhost
+    [ng] index.html www.microsoft.com/unknownhost
 
     Case: -Header is not specified:
-    [ng] www.microsoft.com/unkownhost
+    [ng] www.microsoft.com/unknownhost
 
 .PARAMETER VerboseOutput
     Regardless of errors, all input with [ng] or [ok] tag.
@@ -38,47 +38,47 @@
 .EXAMPLE
     cat uri-list.txt
     https://www.example.com/
-    www.microsoft.com/unkownhost
+    www.microsoft.com/unknownhost
 
-    linkcheck www.microsoft.com/unkownhost
+    linkcheck www.microsoft.com/unknownhost
     Detect broken links.
-    [ng] www.microsoft.com/unkownhost
+    [ng] www.microsoft.com/unknownhost
 
 .EXAMPLE
     cat uri-list.txt | linkcheck
     Detect broken links.
-    [ng] www.microsoft.com/unkownhost
+    [ng] www.microsoft.com/unknownhost
 
 .EXAMPLE
     linkcheck (cat uri-list.txt) -WaitSeconds 1
     Detect broken links.
-    [ng] www.microsoft.com/unkownhost
+    [ng] www.microsoft.com/unknownhost
 
 .EXAMPLE
     linkcheck (cat uri-list.txt) -VerboseOutput
     [ok] https://www.example.com/
-    [ng] www.microsoft.com/unkownhost
+    [ng] www.microsoft.com/unknownhost
     Detect broken links.
-    [ng] www.microsoft.com/unkownhost
+    [ng] www.microsoft.com/unknownhost
 
 .EXAMPLE
-    $uAry = @("https://www.example.com/","www.microsoft.com/unkownhost")
+    $uAry = @("https://www.example.com/","www.microsoft.com/unknownhost")
     linkcheck $uAry -VerboseOutput
 
     [ok] https://www.example.com/
-    [ng] www.microsoft.com/unkownhost
+    [ng] www.microsoft.com/unknownhost
     Detect broken links.
-    [ng] www.microsoft.com/unkownhost
+    [ng] www.microsoft.com/unknownhost
 
 .EXAMPLE
     cat uri-list.txt
     a.html https://www.example.com/
-    a.html www.microsoft.com/unkownhost
+    a.html www.microsoft.com/unknownhost
 
     cat uri-list.txt | linkcheck
     Detect broken links.
     [ng] a.html https://www.example.com/
-    [ng] a.html www.microsoft.com/unkownhost
+    [ng] a.html www.microsoft.com/unknownhost
 
 #>
 function linkcheck {

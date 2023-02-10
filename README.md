@@ -3673,7 +3673,7 @@ cat iris.csv | table2md -d "," -Units "CFU","kg" | head -n 7
 
 #### `linkextract` - Extract links from html
 
-引数に指定したuriやhtmlファイルから外部uriのリストを取得する。`-Uris`が"http" or "www."で始まる場合はuri、それ以外はhtmlファイルとして解釈する。
+引数に指定したuriやhtmlファイルから外部uriのリストを取得する。`-Uris`が`http` or `www`で始まる場合はuri、それ以外はhtmlファイルとして解釈する。
 
 パイプラインで後ろに`linkcheck`コマンドを連結すれば、サイトやhtmlファイルに記載された外部リンクの検出＆リンク切れチェックができる。
 
@@ -3684,8 +3684,7 @@ cat iris.csv | table2md -d "," -Units "CFU","kg" | head -n 7
     - For uri:
         - `(Invoke-WebRequest $uri).Links.href`    
     - For file:
-        - `$reg = [Regex]'href="(http|www\.)[^"]+"'`
-        - `$reg.Matches( $_ ) | ForEach-Object { $_.Value }`
+        - `$reg = [Regex]'href="(http|www\.)[^"]+"'`<br />`$reg.Matches( $_ ) | ForEach-Object { $_.Value }`
 - Options:
     - `-AddUri` : Outputs specified uri in the 1st column, the external uri in the 2nd column
     - `-ExcludeUris <reg>,<reg>,...` : allows to specify links to exclude
@@ -3713,16 +3712,16 @@ linkextract index.html
 https://www.google.com/
 https://translate.google.co.jp/?hl=ja
 https://www.deepl.com/translator
-www.microsoft.com/unkownhost
+www.microsoft.com/unknownhost
 ```
 
 ```powershell
-linkextract index.html　-AddUri
+linkextract index.html -AddUri
 
 index.html https://www.google.com/
 index.html https://translate.google.co.jp/?hl=ja
 index.html https://www.deepl.com/translator
-index.html www.microsoft.com/unkownhost
+index.html www.microsoft.com/unknownhost
 ```
 
 ```powershell
@@ -3731,7 +3730,7 @@ linkextract ./docs/*.html
 https://www.google.com/
 https://translate.google.co.jp/?hl=ja
 https://www.deepl.com/translator
-www.microsoft.com/unkownhost
+www.microsoft.com/unknownhost
 ```
 
 ```powershell
@@ -3778,7 +3777,7 @@ No broken links.
 ```
 
 ```powershell
-linkcheck (linkextractor a.html | sed 's;tra;hoge;') -VerboseOutput
+linkcheck (linkextract a.html | sed 's;tra;hoge;') -VerboseOutput
 
 [ok] https://www.google.com/
 [ng] https://hogenslate.google.co.jp/?hl=ja
@@ -3798,30 +3797,30 @@ Detect broken links.
     - `man2 linkcheck`
     - `linkcheck [-Uris] <String[]> [-Header] [-WaitSeconds <Int32>] [-VerboseOutput]`
 - Examples
-    - `"https://www.example.com/", "www.microsoft.com/unkownhost" | linkcheck`
+    - `"https://www.example.com/", "www.microsoft.com/unknownhost" | linkcheck`
 
 
 Examples:
 
 ```powershell
 # basic usage
-"https://www.example.com/", "www.microsoft.com/unkownhost" | linkcheck
+"https://www.example.com/", "www.microsoft.com/unknownhost" | linkcheck
 Detect broken links.
-[ng] www.microsoft.com/unkownhost
+[ng] www.microsoft.com/unknownhost
 
 # verbose output
-"https://www.example.com/", "www.microsoft.com/unkownhost" | linkcheck -VerboseOutput
+"https://www.example.com/", "www.microsoft.com/unknownhost" | linkcheck -VerboseOutput
 [ok] https://www.example.com/
-[ng] www.microsoft.com/unkownhost
+[ng] www.microsoft.com/unknownhost
 Detect broken links.
-[ng] www.microsoft.com/unkownhost
+[ng] www.microsoft.com/unknownhost
 
 # filename and uri
-"a.html https://www.example.com/", "m.html www.microsoft.com/unkownhost" | linkcheck -Header -VerboseOutput
+"a.html https://www.example.com/", "m.html www.microsoft.com/unknownhost" | linkcheck -Header -VerboseOutput
 [ok] a.html https://www.example.com/
-[ng] m.html www.microsoft.com/unkownhost
+[ng] m.html www.microsoft.com/unknownhost
 Detect broken links in m.html
-[ng] m.html www.microsoft.com/unkownhost
+[ng] m.html www.microsoft.com/unknownhost
 ```
 
 
