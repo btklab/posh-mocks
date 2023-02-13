@@ -44,6 +44,8 @@ if ($IsWindows){
 . $pwshSrcDir/keta_function.ps1
 . $pwshSrcDir/self_function.ps1
 . $pwshSrcDir/delf_function.ps1
+. $pwshSrcDir/sm2_function.ps1
+. $pwshSrcDir/map2_function.ps1
 . $pwshSrcDir/gyo_function.ps1
 . $pwshSrcDir/tateyoko_function.ps1
 . $pwshSrcDir/fillretu_function.ps1
