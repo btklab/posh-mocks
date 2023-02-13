@@ -190,7 +190,7 @@ function conv {
                 $writeLineAry += [string] $rowCounter
             }
             if ( $NumberOfField ){
-                $writeLineAry += 0
+                $writeLineAry += '0'
             }
             if ( $writeLineAry.Count -gt 0){
                 $writeLineAry += ''
