@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `filehame`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `i`, `image2md`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `linkextract`, `logi2dot`, `logi2pu`, `man2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `filehame`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `i`, `image2md`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `linkextract`, `logi2dot`, `logi2pu`, `man2`, `map2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
 
 Inspired by:
 
@@ -963,6 +963,96 @@ C 1 10
 1 B 1 10 10
 1 C 1 10 10
 ```
+
+#### `map2` - Cross tabulation of long-type data
+
+半角スペース区切りのロング型データをクロス集計する。入力データはヘッダなし、かつ、キーが事前に一意に集計されていること。
+
+Input data must be preprocessed to ensure unique keys and no header line.
+
+- Usage
+    - `man2 map2`
+    - `map2 -n <n>[,<m>]`
+        - e.g. `map2 -n 2,1` means: Cross tablate the `2` columns from the left as vertical-key, `1` column as horizontal-key, and the `rest` as value fields
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `map`
+
+Examples:
+
+値列が1列のみの場合。
+
+```powershell
+# Input data example1:
+# (Case: vkey1, vkey2, hkey, value)
+
+cat data.txt
+location-A store-A target-A 1
+location-A store-B target-B 2
+location-A store-C target-C 3
+location-B store-A target-A 4
+location-B store-B target-B 5
+location-B store-C target-C 6
+location-C store-A target-A 7
+location-C store-B target-B 8
+location-C store-C target-C 9
+
+cat data.txt | map2 -n 2,1 | keta
+         *       * target-A target-B target-C
+location-A store-A        1        0        0
+location-A store-B        0        2        0
+location-A store-C        0        0        3
+location-B store-A        4        0        0
+location-B store-B        0        5        0
+location-B store-C        0        0        6
+location-C store-A        7        0        0
+location-C store-B        0        8        0
+location-C store-C        0        0        9
+
+cat data.txt | map2 -n 1,2 | keta
+         *  store-A  store-B  store-C
+         * target-A target-B target-C
+location-A        1        2        3
+location-B        4        5        6
+location-C        7        8        9
+```
+
+値列が複数列の場合。
+
+```powershell
+# Input data example2:
+# (Case: vkey, hkey, value1, value2)
+
+cat data.txt
+loc-1 tar-1 1 10
+loc-1 tar-2 2 20
+loc-1 tar-3 3 30
+loc-2 tar-1 4 40
+loc-2 tar-2 5 50
+loc-2 tar-3 6 60
+loc-3 tar-1 7 70
+loc-3 tar-2 8 80
+loc-3 tar-3 9 90
+
+# ("A".."Z" is given according to the number of value-columns)
+cat data.txt | map2 -n 1,1 -ifs " " -ofs "`t"
+*       *       tar-1   tar-2   tar-3
+loc-1   A       1       2       3
+loc-1   B       10      20      30
+loc-2   A       4       5       6
+loc-2   B       40      50      60
+loc-3   A       7       8       9
+loc-3   B       70      80      90
+
+# -yarr switch
+cat data.txt | map2 -n 1,1 -ifs " " -ofs "`t" -yarr
+*       tar-1   tar-1   tar-2   tar-2   tar-3   tar-3
+*       a       b       a       b       a       b
+loc-1   1       10      2       20      3       30
+loc-2   4       40      5       50      6       60
+loc-3   7       70      8       80      9       90
+```
+
 
 
 #### `lcalc` - Column-to-column calculator

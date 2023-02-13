@@ -71,6 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `i`
 - Added `tenki`
 - Added `sm2`
+- Added `map2`
 - Added `table2md`
 - Added `image2md`
 - Added `tac`

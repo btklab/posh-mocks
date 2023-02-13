@@ -68,16 +68,18 @@ function flat {
         } else {
             [bool] $flatFlag = $False
         }
-        # set input delimiter
-        if ($InputDelimiter){
+        # set input/output delimiter
+        if ( $InputDelimiter -and $OutputDelimiter ){
             [string] $iDelim = $InputDelimiter
-        } else {
+            [string] $oDelim = $OutputDelimiter
+        } elseif ( $InputDelimiter ){
+            [string] $iDelim = $InputDelimiter
+            [string] $oDelim = $InputDelimiter
+        } elseif ( $OutputDelimiter ){
             [string] $iDelim = $Delimiter
-        }
-        # set output delimiter
-        if ($OutputDelimiter){
             [string] $oDelim = $OutputDelimiter
         } else {
+            [string] $iDelim = $Delimiter
             [string] $oDelim = $Delimiter
         }
         # test is iDelim -eq ''?
