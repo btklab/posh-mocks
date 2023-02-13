@@ -15,7 +15,6 @@
         Tab, LineFeed.
 
             sed "s;`t;,;g"  : replace tab to comma
-            sed "s;`r`n;;g" : remove CrLf
 
         The second character from the left of the statement is
         taken as the delimiter between the pattern and the
@@ -55,9 +54,6 @@
 
     # delete tab (use double quote)
     cat a.txt | sed "s;`t;;g"
-
-    # replace CrLf to space (use double quote)
-    cat a.txt | sed "s;`r`n; ;g"
 
 .EXAMPLE
     # print mode

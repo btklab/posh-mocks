@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `filehame`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `i`, `image2md`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `linkextract`, `logi2dot`, `logi2pu`, `man2`, `map2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `conv`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `filehame`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `i`, `image2md`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `linkextract`, `logi2dot`, `logi2pu`, `man2`, `map2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
 
 Inspired by:
 
@@ -157,8 +157,8 @@ a2b1c1
 # delete tab (use double quote)
 cat a.txt | sed "s;`t;;g"
 
-# replace CrLf to space (use double quote)
-cat a.txt | sed "s;`r`n; ;g"
+# replace CrLf to space
+(cat a.txt) -join ""
 ```
 
 ```powershell
@@ -190,10 +190,10 @@ ccc
 ddd
 eee
 
-    # Delete between "bbb" and "ddd"
-    $dat | sed 'p;^bbb;^ddd;'
-    aaa
-    eee
+# Delete between "bbb" and "ddd"
+$dat | sed 'p;^bbb;^ddd;'
+aaa
+eee
 ```
 
 #### `sed-i` - Edit files in place
@@ -2012,6 +2012,87 @@ eo
 - Inspired by [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
     - License: The MIT License (MIT): Copyright (c) 2016 Yasuhiro, Yamada
     - Command: `addt`, `addb`, `addr`, `addl`
+
+
+#### `conv` - Convolution operation or find N-gram of text
+
+入力行を任意列数ごとに畳み込み演算（convolution）のように折り返す。
+文章のN-gramを求める。
+
+Convolution operation with the specified number of columns 
+for each input record. Instead of just wrapping lines, each
+lines shifts the previous line to the left by one element.
+
+Default field separator is space.
+    
+
+- Usage
+    - `man2 conv`
+    - `conv <num> [-fs DELIMITER] [-r] [-f]`
+- Option
+    - `-r` : output number of records(rows) in the left column
+    - `-f` : output number of fields(columns) in the left column
+    - `-fs` : input/output field separator
+    - `-ifs` : input field separator
+    - `-ofs` : output field separator
+    - `-nfs` : field separator for only "-r" and "-f" option
+- Examples
+    - `@(1..10) -join " " | conv 3`
+    - `"にわにはにわにわとりがいる" | conv -fs '' 2`
+        - N-gram of text
+- Inspired by [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
+    - License: The MIT License (MIT): Copyright (c) 2016 Yasuhiro, Yamada
+    - Command: `conv`
+
+Examples:
+
+convolution operation
+
+```powershell
+@(1..10) -join " " | conv 3
+# or 1..10 | flat | conv 3
+1 2 3
+2 3 4
+3 4 5
+4 5 6
+5 6 7
+6 7 8
+7 8 9
+8 9 10
+```
+
+N-gram of text
+
+```powershell
+Write-Output "にわにはにわにわとりがいる" | conv -fs '' 2
+にわ
+わに
+には
+はに
+にわ
+わに
+にわ
+わと
+とり
+りが
+がい
+いる
+
+# output -n (NumOfRecord), and -f (NumOfFiild)
+Write-Output "にわにはにわにわとりがいる" | conv -fs '' 2 -r -f
+1 1 にわ
+1 2 わに
+1 3 には
+1 4 はに
+1 5 にわ
+1 6 わに
+1 7 にわ
+1 8 わと
+1 9 とり
+1 10 りが
+1 11 がい
+1 12 いる
+```
 
 
 #### `keta` - Padding per columns
