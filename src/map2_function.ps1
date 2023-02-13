@@ -89,61 +89,61 @@
     # Input data example1: (Case: vkey1, vkey2, hkey, value)
 
     cat data.txt
-    location-A store-A target-A 1
-    location-A store-B target-B 2
-    location-A store-C target-C 3
-    location-B store-A target-A 4
-    location-B store-B target-B 5
-    location-B store-C target-C 6
-    location-C store-A target-A 7
-    location-C store-B target-B 8
-    location-C store-C target-C 9
+    loc-A store-A tar-A 1
+    loc-A store-B tar-B 2
+    loc-A store-C tar-C 3
+    loc-B store-A tar-A 4
+    loc-B store-B tar-B 5
+    loc-B store-C tar-C 6
+    loc-C store-A tar-A 7
+    loc-C store-B tar-B 8
+    loc-C store-C tar-C 9
     
     # Output:
     cat data.txt | map2 -n 2,1 | keta
-             *       * target-A target-B target-C
-    location-A store-A        1        0        0
-    location-A store-B        0        2        0
-    location-A store-C        0        0        3
-    location-B store-A        4        0        0
-    location-B store-B        0        5        0
-    location-B store-C        0        0        6
-    location-C store-A        7        0        0
-    location-C store-B        0        8        0
-    location-C store-C        0        0        9
+        *       * tar-A tar-B tar-C
+    loc-A store-A     1     0     0
+    loc-A store-B     0     2     0
+    loc-A store-C     0     0     3
+    loc-B store-A     4     0     0
+    loc-B store-B     0     5     0
+    loc-B store-C     0     0     6
+    loc-C store-A     7     0     0
+    loc-C store-B     0     8     0
+    loc-C store-C     0     0     9
 
 .EXAMPLE
     # Input data example2: (Case: vkey, hkey, value1, value2)
 
     cat data.txt
-    location-1 target-1 1 10
-    location-1 target-2 2 20
-    location-1 target-3 3 30
-    location-2 target-1 4 40
-    location-2 target-2 5 50
-    location-2 target-3 6 60
-    location-3 target-1 7 70
-    location-3 target-2 8 80
-    location-3 target-3 9 90
+    loc-1 tar-1 1 10
+    loc-1 tar-2 2 20
+    loc-1 tar-3 3 30
+    loc-2 tar-1 4 40
+    loc-2 tar-2 5 50
+    loc-2 tar-3 6 60
+    loc-3 tar-1 7 70
+    loc-3 tar-2 8 80
+    loc-3 tar-3 9 90
 
     # Output: ("A".."Z" is given according to the number of value-columns)
 
     cat data.txt | map2 -n 1,1 | keta
 
-             * * target-1 target-2 target-3
-    location-1 A        1        2        3
-    location-1 B       10       20       30
-    location-2 A        4        5        6
-    location-2 B       40       50       60
-    location-3 A        7        8        9
-    location-3 B       70       80       90
+        * * tar-1 tar-2 tar-3
+    loc-1 A     1     2     3
+    loc-1 B    10    20    30
+    loc-2 A     4     5     6
+    loc-2 B    40    50    60
+    loc-3 A     7     8     9
+    loc-3 B    70    80    90
 
     cat data.txt | map2 -n 1,1 -yarr | keta
-             * target-1 target-1 target-2 target-2 target-3 target-3
-             *        a        b        a        b        a        b
-    location-1        1       10        2       20        3       30
-    location-2        4       40        5       50        6       60
-    location-3        7       70        8       80        9       90
+        * tar-1 tar-1 tar-2 tar-2 tar-3 tar-3
+        *     a     b     a     b     a     b
+    loc-1     1    10     2    20     3    30
+    loc-2     4    40     5    50     6    60
+    loc-3     7    70     8    80     9    90
 
 #>
 function map2 {
@@ -184,17 +184,19 @@ function map2 {
     ## if only <n> is specified, set <m> = 1
     if($Num.Count -eq 1){$Num += ,1}
 
-    # set input delimiter
-    if ($InputDelimiter){
-        [string] $iDelim = $InputDelimiter
+    # set input/output delimiter
+    if ( $InputDelimiter -and $OutputDelimiter ){
+      [string] $iDelim = $InputDelimiter
+      [string] $oDelim = $OutputDelimiter
+    } elseif ( $InputDelimiter ){
+      [string] $iDelim = $InputDelimiter
+      [string] $oDelim = $InputDelimiter
+    } elseif ( $OutputDelimiter ){
+      [string] $iDelim = $Delimiter
+      [string] $oDelim = $OutputDelimiter
     } else {
-        [string] $iDelim = $Delimiter
-    }
-    # set output delimiter
-    if ($OutputDelimiter){
-        [string] $oDelim = $OutputDelimiter
-    } else {
-        [string] $oDelim = $Delimiter
+      [string] $iDelim = $Delimiter
+      [string] $oDelim = $Delimiter
     }
     # test is iDelim -eq ''?
     if ($iDelim -eq ''){
