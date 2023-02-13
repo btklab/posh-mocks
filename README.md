@@ -157,8 +157,8 @@ a2b1c1
 # delete tab (use double quote)
 cat a.txt | sed "s;`t;;g"
 
-# replace CrLf to space (use double quote)
-cat a.txt | sed "s;`r`n; ;g"
+# replace CrLf to space
+(cat a.txt) -join ""
 ```
 
 ```powershell
@@ -190,10 +190,10 @@ ccc
 ddd
 eee
 
-    # Delete between "bbb" and "ddd"
-    $dat | sed 'p;^bbb;^ddd;'
-    aaa
-    eee
+# Delete between "bbb" and "ddd"
+$dat | sed 'p;^bbb;^ddd;'
+aaa
+eee
 ```
 
 #### `sed-i` - Edit files in place
