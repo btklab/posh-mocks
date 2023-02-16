@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `conv`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `filehame`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `i`, `image2md`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `linkextract`, `logi2dot`, `logi2pu`, `man2`, `map2`, `mind2dot`, `mind2pu`, `nextyear`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `conv`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `filehame`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `i`, `image2md`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `linkextract`, `logi2dot`, `logi2pu`, `man2`, `map2`, `mind2dot`, `mind2pu`, `nextyear`, `Override-Yaml`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
 
 Inspired by:
 
@@ -4068,6 +4068,260 @@ bumon-C tank    17:46 2017/05/10        fuga    fuga
 説明
 =============
 空行区切りレコードをタブ区切りに変換
+```
+
+
+#### `Override-Yaml` - Override external yaml in markdown yaml
+
+Markdownファイルのyamlヘッダに外部yamlヘッダのアイテムを追加する。
+キーが重複した場合はmarkdownファイルのyamlデータが優先される。
+
+yamlデータの共用可能部分を外部ファイル化することで、markdownファイルに書かれる記事固有のyamlセッティングを最小限ですませられる。
+
+markdownに記述するyamlは単行のみとする。
+
+- Usage
+    - `man2 Override-Yaml`
+    - `Override-Yaml [-Yaml] <String> [[-Settings] <String[]>] [-Footers <String[]>]`
+- Options
+    - `-Settings <file>,<file>,...` : Load external files right after yaml header
+    - `-Footers <file>,<file>,...` : Load external files at the end of the content
+
+- Examples
+    - `cat a.md | Override-Yaml a.yaml -Settings chunk.R`
+
+Input1: markdown (simple yaml!)
+
+```markdown
+---
+title: Override-Title
+subtitle: Override-Subtitle
+author: ["btklab1", "btklab2"]
+date: Override-Date
+---
+
+## hoge
+
+fuga
+```
+
+Input2: yaml (complex and too long)
+
+```yaml
+title: "title"
+author: hoge
+lang: ja
+date: 2022-05-12
+date-format: "YYYY-M-D (ddd)"
+citation:
+  url: https://example.com/summarizing-output
+abstract: "abstract"
+...
+```
+
+Output: Override markdown yaml with external yaml
+
+```powershell
+cat a.md
+```
+
+```markdown
+---
+title: Override-Title
+subtitle: Override-Subtitle
+author: ["btklab1", "btklab2"]
+date: Override-Date
+---
+```
+
+```powreshell
+cat a.md | Override-Yaml a.yaml | head
+---
+subtitle: Override-Subtitle
+title: Override-Title
+author: ["btklab1", "btklab2"]
+lang: ja
+date: Override-Date
+date-format: "YYYY-M-D (ddd)"
+citation:
+  url: https://example.com/
+abstract: "abstract"
+...
+```
+
+More example: Too long yaml and Rmarkdown chunk
+
+```powershell
+cat a.md | Override-Yaml a.yaml -Settings chunk.R
+```
+
+```
+---
+subtitle: Override-Subtitle
+title: Override-Title
+author: ["btklab1", "btklab2"]
+lang: ja
+date: Override-Date
+date-format: "YYYY-M-D (ddd)"
+citation:
+  url: https://example.com/
+abstract: "abstract"
+format:
+  html:
+    minimal: false
+    code-fold: true
+    toc: true
+    #toc-depth: 2
+    #number-sections: true
+    #number-depth: 3
+    fig-width: 5
+    #fig-height: 4
+    #standalone: true
+    #self-contained: true
+    citations-hover: true
+    footnotes-hover: true
+    link-external-newwindow: true
+    theme:
+      light: cosmo
+      dark: darkly
+    #include-in-header: ../../quarto-header.html
+    include-before-body: ../../quarto-before.html
+    include-after-body: ../../quarto-footer.html
+    #html-math-method:
+    #  method: mathjax
+    #  url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    css: ../../quarto-styles.css
+    fontsize: 1.0em
+    #fig-cap-location: margin
+    #tbl-cap-location: margin
+    # ref:[document | section | block | margin ]
+    # cit:[document | margin ]
+    reference-location: margin
+    citation-location: margin
+    default-image-extension: svg
+  pdf:
+    documentclass: bxjsarticle
+    classoption:
+      - pandoc
+      - ja=standard
+      - jafont=haranoaji
+      #- twocolumn
+      #- landscape
+      #- everyparhook=compat
+    include-in-header:
+      - ../../quarto-preamble.tex
+    #include-before-body: quarto-before.tex
+    #include-after-body: quarto-after.tex
+    #papersize: a4
+    #toc: true
+    toc-depth: 1
+    toc-title: もくじ
+    number-sections: true
+    #number-depth: 3
+    #lof: true
+    #lot: true
+    #fig-width: 3
+    #fig-height: 2
+    fig-pos: 'H'
+    colorlinks: true
+    #pagestyle: headings
+    geometry:
+      - top=20mm
+      - bottom=20mm
+      #- right=20mm
+      #- left=20mm
+      - right=45mm
+      - left=25mm
+      #- heightrounded
+      #- showframe
+    #cite-method: biblatex
+    #keep-tex: true
+    #fig-cap-location: margin
+    #tbl-cap-location: margin
+    # ref:[document | section | block | margin ]
+    # cit:[document | margin ]
+    reference-location: margin
+    citation-location: document
+    default-image-extension: pdf
+  #docx:
+  #  toc: false
+pdf-engine: lualatex
+#bibliography: ../../quarto-bib.bib
+#jupyter: python3
+#execute:
+#  echo: false
+#code-fold: true
+#code-summary: "Show the code"
+highlight-style: github
+shortcodes:
+  - ../../quarto-shortcode-ruby.lua
+  - ../../quarto-shortcode-color.lua
+  - ../../quarto-shortcode-imgr.lua
+title-block-banner: true
+crossref:
+  fig-title: 図
+  tbl-title: 表
+  title-delim: ":"
+  fig-prefix: 図
+  tbl-prefix: 表
+  ref-hyperlink: false
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(tidyr)
+library(ggplot2)
+
+## Global options
+opts_chunk$set(
+  echo=FALSE,
+  fig.align = "center",
+  fig.dim=c(),
+  cache=TRUE,
+  prompt=FALSE,
+  tidy=FALSE,
+  comment="##",
+  message=FALSE,
+  warning=FALSE)
+opts_knit$set(aliases=c(
+    h="fig.height",
+    w="fig.width",
+    c="fig.cap"))
+
+## Functions
+color <- function(col, str) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{%s}", col, str)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'>%s</span>", col, str)
+  } else str
+}
+ruby <- function(str, rub) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\ruby{%s}{%s}", str, rub)
+  } else if (knitr::is_html_output()) {
+    sprintf("<ruby><rb>%s</rb><rt>%s</rt></ruby>", str, rub)
+  } else str
+}
+insert_pdf <- function(file='index.pdf') {
+  if (knitr::is_html_output()) {
+    sprintf("- [PDFで見る](%s)", file)
+  }
+}
+img <- function(file, alt='') {
+  if (knitr::is_html_output()) {
+    sprintf("![%s](%s.svg)", alt, file)
+  } else if (knitr::is_latex_output()) {
+    sprintf("![%s](%s.pdf)", alt, file)
+  } else if (knitr::pandoc_to('docx')){
+    sprintf("![%s](%s.svg)", alt, file)
+  }
+}
+```
+
+## hoge
+
+fuga
 ```
 
 

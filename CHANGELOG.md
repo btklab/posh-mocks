@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `flat`
 - Added `fwatch`
 - Added `Get-OGP(Alias:ml)`
+- Added `Override-Yaml`
 - Added `getfirst`
 - Added `getlast`
 - Added `grep`
