@@ -4121,18 +4121,6 @@ abstract: "abstract"
 
 Output: Override markdown yaml with external yaml
 
-```powershell
-cat a.md
-```
-
-```markdown
----
-title: Override-Title
-subtitle: Override-Subtitle
-author: ["btklab1", "btklab2"]
-date: Override-Date
----
-```
 
 ```powreshell
 cat a.md | Override-Yaml a.yaml | head
@@ -4150,6 +4138,20 @@ abstract: "abstract"
 ```
 
 More example: Too long yaml and Rmarkdown chunk
+
+```powershell
+cat a.md
+```
+
+```markdown
+---
+title: Override-Title
+subtitle: Override-Subtitle
+author: ["btklab1", "btklab2"]
+date: Override-Date
+---
+```
+
 
 ```powershell
 cat a.md | Override-Yaml a.yaml -Settings chunk.R
