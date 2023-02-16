@@ -4157,7 +4157,7 @@ date: Override-Date
 cat a.md | Override-Yaml a.yaml -Settings chunk.R
 ```
 
-```
+````
 ---
 subtitle: Override-Subtitle
 title: Override-Title
@@ -4324,7 +4324,7 @@ img <- function(file, alt='') {
 ## hoge
 
 fuga
-```
+````
 
 
 ### csv / toml / json handling
