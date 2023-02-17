@@ -4076,9 +4076,10 @@ bumon-C tank    17:46 2017/05/10        fuga    fuga
 Markdownファイルのyamlヘッダに外部yamlヘッダのアイテムを追加する。
 キーが重複した場合はmarkdownファイルのyamlデータが優先される。
 
-yamlデータの共用可能部分を外部ファイル化することで、markdownファイルに書かれる記事固有のyamlセッティングを最小限ですませられる。
+yamlデータの共用可能部分を外部ファイル化することで、markdownファイルに書かれる記事固有のyamlセッティングを最小限ですませられる。要するに、筆者は長いYamlヘッダは記憶できない。覚えていられるのは`title`、`author`、`date`程度である。
 
 markdownに記述するyamlは単行のみとする。
+
 
 - Usage
     - `man2 Override-Yaml`
@@ -4086,7 +4087,6 @@ markdownに記述するyamlは単行のみとする。
 - Options
     - `-Settings <file>,<file>,...` : Load external files right after yaml header
     - `-Footers <file>,<file>,...` : Load external files at the end of the content
-
 - Examples
     - `cat a.md | Override-Yaml a.yaml -Settings chunk.R`
 
@@ -4150,6 +4150,10 @@ subtitle: Override-Subtitle
 author: ["btklab1", "btklab2"]
 date: Override-Date
 ---
+
+## hoge
+
+fuga
 ```
 
 
@@ -4565,6 +4569,7 @@ CSVファイルをSQLで操作し、集計したり検索できる。
 - Examples
     - `clip2img -d ~/Documents`
     - `clip2img -n a.png`
+    - `clip2img -MSPaint -Clip -DirView -Directory ~/Pictures/ -Name 2023-02-18-hoge`
 
 #### `clipwatch` - A clipboard watcher using Compare-Object
 

@@ -63,6 +63,9 @@ function tenki {
         [switch] $Map,
         
         [Parameter(Mandatory=$False)]
+        [switch] $Map24,
+        
+        [Parameter(Mandatory=$False)]
         [Alias('t')]
         [switch] $Typhoon,
         
@@ -124,6 +127,7 @@ function tenki {
     if ( $Jma ){
         $argHash["Forecast"] = 'https://www.data.jma.go.jp/gmd/cpd/twoweek/?fuk=63'
         $argHash["Map"]      = 'https://www.jma.go.jp/bosai/weather_map/'
+        $argHash["Map24"]    = 'https://www.jma.go.jp/bosai/weather_map/'
         $argHash["Radar"]    = 'https://www.jma.go.jp/bosai/rain/rain.html'
         $argHash["Cloud"]    = 'https://www.jma.go.jp/bosai/map.html#5/34.5/137/&elem=ir&contents=himawari'
         $argHash["Amedas"]   = 'https://www.jma.go.jp/bosai/map.html#5/34.5/137/&elem=temp&contents=amedas&interval=60'
@@ -155,6 +159,8 @@ function tenki {
         if ( $Radar )   { [string[]] $argList += $argHash["Radar"] }
         if ( $Cloud )   { [string[]] $argList += $argHash["Cloud"] }
         if ( $Map )     { [string[]] $argList += $argHash["Map"] }
+        if ( $Map24 )   { [string[]] $argList += $argHash["Map24"] }
+        if ( $Amedas )  { [string[]] $argList += $argHash["Amedas"] }
         if ( $Typhoon ) { [string[]] $argList += $argHash["Typhoon"] }
         if ( $Warning ) { [string[]] $argList += $argHash["Warning"] }
         if ( $Top )     { [string[]] $argList += $argHash["Top"] }
