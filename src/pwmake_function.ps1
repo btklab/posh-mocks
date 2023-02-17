@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    pwmake -- Pwsh implementation of GNU make command
+    pwmake - Pwsh implementation of GNU make command
 
     Read and execute Makefile in current directory.
     
@@ -10,7 +10,21 @@
         - pwmake -f path/to/Makefile (specify external Makefile path)
         - pwmake -Help (get help comment written at the end of each target line)
         - pwmake -DryRun
-    
+
+    Note:
+        Only the following automatic variables are impremented:
+            - $@ : Target file name
+            - $< : The name of the first dependent file
+            - $^ : Names of all dependent file
+            - %.ext : Replace with a string with the extension removed
+                  from the target name. Only target line can be used.
+
+        ```Makefile
+        # '%' example:
+        %.tex: %.md
+            cat $< | md2html > $@
+        ```
+
     Detail:
         - Makefile format roughly follows GNU make
             - but spaces at the beginning of the line are
@@ -111,18 +125,6 @@
             - backquote
             - pipeline (vertical bar)
 
-        - Only the following automatic variables are impremented:
-            - $@ : Target file name
-            - $< : The name of the first dependent file
-            - $^ : Names of all dependent file
-            - %.ext : Replace with a string with the extension removed
-                  from the target name. Only target line can be used.
-
-        ```Makefile
-        # '%' example:
-        %.tex: %.md
-            cat $< | md2html > $@
-        ```
 
     references:
         - https://www.gnu.org/software/make/
@@ -478,31 +480,37 @@ function pwmake {
     }
 
     function RemoveLineBreaks ([string[]]$lines){
-        [string]$prevLine = ''
-        $lines = foreach ($line in $lines) {
-            $line = [string]$line -replace '^\s+',' '
-            if ($line -match ' \\$'){
-                ## backslash
-                $line = $line -replace '\s+\\$',' @-->@'
-                $prevLine = $prevLine + $line
-            }elseif($line -match ' \`$'){
-                ## backquote
-                $line = $line -replace '\s+\`$',' @-->@'
-                $prevLine = $prevLine + $line
-            }elseif($line -match ' \|$'){
-                ## pipe
-                $line = $line -replace '\s+\|$',' | @-->@'
-                $prevLine = $prevLine + $line
-            } else {
-                if($prevLine -ne ''){
+        [string] $prevLine = ''
+        [string[]] $lines = $lines | ForEach-Object {
+                [string] $line = [string] $_
+                [string] $line = [string] $line -replace '^\s+',' '
+                if ( $line -match ' \\$' ){
+                    ## backslash
+                    $line = $line -replace '\s+\\$',' @-->@'
                     $prevLine = $prevLine + $line
-                    $prevLine = $prevLine -replace '@\-\->@\s*',''
-                    Write-Output $prevLine
-                    $prevLine = ''
-                }else{
-                    Write-Output $line
+                } elseif ( $line -match ' \`$' ){
+                    ## backquote
+                    $line = $line -replace '\s+\`$',' @-->@'
+                    $prevLine = $prevLine + $line
+                } elseif ( $line -match ' \|$' ){
+                    ## pipe
+                    $line = $line -replace '\s+\|$',' | @-->@'
+                    $prevLine = $prevLine + $line
+                } else {
+                    if($prevLine -ne ''){
+                        $prevLine = $prevLine + $line
+                        $prevLine = $prevLine -replace '@\-\->@\s*',''
+                        Write-Output $prevLine
+                        $prevLine = ''
+                    }else{
+                        Write-Output $line
+                    }
                 }
             }
+        if ( $prevLine -ne '' ){
+            $prevLine = $prevLine -replace '@\-\->@\s*',''
+            $prevLine = $prevLine -replace '\s*$',''
+            [string[]] $lines += ,$prevLine
         }
         return $lines
     }
@@ -740,12 +748,12 @@ function pwmake {
         } else {
             if ($line -match '\$%\.'){ return $True }
         }
-        Write-Error "記号'%'は拡張子と一緒に用いてください: $line" -ErrorAction Stop
+        Write-Error "Use the symbol '%' with the extension: $line" -ErrorAction Stop
         return $False
 
     }
     function ReplacePercentToTarget ([string[]]$ary){
-        ## ターゲット文字列のドットから右を最短で削除
+        ## shortest remove right from dot in target string
         $repTar = $Target -replace '\.[^.\\/]*$', ''
         $repTar += '.'
         #Write-Debug $repTar
@@ -925,9 +933,11 @@ function pwmake {
 
     function ReplaceAutoVar ([string]$comline, [string]$tar, $tarDepDict){
         ## replace auto variables written in each command line
-        ##     $@ : ターゲットファイル名
-        ##     $< : 最初の依存するファイルの名前
-        ##     $^ : すべての依存するファイルの名前
+        ##     $@ : Target file name
+        ##     $< : The name of the first dependent file
+        ##     $^ : Names of all dependent file
+        ##     %.ext : Replace with a string with the extension removed
+        ##         from the target name. Only target line can be used.
 
         ## set dependency line
         if ($tarDepDict[$tar][0] -eq '') {
