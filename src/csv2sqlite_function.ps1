@@ -3,19 +3,18 @@
     csv2sqlite - Apply sqlite-sql to csv files
 
     Usage:
-      csv2sqlite csv,csv,... -q "<sqlstring>"
-      csv2sqlite csv,csv,... -ReadFile <sqlfile>
-      "<sqlstring>" | csv2sqlite csv,csv,...
-      cat <sqlfile> | csv2sqlite csv,csv,...
+        csv2sqlite csv,csv,... -q "<sqlstring>"
+        csv2sqlite csv,csv,... -ReadFile <sqlfile>
+        "<sqlstring>" | csv2sqlite csv,csv,...
+        cat <sqlfile> | csv2sqlite csv,csv,...
 
-      csv2sqlite db -q "<sqlstring>"
-      csv2sqlite db -ReadFile <sqlfile>
-      "<sqlstring>" | csv2sqlite db
-      cat <sqlfile> | csv2sqlite db
+        csv2sqlite db -q "<sqlstring>"
+        csv2sqlite db -ReadFile <sqlfile>
+        "<sqlstring>" | csv2sqlite db
+        cat <sqlfile> | csv2sqlite db
 
     Dependencies:
-        - sqlite3
-        - <https://www.sqlite.org/index.html>
+        sqlite3 <https://www.sqlite.org/index.html>
     
     If csv file is specified, the csv file treated as DB name.
 
@@ -33,11 +32,12 @@
     -ComsBefore '<com>','<com>',... Settings before CSV import.
         for example, you can import headerless CSV data
         into an existing "table" in "a.db" as follows:
-        
+    
+    Example:
         csv2sqlite a.db -noheader -ComsBefore '.mode csv','.separator ","','.import table.csv' -SQL "SELECT * FROM table"
     
-    thanks:
-        https://qiita.com/Kunikata/items/61b5ee2c6a715f610493
+        thanks:
+            https://qiita.com/Kunikata/items/61b5ee2c6a715f610493
     
     Behavior of importing CSV files depends on whether the table
     to import already exists or not
@@ -263,7 +263,7 @@
     CREATE TABLE users(users_id PRIMARY KEY, users_name TEXT);
     CREATE TABLE langs(langs_id PRIMARY KEY, langs_name TEXT);
     CREATE TABLE binds(users_id INTEGER, langs_id INTEGER,PRIMARY KEY(users_id, langs_id),
-        FOREIGN KEY(users_id) REFERENCES users(users_id), FOREIGN KEY(langs_id) REFERENCES langs(langs_id));
+    FOREIGN KEY(users_id) REFERENCES users(users_id), FOREIGN KEY(langs_id) REFERENCES langs(langs_id));
 
     INSERT INTO langs VALUES(1,'C');
     INSERT INTO langs VALUES(2,'C++');
@@ -292,6 +292,135 @@
 
     thanks:
         https://qiita.com/SoraKumo/items/ecaeeea51297cb6896c9
+
+.EXAMPLE
+    ## calc summary (basic statistics)
+
+    PS > cat tab.csv
+    name,val
+    A,1
+    B,3
+    C,1
+    A,2
+    B,1
+    A,2
+
+    PS > cat summary.sql
+    -- calc summary val from tab
+    SELECT
+        COUNT( val ) cnt
+        , AVG( val ) ave
+        , MAX( val ) max
+        , MIN( val ) min
+        , (
+            SELECT
+                AVG( val )
+            FROM (
+                SELECT   *
+                FROM     tab
+                ORDER BY val
+                LIMIT    2 - ( SELECT COUNT(*) FROM tab ) % 2
+                OFFSET   ( SELECT ( COUNT(*) - 1 ) / 2  FROM tab )
+                )
+            ) Qt50
+    FROM tab;
+
+    ## calc summary
+    PS > cat summary.sql | sed 's;val;val;' | sed 's;tab;tab;' | csv2sqlite tab.csv
+    cnt  ave               max  min  Qt50
+    ---  ----------------  ---  ---  ----
+    6    1.66666666666667  3    1    1.5
+
+
+
+.EXAMPLE
+    ## date handling using julianday and window function
+    
+    PS > cat create_data.sql
+
+    CREATE TABLE data (
+        id INTEGER
+        ,item TEXT
+        ,qty INTEGER
+        ,date TIMESTAMP
+    );
+    INSERT INTO data ("id", "item", "qty", "date") VALUES ('1001', 'Apple', '4', '2018-01-10' );
+    INSERT INTO data ("id", "item", "qty", "date") VALUES ('1005', 'Banan', '8', '2018-01-20' );
+    INSERT INTO data ("id", "item", "qty", "date") VALUES ('1010', 'Banan', '2', '2018-02-01' );
+    INSERT INTO data ("id", "item", "qty", "date") VALUES ('1021', 'Apple', '9', '2018-02-15' );
+    INSERT INTO data ("id", "item", "qty", "date") VALUES ('1025', 'Apple', '6', '2018-02-22' );
+    INSERT INTO data ("id", "item", "qty", "date") VALUES ('1026', 'Apple', '5', '2018-02-23' );
+    -- thanks
+    -- https://qiita.com/tetr4lab/items/7beba8a29b2df2ef9060
+
+
+    PS > cat date_handling_using_julianday_and_window_function.sql
+    SELECT
+        id
+        , item
+        , qty
+        , DATE(date) as "date(TEXT)"
+        , SUM(qty) OVER (ORDER BY date RANGE 10 PRECEDING) as "sum"
+        , COUNT(*) OVER (ORDER BY date RANGE 10 PRECEDING) as "cnt"
+        , DATE(date) as "date(JULIANDAY)"
+        , SUM(qty) OVER (ORDER BY julianday(date) RANGE 10 PRECEDING) as "sum2"
+        , COUNT(*) OVER (ORDER BY julianday(date) RANGE 10 PRECEDING) as "cnt2"
+        , DATE(julianday(date) + 1) as day_plus_one
+        , CASE CAST (strftime('%w', date) as INTEGER)
+          WHEN 0 THEN 'sun'
+          WHEN 1 THEN 'mon'
+          WHEN 2 THEN 'tue'
+          WHEN 3 THEN 'wed'
+          WHEN 4 THEN 'thu'
+          WHEN 5 THEN 'fri'
+          ELSE 'sat' END as weekday
+    FROM data ;
+
+    ## date processed julianday function has the correct date-range and sum,
+    ## but text date has incorrect date-range and sum
+
+    PS > csv2sqlite a.db -ReadFile date_handling_using_julianday_and_window_function.sql
+
+    id    item   qty  date(TEXT)  sum  cnt  date(JULIANDAY)  sum2  cnt2  day_plus_one  weekday
+    ----  -----  ---  ----------  ---  ---  ---------------  ----  ----  ------------  -------
+    1001  Apple  4    2018-01-10  4    1    2018-01-10       4     1     2018-01-11    wed
+    1005  Banan  8    2018-01-20  8    1    2018-01-20       12    2     2018-01-21    sat
+    1010  Banan  2    2018-02-01  2    1    2018-02-01       2     1     2018-02-02    thu
+    1021  Apple  9    2018-02-15  9    1    2018-02-15       9     1     2018-02-16    thu
+    1025  Apple  6    2018-02-22  6    1    2018-02-22       15    2     2018-02-23    thu
+    1026  Apple  5    2018-02-23  5    1    2018-02-23       20    3     2018-02-24    fri
+
+    ## output insert sql mode
+    PS > csv2sqlite a.db -ReadFile date_handling_using_julianday_and_window_function.sql -Mode insert
+
+    INSERT INTO "table"(id,item,qty,"date(TEXT)",sum,cnt,"date(JULIANDAY)",sum2,cnt2,day_plus_one,weekday) VALUES(1001,'Apple',4,'2018-01-10',4,1,'2018-01-10',4,1,'2018-01-11','wed');
+    INSERT INTO "table"(id,item,qty,"date(TEXT)",sum,cnt,"date(JULIANDAY)",sum2,cnt2,day_plus_one,weekday) VALUES(1005,'Banan',8,'2018-01-20',8,1,'2018-01-20',12,2,'2018-01-21','sat');
+    INSERT INTO "table"(id,item,qty,"date(TEXT)",sum,cnt,"date(JULIANDAY)",sum2,cnt2,day_plus_one,weekday) VALUES(1010,'Banan',2,'2018-02-01',2,1,'2018-02-01',2,1,'2018-02-02','thu');
+    INSERT INTO "table"(id,item,qty,"date(TEXT)",sum,cnt,"date(JULIANDAY)",sum2,cnt2,day_plus_one,weekday) VALUES(1021,'Apple',9,'2018-02-15',9,1,'2018-02-15',9,1,'2018-02-16','thu');
+    INSERT INTO "table"(id,item,qty,"date(TEXT)",sum,cnt,"date(JULIANDAY)",sum2,cnt2,day_plus_one,weekday) VALUES(1025,'Apple',6,'2018-02-22',6,1,'2018-02-22',15,2,'2018-02-23','thu');
+    INSERT INTO "table"(id,item,qty,"date(TEXT)",sum,cnt,"date(JULIANDAY)",sum2,cnt2,day_plus_one,weekday) VALUES(1026,'Apple',5,'2018-02-23',5,1,'2018-02-23',20,3,'2018-02-24','fri');
+
+    ## output json
+    PS > csv2sqlite a.db -ReadFile date_handling_using_julianday_and_window_function.sql -Mode json
+
+    [{"id":1001,"item":"Apple","qty":4,"date(TEXT)":"2018-01-10","sum":4,"cnt":1,"date(JULIANDAY)":"2018-01-10","sum2":4,"cnt2":1,"day_plus_one":"2018-01-11","weekday":"wed"},
+    {"id":1005,"item":"Banan","qty":8,"date(TEXT)":"2018-01-20","sum":8,"cnt":1,"date(JULIANDAY)":"2018-01-20","sum2":12,"cnt2":2,"day_plus_one":"2018-01-21","weekday":"sat"},
+    {"id":1010,"item":"Banan","qty":2,"date(TEXT)":"2018-02-01","sum":2,"cnt":1,"date(JULIANDAY)":"2018-02-01","sum2":2,"cnt2":1,"day_plus_one":"2018-02-02","weekday":"thu"},
+    {"id":1021,"item":"Apple","qty":9,"date(TEXT)":"2018-02-15","sum":9,"cnt":1,"date(JULIANDAY)":"2018-02-15","sum2":9,"cnt2":1,"day_plus_one":"2018-02-16","weekday":"thu"},
+    {"id":1025,"item":"Apple","qty":6,"date(TEXT)":"2018-02-22","sum":6,"cnt":1,"date(JULIANDAY)":"2018-02-22","sum2":15,"cnt2":2,"day_plus_one":"2018-02-23","weekday":"thu"},
+    {"id":1026,"item":"Apple","qty":5,"date(TEXT)":"2018-02-23","sum":5,"cnt":1,"date(JULIANDAY)":"2018-02-23","sum2":20,"cnt2":3,"day_plus_one":"2018-02-24","weekday":"fri"}]
+
+    ## output json and ConvertFrom-Json
+    PS > (csv2sqlite a.db -ReadFile .\date_handling_using_julianday_and_window_function.sql -Mode json) -join '' | ConvertFrom-Json | ft
+
+      id item  qty date(TEXT) sum cnt date(JULIANDAY) sum2 cnt2 day_plus_one
+      -- ----  --- ---------- --- --- --------------- ---- ---- ------------
+    1001 Apple   4 2018-01-10   4   1 2018-01-10         4    1 2018-01-11
+    1005 Banan   8 2018-01-20   8   1 2018-01-20        12    2 2018-01-21
+    1010 Banan   2 2018-02-01   2   1 2018-02-01         2    1 2018-02-02
+    1021 Apple   9 2018-02-15   9   1 2018-02-15         9    1 2018-02-16
+    1025 Apple   6 2018-02-22   6   1 2018-02-22        15    2 2018-02-23
+    1026 Apple   5 2018-02-23   5   1 2018-02-23        20    3 2018-02-24
 
 #>
 function csv2sqlite {
@@ -374,9 +503,9 @@ function csv2sqlite {
     }
     function TrimSpace ([string[]]$lines){
         $lines = $lines | ForEach-Object {
-            $line = [string]$_
-            $line = $line -replace '^\s+', ''
-            $line = $line -replace '\s+$', ''
+            $line = "$_".Trim()
+            #$line = $line -replace '^\s+', ''
+            #$line = $line -replace '\s+$', ''
             $line = $line -replace '\s+;', ';'
             Write-Output "$line"
         }
