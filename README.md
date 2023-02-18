@@ -4543,6 +4543,9 @@ CSVファイルをSQLで操作し、集計したり検索できる。
 
 - Usage
     - `man2 csv2sqlite`
+- Dependencies
+    - sqlite3
+        - <https://www.sqlite.org/index.html>
 - Examples
     - `csv2sqlite csv,csv,... "<sqlstring>"`
     - `csv2sqlite csv,csv,... -ReadFile <sqlfile>`
@@ -4552,6 +4555,77 @@ CSVファイルをSQLで操作し、集計したり検索できる。
     - `csv2sqlite db -ReadFile <sqlfile>`
     - `"<sqlstring>" | csv2sqlite db`
     - `cat <sqlfile> | csv2sqlite db`
+
+Input(csv file):
+
+`dat.csv`
+
+```csv
+id,main,id2,sub,val
+01,aaa,01,xxx,10
+01,aaa,02,yyy,10
+01,aaa,03,zzz,10
+02,bbb,01,xxx,10
+02,bbb,02,yyy,10
+02,bbb,03,zzz,10
+01,aaa,04,ooo,10
+03,ccc,01,xxx,10
+03,ccc,02,yyy,10
+03,ccc,03,zzz,10
+04,ddd,01,xxx,10
+04,ddd,02,yyy,10
+04,ddd,03,zzz,10
+```
+
+Output:
+
+```powershell
+csv2sqlite dat.csv -q "select main,sum(val) from dat group by main;" -OutputFile o.csv | cat
+main  sum(val)
+----  --------
+aaa   40
+bbb   30
+ccc   30
+ddd   30
+```
+
+SQL from stdin:
+
+```powershell
+"select *,sum(val) from dat where main like '%b%' group by main;" | csv2sqlite dat.csv -o o.csv | cat
+id  main  id2  sub  val  sum(val)
+--  ----  ---  ---  ---  --------
+02  bbb   01   xxx  10   30
+```
+
+
+Another examples:
+
+```powershell
+csv2sqlite titanic.csv -q "select * from titanic limit 5;"
+
+survived  pclass  sex     age   sibsp  parch  fare     embarked  class
+--------  ------  ------  ----  -----  -----  -------  --------  -----
+0         3       male    22.0  1      0      7.25     S         Third
+1         1       female  38.0  1      0      71.2833  C         First
+1         3       female  26.0  0      0      7.925    S         Third
+1         1       female  35.0  1      0      53.1     S         First
+0         3       male    35.0  0      0      8.05     S         Third
+```
+
+```powershell
+"select * from titanic limit 5;" | csv2sqlite titanic.csv
+
+survived  pclass  sex     age   sibsp  parch  fare     embarked  class
+--------  ------  ------  ----  -----  -----  -------  --------  -----
+0         3       male    22.0  1      0      7.25     S         Third
+1         1       female  38.0  1      0      71.2833  C         First
+1         3       female  26.0  0      0      7.925    S         Third
+1         1       female  35.0  1      0      53.1     S         First
+0         3       male    35.0  0      0      8.05     S         Third
+```
+
+
 
 ### Clipboard operation
 

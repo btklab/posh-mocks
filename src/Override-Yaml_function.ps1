@@ -59,7 +59,7 @@
     citation:
       url: https://example.com/summarizing-output
     abstract: "abstract"
-
+    ...
 
     PS > cat a.md | Override-Yaml a.yaml | head
     ---
@@ -136,7 +136,6 @@
         #papersize: a4
         #toc: true
         toc-depth: 1
-        toc-title: もくじ
         number-sections: true
         #number-depth: 3
         #lof: true
@@ -180,11 +179,11 @@
       - ../../quarto-shortcode-imgr.lua
     title-block-banner: true
     crossref:
-      fig-title: 図
-      tbl-title: 表
+      fig-title: "fig"
+      tbl-title: "tab"
       title-delim: ":"
-      fig-prefix: 図
-      tbl-prefix: 表
+      fig-prefix: "fig"
+      tbl-prefix: "tab"
       ref-hyperlink: false
     ---
 
@@ -266,11 +265,11 @@ function Override-Yaml {
         }
         ## private functions
         function getYamKeyVal {
-          param( [string]$line )
-          [string] $key = $line -replace '^([^:]+): *(..*)$','$1'
-          [string] $val = $line -replace '^([^:]+): *(..*)$','$2'
-          [string[]] $retAry = @( $key.Trim(), $val.Trim() )
-          return $retAry
+            param( [string]$line )
+            [string] $key = $line -replace '^([^:]+): *(..*)$','$1'
+            [string] $val = $line -replace '^([^:]+): *(..*)$','$2'
+            [string[]] $retAry = @( $key.Trim(), $val.Trim() )
+            return $retAry
         }
         ## init variables
         [int] $rowCnt = 0
@@ -278,14 +277,13 @@ function Override-Yaml {
         [string] $nowLine = ''
         $innerYamlHash = @{}
         ## set yaml key
-        [string[]] $outerYamlArray = @()
-        Get-Content -LiteralPath $yamlFullPath -Encoding UTF8 `
+        [string[]] $outerYamlArray = Get-Content -LiteralPath $yamlFullPath -Encoding UTF8 `
             | ForEach-Object {
                 [string] $readLine = [string] $_
                 if ( $readLine -match '^(\s*[^#][^:]+): *(..*)$' ){
                     $ikey, $ival = getYamKeyVal $readLine
                     Write-Debug "yaml-key: $ikey"
-                    $outerYamlArray += ,$ikey
+                    Write-Output $ikey
                 } else {
                     return
                 }
