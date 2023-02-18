@@ -2,6 +2,8 @@
 .SYNOPSIS
     Get-OGP - Make Link with markdown format
 
+    Get meta-OGP tag from uri and format markdown href.
+
     If Uri is not specified in the args or pipline input,
     it tries to use the value from the clipboard.
 
@@ -56,142 +58,142 @@
       [GitHub: Let’s build from here]: <https://github.com/>
 
 .EXAMPLE
-"https://github.com/" | Get-OGP | fl
-curl https://github.com/
-200 OK
+    "https://github.com/" | Get-OGP | fl
+    curl https://github.com/
+    200 OK
 
-description : GitHub is where over 94 million developers shape the future of software, together. Contribute to the open
-               source community, manage your Git repositories, review code like a pro, track bugs and feat...
-image       : https://github.githubassets.com/images/modules/site/social-cards/campaign-social.png
-title       : GitHub: Let’s build from here
-uri         : https://github.com/
-
-.EXAMPLE
-Get-OGP "https://github.com/" | fl
-curl https://github.com/
-200 OK
-
-description : GitHub is where over 94 million developers shape the future of software, together. Contribute to the open
-               source community, manage your Git repositories, review code like a pro, track bugs and feat...
-image       : https://github.githubassets.com/images/modules/site/social-cards/campaign-social.png
-title       : GitHub: Let’s build from here
-uri         : https://github.com/
+    description : GitHub is where over 94 million developers shape the future of software, together. Contribute to the open
+                   source community, manage your Git repositories, review code like a pro, track bugs and feat...
+    image       : https://github.githubassets.com/images/modules/site/social-cards/campaign-social.png
+    title       : GitHub: Let’s build from here
+    uri         : https://github.com/
 
 .EXAMPLE
-Get-OGP "https://github.com/" -DownloadMetaImage | fl
-curl https://github.com/
-200 OK
+    Get-OGP "https://github.com/" | fl
+    curl https://github.com/
+    200 OK
 
-description : GitHub is where over 94 million developers shape the future of software, together. Contribute to the open
-               source community, manage your Git repositories, review code like a pro, track bugs and feat...
-image       : https://github.githubassets.com/images/modules/site/social-cards/campaign-social.png
-title       : GitHub: Let’s build from here
-uri         : https://github.com/
-OutputImage : ~/Downloads/campaign-social_s.png
-
-.EXAMPLE
-"https://github.com/" | Get-OGP -AllMetaData
-curl https://github.com/
-200 OK
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width">
-<meta name="description" content="GitHub is where over 94 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and features, power your CI/CD and DevOps workflows, and secure code before you commit it.">
-<meta property="og:image" content="https://github.githubassets.com/images/modules/site/social-cards/campaign-social.png" />
-<meta property="og:image:alt" content="GitHub is where over 94 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and feat..." />
-<meta property="og:site_name" content="GitHub" />
-<meta property="og:type" content="object" />
-<meta property="og:title" content="GitHub: Let’s build from here" />
-<meta property="og:url" content="https://github.com/" />
-<meta property="og:description" content="GitHub is where over 94 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and feat..." />
-<title>GitHub: Let’s build from here · GitHub</title>
+    description : GitHub is where over 94 million developers shape the future of software, together. Contribute to the open
+                   source community, manage your Git repositories, review code like a pro, track bugs and feat...
+    image       : https://github.githubassets.com/images/modules/site/social-cards/campaign-social.png
+    title       : GitHub: Let’s build from here
+    uri         : https://github.com/
 
 .EXAMPLE
-Get-OGP "https://github.com/" -DownloadMetaImage -Image ~/Downloads/hoge.png | fl
-curl https://github.com/
-200 OK
+    Get-OGP "https://github.com/" -DownloadMetaImage | fl
+    curl https://github.com/
+    200 OK
 
-description : GitHub is where over 94 million developers shape the future of software, together. Contribute to the open
-               source community, manage your Git repositories, review code like a pro, track bugs and feat...
-title       : GitHub: Let’s build from here
-uri         : https://github.com/
-image       : ~/Downloads/hoge.png
-OutputImage : ~/Downloads/campaign-social_s.png
-
-Description
-============
--Image <image_file> to replace image with a local image file,
-and shrink the replaced local image file to 600x600px.
+    description : GitHub is where over 94 million developers shape the future of software, together. Contribute to the open
+                   source community, manage your Git repositories, review code like a pro, track bugs and feat...
+    image       : https://github.githubassets.com/images/modules/site/social-cards/campaign-social.png
+    title       : GitHub: Let’s build from here
+    uri         : https://github.com/
+    OutputImage : ~/Downloads/campaign-social_s.png
 
 .EXAMPLE
-Get-OGP "https://github.com/"-DownloadMetaImage -Card | fl
-curl https://github.com/
-200 OK
-<!-- blog card -->
-<a href="https://github.com/" style="margin: 50px;padding: 12px;border: solid thin slategray;display: flex;text-decoration: none;color: inherit;" onMouseOver="this.style.opacity='0.9'" target="_blank">
-    <div style="flex-shrink: 0;">
-        <img src="~/Downloads/campaign-social_s.png" alt="" width="100" />
-    </div>
-    <div style="margin-left: 10px;">
-        <h2 style="margin: 0;padding-bottom: 13px;border: none;font-size: 16px;">
-            GitHub: Let’s build from here
-        </h2>
-        <p style="margin: 0;font-size: 13px;word-break: break-word;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;">
-            GitHub is where over 94 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and feat...
-        </p>
-    </div>
-</a>
-
-説明
-============
--Cardで、Card形式
+    "https://github.com/" | Get-OGP -AllMetaData
+    curl https://github.com/
+    200 OK
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="GitHub is where over 94 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and features, power your CI/CD and DevOps workflows, and secure code before you commit it.">
+    <meta property="og:image" content="https://github.githubassets.com/images/modules/site/social-cards/campaign-social.png" />
+    <meta property="og:image:alt" content="GitHub is where over 94 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and feat..." />
+    <meta property="og:site_name" content="GitHub" />
+    <meta property="og:type" content="object" />
+    <meta property="og:title" content="GitHub: Let’s build from here" />
+    <meta property="og:url" content="https://github.com/" />
+    <meta property="og:description" content="GitHub is where over 94 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and feat..." />
+    <title>GitHub: Let’s build from here · GitHub</title>
 
 .EXAMPLE
-Get-OGP "https://www.maff.go.jp/j/shokusan/sdgs/" -ImagePathOverwrite '/img/2022/' -Card
-curl https://www.maff.go.jp/j/shokusan/sdgs/
-200 OK
-<!-- blog card -->
-<a href="https://www.maff.go.jp/j/shokusan/sdgs/" style="margin: 50px;padding: 12px;border: solid thin slategray;display: flex;text-decoration: none;color: inherit;" onMouseOver="this.style.opacity='0.9'">
-    <div style="flex-shrink: 0;">
-        <img src="/img/2022/a_s.png" alt="" width="100" />
-    </div>
-    <div style="margin-left: 10px;">
-        <h2 style="margin: 0;padding-bottom: 13px;border: none;font-size: 16px;">
-            SDGs x maff
-        </h2>
-        <p style="margin: 0;font-size: 13px;word-break: break-word;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;">
-            description
-        </p>
-    </div>
-</a>
+    Get-OGP "https://github.com/" -DownloadMetaImage -Image ~/Downloads/hoge.png | fl
+    curl https://github.com/
+    200 OK
 
-Description
-============
--Card -ImagePathOverwrite <path> to replace the directory path of the
-image to be embedded in the Card format/
+    description : GitHub is where over 94 million developers shape the future of software, together. Contribute to the open
+                   source community, manage your Git repositories, review code like a pro, track bugs and feat...
+    title       : GitHub: Let’s build from here
+    uri         : https://github.com/
+    image       : ~/Downloads/hoge.png
+    OutputImage : ~/Downloads/campaign-social_s.png
+
+    Description
+    ============
+    -Image <image_file> to replace image with a local image file,
+    and shrink the replaced local image file to 600x600px.
 
 .EXAMPLE
-Get-OGP "https://github.com/" -Canonical -Markdown | Set-Clipboard
-curl https://github.com/
-200 OK
-[GitHub: Let’s build from here](https://github.com/)
+    Get-OGP "https://github.com/"-DownloadMetaImage -Card | fl
+    curl https://github.com/
+    200 OK
+    <!-- blog card -->
+    <a href="https://github.com/" style="margin: 50px;padding: 12px;border: solid thin slategray;display: flex;text-decoration: none;color: inherit;" onMouseOver="this.style.opacity='0.9'" target="_blank">
+        <div style="flex-shrink: 0;">
+            <img src="~/Downloads/campaign-social_s.png" alt="" width="100" />
+        </div>
+        <div style="margin-left: 10px;">
+            <h2 style="margin: 0;padding-bottom: 13px;border: none;font-size: 16px;">
+                GitHub: Let’s build from here
+            </h2>
+            <p style="margin: 0;font-size: 13px;word-break: break-word;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;">
+                GitHub is where over 94 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and feat...
+            </p>
+        </div>
+    </a>
 
-Description
-============
-Attempt to retrieve the canonical uri with "-Canonical" switch.
-If not found canonical uri, output the input uri as is.
+    Description
+    ============
+    -Cardで、Card形式
 
 .EXAMPLE
-Get-OGP "https://github.com/" -Canonical -Markdown -id ""
-curl https://github.com/
-200 OK
-[GitHub: Let’s build from here][]
-[GitHub: Let’s build from here]: <https://github.com/>
+    Get-OGP "https://www.maff.go.jp/j/shokusan/sdgs/" -ImagePathOverwrite '/img/2022/' -Card
+    curl https://www.maff.go.jp/j/shokusan/sdgs/
+    200 OK
+    <!-- blog card -->
+    <a href="https://www.maff.go.jp/j/shokusan/sdgs/" style="margin: 50px;padding: 12px;border: solid thin slategray;display: flex;text-decoration: none;color: inherit;" onMouseOver="this.style.opacity='0.9'">
+        <div style="flex-shrink: 0;">
+            <img src="/img/2022/a_s.png" alt="" width="100" />
+        </div>
+        <div style="margin-left: 10px;">
+            <h2 style="margin: 0;padding-bottom: 13px;border: none;font-size: 16px;">
+                SDGs x maff
+            </h2>
+            <p style="margin: 0;font-size: 13px;word-break: break-word;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;">
+                description
+            </p>
+        </div>
+    </a>
+
+    Description
+    ============
+    -Card -ImagePathOverwrite <path> to replace the directory path of the
+    image to be embedded in the Card format/
 
 .EXAMPLE
-Get-OGP "https://github.com/" -Canonical -Html
-curl https://github.com/
-200 OK
-<a href="https://github.com/">GitHub: Let’s build from here</a>
+    Get-OGP "https://github.com/" -Canonical -Markdown | Set-Clipboard
+    curl https://github.com/
+    200 OK
+    [GitHub: Let’s build from here](https://github.com/)
+
+    Description
+    ============
+    Attempt to retrieve the canonical uri with "-Canonical" switch.
+    If not found canonical uri, output the input uri as is.
+
+.EXAMPLE
+    Get-OGP "https://github.com/" -Canonical -Markdown -id ""
+    curl https://github.com/
+    200 OK
+    [GitHub: Let’s build from here][]
+    [GitHub: Let’s build from here]: <https://github.com/>
+
+.EXAMPLE
+    Get-OGP "https://github.com/" -Canonical -Html
+    curl https://github.com/
+    200 OK
+    <a href="https://github.com/">GitHub: Let’s build from here</a>
 
 #>
 function Get-OGP {
@@ -259,9 +261,9 @@ function Get-OGP {
         [switch] $NoShrink
     )
     # private function
-    # https://www.amazon.co.jp/82%B9/dp/4840107505
     function Parse-AmazonURI ([string]$amUri){
-        
+        # Parse:
+        # https://www.amazon.co.jp/82%B9/dp/4840107505
         if ($amUri -match "/dp/(?<asin>[^/]+)"){
             $dp = $Matches.asin
             return "https://www.amazon.co.jp/dp/$dp"
@@ -336,9 +338,10 @@ function Get-OGP {
                     $innerTitle = $cont
                     $o["title"] = $innerTitle
             } else {
-                #<meta property="og:title" content="Yahoo! JAPAN"/>
-                #<meta property="og:url"   content="https://github.com//"/>
-                #<meta property="og:image" content="https://s.yimg.jp/images/top/ogp/fb_y_1500px.png"/>
+                # Parse:
+                #  <meta property="og:title" content="Yahoo! JAPAN"/>
+                #  <meta property="og:url"   content="https://github.com//"/>
+                #  <meta property="og:image" content="https://s.yimg.jp/images/top/ogp/fb_y_1500px.png"/>
                 if (($prop -match 'og:title$') -or ($name -match 'og:title$')){
                     $innerTitle = "$cont"
                     if ($o["title"] -eq $Null){
@@ -558,7 +561,7 @@ function Get-OGP {
         #$reader.BaseStream.Position = 0
         #$reader.DiscardBufferedData()
         #Write-Host $reader.ReadToEnd()
-        #$reader.Close()  # Closeは$readerと$streamの一方を呼び出せばよい。両方呼び出しても害はない
+        #$reader.Close()  # Close should call either $reader or $stream. no harm in calling both
         #$stream.Close()
     }
 }
