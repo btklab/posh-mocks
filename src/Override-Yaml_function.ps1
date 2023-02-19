@@ -24,6 +24,8 @@
         -Footers <file>,<file>,... : Load external configuration files
                                      at the end of the content.
     
+        -ReplaceYaml <old_text_regex>,<new_text>: replace yaml
+    
     Note:
         - yaml block separator in markdown file is '---'
         - Only one-line settings are overridden
@@ -248,20 +250,32 @@ function Override-Yaml {
     Param(
         [Parameter( Mandatory=$True, Position=0 )]
         [string] $Yaml,
+
         [Parameter( Mandatory=$False, Position=1 )]
         [string[]] $Settings,
+
         [Parameter( Mandatory=$False )]
         [string[]] $Footers,
+
+        [Parameter( Mandatory=$False )]
+        [string[]] $ReplaceYaml,
+
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
         [string[]] $Text
     )
 
-    begin{
+    begin {
         ## test path
         if(-not (Test-Path -Path $Yaml)){
             Write-Error "file: $Yaml is not exists." -ErrorAction Stop
         }else{
             $yamlFullPath = Resolve-Path -Path $Yaml
+        }
+        ## test option
+        if ( $ReplaceYaml ){
+            if ( $ReplaceYaml.Count -ne 2 ){
+                Write-Error "-ReplaceYaml '<old_text_regex>', '<new_text>'" -ErrorAction Stop
+            }
         }
         ## private functions
         function getYamKeyVal {
@@ -319,9 +333,12 @@ function Override-Yaml {
             ## create yaml from template
             Get-Content -LiteralPath $yamlFullPath -Encoding UTF8 `
               | ForEach-Object {
-                    $readLine = [string]$_
+                    [string] $readLine = [string]$_
                     if ( $readLine -eq '---' ){ return }
                     if ( $readLine -eq ''    ){ return }
+                    if ( $ReplaceYaml ){
+                        $readLine = $readLine -replace $ReplaceYaml[0], $ReplaceYaml[1]
+                    }
                     if ( $readLine -match '^([^:]+): *(..*)$' ){
                         $ikey, $ival = getYamKeyVal $readLine
                         if( $innerYamlHash.ContainsKey( $ikey )){
