@@ -5,7 +5,18 @@ All notable changes to "posh-mocks" project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
 ## [Unreleased]
+
+### Changed
+
+- Changed `CHANGELOG.md` test tagging and write CHANGELOG.md
+
+### Added
+
+- None
+
+## [0.1.0] init - 2023-02-19
 
 ### Changed
 
@@ -87,3 +98,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `vbStrConv`
 - Added `yarr`
 - Added `zen`
+
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/v0.1.0..HEAD
+[0.1.0]: https://github.com/btklab/posh-mocks/releases/tag/v0.1.0
+
