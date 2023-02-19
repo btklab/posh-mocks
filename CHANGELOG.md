@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed `csv2sqlite` update examples
 - Changed `CHANGELOG.md` test tagging and write CHANGELOG.md
 
 ### Added
