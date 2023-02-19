@@ -332,6 +332,101 @@
     6    1.66666666666667  3    1    1.5
 
 
+.EXAMPLE
+    ## calculate percentile and rank using SQL
+    ##
+    ## thanks:
+    ##  Qiita: @arc279
+    ##  https://qiita.com/arc279/items/8bfebf6b856bbb62586e
+    ##
+    ##  SQLite tutorial PERCENT_RANK()
+    ##  https://www.sqlitetutorial.net/sqlite-window-functions/sqlite-percent_rank/
+    
+    # input data
+    PS > cat data.csv | head
+    id,val
+    AC01,6340834
+    AC02,6340834
+    AC03,6340834
+    AC04,6340834
+    AC05,6340834
+    AC06,6340834
+    AC99,6340834
+    AS01,6340834
+    AS02,6340834
+    ...
+    
+    # SQL file
+    PS > cat percentile_and_rank.sql
+    SELECT
+      COUNT(*)
+      , MAX(percentile)
+      , MAX(val)
+      , rank
+    FROM (
+      SELECT
+        *
+        , CASE
+          WHEN tab.percentile >= 0.8 THEN "A"
+          WHEN tab.percentile >= 0.6 THEN "B"
+          WHEN tab.percentile >= 0.4 THEN "C"
+          WHEN tab.percentile >= 0.2 THEN "D"
+          ELSE "E"
+          END AS rank
+      FROM (
+        SELECT
+          *
+          , PERCENT_RANK() OVER( ORDER BY CAST(val AS INT) ) AS percentile
+        FROM data
+      ) tab
+    )
+    GROUP BY rank
+    ;
+    
+    
+    # calc percentile and rank from val
+    PS > csv2sqlite data.csv -ReadFile percentile_and_rank.sql
+    COUNT(*)  MAX(percentile)    MAX(val)  rank
+    --------  -----------------  --------  ----
+    113       1.0                9830001   A
+    111       0.798932384341637  6712244   B
+    92        0.599644128113879  6580027   C
+    134       0.370106761565836  5428550   D
+    113       0.193950177935943  862       E
+
+
+    # calc only percentile
+    PS > cat percentile_only.sql
+    SELECT
+      *
+      , CASE
+        WHEN tab.percentile >= 0.8 THEN "A"
+        WHEN tab.percentile >= 0.6 THEN "B"
+        WHEN tab.percentile >= 0.4 THEN "C"
+        WHEN tab.percentile >= 0.2 THEN "D"
+        ELSE "E"
+        END AS rank
+    FROM (
+      SELECT
+        *
+        , PERCENT_RANK() OVER( ORDER BY CAST(val AS INT) ) AS percentile
+      FROM data
+    ) tab
+    ;
+
+
+    PS > csv2sqlite data.csv -ReadFile percentile_only.sql | head
+    id    val      percentile           rank
+    ----  -------  -------------------  ----
+    FZ42  541      0.0                  E
+    FZ57  670      0.00177935943060498  E
+    FZ62  673      0.00355871886120996  E
+    FZ64  862      0.00533807829181495  E
+    FZ94  101003   0.00711743772241993  E
+    CZ88  184302   0.00889679715302491  E
+    CZ07  542121   0.0106761565836299   E
+    GZ31  564005   0.0124555160142349   E
+
 
 .EXAMPLE
     ## date handling using julianday and window function
@@ -554,17 +649,18 @@ function csv2sqlite {
     ## cleaning sql
     [string[]]$sqlAry = @()
     if ($input){
-        $sqlAry = $input
+        [string[]] $sqlAry = $input
     } else {
         $sqlAry += ,$SQL
     }
-    $sqlAry = DeleteComment $sqlAry
-    $sqlAry = TrimSpace $sqlAry
-    $sqlAry = SkipBlank $sqlAry
+    [string[]] $sqlAry = DeleteComment $sqlAry
+    [string[]] $sqlAry = TrimSpace $sqlAry
+    [string[]] $sqlAry = SkipBlank $sqlAry
     if ($ReadFile){
         [string] $sqlOneliner = ".read $rFile"
     } else {
         [string] $sqlOneliner = $sqlAry -Join ' '
+        Write-Debug $sqlOneliner
     }
     # debug
     #Write-Debug "$iFile : $dbName : $dbExt"
