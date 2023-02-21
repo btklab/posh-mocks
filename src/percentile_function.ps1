@@ -56,11 +56,11 @@
     sum     : 60
     average : 3
     stdev   : 1.45095250022002
-    max     : 5
-    Qt75    : 4
-    Qt50    : 3
-    Qt25    : 2
     min     : 1
+    Qt25    : 2
+    Qt50    : 3
+    Qt75    : 4
+    max     : 5
     IQR     : 2
 
     ## same as below (calc rightmost field by default)
@@ -70,22 +70,22 @@
     ##  means summary 2nd field using 1st field as key
     PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -k 1 | ft
 
-    key count   sum average stdev  max Qt75 Qt50 Qt25  min
+    key count   sum average stdev  min Qt25 Qt50 Qt75  max
     --- -----   --- ------- -----  --- ---- ---- ----  ---
-    a       5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
-    b       5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
-    c       5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
-    d       5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
+    a       5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    b       5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    c       5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    d       5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
 
     ## -k 1,2 means fields from 1st to 2nd are considered keys
     PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $s $_" } } | percentile 3 -k 1,2 | ft
 
-    key count   sum average stdev  max Qt75 Qt50 Qt25  min
+    key count   sum average stdev  min Qt25 Qt50 Qt75  max
     --- -----   --- ------- -----  --- ---- ---- ----  ---
-    a a     5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
-    b b     5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
-    c c     5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
-    d d     5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
+    a a     5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    b b     5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    c c     5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    d d     5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
 
 .EXAMPLE
     ## -NoGrouping means ranking with quartile
@@ -314,16 +314,29 @@ function percentile {
         }
 
         # calc quartile
-        [int[]] $posQt50 = getMedianPos $statCnt
-        [string[]] $tmpQt25 = $sortedAry[0..($posQt50[0]-1)]
-        [string[]] $tmpQt75 = $sortedAry[($posQt50[1]+1)..($sortedAry.Count - 1)]
-        [int[]] $posQt25 = getMedianPos $tmpQt25.Count
-        [int[]] $posQt75 = @( ($posQt50[1]+$posQt25[0]+1), ($posQt50[1]+$posQt25[1]+1) )
-        Write-Debug "posQt25: $($posQt25 -join ',')"
-        Write-Debug "posQt50: $($posQt50 -join ',')"
-        Write-Debug "posQt75: $($posQt75 -join ',')"
+        function CalcQuartilePos ( [string[]] $lineAry ){
+            [int[]] $posQt50 = getMedianPos $statCnt
+            [string[]] $tmpQt25 = $lineAry[0..($posQt50[0]-1)]
+            [string[]] $tmpQt75 = $lineAry[($posQt50[1]+1)..($lineAry.Count - 1)]
+            [int[]] $posQt25 = getMedianPos $tmpQt25.Count
+            [int[]] $posQt75 = @( ($posQt50[1]+$posQt25[0]+1), ($posQt50[1]+$posQt25[1]+1) )
+            Write-Debug "posQt25: $($posQt25 -join ',')"
+            Write-Debug "posQt50: $($posQt50 -join ',')"
+            Write-Debug "posQt75: $($posQt75 -join ',')"
+            $posHash = @{
+                posQt25 = @($posQt25)
+                posQt50 = @($posQt50)
+                posQt75 = @($posQt75)
+            }
+            return $posHash
+        }
 
         function CalcQuartile ( [string[]] $lineAry){
+            $posHash = @{}
+            $posHash = CalcQuartilePos $lineAry
+            [int[]] $posQt25 = $posHash["posQt25"]
+            [int[]] $posQt50 = $posHash["posQt50"]
+            [int[]] $posQt75 = $posHash["posQt75"]
             [int] $cumCol = $sVal
             [double] $Qt25 = ( [double](($sortedAry[($posQt25[0])].split($iDelim))[$cumCol]) + [double](($sortedAry[($posQt25[1])].split($iDelim))[$cumCol]) ) / 2
             [double] $Qt50 = ( [double](($sortedAry[($posQt50[0])].split($iDelim))[$cumCol]) + [double](($sortedAry[($posQt50[1])].split($iDelim))[$cumCol]) ) / 2
@@ -405,22 +418,22 @@ function percentile {
                 $outObject["sum"]     = [int64] $statSum
                 $outObject["average"] = [int64] $statAvg
                 $outObject["stdev"]   = [int64] $statStd
-                $outObject["max"]     = [int64] $statMax
-                $outObject["Qt75"]    = [int64] $Qt75
-                $outObject["Qt50"]    = [int64] $Qt50
-                $outObject["Qt25"]    = [int64] $Qt25
                 $outObject["min"]     = [int64] $statMin
+                $outObject["Qt25"]    = [int64] $Qt25
+                $outObject["Qt50"]    = [int64] $Qt50
+                $outObject["Qt75"]    = [int64] $Qt75
+                $outObject["max"]     = [int64] $statMax
                 $outObject["IQR"]     = [int64] $IQR
             } else {
                 $outObject["count"]   = [int]    $statCnt
                 $outObject["sum"]     = [double] $statSum
                 $outObject["average"] = [double] $statAvg
                 $outObject["stdev"]   = [double] $statStd
-                $outObject["max"]     = [double] $statMax
-                $outObject["Qt75"]    = [double] $Qt75
-                $outObject["Qt50"]    = [double] $Qt50
-                $outObject["Qt25"]    = [double] $Qt25
                 $outObject["min"]     = [double] $statMin
+                $outObject["Qt25"]    = [double] $Qt25
+                $outObject["Qt50"]    = [double] $Qt50
+                $outObject["Qt75"]    = [double] $Qt75
+                $outObject["max"]     = [double] $statMax
                 $outObject["IQR"]     = [double] $IQR
             }
             return [pscustomobject]($outObject)
