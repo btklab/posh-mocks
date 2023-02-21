@@ -15,7 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- None
+- Added `percentile` function
+
 
 ## [0.1.0] init - 2023-02-19
 

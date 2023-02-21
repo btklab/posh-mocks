@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `conv`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `filehame`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `i`, `image2md`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `linkextract`, `logi2dot`, `logi2pu`, `man2`, `map2`, `mind2dot`, `mind2pu`, `nextyear`, `Override-Yaml`, `pawk`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
+- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `conv`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `filehame`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `i`, `image2md`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `linkextract`, `logi2dot`, `logi2pu`, `man2`, `map2`, `mind2dot`, `mind2pu`, `nextyear`, `Override-Yaml`, `pawk`, `percentile`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
 
 Inspired by:
 
@@ -2347,6 +2347,147 @@ lastyear 2/28 -s "_last_year"
 2022-02-28_last_year
 ```
 
+
+### Statistics
+
+#### `percentile` - Ranking with percentile and quartile
+
+半角スペース区切りデータにpercentileまたは四分位数（quartile）を適用してランク付け。
+
+    Usage:
+
+    Calculate and ranking with percentile and quartiles on space-delimited
+    data without headers. If data has header rows, they can be skipped with
+    -SkipHeader switch.
+
+
+- Usage
+    - `man2 percentile`
+    - `cat data.txt | percentile [-v] <n> [-k <n>[,<n>]] [-NoHeader] [-SkipHeader] [-NoGrouping] [-Level5]`
+
+Examples:
+
+
+Input
+
+```powershell
+## Input
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } }
+
+a 1
+a 2
+a 3
+a 4
+a 5
+b 1
+b 2
+b 3
+b 4
+b 5
+c 1
+c 2
+c 3
+c 4
+c 5
+d 1
+d 2
+d 3
+d 4
+d 5
+```
+
+Output
+
+```powershell
+## calc summary of 2nd field
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2
+
+count   : 20
+sum     : 60
+average : 3
+stdev   : 1.45095250022002
+max     : 5
+Qt75    : 4
+Qt50    : 3
+Qt25    : 2
+min     : 1
+IQR     : 2
+
+## same as below (calc rightmost field by default)
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile
+
+## percentile 2 -k 1 :
+##  means summary 2nd field using 1st field as key
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -k 1 | ft
+
+key count   sum average stdev  max Qt75 Qt50 Qt25  min
+--- -----   --- ------- -----  --- ---- ---- ----  ---
+a       5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
+b       5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
+c       5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
+d       5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
+
+## -k 1,2 means fields from 1st to 2nd are considered keys
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $s $_" } } | percentile 3 -k 1,2 | ft
+
+key count   sum average stdev  max Qt75 Qt50 Qt25  min
+--- -----   --- ------- -----  --- ---- ---- ----  ---
+a a     5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
+b b     5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
+c c     5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
+d d     5 15.00    3.00  1.58 5.00 1.00 3.00 5.00 1.00
+```
+
+```powershell
+## -NoGrouping means ranking with quartile
+##   add cumulative-ratio and quartile-labels
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -NoGrouping | ft
+
+a 1 0.0167 Qt1
+b 1 0.0333 Qt1
+c 1 0.0500 Qt1
+d 1 0.0667 Qt1
+a 2 0.1000 Qt1
+b 2 0.1333 Qt1
+c 2 0.1667 Qt1
+d 2 0.2000 Qt1
+a 3 0.2500 Qt2
+d 3 0.3000 Qt2
+b 3 0.3500 Qt2
+c 3 0.4000 Qt2
+a 4 0.4667 Qt3
+b 4 0.5333 Qt3
+d 4 0.6000 Qt3
+c 4 0.6667 Qt3
+b 5 0.7500 Qt4
+a 5 0.8333 Qt4
+c 5 0.9167 Qt4
+d 5 1.0000 Qt4
+
+## -NoGouping and -Level5 means ranking by 20% cumurative ratio
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -NoGrouping -Level5 | ft
+
+a 1 0.0167 E
+b 1 0.0333 E
+c 1 0.0500 E
+d 1 0.0667 E
+a 2 0.1000 E
+b 2 0.1333 E
+c 2 0.1667 E
+d 2 0.2000 D
+a 3 0.2500 D
+d 3 0.3000 D
+b 3 0.3500 D
+c 3 0.4000 C
+a 4 0.4667 C
+b 4 0.5333 C
+d 4 0.6000 B
+c 4 0.6667 B
+b 5 0.7500 B
+a 5 0.8333 A
+c 5 0.9167 A
+d 5 1.0000 A
+```
 
 ### Plot chart and graph
 
