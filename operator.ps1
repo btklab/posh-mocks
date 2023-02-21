@@ -130,6 +130,7 @@ Set-Alias -name ml -value Get-OGP
 ## sys admin
 
 ## statistics
+. $pwshSrcDir/percentile_function.ps1
 
 ## math
 
