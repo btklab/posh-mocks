@@ -131,6 +131,9 @@ Set-Alias -name ml -value Get-OGP
 
 ## statistics
 . $pwshSrcDir/percentile_function.ps1
+. $pwshSrcDir/decil_function.ps1
+. $pwshSrcDir/summary_function.ps1
+. $pwshSrcDir/movw_function.ps1
 
 ## math
 

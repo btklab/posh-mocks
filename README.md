@@ -162,7 +162,7 @@ a2b1c1
 cat a.txt | sed "s;`t;;g"
 
 # replace CrLf to space
-(cat a.txt) -join ""
+(cat a.txt) -join " "
 ```
 
 ```powershell
@@ -2583,6 +2583,266 @@ b 5 0.7500 B
 a 5 0.8333 A
 c 5 0.9167 A
 d 5 1.0000 A
+```
+
+#### [decil] - Decile analysis (Divide records about 10 equal parts)
+
+[decil]: src/decil_function.ps1
+
+デシル分析表の生成。入力データを10ブロックに分けてラベル付け。[percentile]との違いは、値をみずに単純に「行数」だけをみてそれを10等分する点。
+
+[percentile]でのpercentileやquartileは外れ値を除外したり中央値をみるが、この[decil]はどちらかというと指定列の「上位の少数レコード」が総計の多く（たとえば8割）を占めている、ということを確認するのによく使う。
+
+- Usage
+    - `man2 decil`
+    - `decil [[-Key] <Int32>] [[-Val] <Int32>] [-Delimiter <String>] [-Rank] [-NaN <String>] [-NoHeader] [-Quartile] [-Outlier] [-StandardDeviation]`
+- thanks:
+    - [デシル分析表の作成 with Excel](https://hitorimarketing.net/tools/decile-analysis.html)
+
+Examples:
+
+Input:
+
+```powershell
+cat data.txt
+Customers Sales
+AC01 6340834
+AC02 6340834
+AC03 6340834
+・・・
+U036 6158245
+U040 6500047
+U041 6751113
+```
+
+Output:
+
+```powershell
+cat data.txt | decil | Format-Table
+
+Name  Seg Count          Sum       Mean Ratio Cumulative-Ratio
+----  --- -----          ---       ---- ----- ----------------
+Sales D01    57 431538439.00 7570849.81  0.14             0.14
+Sales D02    57 384099747.00 6738592.05  0.12             0.26
+Sales D03    57 382266775.00 6706434.65  0.12             0.38
+Sales D04    56 374027341.00 6679059.66  0.12             0.49
+Sales D05    56 353450955.00 6311624.20  0.11             0.60
+Sales D06    56 309655714.00 5529566.32  0.10             0.70
+Sales D07    56 303489528.00 5419455.86  0.10             0.80
+Sales D08    56 302052324.00 5393791.50  0.09             0.89
+Sales D09    56 266710113.00 4762680.59  0.08             0.98
+Sales D10    56  76811269.00 1371629.80  0.02             1.00
+```
+
+Another examples:
+
+```powershell
+cat data.txt | decil -NoHeader | ft
+
+Name Seg Count          Sum       Mean Ratio Cumulative-Ratio
+---- --- -----          ---       ---- ----- ----------------
+H2   D01    57 431538439.00 7570849.81  0.14             0.14
+H2   D02    57 384099747.00 6738592.05  0.12             0.26
+H2   D03    57 382266775.00 6706434.65  0.12             0.38
+H2   D04    56 374027341.00 6679059.66  0.12             0.49
+H2   D05    56 353450955.00 6311624.20  0.11             0.60
+H2   D06    56 309655714.00 5529566.32  0.10             0.70
+H2   D07    56 303489528.00 5419455.86  0.10             0.80
+H2   D08    56 302052324.00 5393791.50  0.09             0.89
+H2   D09    56 266710113.00 4762680.59  0.08             0.98
+H2   D10    56  76811269.00 1371629.80  0.02             1.00
+
+description
+=========================
+NoHeader input
+```
+
+```powershell
+cat data.txt
+Customers Salse
+AC01 6340834
+AC02 6340834
+AC03 6340834
+・・・
+U036 6158245
+U040 6500047
+U041 6751113
+
+
+cat .\data.txt | decil -Rank | head
+Seg Customers Sales
+D01 BZ30 9830001
+D01 CZ31 9600101
+D01 GZ96 9500965
+D01 TZ11 8998608
+D01 CZ35 8920822
+D01 EZ64 8691211
+D01 GZ87 8615511
+D01 FZ09 8614123
+D01 U022 8594501
+
+description
+=========================
+-Rank option
+```
+
+```powershell
+cat data.txt
+AC01 6340834
+AC02 6340834
+AC03 6340834
+・・・
+U036 6158245
+U040 6500047
+U041 6751113
+
+
+cat data.txt | decil -Rank | chead | ratio 3 | head
+D01 BZ30 9830001 0.0030872127736867039417159664
+D01 CZ31 9600101 0.0030150103174844539891268974
+D01 GZ96 9500965 0.0029838756385019996555041486
+D01 TZ11 8998608 0.0028261052631631841729778897
+D01 CZ35 8920822 0.0028016757709572328253828774
+D01 EZ64 8691211 0.0027295640781731753488107647
+D01 GZ87 8615511 0.0027057897156916167519817411
+D01 FZ09 8614123 0.0027053538000360764173397506
+D01 U022 8594501 0.0026991913094071049142092472
+D01 CZ84 8470022 0.0026600974009877927269611624
+```
+
+
+
+#### [summary] - Calculate the basic statistics of a specified field
+
+[summary]: src/summary_function.ps1
+
+半角スペース区切りデータのうち数値列1列分の基礎統計量を算出する。
+
+- デフォルトで四分位数を計算
+    - 四分位数の中央値はExclusive
+    - 四分位数の外れ値は `(Qt1st - IQR*1.5)`以下、`(Qt3rd + IQR*1.5)`以上
+    - 標準偏差は`n-1`で割った値（標本標準偏差）
+- オプションで外れ値を加味した四分位数、標準偏差を算出
+
+```powershell
+cat iris.csv | summary 1 -d ","
+
+Name        : sepal_length
+Count       : 150
+Mean        : 5.84333333333333
+Min         : 4.3
+Qt25%       : 5.1
+Qt50%       : 5.8
+Qt75%       : 6.4
+Max         : 7.9
+IQR         : 1.3
+IQD         : 0.65
+Sum         : 876.5
+Count-NaN   : 0
+Count-Total : 150
+```
+
+- Usage
+    - `man2 summary`
+    - `summary [[-Num] <Int32>] [-Delimiter <String>] [-NaN <String>] [-noHeader] [-Quartile] [-Outlier] [-StandardDeviation]`
+
+Examples:
+
+一列分しか演算してくれない。
+
+```powershell
+cat iris.csv | summary 1 -d ","
+
+Name        : sepal_length
+Count       : 150
+Mean        : 5.84333333333333
+Min         : 4.3
+Qt25%       : 5.1
+Qt50%       : 5.8
+Qt75%       : 6.4
+Max         : 7.9
+IQR         : 1.3
+IQD         : 0.65
+Sum         : 876.5
+Count-NaN   : 0
+Count-Total : 150
+```
+
+以下のように工夫すると任意の複数列の基礎統計量が計算できる。
+
+```powershell
+1..4 | %{ cat iris.csv | summary $_ -d "," } | ft
+
+Name         Count Mean  Min Qt25% Qt50% Qt75%  Max  IQR  IQD
+----         ----- ----  --- ----- ----- -----  ---  ---  ---
+sepal_length   150 5.84 4.30  5.10  5.80  6.40 7.90 1.30 0.65
+sepal_width    150 3.06 2.00  2.80  3.00  3.30 4.40 0.50 0.25
+petal_length   150 3.76 1.00  1.60  4.35  5.10 6.90 3.50 1.75
+petal_width    150 1.20 0.10  0.30  1.30  1.80 2.50 1.50 0.75
+```
+
+
+#### [movw] - Moving window approach
+
+[movw]: src/movw_function.ps1
+
+ムービング・ウィンドウ・アプローチ（異常検知の考え方・傾向分析（TREND ANALYSIS）の一種）のPowerShell実装。
+
+Implementation of moving window approach.
+
+> 通常のサンプリング計画では同一ロットから決められたサンプル数(n)を採取して検査し，その中で基準値(m)を超えるものが(c)個以内であれば合格と判定するが（2階級法），Moving windowでは，比較的大きな数のサンプル数n個を一定の期間，決められた頻度で採取して検査し，最新の結果が加わるたびに最古の検査結果をn個の枠から削除し，そのn個のなかで，基準値(m)を超えるものが(c)個以内であればその工程または食品安全管理システムは適切に管理されていると判断する手法であり，サンプル日ごとの検査結果を表に表した場合，n個の枠が検査結果が加わるたびに日々，枠（窓）を移動するように見えるので，ムービング・ウインドウと呼ばれている．
+
+from [グローバル化と食品微生物規格の考え方 - J-Stage](https://www.jstage.jst.go.jp/article/jsfm/32/2/32_124/_pdf)
+
+
+- references:
+    - [Guidelines&nbsp;&#124; CODEXALIMENTARIUS FAO-WHO](https://www.fao.org/fao-who-codexalimentarius/codex-texts/guidelines/en/)
+        - [CXG 21-1997	Principles and Guidelines for the Establishment and Application of Microbiological Criteria Related to Foods](https://www.fao.org/fao-who-codexalimentarius/sh-proxy/en/?lnk=1&url=https%253A%252F%252Fworkspace.fao.org%252Fsites%252Fcodex%252FStandards%252FCXG%2B21-1997%252FCXG_021e.pdf)
+    - [Application of the moving window approach in the verification of the performance of food safety management systems - ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0956713515001061)
+
+
+- Usage
+    - `man2 movw`
+    - `movw [[-Num] <Int32>] -WindowSize <Int32> -AcceptableLevel <Double> -MaxLimit <Double> -MaxFrequency <Double> [-ReverseLimit] [-OnlyResult] [-NoHeader] [-Delimiter <String>] [-NaN <String>]`
+- Exmples:
+    - `cat iris.txt | movw -Num 1 -WindowSize 5 -AcceptableLevel 4.7 -MaxLimit 5.5 -MaxFrequency 3`
+- Notes:
+    - Corrective action is triggered by exceeding either (c) or (M):
+        - Limit that will start corrective measures when this value deviates at least once in the window
+            - `(M)` Max limit
+		- Levels that will start corrective measures when "-AcceptableLevel" deviations occur more than "-MaxFrequency" times in "-WindowSize" range
+            - `(m)` AcceptableLevel: a marginally acceptable level
+            - `(n)` WindowSize: moving window size
+            - `(c)` Maximum frequency (c) of all samples taken during the specified period (n)
+    - The evaluation result is output in the "Res" field.<br />The meaning of the numerical value is as follows:
+        - `0`: Clear (no need to start corrective action)
+        - `1`: Over MaxFrequency (need to start corrective action)
+        - `2`: Over MaxLimit (need to start corrective action)
+        - `3`: Over MaxFrequency and over MaxLimit (same as 1, 2)
+    - The moving window approach for implementing microbiological criteria is described.
+    - The approach can be a cost-effective means to demonstrate acceptable performance of a food safety management system.
+    - The approach is appropriate where the between-lot variability of samples is less than the within-lot variability.
+
+
+Examples:
+
+```powershell
+cat iris.txt | movw -Num 1 -WindowSize 5 -AcceptableLevel 4.7 -MaxLimit 5.5 -MaxFrequency 3
+
+s_l AcceptableLevel MaxLimit MaxFrequency WindowSize Res
+--- --------------- -------- ------------ ---------- ---
+5.1 NaN             NaN      NaN          NaN        NaN
+4.9 NaN             NaN      NaN          NaN        NaN
+4.7 NaN             NaN      NaN          NaN        NaN
+4.6 NaN             NaN      NaN          NaN        NaN
+5.0 4.7             5.5      3            5          1
+5.4 4.7             5.5      3            5          1
+4.6 4.7             5.5      3            5          0
+5.0 4.7             5.5      3            5          1
+4.4 4.7             5.5      3            5          1
+4.9 4.7             5.5      3            5          1
+5.4 4.7             5.5      3            5          1
+4.8 4.7             5.5      3            5          1
 ```
 
 

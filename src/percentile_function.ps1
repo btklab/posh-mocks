@@ -18,6 +18,9 @@
         versicolor    50 296.80 5.94  0.52 4.90 5.60 5.90 6.30 7.00
         virginica     50 329.40 6.59  0.64 4.90 6.20 6.50 7.00 7.90
 
+.LINK
+    decil, percentile, summary
+
 .PARAMETER Delimiter
     Input/Output field separator.
     Alias: -fs

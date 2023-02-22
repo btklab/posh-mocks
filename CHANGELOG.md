@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added [README.md] hyperlinks to related file in section titles
 - Enabled [map2] change upper-left-mark using `-UpperLeftMark` option
 
+### Added
+
+- Added [movw] function
+- Added [decil] function
+- Added [summary] function
+
+
 
 ## [0.2.0] - 2023-02-22
 
@@ -197,6 +204,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [zen]: src/zen_function.ps1
 
 [percentile]: src/percentile_function.ps1
+[decil]: src/decil_function.ps1
+[summary]: src/summary_function.ps1
+[movw]: src/movw_function.ps1
 
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/0.2.0..HEAD
