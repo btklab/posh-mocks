@@ -173,6 +173,9 @@ function map2 {
     [Parameter( Mandatory=$false)]
     [string] $NaN = '0',
 
+    [Parameter( Mandatory=$false)]
+    [string] $UpperLeftMark = '*',
+
     [Parameter(
       ValueFromPipeline=$true)]
     [string[]] $Text
@@ -297,7 +300,7 @@ function map2 {
     [string[]] $uniqYokoKey = $yokoKeyAry | Sort-Object {[string]$_} -Unique
 
     ## output header part
-    [string] $tateKeyHeader = '*'
+    [string] $tateKeyHeader = $UpperLeftMark
     [string] $tateKeyHeader += "$($oDelim + '*')" * ($tateKeyNum - 1)
 
     if($MaxDataColNum -gt 1){

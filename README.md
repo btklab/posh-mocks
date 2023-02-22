@@ -2354,19 +2354,24 @@ lastyear 2/28 -s "_last_year"
 
 半角スペース区切りデータにpercentileまたは四分位数（quartile）を適用してランク付け。
 
-    Usage:
-
-    Calculate and ranking with percentile and quartiles on space-delimited
-    data without headers. If data has header rows, they can be skipped with
-    -SkipHeader switch.
+Calculate and ranking with percentile and quartiles on space-delimited data without headers. If data has header rows, they can be skipped with `-SkipHeader` switch.
 
 
 - Usage
     - `man2 percentile`
-    - `cat data.txt | percentile [-v] <n> [-k <n>[,<n>]] [-NoHeader] [-SkipHeader] [-NoGrouping] [-Level5]`
+    - `cat data.txt | percentile [-v] <n> [-k <n>[,<n>]] [-NoHeader] [-SkipHeader] [-Rank] [-Level5]`
 
 Examples:
 
+```powershell
+cat iris.csv | percentile -v 1 -k 5 -d "," -SkipHeader | ft
+
+key        count    sum mean stdev  min Qt25 Qt50 Qt75  max
+---        -----    --- ---- -----  --- ---- ---- ----  ---
+setosa        50 250.30 5.01  0.35 4.30 4.80 5.00 5.20 5.80
+versicolor    50 296.80 5.94  0.52 4.90 5.60 5.90 6.30 7.00
+virginica     50 329.40 6.59  0.64 4.90 6.20 6.50 7.00 7.90
+```
 
 Input
 
@@ -2404,7 +2409,7 @@ Output
 
 count   : 20
 sum     : 60
-average : 3
+mean    : 3
 stdev   : 1.45095250022002
 min     : 1
 Qt25    : 2
@@ -2420,28 +2425,28 @@ IQR     : 2
 ##  means summary 2nd field using 1st field as key
 "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -k 1 | ft
 
-key count   sum average stdev  min Qt25 Qt50 Qt75  max
---- -----   --- ------- -----  --- ---- ---- ----  ---
-a       5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
-b       5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
-c       5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
-d       5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
+key count   sum maen stdev  min Qt25 Qt50 Qt75  max
+--- -----   --- ---- -----  --- ---- ---- ----  ---
+a       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+b       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+c       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+d       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
 
 ## -k 1,2 means fields from 1st to 2nd are considered keys
 "a".."d" | %{ $s=$_; 1..5 | %{ "$s $s $_" } } | percentile 3 -k 1,2 | ft
 
-key count   sum average stdev  min Qt25 Qt50 Qt75  max
---- -----   --- ------- -----  --- ---- ---- ----  ---
-a a     5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
-b b     5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
-c c     5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
-d d     5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
+key count   sum maen stdev  min Qt25 Qt50 Qt75  max
+--- -----   --- ---- -----  --- ---- ---- ----  ---
+a a     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+b b     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+c c     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+d d     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
 ```
 
 ```powershell
-## -NoGrouping means ranking with quartile
+## -Rank means ranking with quartile
 ##   add cumulative-ratio and quartile-labels
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -NoGrouping | ft
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Rank | ft
 
 a 1 0.0167 Qt1
 b 1 0.0333 Qt1
@@ -2488,6 +2493,7 @@ a 5 0.8333 A
 c 5 0.9167 A
 d 5 1.0000 A
 ```
+
 
 ### Plot chart and graph
 
