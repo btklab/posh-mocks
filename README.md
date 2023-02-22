@@ -2469,8 +2469,8 @@ a 5 0.8333 Qt4
 c 5 0.9167 Qt4
 d 5 1.0000 Qt4
 
-## -NoGouping and -Level5 means ranking by 20% cumurative ratio
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -NoGrouping -Level5 | ft
+## -Rank and -Level5 means ranking by 20% cumurative ratio
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Rank -Level5 | ft
 
 a 1 0.0167 E
 b 1 0.0333 E
