@@ -2,12 +2,21 @@
 .SYNOPSIS
     percentile - Ranking with percentile and quartile
 
-    Usage:
-        cat data.txt | percentile [-v] <n> [-k <n>[,<n>]] [-NoHeader] [-SkipHeader] [-NoGrouping] [-Level5]
-
     Calculate and ranking with percentile and quartiles on space-delimited
     data without headers. If data has header rows, they can be skipped with
     -SkipHeader switch.
+
+    Usage:
+        cat data.txt | percentile [-v] <n> [-k <n>[,<n>]] [-NoHeader] [-SkipHeader] [-Rank] [-Level5]
+
+    Example:
+        cat iris.csv | percentile -v 1 -k 5 -d "," -SkipHeader | ft
+
+        key        count    sum mean stdev  min Qt25 Qt50 Qt75  max
+        ---        -----    --- ---- -----  --- ---- ---- ----  ---
+        setosa        50 250.30 5.01  0.35 4.30 4.80 5.00 5.20 5.80
+        versicolor    50 296.80 5.94  0.52 4.90 5.60 5.90 6.30 7.00
+        virginica     50 329.40 6.59  0.64 4.90 6.20 6.50 7.00 7.90
 
 .PARAMETER Delimiter
     Input/Output field separator.
@@ -54,7 +63,7 @@
 
     count   : 20
     sum     : 60
-    average : 3
+    mean    : 3
     stdev   : 1.45095250022002
     min     : 1
     Qt25    : 2
@@ -70,26 +79,26 @@
     ##  means summary 2nd field using 1st field as key
     PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -k 1 | ft
 
-    key count   sum average stdev  min Qt25 Qt50 Qt75  max
-    --- -----   --- ------- -----  --- ---- ---- ----  ---
-    a       5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
-    b       5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
-    c       5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
-    d       5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    key count   sum mean stdev  min Qt25 Qt50 Qt75  max
+    --- -----   --- ---- -----  --- ---- ---- ----  ---
+    a       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    b       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    c       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    d       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
 
     ## -k 1,2 means fields from 1st to 2nd are considered keys
     PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $s $_" } } | percentile 3 -k 1,2 | ft
 
-    key count   sum average stdev  min Qt25 Qt50 Qt75  max
-    --- -----   --- ------- -----  --- ---- ---- ----  ---
-    a a     5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
-    b b     5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
-    c c     5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
-    d d     5 15.00    3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    key count   sum mean stdev  min Qt25 Qt50 Qt75  max
+    --- -----   --- ---- -----  --- ---- ---- ----  ---
+    a a     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    b b     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    c c     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    d d     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
 
 .EXAMPLE
-    ## -NoGrouping means ranking with quartile
-    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -NoGrouping | ft
+    ## -Rank means ranking with quartile
+    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Rank | ft
 
     a 1 0.0167 Qt1
     b 1 0.0333 Qt1
@@ -113,7 +122,7 @@
     d 5 1.0000 Qt4
 
     ## -NoGouping and -Level5 means ranking by 20% cumurative ratio
-    "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -NoGrouping -Level5 | ft
+    "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Rank -Level5 | ft
     a 1 0.0167 E
     b 1 0.0333 E
     c 1 0.0500 E
@@ -171,7 +180,7 @@ function percentile {
         [switch] $SkipHeader,
         
         [Parameter( Mandatory=$False )]
-        [switch] $NoGrouping,
+        [switch] $Rank,
         
         [Parameter( Mandatory=$False )]
         [double] $OutlierMultiple = 1.5,
@@ -276,13 +285,7 @@ function percentile {
             return [double[]]@($statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd)
         }
         $statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd = GetStat $valAry
-        Write-Debug "statCnt: $statCnt"
-        Write-Debug "statMax: $statMax"
-        Write-Debug "statMin: $statMin"
-        Write-Debug "statSum: $statSum"
-        Write-Debug "statAvg: $statAvg"
-        Write-Debug "statStd: $statStd"
-        
+
         # private function
         function getMedianPos ( [int] $cnt ){
             [int[]] $pos = @(0, 0)
@@ -315,11 +318,29 @@ function percentile {
 
         # calc quartile
         function CalcQuartilePos ( [string[]] $lineAry ){
-            [int[]] $posQt50 = getMedianPos $statCnt
-            [string[]] $tmpQt25 = $lineAry[0..($posQt50[0]-1)]
-            [string[]] $tmpQt75 = $lineAry[($posQt50[1]+1)..($lineAry.Count - 1)]
-            [int[]] $posQt25 = getMedianPos $tmpQt25.Count
-            [int[]] $posQt75 = @( ($posQt50[1]+$posQt25[0]+1), ($posQt50[1]+$posQt25[1]+1) )
+            if ( $lineAry.Count -eq 1 ){
+                [int[]] $posQt25 = @(0, 0)
+                [int[]] $posQt50 = @(0, 0)
+                [int[]] $posQt75 = @(0, 0)
+            } elseif ( $lineAry.Count -eq 2 ){
+                [int[]] $posQt25 = @(0, 1)
+                [int[]] $posQt50 = @(0, 1)
+                [int[]] $posQt75 = @(0, 1)
+            } elseif ( $lineAry.Count -eq 3 ){
+                [int[]] $posQt25 = @(0, 0)
+                [int[]] $posQt50 = @(1, 1)
+                [int[]] $posQt75 = @(2, 2)
+            } elseif ( $lineAry.Count -eq 4 ){
+                [int[]] $posQt25 = @(0, 0)
+                [int[]] $posQt50 = @(1, 2)
+                [int[]] $posQt75 = @(3, 3)
+            } else {
+                [int[]] $posQt50 = getMedianPos $statCnt
+                [string[]] $tmpQt25 = $lineAry[0..($posQt50[0]-1)]
+                [string[]] $tmpQt75 = $lineAry[($posQt50[1]+1)..($lineAry.Count - 1)]
+                [int[]] $posQt25 = getMedianPos $tmpQt25.Count
+                [int[]] $posQt75 = @( ($posQt50[1]+$posQt25[0]+1), ($posQt50[1]+$posQt25[1]+1) )
+            }
             Write-Debug "posQt25: $($posQt25 -join ',')"
             Write-Debug "posQt50: $($posQt50 -join ',')"
             Write-Debug "posQt75: $($posQt75 -join ',')"
@@ -338,9 +359,10 @@ function percentile {
             [int[]] $posQt50 = $posHash["posQt50"]
             [int[]] $posQt75 = $posHash["posQt75"]
             [int] $cumCol = $sVal
-            [double] $Qt25 = ( [double](($sortedAry[($posQt25[0])].split($iDelim))[$cumCol]) + [double](($sortedAry[($posQt25[1])].split($iDelim))[$cumCol]) ) / 2
-            [double] $Qt50 = ( [double](($sortedAry[($posQt50[0])].split($iDelim))[$cumCol]) + [double](($sortedAry[($posQt50[1])].split($iDelim))[$cumCol]) ) / 2
-            [double] $Qt75 = ( [double](($sortedAry[($posQt75[0])].split($iDelim))[$cumCol]) + [double](($sortedAry[($posQt75[1])].split($iDelim))[$cumCol]) ) / 2
+            Write-Debug "$($cumCol)"
+            [double] $Qt25 = ( [double](($lineAry[($posQt25[0])].split($iDelim))[$cumCol]) + [double](($lineAry[($posQt25[1])].split($iDelim))[$cumCol]) ) / 2
+            [double] $Qt50 = ( [double](($lineAry[($posQt50[0])].split($iDelim))[$cumCol]) + [double](($lineAry[($posQt50[1])].split($iDelim))[$cumCol]) ) / 2
+            [double] $Qt75 = ( [double](($lineAry[($posQt75[0])].split($iDelim))[$cumCol]) + [double](($lineAry[($posQt75[1])].split($iDelim))[$cumCol]) ) / 2
             [double] $IQR = $Qt75 - $Qt25
             [double] $HiIQR = $Qt75 + $OutlierMultiple * $IQR
             [double] $LoIQR = $Qt25 - $OutlierMultiple * $IQR
@@ -388,7 +410,7 @@ function percentile {
                 Write-Output $writeLine
             }
         }
-        if ( ( $NoGrouping ) -and ( -not $Key ) ) {
+        if ( ( $Rank ) -and ( -not $Key ) ) {
             ApplyQuartile $sortedAry
             return
         }
@@ -416,7 +438,7 @@ function percentile {
             if ( $Cast -eq 'int'){
                 $outObject["count"]   = [int64] $statCnt
                 $outObject["sum"]     = [int64] $statSum
-                $outObject["average"] = [int64] $statAvg
+                $outObject["mean"]     = [int64] $statAvg
                 $outObject["stdev"]   = [int64] $statStd
                 $outObject["min"]     = [int64] $statMin
                 $outObject["Qt25"]    = [int64] $Qt25
@@ -424,10 +446,12 @@ function percentile {
                 $outObject["Qt75"]    = [int64] $Qt75
                 $outObject["max"]     = [int64] $statMax
                 $outObject["IQR"]     = [int64] $IQR
+                $outObject["HiIQR"]   = [int64] $HiIQR
+                $outObject["LoIQR"]   = [int64] $LoIQR
             } else {
                 $outObject["count"]   = [int]    $statCnt
                 $outObject["sum"]     = [double] $statSum
-                $outObject["average"] = [double] $statAvg
+                $outObject["mean"]     = [double] $statAvg
                 $outObject["stdev"]   = [double] $statStd
                 $outObject["min"]     = [double] $statMin
                 $outObject["Qt25"]    = [double] $Qt25
@@ -435,6 +459,8 @@ function percentile {
                 $outObject["Qt75"]    = [double] $Qt75
                 $outObject["max"]     = [double] $statMax
                 $outObject["IQR"]     = [double] $IQR
+                $outObject["HiIQR"]   = [double] $HiIQR
+                $outObject["LoIQR"]   = [double] $LoIQR
             }
             return [pscustomobject]($outObject)
         }
@@ -459,8 +485,15 @@ function percentile {
                     $keyAryList.Add( $readLine )
                     $valAryList.Add( $splitLine[$sVal] )
                 } else {
+                    Write-Debug "$($keyAryList.ToArray())"
                     $statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd = GetStat $valAryList.ToArray()
                     $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $keyAryList.ToArray()
+                    Write-Debug "statCnt: $statCnt"
+                    Write-Debug "statMax: $statMax"
+                    Write-Debug "statMin: $statMin"
+                    Write-Debug "statSum: $statSum"
+                    Write-Debug "statAvg: $statAvg"
+                    Write-Debug "statStd: $statStd"
                     OutObject $oldKey $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
                     $keyAryList = New-Object 'System.Collections.Generic.List[System.String]'
                     $ValAryList = New-Object 'System.Collections.Generic.List[System.String]'
@@ -470,14 +503,26 @@ function percentile {
                 $oldKey = $nowKey
             }
             if ( $keyAryList.ToArray() -ne 0 ){
+                Write-Debug "$($keyAryList.ToArray())"
                 $statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd = GetStat $valAryList.ToArray()
                 $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $keyAryList.ToArray()
+                Write-Debug "statCnt: $statCnt"
+                Write-Debug "statMax: $statMax"
+                Write-Debug "statMin: $statMin"
+                Write-Debug "statSum: $statSum"
+                Write-Debug "statAvg: $statAvg"
+                Write-Debug "statStd: $statStd"
                 OutObject $nowKey $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
             }
             return
         }
         if ( $True ){
-            #$statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd = GetStat $valAry
+            Write-Debug "statCnt: $statCnt"
+            Write-Debug "statMax: $statMax"
+            Write-Debug "statMin: $statMin"
+            Write-Debug "statSum: $statSum"
+            Write-Debug "statAvg: $statAvg"
+            Write-Debug "statStd: $statStd"
             $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $sortedAry   
             OutObject '' $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
             return
