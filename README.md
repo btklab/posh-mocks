@@ -17,10 +17,10 @@ function list:
 
 ```powershell
 # one-liner to create function list
-cat README.md | grep '^#### ' | grep -o '`[^`]+`' | sort | flat -ofs ", " | Set-Clipboard
+cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- `Add-CrLf-EndOfFile`, `Add-CrLf`, `addb`, `addl`, `addr`, `addt`, `cat2`, `catcsv`, `chead`, `clip2img`, `clipwatch`, `conv`, `ConvImage`, `count`, `csv2sqlite`, `csv2txt`, `ctail`, `ctail2`, `delf`, `dot2gviz`, `filehame`, `fillretu`, `flat`, `fwatch`, `gantt2pu`, `Get-OGP(Alias:ml)`, `getfirst`, `getlast`, `grep`, `gyo`, `han`, `head`, `i`, `image2md`, `jl`, `json2txt`, `juni`, `keta`, `kinsoku`, `lastyear`, `lcalc`, `linkcheck`, `linkextract`, `logi2dot`, `logi2pu`, `man2`, `map2`, `mind2dot`, `mind2pu`, `nextyear`, `Override-Yaml`, `pawk`, `percentile`, `pu2java`, `pwmake`, `retu`, `rev`, `rev2`, `say`, `sed-i`, `sed`, `self`, `sleepy`, `sm2`, `table2md`, `tac`, `tail`, `tarr`, `tateyoko`, `teatimer`, `tenki`, `tex2pdf`, `thisyear`, `toml2psobject`, `uniq`, `vbStrConv`, `yarr`, `zen`
+- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [ctail2], [delf], [dot2gviz], [filehame], [fillretu], [flat], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [sleepy], [sm2], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [yarr], [zen]
 
 Inspired by:
 
@@ -100,7 +100,9 @@ if ($IsWindows){
 
 ### Show functions
 
-#### `man2` - Enumerate the function names
+#### [man2] - Enumerate the function names
+
+[man2]: src/man2_function.ps1
 
 `src`配下の関数（ファイル）名を列挙する。
 筆者は作った関数をすぐに忘れてしまうため。
@@ -112,7 +114,7 @@ if ($IsWindows){
 - 挙動
     - `man2`関数ファイルと同階層にある`*_function.ps1`ファイルのファイル名から`_function.ps1`を除去して列挙する
 - 依存
-    - `flat`, `tateyoko`, `keta`
+    - [flat], [tateyoko], [keta]
 - Examples
     - `man2`
     - `man2 man2`
@@ -123,7 +125,9 @@ if ($IsWindows){
 
 ### Unix-like text filters
 
-#### `sed` - Stream EDitor
+#### [sed] - Stream EDitor
+
+[sed]: src/sed_function.ps1
 
 文字列を置換する。Windows用。
 Linux環境で使う`sed`のような使用感で文字列を置換するが、劣化コピーである。
@@ -196,7 +200,9 @@ aaa
 eee
 ```
 
-#### `sed-i` - Edit files in place
+#### [sed-i] - Edit files in place
+
+[sed-i]: src/sed-i_function.ps1
 
 文字列を置換し、かつファイルを上書き。
 Linuxでいう`sed -i`（の劣化コピー）。ただし誤爆防止のため`-Execute`スイッチを使用しなければ上書きはしない。
@@ -251,7 +257,9 @@ PS > ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute -DoNotCreateBackup 
 ```
 
 
-#### `grep` - Searches for regex patterns
+#### [grep] - Searches for regex patterns
+
+[grep]: src/grep_function.ps1
 
 文字列の検索とヒット行の出力。Windows用。
 Linux環境で使う`grep`のような使用感で文字列を検索するが、劣化コピーである。
@@ -272,7 +280,10 @@ Linux環境で使う`grep`のような使用感で文字列を検索するが、
 - Inspired by Unix/Linux Commands
     - Command: `grep`
 - Learn
-    - [about Splatting - PowerShell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_splatting) ([ja-jp](https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.core/about/about_splatting))
+    - [about Splatting - PowerShell][about_splatting] ([ja-jp][about_splatting_jp])
+
+[about_splatting]: https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_splatting
+[about_splatting_jp]: https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.core/about/about_splatting
 
 検索速度は遅い。筆者の環境ではシンプルに`Select-String`を用いた方が速い。
 したがって、あまり引数をもちいないシンプルな用途であれば、
@@ -524,7 +535,10 @@ $hash | Out-String -Stream | grep 'foo'
 Name           foo
 ```
 
-#### `head`, `tail` - Output the first/last part of files
+#### [head], [tail] - Output the first/last part of files
+
+[head]: src/head_function.ps1
+[tail]: src/tail_function.ps1
 
 入力文字列の最初の数行または最後の数行を出力する。
 Linux環境で使う`head`、`tail`のような使用感で文字列を置換する。
@@ -541,7 +555,12 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 - Inspired by Unix/Linux Commands
     - Command: `head`, `tail`
 
-#### `chead`, `ctail`, `ctail2` - Cut the first/last part of files
+#### [chead], [ctail], [ctail2] - Cut the first/last part of files
+
+[chead]: src/chead_function.ps1
+[ctail]: src/ctail_function.ps1
+[ctail2]: src/ctail2_function.ps1
+
 
 入力文字列の最初の数行または最後の数行を削除（カット）して出力する。
 `"string" | Select-Object -Skip <int> / -SkipLast <int>`と同じ効果を得る。
@@ -559,7 +578,10 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 - Inspired by Unix/Linux Commands
     - Command: `chead`
 
-#### `uniq` - Report or omit repeated lines
+#### [uniq] - Report or omit repeated lines
+
+[uniq]: src/uniq_function.ps1
+
 
 入力から隣接する（連続する）重複行をなくし一意とする。大文字小文字は区別しない。事前ソート必要。
 `Group-Object -NoElement`、`Get-Unique`と似ている。
@@ -573,7 +595,9 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 - Inspired by Unix/Linux Commands
     - Command: `uniq`
 
-#### `cat2` - Concatenate files and print on the standard output
+#### [cat2] - Concatenate files and print on the standard output
+
+[cat2]: src/cat2_function.ps1
 
 テキストファイルのコンテンツを取得。
 複数ファイルを指定する方法は、`Get-Content`の際の「カンマ区切り」ではなく「半角スペース区切り」。
@@ -585,7 +609,9 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 - Inspired by Unix/Linux Commands
     - Command: `cat`
 
-#### `tac` - Output strings in reverse
+#### [tac] - Output strings in reverse
+
+[tac]: src/tac_function.ps1
 
 入力を行単位逆順に出力する。
 
@@ -608,7 +634,9 @@ Examples:
 1
 ```
 
-#### `rev` - Reverse strings
+#### [rev] - Reverse strings
+
+[rev]: src/rev_function.ps1
 
 文字列を行内で反転する。
 
@@ -625,7 +653,10 @@ Examples:
 "aiueo" | rev
 oeuia
 ```
-#### `rev2` - Reverse columns
+
+#### [rev2] - Reverse columns
+
+[rev2]: src/rev2_function.ps1
 
 半角スペースで区切られた列をリバースする。
 列内の文字列はリバースしない。
@@ -643,11 +674,11 @@ Examples:
 
 ```powershell
 .EXAMPLE
-PS> Write-Output "01 02 03" | rev2
+Write-Output "01 02 03" | rev2
 03 02 01
 
 .EXAMPLE
-PS> Write-Output "01 02 03" | rev2 -e
+Write-Output "01 02 03" | rev2 -e
 01 02 03
 03 02 01
 ```
@@ -655,7 +686,9 @@ PS> Write-Output "01 02 03" | rev2 -e
 
 ### text filters for space-separated input
 
-#### `tateyoko` - Transpose columns and rows
+#### [tateyoko] - Transpose columns and rows
+
+[tateyoko]: src/tateyoko_function.ps1
 
 半角スペース区切り行列の転置（半角スペース区切り文字列の縦横変換）。
 列数は不揃いでもよい。
@@ -682,7 +715,10 @@ Examples:
 3 6 9
 ```
 
-#### `fillretu` - Align records to the maximum number of columns
+#### [fillretu] - Align records to the maximum number of columns
+
+[fillretu]: src/fillretu_function.ps1
+
 
 半角スペース区切りレコードの列数を最大列数にそろえる。
 不足列を埋める、で、fill（埋める）＋retu（列）。
@@ -735,7 +771,9 @@ PS > cat dat.txt | yarr | fillretu | tateyoko | keta
    _    1    _
 ```
 
-#### `juni` - Enumerate the number of rows in each line
+#### [juni] - Enumerate the number of rows in each line
+
+[juni]: src/juni_function.ps1
 
 各行の行数を列挙
 
@@ -758,7 +796,9 @@ Output:
 4 d
 ```
 
-#### `self` - Select fields
+#### [self] - Select fields
+
+[self]: src/self_function.ps1
 
 半角スペース区切りの標準入力から任意の列のみ抽出する。
 すべての列は`0`で、最終列は`NF`で指定することもできる
@@ -823,7 +863,9 @@ Examples:
 ```
 
 
-#### `delf` - Delete fields
+#### [delf] - Delete fields
+
+[delf]: src/delf_function.ps1
 
 半角スペース区切りの標準入力から指定列のみ削除する
 最終列を`NF`で指定することもできる
@@ -865,7 +907,9 @@ Examples:
 7 8 10
 ```
 
-#### `sm2` - Sum up
+#### [sm2] - Sum up
+
+[sm2]: src/sm2_function.ps1
 
 半角スペース区切りの標準入力から指定列の合計を算出（サムアップ）する。
 
@@ -964,7 +1008,9 @@ C 1 10
 1 C 1 10 10
 ```
 
-#### `map2` - Cross tabulation of long-type data
+#### [map2] - Cross tabulation of long-type data
+
+[map2]: src/map2_function.ps1
 
 半角スペース区切りのロング型データをクロス集計する。入力データはヘッダなし、かつ、キーが事前に一意に集計されていること。
 
@@ -1055,7 +1101,10 @@ loc-3   7       70      8       80      9       90
 
 
 
-#### `lcalc` - Column-to-column calculator
+#### [lcalc] - Column-to-column calculator
+
+[lcalc]: src/lcalc_function.ps1
+
 
 半角スペース区切りの標準入力における列同士の計算。
 
@@ -1143,7 +1192,9 @@ C 1 10
 1 C 1 10 10
 ```
 
-#### `pawk` - Pattern-Action processor like GNU AWK
+#### [pawk] - Pattern-Action processor like GNU AWK
+
+[pawk]: src/pawk_function.ps1
 
 半角スペース区切りの標準入力に対する行指向のパターンマッチングプロセッサ。
 
@@ -1639,7 +1690,9 @@ adcbe
 # the first and last elements are dropped from the array.
 ```
 
-#### `retu` - Output column number
+#### [retu] - Output column number
+
+[retu]: src/retu_function.ps1
 
 半角スペース区切り入力の列数を出力。
 
@@ -1690,7 +1743,9 @@ d d
 2 d d
 ```
 
-#### `count` - Count up keys
+#### [count] - Count up keys
+
+[count]: src/count_function.ps1
 
 半角スペース区切り入力のキー数のカウント。
 `<k1>`列から`<k2>`列をキーフィールドとみなし、
@@ -1759,7 +1814,9 @@ PS> cat a.txt | grep . | sort | count -c 1 2
 4 04 神奈川県 16 小田原市 100
 ```
 
-#### `getfirst` - Get the first row of the same key
+#### [getfirst] - Get the first row of the same key
+
+[getfirst]: src/getfirst_function.ps1
 
 半角スペース区切り入力から、
 同一キーの最初行のデータを出力。
@@ -1804,7 +1861,9 @@ cat a.txt | getfirst 1 2
 04 神奈川県 13 横浜市 100
 ```
 
-#### `getlast` - Get the last row of the same key
+#### [getlast] - Get the last row of the same key
+
+[getlast]: src/getlast_function.ps1
 
 半角スペース区切り入力から、
 同一キーの最下行のデータを出力。
@@ -1850,7 +1909,9 @@ cat a.txt | getlast 1 2
 ```
 
 
-#### `yarr` - Expand long data to wide
+#### [yarr] - Expand long data to wide
+
+[yarr]: src/yarr_function.ps1
 
 縦型（ロング型）の半角スペース区切りレコードを、
 指定列をキーに横型（ワイド型）に変換する。
@@ -1900,7 +1961,9 @@ cat a.txt | grep . | ForEach-Object -begin{$h=@{}} -process{$a=$_ -split " ", 2;
 ```
 
 
-#### `tarr` - Expand wide data to long
+#### [tarr] - Expand wide data to long
+
+[tarr]: src/tarr_function.ps1
 
 横長（ワイド型）の半角スペース区切りレコードを、
 指定列をキーに縦長（ロング型）に変換する。
@@ -1940,7 +2003,9 @@ cat a.txt | grep . | tarr -n 1
 ※ `grep .`で空行をスキップ（＝1文字以上の行のみヒット）
 
 
-#### `flat` - Flat columns
+#### [flat] - Flat columns
+
+[flat]: src/flat_function.ps1
 
 半角スペース区切り文字列を任意列数となるように整える。
 `-ifs`で入力テキストの区切り文字を、<br />
@@ -1977,7 +2042,10 @@ aiu
 eo
 ```
 
-#### `Add-CrLf`, `Add-CrLf-EndOfFile` - Add LineFeed
+#### [Add-CrLf] , [Add-CrLf-EndOfFile] - Add LineFeed
+
+[Add-CrLf]: src/Add-CrLf_function.ps1
+[Add-CrLf-EndOfFile]: src/Add-CrLf-EndOfFile_function.ps1
 
 改行を挿入する。
 `Add-CrLf`は、文字列中に``` `r`n ```を見つけるとそこに改行を挿入する。
@@ -1988,7 +2056,12 @@ eo
     - `man2 Add-CrLf`
     - `man2 Add-CrLf-EndOfFile`
 
-#### `addb`, `addl`, `addr`, `addt` - Insert text strings at the top, bottom, left, and right of the input
+#### [addb], [addl], [addr], [addt] - Insert text strings at the top, bottom, left, and right of the input
+
+[addb]: src/addb_function.ps1
+[addl]: src/addl_function.ps1
+[addr]: src/addr_function.ps1
+[addt]: src/addt_function.ps1
 
 入力の上下左右に文字列を挿入する。
 
@@ -2014,7 +2087,9 @@ eo
     - Command: `addt`, `addb`, `addr`, `addl`
 
 
-#### `conv` - Convolution operation or find N-gram of text
+#### [conv] - Convolution operation or find N-gram of text
+
+[conv]: src/conv_function.ps1
 
 入力行を任意列数ごとに畳み込み演算（convolution）のように折り返す。
 文章のN-gramを求める。
@@ -2095,7 +2170,9 @@ Write-Output "にわにはにわにわとりがいる" | conv -fs '' 2 -r -f
 ```
 
 
-#### `keta` - Padding per columns
+#### [keta] - Padding per columns
+
+[keta]: src/keta_function.ps1
 
 半角スペース区切り入力の桁そろえ。
 端末上で半角スペース区切り入力を確認するときに見やすい。
@@ -2132,7 +2209,9 @@ dddddd eeee ffff
 ```
 
 
-#### `gyo` - Row counter
+#### [gyo] - Row counter
+
+[gyo]: src/gyo_function.ps1
 
 入力文字列の行数をカウント。
 `(1..20 | Measure-Object).Count`と同じ効果。
@@ -2166,7 +2245,9 @@ gyo *.*
 2 uri-list.txt
 ```
 
-#### `han` - Convert full-width kana to half-width kana using Microsoft.VisualBasic.VbStrConv.Wide
+#### [han] - Convert full-width kana to half-width kana using Microsoft.VisualBasic.VbStrConv.Wide
+
+[han]: src/han_function.ps1
 
 全角文字を半角に変換。For japanese locale on windows。
 `[-k|-Kana]`スイッチで全角カタカナは変換しない
@@ -2218,7 +2299,9 @@ Examples:
 パピプペポ0123456789=A
 ```
 
-#### `zen` - Convert half-width kana to full-width kana using Microsoft.VisualBasic.VbStrConv.Wide
+#### [zen] - Convert half-width kana to full-width kana using Microsoft.VisualBasic.VbStrConv.Wide
+
+[zen]: src/zen_function.ps1
 
 全角文字を半角に変換する。For japanese locale on windows。
 `[-k|-Kana]`スイッチで半角カタカナのみ全角カタカナに変換
@@ -2268,10 +2351,11 @@ Examples:
 パピプペポ0123456789=A
 ```
 
-#### `vbStrConv` - Convert strings using Microsoft.VisualBasic.VbStrConv
+#### [vbStrConv] - Convert strings using Microsoft.VisualBasic.VbStrConv
+
+[vbStrConv]: src/vbStrConv_function.ps1
 
 文字列の変換。
-
 
 - Usage
     - `man2 vbStrConv`
@@ -2294,7 +2378,12 @@ Examples:
 Input
 ```
 
-#### `thisyear`, `nextyear`, `lastyear` - Add this/next/last year to month/day input. To prevent mistyping the number of year.
+#### [thisyear], [nextyear], [lastyear], [gdate] - Add this/next/last year to month/day input. To prevent mistyping the number of year.
+
+[thisyear]: src/gdate_function.ps1
+[lastyear]: src/gdate_function.ps1
+[nextyear]: src/gdate_function.ps1
+[gdate]: src/gdate_function.ps1
 
 シンプルな日付の入力（e.g. 1/23）に年を付与して出力。
 筆者は「年数」をしばしばミスタイプしてしまうため。
@@ -2350,7 +2439,9 @@ lastyear 2/28 -s "_last_year"
 
 ### Statistics
 
-#### `percentile` - Ranking with percentile and quartile
+#### [percentile] - Ranking with percentile and quartile
+
+[percentile]: src/percentile_function.ps1
 
 半角スペース区切りデータにpercentileまたは四分位数（quartile）を適用してランク付け。
 
@@ -2497,11 +2588,14 @@ d 5 1.0000 A
 
 ### Plot chart and graph
 
-#### `dot2gviz` - Wrapper for Graphviz:dot command
+#### [dot2gviz] - Wrapper for Graphviz:dot command
 
-[Graphviz](https://graphviz.org/)の`dot`ファイルを実行し、グラフ（棒グラフのグラフではなく、箱と矢印・ノードとエッジのほうのグラフ）を描画する。`dot -Tpng -o a.png a.dot`と等価。日本語WindowsでUTF-8な環境下での使用を想定。
+[dot2gviz]: src/dot2gviz_function.ps1
+[Graphviz]: https://graphviz.org/
 
-[Graphviz](https://graphviz.org/)で日本語を用いるときは次のようにフォントを指定せねばならない。
+[Graphviz]の`dot`ファイルを実行し、グラフ（棒グラフのグラフではなく、箱と矢印・ノードとエッジのほうのグラフ）を描画する。`dot -Tpng -o a.png a.dot`と等価。日本語WindowsでUTF-8な環境下での使用を想定。
+
+[Graphviz]で日本語を用いるときは次のようにフォントを指定せねばならない。
 
 - `dot -Nfontname="Meiryo" -Efontname="Meiryo" -Gfontname="Meiryo" -Tsvg -o a.svg a.dot`
 
@@ -2533,11 +2627,13 @@ d 5 1.0000 A
         - `winget install --id Graphviz.Graphviz --source winget`
         - and execute `dot -c` with administrator privileges
 
-#### `pu2java` - Wrapper for plantuml.jar command
+#### [pu2java] - Wrapper for plantuml.jar command
+
+[pu2java]: src/pu2java_function.ps1
 
 [plantuml](https://plantuml.com/en/)形式の`.pu`ファイルを読み取り実行するラッパースクリプト。日本語WindowsでUTF-8な環境下での使用を想定。グラフ（棒グラフのグラフではなく、箱と矢印・ノードとエッジのほうのグラフ）を描画する。`java -jar plantuml.jar -charset "UTF-8" -t"svg" a.pu`と等価。日本語を用いるときは`-charset "UTF-8"`を指定する。
 
-`dot2gviz`と同じくコマンド文字列が長くて覚えられないため、このラッパースクリプトを作成した。もっともシンプルに書くと`pu2java a.pu`。デフォルトで入力ファイル名と同ファイル名の`png`画像をカレントディレクトリに出力する。
+[dot2gviz]と同じくコマンド文字列が長くて覚えられないため、このラッパースクリプトを作成した。もっともシンプルに書くと`pu2java a.pu`。デフォルトで入力ファイル名と同ファイル名の`png`画像をカレントディレクトリに出力する。
 
 `plantuml.jar`ファイルの場所はデフォルトで`${HOME}/bin/plantuml.jar`を期待する。`-Jar <path/to/the/jar>`で任意の場所の`jar`ファイルを指定することもできる。
 
@@ -2566,7 +2662,9 @@ d 5 1.0000 A
         - <https://www.java.com/en/download/>
 
 
-#### `gantt2pu` - Visualizatoin tool of DANDORI-chart (setup-chart) for PlantUML.
+#### [gantt2pu] - Visualizatoin tool of DANDORI-chart (setup-chart) for PlantUML.
+
+[gantt2pu]: src/gantt2pu_function.ps1
 
 段取表の作成支援ツール。
 期日からタスクとタスク時間を逆算して着手日を求めるガントチャートを描画する
@@ -2615,7 +2713,7 @@ Japanese "DANDORI" means "make arrangement", "take steps", "plan".
     - `-StartDate yyyy-m-d` ... プロジェクト開始日を指定
     - `-EndDate yyyy-m-d` ... プロジェクト終了日を指定
 - Dependencies
-    - `pu2java` from posh-mocks (this repository)
+    - [pu2java] from posh-mocks (this repository)
 
 Input:
 
@@ -2680,7 +2778,9 @@ title title
 
 ![](img/gantt2pu_1.png)
 
-#### `mind2dot` - Generate graphviz script to draw a mind map from list data in markdown format
+#### [mind2dot] - Generate graphviz script to draw a mind map from list data in markdown format
+
+[mind2dot]: src/mind2dot_function.ps1
 
 markdown形式のリストデータからマインドマップを描画する`graphviz`スクリプトを生成する。
 入力データは「半角スペース4つ」に「ハイフン」で階層構造を期待する
@@ -2690,7 +2790,7 @@ markdown形式のリストデータからマインドマップを描画する`gr
 - 一行目にmarkdownの第一見出し形式でタイトルを入力する（`# title`）とキャプションとして認識する。
 
 箇条書きをマインドマップに変換すると、とくにグループ分けが視覚的に理解しやすくなる（気がする）。
-上の`dot2gviz`と組み合わせて使うと、形式変換から作図までワンライナーで処理できるので便利。
+上の[dot2gviz]と組み合わせて使うと、形式変換から作図までワンライナーで処理できるので便利。
 たとえば、`cat a.md | mind2dot > a.dot; dot2gviz a.dot | ii`とする。
 
 - Usage
@@ -2700,7 +2800,7 @@ markdown形式のリストデータからマインドマップを描画する`gr
     - `cat a.md | mind2dot -o a.dot`
     - `cat a.md | mind2dot > a.dot`
     - `cat a.md | mind2dot | Out-File a.dot -Encoding utf8`
-    - `dot2gviz`との連携
+    - [dot2gviz]との連携
         - `cat a.md | mind2dot > a.dot; dot2gviz a.dot | ii`
 - Options
     - `-LayoutEngine (circo|dot|fdp|neato|osage|sfdp|twopi|patchwork)`でレイアウトエンジンを指定可能
@@ -2712,8 +2812,8 @@ markdown形式のリストデータからマインドマップを描画する`gr
         - 全角文字幅は2、半角文字幅は1として折り返し文字幅を指定する
     - `-TopToBottom`スイッチで、レイアウトを左→右ではなく上→下に変更する
 - Dependencies
-    - `dot2gviz` from posh-mocks (this repository)
-    - `kinsoku` from posh-mocks (this repository) if `-Kinsoku <int>` option used
+    - [dot2gviz] from posh-mocks (this repository)
+    - [kinsoku] from posh-mocks (this repository) if `-Kinsoku <int>` option used
 - Credits
     - Solarized color palette from:
         - <https://github.com/altercation/solarized>
@@ -2888,7 +2988,9 @@ cat a.md | mind2dot -Kinsoku 14 > a.dot; dot2gviz a.dot -o png | ii
 
 
 
-#### `mind2pu` - Generate plantuml script to draw a mind map from list data in markdown format
+#### [mind2pu] - Generate plantuml script to draw a mind map from list data in markdown format
+
+[mind2pu]: src/mind2pu_function.ps1
 
 markdown形式のリストデータからマインドマップを描画する`plantuml`スクリプトを生成する。
 入力データは「半角スペース4つ」に「ハイフン」で階層構造を期待する
@@ -2898,7 +3000,7 @@ markdown形式のリストデータからマインドマップを描画する`pl
 - 一行目にmarkdownの第一見出し形式でタイトルを入力する（`# title`）と、図全体のキャプションとして認識する。
 
 箇条書きをマインドマップに変換すると、とくにグループ分けが視覚的に理解しやすくなる（気がする）。
-上の`pu2java`と組み合わせて使うと、形式変換から作図までワンライナーで処理できるので便利。
+上の[pu2java]と組み合わせて使うと、形式変換から作図までワンライナーで処理できるので便利。
 たとえば、`cat a.md | mind2pu > a.pu; pu2java a.pu | ii`とする。
 
 - Usage
@@ -2908,7 +3010,7 @@ markdown形式のリストデータからマインドマップを描画する`pl
     - `cat a.md | mind2pu -o a.pu`
     - `cat a.md | mind2pu > a.pu`
     - `cat a.md | mind2pu | Out-File a.pu -Encoding utf8`
-    - `pu2java`との連携
+    - [pu2java]との連携
         - `cat a.md | mind2pu > a.pu ; pu2java a.pu | ii`
 - Options
     - `-Theme <theme>`でカラースキーマを指定可能
@@ -2916,8 +3018,8 @@ markdown形式のリストデータからマインドマップを描画する`pl
     - `-Kinsoku <int>`で日本語文書に禁則処理を適用して任意の文字幅で折り返し
         - 全角文字幅は2、半角文字幅は1として折り返し文字幅を指定する
 - Dependencies
-    - `pu2java` from posh-mocks (this repository)
-    - `kinsoku` from posh-mocks (this repository) if `-Kinsoku <int>` option used
+    - [pu2java] from posh-mocks (this repository)
+    - [kinsoku] from posh-mocks (this repository) if `-Kinsoku <int>` option used
 - Credit
     - [mindmap-diagram - plantuml](https://plantuml.com/en/mindmap-diagram)
 
@@ -3084,7 +3186,9 @@ skinparam DefaultFontName "Meiryo"
 ![](img/mind2pu_WBS.png)
 
 
-#### `logi2dot` - Generate data for graphviz with simple format
+#### [logi2dot] - Generate data for graphviz with simple format
+
+[logi2dot]: src/logi2dot_function.ps1
 
 シンプルな記法で表現された論理ツリーデータを[Graphviz](https://graphviz.org/)形式（dot言語）に変換する。
 
@@ -3116,8 +3220,8 @@ C task-C [A,B]
     - `-TopToBottom`スイッチで、レイアウトを左→右ではなく上→下に変更する
     - `-Grep pattern`で`regex-pattern`にマッチするラベルのノードの背景色や形を変える
 - Dependencies
-    - `dot2gviz` from posh-mocks (this repository)
-    - `kinsoku` from posh-mocks (this repository) if `-Kinsoku <int>` option used
+    - [dot2gviz] from posh-mocks (this repository)
+    - [kinsoku] from posh-mocks (this repository) if `-Kinsoku <int>` option used
 
 Input:
 
@@ -3325,7 +3429,9 @@ strict digraph logictree {
 
 
 
-#### `logi2pu` - Generate data for PlantUML (usecase diagram) with simple format
+#### [logi2pu] - Generate data for PlantUML (usecase diagram) with simple format
+
+[logi2pu]: src/logi2pu_function.ps1
 
 シンプルな記法で表現された論理ツリーデータを[PlantUML](https://plantuml.com/en/)形式に変換する。
 
@@ -3345,7 +3451,7 @@ C task-C [A,B]
     - `logi2pu [[-Title] <String>] [-LeftToRightDirection] [-BottomToTopDirection] [-RightToLeftDirection] [-ReverseEdgeDir] [-Shadow] [[-Scale] <Double>] [[-Grep] <Regex>] [[-GrepShape] <String>] [[-GrepColor] <String>] [-Monochrome] [-HandWritten] [[-FontName] <String>] [[-Theme] <String>] [[-NodeShape] <String>] [[-NodeShapeFirst] <String>] [[-GroupShape] <String>] [[-Kinsoku] <Int32>] [[-KinsokuDelim] <String>] ...`
 - Examples
     - `cat input.txt | logi2pu`
-    - `pu2java`との連携
+    - [pu2java]との連携
         - `cat input.txt | logi2pu > a.pu; pu2java a.pu svg | ii`
 - Options
     - `-FontName <fontname>`でフォントを指定可能
@@ -3356,8 +3462,8 @@ C task-C [A,B]
     - `-TopToBottom`スイッチで、レイアウトを左→右ではなく上→下に変更する
     - `-Grep pattern`で`regex-pattern`にマッチするラベルのノードの背景色や形を変える
 - Dependencies
-    - `pu2java` from posh-mocks (this repository)
-    - `kinsoku` from posh-mocks (this repository) if `-Kinsoku <int>` option used
+    - [pu2java] from posh-mocks (this repository)
+    - [kinsoku] from posh-mocks (this repository) if `-Kinsoku <int>` option used
 
 Input:
 
@@ -3515,7 +3621,9 @@ ActA <-> ActB #line:red : conflict！
 
 ### Image processing
 
-#### `ConvImage` - Image rotation, flipping, scaling, convert format
+#### [ConvImage] - Image rotation, flipping, scaling, convert format
+
+[ConvImage]: src/ConvImage_function.ps1
 
 画像の回転、リサイズ、拡大縮小、形式変換。Assembly:`System.Drawing`を用いる。
 画像の形式変換は入出力に指定するファイルの拡張子から自動認識する
@@ -3637,7 +3745,9 @@ before.jpg を after.png に形式変換し、かつ、
 
 ### Writing
 
-#### `tex2pdf` - Compile tex to pdf
+#### [tex2pdf] - Compile tex to pdf
+
+[tex2pdf]: src/tex2pdf_function.ps1
 
 `.tex`から`.pdf`ファイルをコンパイルする、`lualatex`と`uplatex`のラッパースクリプト。
 
@@ -3663,7 +3773,9 @@ before.jpg を after.png に形式変換し、かつ、
         - `lualatex`, `uplatex`
 
 
-#### `kinsoku` - Japanese text wrapper
+#### [kinsoku] - Japanese text wrapper
+
+[kinsoku]: src/kinsoku_function.ps1
 
 日本語文章の文字列折り返し。
 入力行1行ごとに禁則処理を施し、任意の幅で折り返す。
@@ -3752,7 +3864,9 @@ ID0001:\nあああああ、\nいいいいい、\nううううう
 ID0001:\nあああああ、\nいいいいい、\nううううう\r\n
 ```
 
-#### `filehame` - Insert contents into template
+#### [filehame] - Insert contents into template
+
+[filehame]: src/filehame_function.ps1
 
 テンプレートファイルの任意の文字列を含む行を見つけるとそこに別のテキストファイルを挿入する。
 「ファイルをはめ込む」ので`filehame`。
@@ -3834,7 +3948,9 @@ cat contents.md | pandoc -f markdown -t html5 | filehame -l TEXTBODY template.ht
 ```
 
 
-#### `Get-OGP(Alias:ml)` - Make Link with markdown format
+#### [Get-OGP] (Alias:ml) - Make Link with markdown format
+
+[Get-OGP]: src/Get-OGP_function.ps1
 
 指定したURIからサイトプレビュー用Open Graph protocol（OGP）の要素（主にmetaタグの要素）を取得する。
 標準入力、第一引数でUriを指定しない場合はクリップボードの値を使おうとする。
@@ -3852,10 +3968,12 @@ cat contents.md | pandoc -f markdown -t html5 | filehame -l TEXTBODY template.ht
         - クリップボードのUriからOGP要素（metaタグの要素）を取得
 - Inspired by [goark/ml - GitHub](https://github.com/goark/ml)
     - License: Apache License Version 2.0, January 2004, https://www.apache.org/licenses/LICENSE-2.0
-    - Command: `Get-OGP (Alias: ml)`
+    - Command: [Get-OGP] (Alias: ml)
 
 
-#### `image2md` - Convert image filename and alt text to markdown format
+#### [image2md] - Convert image filename and alt text to markdown format
+
+[image2md]: src/image2md_function.ps1
 
 画像ファイル名とaltテキストをマークダウン形式に変換する。
 
@@ -3932,7 +4050,9 @@ Output:
 ```
 
 
-#### `table2md` - Convert tab and csv delimited tables to markdown table format
+#### [table2md] - Convert tab and csv delimited tables to markdown table format
+
+[table2md]: src/table2md_function.ps1
 
 tab区切り・csv区切りの表をmarkdown形式に変換する。
 標準入力、第一引数で何も指定ない場合はクリップボードの値を使おうとする。
@@ -3989,11 +4109,13 @@ cat iris.csv | table2md -d "," -Units "CFU","kg" | head -n 7
 # (Default -Units " kg"," ml", " CFU", "RLU", etc...)
 ```
 
-#### `linkextract` - Extract links from html
+#### [linkextract] - Extract links from html
+
+[linkextract]: src/linkextract_function.ps1
 
 引数に指定したuriやhtmlファイルから外部uriのリストを取得する。`-Uris`が`http` or `www`で始まる場合はuri、それ以外はhtmlファイルとして解釈する。
 
-パイプラインで後ろに`linkcheck`コマンドを連結すれば、サイトやhtmlファイルに記載された外部リンクの検出＆リンク切れチェックができる。
+パイプラインで後ろに[linkcheck]コマンドを連結すれば、サイトやhtmlファイルに記載された外部リンクの検出＆リンク切れチェックができる。
 
 - Usage
     - `man2 linkextract`
@@ -4008,7 +4130,7 @@ cat iris.csv | table2md -d "," -Units "CFU","kg" | head -n 7
     - `-ExcludeUris <reg>,<reg>,...` : allows to specify links to exclude
     - `-Recurse` is not implemented
 
-By piping to the `linkcheck` command, you can check link-alive.
+By piping to the [linkcheck] command, you can check link-alive.
 
 ```powershell
 ls docs/*.html | linkextract | linkcheck -VerboseOutput
@@ -4107,7 +4229,9 @@ Detect broken links.
 ```
 
 
-#### `linkcheck` - Broken link checker
+#### [linkcheck] - Broken link checker
+
+[linkcheck]: src/linkcheck_function.ps1
 
 引数に指定したuriのリンク切れをチェックする。
 
@@ -4142,7 +4266,9 @@ Detect broken links in m.html
 ```
 
 
-#### `jl` - Join the next Line if line ends with the keyword
+#### [jl] - Join the next Line if line ends with the keyword
+
+[jl]: src/jl_function.ps1
 
 キーワードで終わる行に次の行を連結する。たとえばHTMLで日本語を使うとき、
 「、」で改行した場合に余計な空白がはいることがあるが、このコマンドで下処理しておけば大丈夫。
@@ -4218,7 +4344,9 @@ bumon-C tank    17:46 2017/05/10        fuga    fuga
 ```
 
 
-#### `Override-Yaml` - Override external yaml in markdown yaml
+#### [Override-Yaml] - Override external yaml in markdown yaml
+
+[Override-Yaml]: src/Override-Yaml_function.ps1
 
 Markdownファイルのyamlヘッダに外部yamlヘッダのアイテムを追加する。
 キーが重複した場合はmarkdownファイルのyamlデータが優先される。
@@ -4480,7 +4608,9 @@ fuga
 
 ### csv / toml / json handling
 
-#### `toml2psobject` - Parser for toml-like configuration files
+#### [toml2psobject] - Parser for toml-like configuration files
+
+[toml2psobject]: src/toml2psobject_function.ps1
 
 [TOML(Tom's Obvious Minimal Language)](https://toml.io/en/)風設定ファイルの簡易パーサ。
 TOML風の設定情報を読み込みPSCustomObjectとして返す。
@@ -4548,7 +4678,9 @@ note  : multi-line note1
         multi-line note3
 ```
 
-#### `json2txt` - Transform json into key-value format with one record per line.
+#### [json2txt] - Transform json into key-value format with one record per line.
+
+[json2txt]: src/json2txt_function.ps1
 
 Json形式のテキスト入力を1行1レコード形式に変換し`grep`しやすくする。
 逆変換はできない。
@@ -4621,7 +4753,9 @@ cat a.json | json2txt
 .widget.text.onMouseUp = "sun1.opacity = (sun1.opacity / 100) * 90;"
 ```
 
-#### `csv2txt` - Convert CSV to TSV
+#### [csv2txt] - Convert CSV to TSV
+
+[csv2txt]: src/csv2txt_function.ps1
 
 CSVを半角スペース区切りの1行1レコード形式（SSV）に変換する。
 改行含みのCSVデータを1行にして`grep`する、などの用途に便利。
@@ -4668,7 +4802,9 @@ id main id2 sub val
 04  ddd  02 yyy  10
 04  ddd  03 zzz  10
 ```
-#### `catcsv` - Concatenate csv files
+#### [catcsv] - Concatenate csv files
+
+[catcsv]: src/catcsv_function.ps1
 
 任意のフォルダにあるUTF-8なCSVファイル群をひとつのCSVファイルにまとめる。
 空行はスキップ。CSVヘッダは「有or無」どちらかに統一されている必要あり。
@@ -4683,7 +4819,10 @@ id main id2 sub val
     - `catcsv a*.csv -Output out.csv`
         - カレントディレクトリの`a*.csv`を`out.csv`に出力する
 
-#### `csv2sqlite` - Apply sqlite-sql to csv files
+
+#### [csv2sqlite] - Apply sqlite-sql to csv files
+
+[csv2sqlite]: src/csv2sqlite_function.ps1
 
 CSVファイルに対して`sqlite`のSQL文を発行する。
 CSVファイルをSQLで操作し、集計したり検索できる。
@@ -4776,7 +4915,9 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 
 ### Clipboard operation
 
-#### `clip2img` - Save clip board image as an image file
+#### [clip2img] - Save clip board image as an image file
+
+[clip2img]: src/clip2img_function.ps1
 
 クリップボードの画像データを画像ファイルとして保存。
 `printscreen`で画像をキャプチャして画像ファイルに保存する、という作業を想定。
@@ -4792,7 +4933,9 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
     - `clip2img -n a.png`
     - `clip2img -MSPaint -Clip -DirView -Directory ~/Pictures/ -Name 2023-02-18-hoge`
 
-#### `clipwatch` - A clipboard watcher using Compare-Object
+#### [clipwatch] - A clipboard watcher using Compare-Object
+
+[clipwatch]: src/clipwatch_function.ps1
 
 `Compare-Object`を用いたクリップボードウォッチャー。
 クリップボードの変化を検知すると`-Action {scriptblock}`に指定したアクションを実行する。
@@ -4806,7 +4949,9 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 
 ### file watcher
 
-#### `fwatch` - A filewatcher using LastWriteTime and FileHash
+#### [fwatch] - A filewatcher using LastWriteTime and FileHash
+
+[fwatch]: src/fwatch_function.ps1
 
 ファイル監視。実行したディレクトリ配下のファイルの変更を、
 更新時刻またはハッシュ値の比較で検知する。
@@ -4826,7 +4971,9 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 
 ### misc
 
-#### `pwmake` - Pwsh implementation of GNU make command
+#### [pwmake] - Pwsh implementation of GNU make command
+
+[pwmake]: src/pwmake_function.ps1]
 
 PowerShell版make-like command。劣化コピー。
 カレントディレクトリにあるMakefileを読み実行する。
@@ -4978,7 +5125,9 @@ Check the spelling of the name, or if a path was included, verify that the path 
 ```
 
 
-#### `i` - Invoke-Links - Read and execute links written in a text file.
+#### [i] - Invoke-Links - Read and execute links written in a text file
+
+[i]: src/i_function.ps1
 
 テキストファイルに記述されたリンクを任意のアプリで実行する。Windowsにおけるショートカットに対して`Invoke-Item(Alias:ii)`するのと似た挙動だが、リンクの実行に任意のアプリを用いたり、「ファイルの場所」をエクスプローラで開いたりできる。
 
@@ -5045,7 +5194,9 @@ i ./link/rmarkdown_site.txt -l
 ```
 
 
-#### `tenki` - Open tenki.jp or jma.go.jp in browser
+#### [tenki] - Open tenki.jp or jma.go.jp in browser
+
+[tenki]: src/tenki_function.ps1
 
 日本・兵庫県の天気情報webページをブラウザで開く。毎日天気予報を確認するのは製造業のマネジメントの基本。
 
@@ -5076,7 +5227,9 @@ Open Hyogo/Japan weather reports in browser (on windows).
     - `tenki -Edge` ... open tenki.jp forecast and map in edge
 
 
-#### `say` - Speech Synthesizer
+#### [say] - Speech Synthesizer
+
+[say]: src/say_function.ps1
 
 入力された文字列を読み上げる（文字列入力を音声出力に変換する）。
 
@@ -5087,7 +5240,9 @@ Open Hyogo/Japan weather reports in browser (on windows).
     - `clipwatch -Action {Get-Clipboard | say -EN -Speed 2}`
 
 
-#### `sleepy` - A pomodoro timer using progress bar
+#### [sleepy] - A pomodoro timer using progress bar
+
+[sleepy]: src/sleepy_function.ps1
 
 `Start-Sleep`にプログレスバーを付与したもの。
 経過時間や残り時間が**視覚的に**わかる。
@@ -5119,7 +5274,9 @@ Open Hyogo/Japan weather reports in browser (on windows).
     - License: The MIT License (MIT): Copyright (c) 2022 Yasuhiro Matsumoto
     - Command: `sleepy`
 
-#### `teatimer` - Time-up notification
+#### [teatimer] - Time-up notification
+
+[teatimer]: src/teatimer_function.ps1
 
 Windows環境用ティータイマー。時間がきたら通知トレイからポップアップ通知してくれる。
 仕事に没頭すると休憩するタイミングをのがしやすいので。
