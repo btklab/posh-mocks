@@ -93,6 +93,9 @@ function tenki {
         [switch] $Rss,
         
         [Parameter(Mandatory=$False)]
+        [switch] $Global,
+        
+        [Parameter(Mandatory=$False)]
         [int] $MaxResults = 20
     )
     # private function
@@ -149,6 +152,11 @@ function tenki {
         $argHash["Tweet"]    = 'https://twitter.com/tenkijp'
         $argHash["Top"]      = 'https://tenki.jp/'
     }
+    if ( $Global ){
+        $argHash["Forecast"]    = 'https://tenki.jp/world/'
+        $argHash["Temperature"] = 'https://tenki.jp/world/temp.html'
+        $argHash["Cloud"]       = 'https://tenki.jp/satellite/world/'
+    }
     if ( $All ){
         [string[]] $argList = foreach ( $key in $argHash.Keys ){
             Write-Output $argHash[$key]
@@ -169,10 +177,18 @@ function tenki {
             [string[]] $argList += $argHash["Tweet"]
         }
         if ( $argList.Count -eq 0 ){
-            [string[]] $argList = @(
-                $argHash["Forecast"]
-                $argHash["Map"]
-                )
+            if ( $Global ){
+                [string[]] $argList = @(
+                    $argHash["Forecast"]
+                    $argHash["Temperature"]
+                    $argHash["Cloud"]
+                    )
+            } else {
+                [string[]] $argList = @(
+                    $argHash["Forecast"]
+                    $argHash["Map"]
+                    )
+            }
         }
     }
     # invoke browser
