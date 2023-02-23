@@ -87,6 +87,7 @@ if ($IsWindows){
 . $pwshSrcDir/mind2pu_function.ps1
 . $pwshSrcDir/logi2dot_function.ps1
 . $pwshSrcDir/logi2pu_function.ps1
+. $pwshSrcDir/flow2pu_function.ps1
 
 
 ## image processing

@@ -3016,7 +3016,7 @@ scale 1
 
 project starts 2023-01-31
 
-title title
+title "title"
 
 -- project name [2023-03-01] --
 [fin] as [M1] happens 2023-03-01
@@ -3316,7 +3316,7 @@ end legend
 cat a.md | mind2pu
 @startmindmap
 
-title What flavor would you like?
+title "What flavor would you like?"
 skinparam DefaultFontName "Meiryo"
 
 * Flavors
@@ -3413,7 +3413,7 @@ cat wbs.md
 cat wbs.md | mind2pu -WBS | Tee-Object -FilePath a.pu ; pu2java a.pu -OutputFileType svg | ii
 @startwbs
 
-title WBS
+title "WBS"
 skinparam DefaultFontName "Meiryo"
 
 + <&flag>社長
@@ -3761,7 +3761,7 @@ Output:
 cat input.txt | logi2dot > a.dot; dot2gviz a.dot png | ii
 @startuml
 
-title how to cook curry
+title "how to cook curry"
 skinparam DefaultFontName "MS Gothic"
 skinparam roundCorner 15
 skinparam shadowing false
@@ -3839,7 +3839,7 @@ Output2:
 cat input.txt | logi2pu -BottomToTopDirection -Kinsoku 10 > a.pu; pu2java a.pu png | ii
 @startuml
 
-title logick tree
+title "logick tree"
 skinparam DefaultFontName "MS Gothic"
 skinparam roundCorner 15
 skinparam shadowing false
@@ -3876,6 +3876,121 @@ ActA <-> ActB #line:red : conflict！
 ```
 
 ![](img/logi2pu_2.png)
+
+
+#### [flow2pu] - Generate activity-diagram (flowchart) from markdown-like list format
+
+[flow2pu]: src/flow2pu_function.ps1
+
+マークダウンのリスト形式の入力データから簡単に素早くシンプルなフローチャートを描画する。
+
+Easy and quick flow chart creator from lists written in markdown format.
+
+
+- Usage
+    - `man2 flow2pu`
+    - `flow2pu [[-OutputFile] <String>] [[-Title] <String>] [[-Scale] <Double>] [-Monochrome] [-HandWritten] [[-Grep] <Regex>] [[-FontName] <String>] [[-FontNameWindowsDefault] <String>] [[-Theme] <String>] [[-Kinsoku] <Int32>] [[-KinsokuNote] <Int32>] [[-LegendRight] <String[]>] [[-LegendLeft] <String[]>]`
+- Examples
+    - `cat a.md | flow2pu -o a.pu`
+    - `cat a.md | flow2pu > a.pu`
+    - `cat a.md | flow2pu | Out-File a.pu -Encoding utf8`
+    - [pu2java]との連携
+        - `cat a.md | flow2pu > a.pu ; pu2java a.pu | ii`
+- Options
+    - `-Theme <theme>`でカラースキーマを指定可能
+    - `-FontName <fontname>`でフォントを指定可能
+    - `-Kinsoku <int>`で日本語文書に禁則処理を適用して任意の文字幅で折り返し
+        - 全角文字幅は2、半角文字幅は1として折り返し文字幅を指定する
+    - `-KinsokuNote <int>`はnote block文字列の折り返し幅
+        - `flow2pu`では、インデントされたリストはすべてnote blockとして解釈される
+- Dependencies
+    - [pu2java] from posh-mocks (this repository)
+    - [kinsoku] from posh-mocks (this repository) if `-Kinsoku <int>` option used
+- Credit
+    - [activity-diagram-beta - plantuml](https://plantuml.com/en/activity-diagram-beta)
+
+Examples:
+
+シンプルな入力例： （インデントされたリストのマークがハイフンの場合は左ノート、それ以外は右ノートになる）
+
+```markdown
+# How to cook curry
+
+0. order {Counter}
+1. cut vegetables and meats {Kitchen}
+2. fry meats
+3. fry vegetables
+    + **Point**: Fry the onions until they are translucent
+4. boil meat and vegetables
+    + If you have Laurel, put it in, and take the lye
+5. add roux and simmer
+6. serve on a plate {Counter}
+7. topping
+    - add garam masala
+```
+
+フローチャート描画コマンド例：
+
+```powershell
+# Create flowchart (activity-diagram)
+cat a.md | flow2pu -Kinsoku 10 -KinsokuNote 20 > a.pu; pu2java a.pu svg | ii
+```
+
+出力画像：
+
+![](img/flow2pu_1.png)
+
+
+より複雑な入力例： （Level2ヘッダで、次の空行もしくは次のLevel2ヘッダが現れるまでの区間をパーティショニング）
+
+```markdown
+    # How to cook curry
+
+    |Counter|
+    start
+
+    ## Order
+    0. order
+
+    |#LightGray|Kitchen|
+
+    ## Preparation
+    1. cut vegetables and meats
+
+    ## Fry
+    2. fry meats
+    if (is there \n cumin seed?) then (yes)
+    - fry cumin seed
+    else (no)
+    endif
+    3. fry vegetables
+        + **Point**
+        + Fry the onions until they are translucent
+
+    ## Boil
+    4. boil meat and vegetables
+        + If you have Laurel, put it in, and take the lye
+    5. add roux and simmer
+
+    |Counter|
+
+    ## Finish
+    6. serve on a plate
+    7. topping
+        - add garam masala
+    end
+```
+
+描画コマンド例：
+
+```powershell
+## output activity-diagram
+cat a.md | flow2pu -Kinsoku 16 -KinsokuNote 20 > a.pu; pu2java a.pu svg | ii
+```
+
+出力： （リストとヘッダ行以外はそのまま出力される）
+
+![](img/flow2pu_2.png)
 
 
 

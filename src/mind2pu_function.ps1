@@ -118,7 +118,7 @@
     cat input.txt | mind2pu > a.pu; pu2java a.pu | ii
     @startmindmap
 
-    title title
+    title "title"
     skinparam DefaultFontName "Meiryo"
 
     * hogehoge
@@ -348,9 +348,9 @@ function mind2pu {
             $readLineAryHeader += ""
         }
         if ($Title){
-            $readLineAryHeader += "title $Title"
+            $readLineAryHeader += "title ""$Title"""
         } elseif ($isFirstRowEqTitle) {
-            $readLineAryHeader += "title $fTitle"
+            $readLineAryHeader += "title ""$fTitle"""
         } else {
             $readLineAryHeader += "'title none"
         }

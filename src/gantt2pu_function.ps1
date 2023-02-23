@@ -333,7 +333,7 @@
     
     project starts 2023-01-31
     
-    title title
+    title "title"
     
     -- project name [2023-03-01] --
     [fin] as [M1] happens 2023-03-01
@@ -1032,7 +1032,7 @@ function gantt2pu {
             default {
                 if (($rowCounter -eq 1) -and ($readLine -match '^# ') -and ( -not $Title)){
                     ## infile title
-                    $readLine = $readLine -replace '^# ','title '
+                    [string] $readLine = $readLine -replace '^# (..*)$','title "$1"'
                     $readLineList.Add($readLine)
                 } else {
                     ## output as-is

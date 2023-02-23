@@ -2,6 +2,9 @@
 .SYNOPSIS
     watercss - Get Water.css rel link
 
+    A small tool to always quickly install Water.css,
+    a simple and beautiful CSS framework.
+
     Usage:
         watercss
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">

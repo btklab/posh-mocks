@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+### Added
+
+- Added [flow2pu] function
+
+
+## [1.0.0] - 2023-02-23
+
+### Changed
+
 - Added [README.md] hyperlinks to related file in section titles
 - Enabled [map2] change upper-left-mark using `-UpperLeftMark` option
 
@@ -19,7 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added [summary] function
 - Added [fpath] function
 - Added [watercss] function
-
 
 
 ## [0.2.0] - 2023-02-22
@@ -213,8 +221,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [fpath]: src/fpath_function.ps1
 [watercss]: src/watercss_function.ps1
 
+[watercss]: src/flow2pu_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/0.2.0..HEAD
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/1.0.0..HEAD
+[1.0.0]: https://github.com/btklab/posh-mocks/releases/tag/1.0.0
 [0.2.0]: https://github.com/btklab/posh-mocks/releases/tag/0.2.0
 [0.1.0]: https://github.com/btklab/posh-mocks/releases/tag/0.1.0
 
