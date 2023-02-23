@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [ctail2], [delf], [dot2gviz], [filehame], [fillretu], [flat], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [sleepy], [sm2], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [yarr], [zen]
+- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [ctail2], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [fpath], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [sleepy], [sm2], [summary], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [yarr], [zen]
 
 Inspired by:
 
@@ -4229,6 +4229,86 @@ cat contents.md | pandoc -f markdown -t html5 | filehame -l TEXTBODY template.ht
 - Inspired by [goark/ml - GitHub](https://github.com/goark/ml)
     - License: Apache License Version 2.0, January 2004, https://www.apache.org/licenses/LICENSE-2.0
     - Command: [Get-OGP] (Alias: ml)
+
+
+#### [fpath] - Remove double-quotes and replace backslashes to slashes from windows path
+
+[fpath]: src/fpath_function.ps1
+
+Windows環境のファイルパスの整形。
+動作は単純で、ファイルパスからダブルクオート`"`を除去し、バックスラッシュ`\`をスラッシュ`/`に置換するのみ。
+
+- Usage
+    - `man2 fpath`
+    - `fpath [[-Paths] <String[]>`
+
+Examples:
+
+```powershell
+# get paths from clipboard
+fpath
+Get-Clipboard | fpath
+```
+
+```powershell
+# get paths from clipboard and set output to clipboard
+fpath | Set-Clipboard
+```
+
+```powershell
+# get path from parameter
+fpath "C:\Users\hoge\fuga\piyo_function.ps1"
+C:/Users/hoge/fuga/piyo_function.ps1
+```
+
+```powershell
+# get path from stdin
+"C:\Users\hoge\fuga\piyo_function.ps1" | fpath
+C:/Users/hoge/fuga/piyo_function.ps1
+```
+
+```powershell
+# get path from file
+cat paths.txt | fpath
+```
+
+
+#### [watercss] - Get Water.css rel link
+
+[watercss]: src/watercss_function.ps1
+
+A small tool to always quickly install [Water.css](https://watercss.kognise.dev/),
+a simple and beautiful CSS framework.
+
+この小さなツールを使えば、いつでもすぐに[Water.css](https://watercss.kognise.dev/)のlink tagを生成できる。<br />
+たとえば出力をVSCodeのMarkdownにペーストすると、プレビューの見栄えがよくなる。
+
+```powershell
+PS > watercss
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+
+PS > watercss -Dark
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+
+PS > watercss -Light
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
+```
+
+- Usage
+    - `man2 watercss`
+    - `watercss [-Automatic] [-Light] [-Dark] [-GitHub] [-WebSite] [-CDN] [[-CDNVersion] <Int32>] [-Extra]`
+- Examples
+    - `watercss`
+    - `watercss -Light`
+    - `watercss -Dark`
+    - `watercss -Automatic`
+    - `watercss -GitHub`
+    - `watercss -WebSite`
+    - `watercss -CDN`
+    - `watercss -CDNVersion 2`
+- Inspired by [Water.css](https://watercss.kognise.dev/)
+    - GitHub: <https://github.com/kognise/water.css)https://github.com/kognise/water.css>
+    - License: The MIT License (MIT) Copyright © 2019 Kognise
 
 
 #### [image2md] - Convert image filename and alt text to markdown format

@@ -37,6 +37,8 @@
     thanks: goark/ml: Make Link with Markdown Format
       <https://github.com/goark/ml>
 
+.LINK
+    Get-OGP, fpath
 
 .PARAMETER Canonical
     get canonical uri

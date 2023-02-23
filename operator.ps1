@@ -107,6 +107,8 @@ if ($IsWindows){
 . $pwshSrcDir/linkextract_function.ps1
 . $pwshSrcDir/Get-OGP_function.ps1
 Set-Alias -name ml -value Get-OGP
+. $pwshSrcDir/fpath_function.ps1
+. $pwshSrcDir/watercss_function.ps1
 
 ## csv
 . $pwshSrcDir/catcsv_function.ps1
