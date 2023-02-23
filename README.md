@@ -3878,6 +3878,140 @@ ActA <-> ActB #line:red : conflict！
 ![](img/logi2pu_2.png)
 
 
+#### [seq2pu] - Generate sequence-diagram from markdown-like list format
+
+[seq2pu]: src/seq2pu_function.ps1
+
+マークダウンのリスト形式の入力データからシンプルなシーケンス図を描画する。
+
+Easy and quick sequence-diagram creator from lists written in markdown-like format using [PlantUML](https://plantuml.com/en/).
+
+
+- Usage
+    - `man2 seq2pu`
+    - `seq2pu [[-OutputFile] <String>] [[-Title] <String>] [[-Scale] <Double>] [-Monochrome] [-HandWritten] [-AutoActivate] [[-FontName] <String>] [[-Theme] <String>] [[-SequenceMessageAlign] <String>] [-ResponseMessageBelowArrow] [[-Kinsoku] <Int32>] [[-KinsokuNote] <Int32>]`
+- Examples
+    - `cat a.md | seq2pu -o a.pu`
+    - `cat a.md | seq2pu > a.pu`
+    - `cat a.md | seq2pu | Out-File a.pu -Encoding utf8`
+    - [pu2java]との連携
+        - `cat a.md | seq2pu > a.pu ; pu2java a.pu | ii`
+- Options
+    - `-Theme <theme>`でカラースキーマを指定可能
+    - `-FontName <fontname>`でフォントを指定可能
+    - `-Kinsoku <int>`で日本語文書に禁則処理を適用して任意の文字幅で折り返し
+        - 全角文字幅は2、半角文字幅は1として折り返し文字幅を指定する
+    - `-KinsokuNote <int>`はnote block文字列の折り返し幅
+        - `seq2pu`では、インデントされたリストは（keyword以外で始まるもの以外は）note blockとして解釈される
+- Dependencies
+    - [pu2java] from posh-mocks (this repository)
+    - [kinsoku] from posh-mocks (this repository) if `-Kinsoku <int>` option used
+- Credit
+    - [Sequence Diagram syntax and features - plantuml](https://plantuml.com/sequence-diagram)
+
+Examples:
+
+シンプルな入力例： （インデントされたリストのマークがハイフンの場合は左ノート、それ以外は右ノートになる。ただし特定のkeywordで始まる場合はそのままplantumlの命令文として解釈される）
+
+```markdown
+# How to cook curry
+
+Actor Alice as Alice
+box "in the kitchen"
+Participant Bob as Bob #white
+end box
+
+## init
+
+0. Alice ->o Bob  : order
+1. Bob --> Alice  : cut vegetables and meats
+2. Alice -> Bob   : fry meats
+3. Alice <- Alice : fry vegetables
+    + **Point**
+    + Fry the onions until they are translucent
+4. Alice -> Bob  : boil meat and vegetables
+    + If you have Laurel, put it in, and take the lye
+5. Bob --> Alice : add roux and simmer
+6. Alice -> Bob  : serve on a plate
+7. Bob --> Alice : topping
+    - add garam masala
+```
+
+シーケンス図描画コマンド例：
+
+```powershell
+# Create sequence-diagram example
+cat a.md | seq2pu -KinsokuNote 24 -ResponseMessageBelowArrow > a.pu; pu2java a.pu svg | ii
+```
+
+出力：
+
+![](img/seq2pu_1.png)
+
+
+
+より複雑な入力例： （plantumlコマンドを併用。リスト以外のブロックはそのまま出力されることを利用する）
+
+```markdown
+# How to cook curry
+
+Actor Alice as Alice
+box "in the kitchen"
+Participant Bob as Bob #white
+end box
+
+## init
+0. Alice ->o Bob : order
+    - Activate Alice #gold
+    - ref over Alice, Bob : recipe of curry
+
+1. Bob --> Alice : cut vegetables and meats
+
+2. Alice -> Bob : fry meats
+
+3. Alice <- Alice : fry vegetables
+    + **Point**
+    + Fry the onions until they are translucent
+    - Deactivate Alice
+
+    alt Laurel out of stock
+
+4. Alice -> Bob : boil meat and vegetables
+
+    else Laurel in stock
+
+4. Alice -> Bob : boil meat and vegetables and Laurel
+    + If you have Laurel, put it in, and take the lye
+
+    end
+
+5. Bob --> Alice : add roux and simmer
+
+    ...
+
+6. Alice -> Bob : serve on a plate
+
+    ...5 minutes later...
+
+
+7. Bob --> Alice : topping
+    - return bye
+    - add garam masala
+```
+
+シーケンス図描画コマンド例：
+
+```powershell
+# Create sequence-diagram:
+cat a.md | seq2pu -KinsokuNote 24 -ResponseMessageBelowArrow > a.pu; pu2java a.pu svg | ii
+```
+
+出力：
+
+![](img/seq2pu_2.png)
+
+
+
 #### [flow2pu] - Generate activity-diagram (flowchart) from markdown-like list format
 
 [flow2pu]: src/flow2pu_function.ps1
