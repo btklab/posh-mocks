@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added [movw] function
 - Added [decil] function
 - Added [summary] function
+- Added [fpath] function
+- Added [watercss] function
 
 
 
@@ -207,6 +209,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [decil]: src/decil_function.ps1
 [summary]: src/summary_function.ps1
 [movw]: src/movw_function.ps1
+
+[fpath]: src/fpath_function.ps1
+[watercss]: src/watercss_function.ps1
 
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/0.2.0..HEAD
