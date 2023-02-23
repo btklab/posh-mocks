@@ -230,7 +230,7 @@
     PS > cat input.txt | logi2pu > a.pu; pu2java a.pu svg | ii
         @startuml
 
-        title logick tree
+        title "logick tree"
         skinparam DefaultFontName "MS Gothic"
         skinparam roundCorner 15
         skinparam shadowing false
@@ -712,9 +712,9 @@ function logi2pu {
         $readLineAryHeader += "@startuml"
         $readLineAryHeader += ""
         if ($Title){
-            $readLineAryHeader += "title $Title"
+            $readLineAryHeader += "title ""$Title"""
         } elseif ($isFirstRowEqTitle) {
-            $readLineAryHeader += "title $fTitle"
+            $readLineAryHeader += "title ""$fTitle"""
         } else {
             $readLineAryHeader += "'title none"
         }
