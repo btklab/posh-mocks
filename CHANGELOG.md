@@ -9,9 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Fixed [gantt2pu], [logi2pu] , [mind2pu] Wrap title string in double quotes'
+- Changed [watercss] Synopsis
+
 ### Added
 
 - Added [flow2pu] function
+- Added [seq2pu] function
 
 
 ## [1.0.0] - 2023-02-23
@@ -221,7 +225,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [fpath]: src/fpath_function.ps1
 [watercss]: src/watercss_function.ps1
 
-[watercss]: src/flow2pu_function.ps1
+[flow2pu]: src/flow2pu_function.ps1
+[seq2pu]: src/seq2pu_function.ps1
 
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/1.0.0..HEAD

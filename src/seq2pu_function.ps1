@@ -1,31 +1,39 @@
 <#
 .SYNOPSIS
-    flow2pu - Generate activity-diagram (flowchart) from markdown-like list format
+    seq2pu - Generate sequence-diagram from markdown-like list format
 
-    Easy and quick flow chart creator from lists written in markdown format.
+    Easy and quick sequence-diagram creator from lists written in
+    markdown-like format.
 
     Reference:
-        plantuml activity-diagram
-        https://plantuml.com/en/activity-diagram-beta
+        plantuml sequence-diagram
+        https://plantuml.com/en/sequence-diagram
 
     Simple input (markdown like list):
         # How to cook curry
 
-        0. order {Counter}
-        1. cut vegetables and meats {Kitchen}
-        2. fry meats
-        3. fry vegetables
-            + **Point**: Fry the onions until they are translucent
-        4. boil meat and vegetables
+        Actor Alice as Alice
+        box "in the kitchen"
+        Participant Bob as Bob #white
+        end box
+
+        ## init
+
+        0. Alice ->o Bob : order
+        1. Bob --> Alice : cut vegetables and meats
+        2. Alice -> Bob : fry meats
+        3. Alice <- Alice : fry vegetables
+            + **Point**
+            + Fry the onions until they are translucent
+        4. Alice -> Bob : boil meat and vegetables
             + If you have Laurel, put it in, and take the lye
-        5. add roux and simmer
-        6. serve on a plate {Counter}
-        7. topping
+        5. Bob --> Alice : add roux and simmer
+        6. Alice -> Bob : serve on a plate
+        7. Bob --> Alice : topping
             - add garam masala
-
-    Create flowchart (activity-diagram) example:
-        PS > cat a.md | flow2pu -Kinsoku 10 -KinsokuNote 20 > a.pu; pu2java a.pu svg | ii
-
+    
+    Create sequence-diagram example:
+        cat a.md | seq2pu -KinsokuNote 24 -ResponseMessageBelowArrow > a.pu; pu2java a.pu svg | ii
 
     Format:
         Available list formats are:
@@ -35,46 +43,48 @@
             + Fourth step
             * Fifth step
 
-        Indented item treated as note block:
+        Indented list treated as note block:
             1. First step
                 - Indented item = note (left note)
                 - Indented item = note
-                - Indented item = note
+                - Activate key (parse as-is)
             2. Second step
                 + Indented item = note (right note)
                 + Indented item = note
                 + Indented item = note
             3. Hyphen is note left, otherwise note right
-            4. Indented lists are interpreted as notes
-               regardless of depth.
+            4. Indented lists are interpreted as a note regardless
+               of the nesting depth, but if a keyword is included
+               at the beginning of the line, output as-is as a
+               plantuml statement.
 
-        Level 1 header written on the first line is the title:
+        Indented list starting with the following keywords is
+        interpreted as a plantuml statement as-is.
+
+            Keywords:
+                "activate"
+                "deactivate"
+                "destroy"
+                "ref"
+                "return"
+                "..."
+
+        Level 1 header written on the first line is the title.
         
-        Level 2 headers are partitioned up to the next blank line
-        or the next level 2 header
+        Level 2 headers divide diagram into logical steps
 
-        "{ }" at the end of the list is a swimlane
+            ## section
+                into
+            == section ==
 
-            1. First step {swimlane1}
-            2. Second step {swimlane2}
-            3. Third step {#AntiqueWhite|swimlane3}
-            4. Fourth step {swimlane2}
-            5. Fifth step {swimlane1}
-        
         Legend can be output by writing the following:
 
             legend right|left
-            this is legend
+              this is legend
             end legend
-    
-        Fill color can be specified by prepending [#color]
-        to the label. For example:
-
-            - [#orange] label
 
 .LINK
-    pu2java, dot2gviz, pert, pert2dot, pert2gantt2pu, mind2dot, flow2pu, gantt2pu, logi2dot, logi2dot2, logi2dot3, logi2pu, logi2pu2, flow2pu, seq2pu
-
+    pu2java, dot2gviz, pert, pert2dot, pert2gantt2pu, mind2dot, gantt2pu, logi2dot, logi2dot2, logi2dot3, logi2pu, logi2pu2, seq2pu
 
 .PARAMETER Title
     insert title
@@ -97,70 +107,87 @@
 
 
 .EXAMPLE
-    Simple input (markdown like list)
-    # How to cook curry
-
-    0. order {Counter}
-    1. cut vegetables and meats {Kitchen}
-    2. fry meats
-    3. fry vegetables
-        + **Point**: Fry the onions until they are translucent
-    4. boil meat and vegetables
-        + If you have Laurel, put it in, and take the lye
-    5. add roux and simmer
-    6. serve on a plate {Counter}
-    7. topping
-        - add garam masala
-
-
-    # Create flowchart (activity-diagram)
-    PS > cat a.md | flow2pu -Kinsoku 10 -KinsokuNote 20 > a.pu; pu2java a.pu svg | ii
-
-.EXAMPLE
-    Complex input
+    "Simple input (markdown like list):"
 
     # How to cook curry
 
-    |Counter|
-    start
+    Actor Alice as Alice
+    box "in the kitchen"
+    Participant Bob as Bob #white
+    end box
 
-    ## Order
-    0. order
+    ## init
 
-    |#LightGray|Kitchen|
-
-    ## Preparation
-    1. cut vegetables and meats
-
-    ## Fry
-    2. fry meats
-    if (is there \n cumin seed?) then (yes)
-    - fry cumin seed
-    else (no)
-    endif
-    3. fry vegetables
+    0. Alice ->o Bob : order
+    1. Bob --> Alice : cut vegetables and meats
+    2. Alice -> Bob : fry meats
+    3. Alice <- Alice : fry vegetables
         + **Point**
         + Fry the onions until they are translucent
-
-    ## Boil
-    4. boil meat and vegetables
+    4. Alice -> Bob : boil meat and vegetables
         + If you have Laurel, put it in, and take the lye
-    5. add roux and simmer
-
-    |Counter|
-
-    ## Finish
-    6. serve on a plate
-    7. topping
+    5. Bob --> Alice : add roux and simmer
+    6. Alice -> Bob : serve on a plate
+    7. Bob --> Alice : topping
         - add garam masala
-    end
+    
+    # Create sequence-diagram:
+    PS > cat a.md | seq2pu -KinsokuNote 24 -ResponseMessageBelowArrow > a.pu; pu2java a.pu svg | ii
+
+.EXAMPLE
+    "Complex input"
+
+    # How to cook curry
+
+    Actor Alice as Alice
+    box "in the kitchen"
+    Participant Bob as Bob #white
+    end box
+
+    ## init
+
+    0. Alice ->o Bob : order
+        - Activate Alice #gold
+        - ref over Alice, Bob : recipe of curry
+
+    1. Bob --> Alice : cut vegetables and meats
+
+    2. Alice -> Bob : fry meats
+
+    3. Alice <- Alice : fry vegetables
+        + **Point**
+        + Fry the onions until they are translucent
+        - Deactivate Alice
+
+        alt Laurel out of stock
+
+    4. Alice -> Bob : boil meat and vegetables
+
+        else Laurel in stock
+
+    4. Alice -> Bob : boil meat and vegetables and Laurel
+        + If you have Laurel, put it in, and take the lye
+
+        end
+
+    5. Bob --> Alice : add roux and simmer
+
+        ...
+
+    6. Alice -> Bob : serve on a plate
+
+        ...5 minutes later...
 
 
-    ## output activity-diagram
-    PS > cat a.md | flow2pu -Kinsoku 16 -KinsokuNote 20 > a.pu; pu2java a.pu svg | ii
+    7. Bob --> Alice : topping
+        - return bye
+        - add garam masala
+
+    # Create sequence-diagram:
+    PS > cat a.md | seq2pu -KinsokuNote 24 -ResponseMessageBelowArrow > a.pu; pu2java a.pu svg | ii
 
 #>
-function flow2pu {
+function seq2pu {
     Param(
         [Parameter( Mandatory=$False)]
         [Alias('o')]
@@ -177,6 +204,9 @@ function flow2pu {
 
         [Parameter( Mandatory=$False)]
         [switch] $HandWritten,
+
+        [Parameter( Mandatory=$False)]
+        [switch] $AutoActivate,
 
         [Parameter(Mandatory=$False)]
         [regex]$Grep,
@@ -195,6 +225,13 @@ function flow2pu {
             "spacelab", "toy", "vibrant"
         )]
         [string] $Theme,
+
+        [Parameter( Mandatory=$False)]
+        [ValidateSet( "right", "left", "center" )]
+        [string] $SequenceMessageAlign,
+
+        [Parameter( Mandatory=$False)]
+        [switch] $ResponseMessageBelowArrow,
 
         [Parameter( Mandatory=$False)]
         [int] $Kinsoku,
@@ -219,9 +256,16 @@ function flow2pu {
         [bool] $isFirstRowEqTitle = $False
         [bool] $isLegend = $False
         [bool] $isNoteBlock = $False
-        [bool] $isPartitionBlock = $False
         [string[]] $readLineAry = @()
         [string[]] $readLineAryNode = @()
+        [string[]] $ignoreKeywords = @(
+            "note",
+            "activate",
+            "deactivate",
+            "destroy",
+            "ref",
+            "return"
+        )
         ## private function
         function isCommandExist ([string]$cmd) {
             try { Get-Command $cmd -ErrorAction Stop > $Null
@@ -274,7 +318,7 @@ function flow2pu {
             return
         }
         ## end note block if detect empty line
-        if ( $rdLine -eq '' -and $isNoteBlock){
+        if ( $rdLine -match '^\s*$' -and $isNoteBlock){
             [bool] $isNoteBlock = $False
             $readLineAryNode += "  end note"
             $readLineAryNode += ''
@@ -285,20 +329,26 @@ function flow2pu {
             [bool] $isNoteBlock = $False
             $readLineAryNode += "  end note"
         }
-        if ( $rdLine -eq '' -and $isPartitionBlock){
-            [bool] $isPartitionBlock = $False
-            $readLineAryNode += "}"
-            $readLineAryNode += ''
-            return
-        }
         ## convert target block
         if (($rdLine -match '^\s*[-+*]+|^\s*[0-9]+\.') -and (-not $isLegend)){
             if ( $rdLine -match '^\s+') {
                 ## note
                 if ( $isNoteBlock ){
                     ## continue note block
-                    [string] $noteStr = $rdLine -replace '^(\s*)[-+*]+|^\s*[0-9]+\.', '$1'
+                    ## ignore keywords
+                    [string] $noteStr = $rdLine -replace '^\s+[-+*]+|^\s+[0-9]+\.', ''
                     [string] $noteStr = $noteStr.Trim()
+                    [string] $noteKey = $noteStr -replace '^([^ ]+) .*$', '$1'
+                    Write-Debug "noteKey: $noteKey"
+                    foreach ( $ik in $ignoreKeywords ){
+                        if ( $noteKey -eq $ik){
+                            ## output as-is
+                            [bool] $isNoteBlock = $False
+                            $readLineAryNode += "  end note"
+                            $readLineAryNode += "  $noteStr"
+                            return
+                        }
+                    }
                     ## Apply kinsoku
                     if ($KinsokuNote) {
                         [string[]] $noteAry = execKinsokuToNote $noteStr
@@ -310,13 +360,23 @@ function flow2pu {
                     }
                 } else {
                     ## begin note block
+                    ## ignore keywords
+                    [string] $noteStr = $rdLine -replace '^\s*[-+*]+|^\s*[0-9]+\.', ''
+                    [string] $noteStr = $noteStr.Trim()
+                    [string] $noteKey = $noteStr -replace '^([^ ]+) .*$', '$1'
+                    Write-Debug "noteKey: $noteKey"
+                    foreach ( $ik in $ignoreKeywords ){
+                        if ( $noteKey -eq $ik){
+                            ## output as-is
+                            $readLineAryNode += "  $noteStr"
+                            return
+                        }
+                    }
                     if ( $rdLine -match '^\s+\-'){
                         $readLineAryNode += "  note left"
                     } else {
                         $readLineAryNode += "  note right"
                     }
-                    [string] $noteStr = $rdLine -replace '^(\s*)[-+*]+|^\s*[0-9]+\.', '$1'
-                    [string] $noteStr = $noteStr.Trim()
                     ## Apply kinsoku
                     if ($KinsokuNote) {
                         [string[]] $noteAry = execKinsokuToNote $noteStr
@@ -336,29 +396,14 @@ function flow2pu {
                 $readLineAryNode += "  end note"
             }
             ## target row pattern:
-            ## - flow1 {swim}
-            ## - [#pink] flow1
-            ## - flow1 {swim}
-            ## - [#pink] flow1 {swim}
-            [string] $preSpaces = $rdLine -replace '^(\s*)([-+*]+|[0-9]+\.)(..*)$','$1'
-            [string] $preMark   = $rdLine -replace '^(\s*)([-+*]+|[0-9]+\.)(..*)$','$2'
+            ## - 1. Alice -> Bob : order
             [string] $contents  = $rdLine -replace '^(\s*)([-+*]+|[0-9]+\.)(..*)$','$3'
-            [string] $contents  = $contents.Trim()
-            if ($contents -match '\{[^\}]+\}$'){
-                ## set swimLane when contents -eq '- contents {swim}'
-                [string] $swimLane  = $contents -replace '^(..*)\{([^\}]+)\}$','$2'
-                [string] $contents  = $contents -replace '^(..*)\{([^\}]+)\}$','$1'
-                $readLineAryNode += "| $swimLane |"
+            [string[]] $splitContents = $contents -split ':', 2
+            if ( $splitContents.Count -ne 2 ){
+                Write-Error "Missing separator "":"" in $rdLine" -ErrorAction Stop
             }
-            if ($contents -match '^\[#'){
-                ## if color specifiacation (prefix) e.g. [#orange] contents
-                [string] $colorName = $contents -replace '^\[(#[^\]]+)\](..*)$','$1'
-                [string] $contents  = $contents -replace '^\[(#[^\]]+)\](..*)$','$2'
-            } else {
-                [string] $colorName = ''
-            }
-            [string] $colorName = $colorName.Trim()
-            [string] $contents  = $contents.Trim()
+            [string] $sequence = $splitContents[0].Trim()
+            [string] $contents = $splitContents[1].Trim()
             ## Grep contents
             if ( $Grep -and $contents -match $Grep ){
                 $colorName = "#pink"
@@ -368,37 +413,14 @@ function flow2pu {
                 $contents = execKinsoku $contents
             }
             ## set node
-            $readLineAryNode += $colorName + ':' + $contents + ';'
+            $readLineAryNode += $sequence + ' : ' + $contents
 
         } elseif ( $rdLine -match '^## '){
             ## add partition
             [string] $newPartitionName = $rdLine -replace '^## (..*)$','$1'
             [string] $newPartitionName = $newPartitionName.Trim()
-            ## add swimLane
-            [string] $swimLane = ''
-            if ( $newPartitionName -match '\s*\{[^\}]+\}$' ){
-                [string] $swimLane = $rdLine -replace '^(..*)\{([^\}]+)\}$','$2'
-                [string] $newPartitionName   = $newPartitionName -replace '^(..*)\{([^\}]+)\}$','$1'
-                [string] $newPartitionName   = $newPartitionName -replace '\s*$', ''
-            }
-            if ( $isPartitionBlock ) {
-                ## close and open partition block
-                [bool] $isPartitionBlock = $True
-                $readLineAryNode += "}"
-                if ( $swimLane -ne ''){
-                    $readLineAryNode += "| $swimLane |"
-                }
-                $readLineAryNode += "partition ""$newPartitionName"" {"
-                return
-            } else {
-                ## open partition block
-                [bool] $isPartitionBlock = $True
-                if ( $swimLane -ne ''){
-                    $readLineAryNode += "| $swimLane |"
-                }
-                $readLineAryNode += "partition ""$newPartitionName"" {"
-                return
-            }
+            $readLineAryNode += "== $newPartitionName =="
+            return
         } else {
             ## end note block if detect "^## "
             if ( $isNoteBlock){
@@ -425,12 +447,6 @@ function flow2pu {
             ## close note block
             [bool] $isNoteBlock = $False
             $readLineAryNode += "  end note"
-            $readLineAryNode += ''
-        }
-        if ( $isPartitionBlock ){
-            ## close partition block
-            [bool] $isPartitionBlock = $False
-            $readLineAryNode += "}"
             $readLineAryNode += ''
         }
         ##
@@ -467,6 +483,15 @@ function flow2pu {
         }
         if ($HandWritten) {
             $readLineAryHeader += "skinparam handwritten true"
+        }
+        if ($SequenceMessageAlign){
+            $readLineAryHeader += "skinparam sequenceMessageAlign $SequenceMessageAlign"
+        }
+        if ($ResponseMessageBelowArrow){
+            $readLineAryHeader += "skinparam responseMessageBelowArrow true"
+        }
+        if ($AutoActivate) {
+            $readLineAryHeader += "autoactivate on"
         }
         if ($Theme) {
             $readLineAryHeader += "!theme $Theme"

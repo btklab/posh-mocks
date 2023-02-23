@@ -88,6 +88,7 @@ if ($IsWindows){
 . $pwshSrcDir/logi2dot_function.ps1
 . $pwshSrcDir/logi2pu_function.ps1
 . $pwshSrcDir/flow2pu_function.ps1
+. $pwshSrcDir/seq2pu_function.ps1
 
 
 ## image processing
