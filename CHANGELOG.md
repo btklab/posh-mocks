@@ -9,8 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Fixed [gantt2pu], [logi2pu] , [mind2pu] Wrap title string in double quotes'
+- None
+
+### Added
+
+-None
+
+
+## [1.1.0]
+
+### Changed
+
+- Fixed [gantt2pu], [logi2pu], [mind2pu] Wrap title string in double quotes
 - Changed [watercss] Synopsis
+- Fixed [README.md]
 
 ### Added
 
@@ -38,8 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Changed `csv2sqlite` update examples
-- Changed `CHANGELOG.md` test tagging and write CHANGELOG.md
+- Changed [csv2sqlite] update examples
+- Changed [CHANGELOG.md] test tagging and write CHANGELOG.md
 
 ### Added
 
@@ -54,84 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added 
 
-- Added [Add-CrLf-EndOfFile]
-- Added [Add-CrLf]
-- Added [addb]
-- Added [addl]
-- Added [addr]
-- Added [addt]
-- Added [cat2]
-- Added [catcsv]
-- Added [chead]
-- Added [clip2img]
-- Added [clipwatch]
-- Added [conv]
-- Added [ConvImage]
-- Added [count]
-- Added [csv2sqlite]
-- Added [csv2txt]
-- Added [ctail]
-- Added [ctail2]
-- Added [delf]
-- Added [dot2gviz]
-- Added [filehame]
-- Added [fillretu]
-- Added [flat]
-- Added [fwatch]
-- Added [gantt2pu]
-- Added [gdate]
-- Added [Get-OGP]
-- Added [getfirst]
-- Added [getlast]
-- Added [grep]
-- Added [gyo]
-- Added [han]
-- Added [head]
-- Added [i]
-- Added [image2md]
-- Added [jl]
-- Added [json2txt]
-- Added [juni]
-- Added [keta]
-- Added [kinsoku]
-- Added [lastyear]
-- Added [lcalc]
-- Added [linkcheck]
-- Added [linkextract]
-- Added [logi2dot]
-- Added [logi2pu]
-- Added [man2]
-- Added [map2]
-- Added [mind2dot]
-- Added [mind2pu]
-- Added [nextyear]
-- Added [Override-Yaml]
-- Added [pawk]
-- Added [pu2java]
-- Added [pwmake]
-- Added [retu]
-- Added [rev]
-- Added [rev2]
-- Added [say]
-- Added [sed-i]
-- Added [sed]
-- Added [self]
-- Added [sleepy]
-- Added [sm2]
-- Added [table2md]
-- Added [tac]
-- Added [tail]
-- Added [tarr]
-- Added [tateyoko]
-- Added [teatimer]
-- Added [tenki]
-- Added [tex2pdf]
-- Added [thisyear]
-- Added [toml2psobject]
-- Added [uniq]
-- Added [vbStrConv]
-- Added [yarr]
-- Added [zen]
+- Added [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [ctail2], [delf], [dot2gviz], [filehame], [fillretu], [flat], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [nextyear], [Override-Yaml], [pawk], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [sleepy], [sm2], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [yarr], [zen]
 
 
 
@@ -229,7 +164,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [seq2pu]: src/seq2pu_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/1.0.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/1.1.0..HEAD
+[1.1.0]: https://github.com/btklab/posh-mocks/releases/tag/1.1.0
 [1.0.0]: https://github.com/btklab/posh-mocks/releases/tag/1.0.0
 [0.2.0]: https://github.com/btklab/posh-mocks/releases/tag/0.2.0
 [0.1.0]: https://github.com/btklab/posh-mocks/releases/tag/0.1.0

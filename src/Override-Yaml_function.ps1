@@ -53,13 +53,13 @@
 
     PS > cat .\a.yaml | head
     ---
-    title: "title"
-    author: hoge
+    title: dummy
+    author: dummy
     lang: ja
-    date: 2022-05-12
+    date: dummy
     date-format: "YYYY-M-D (ddd)"
     citation:
-      url: https://example.com/summarizing-output
+      url: https://example.com/
     abstract: "abstract"
     ...
 

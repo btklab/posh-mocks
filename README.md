@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [ctail2], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [fpath], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [sleepy], [sm2], [summary], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [yarr], [zen]
+- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [ctail2], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [yarr], [zen]
 
 Inspired by:
 
@@ -46,6 +46,10 @@ Inspired by:
     - Commands: `Get-Draw.ps1`
 - [ImageMagick](https://imagemagick.org/index.php)
     - Commands: `convert`, `magick convert`(on windows)
+- [Water.css](https://watercss.kognise.dev/)
+    - GitHub: <https://github.com/kognise/water.css)https://github.com/kognise/water.css>
+    - License: The MIT License (MIT) Copyright © 2019 Kognise
+
 
 
 
@@ -2768,7 +2772,7 @@ Count-NaN   : 0
 Count-Total : 150
 ```
 
-以下のように工夫すると任意の複数列の基礎統計量が計算できる。
+以下のように工夫すると任意の**複数列**の基礎統計量が計算できる。
 
 ```powershell
 1..4 | %{ cat iris.csv | summary $_ -d "," } | ft
@@ -2807,13 +2811,13 @@ from [グローバル化と食品微生物規格の考え方 - J-Stage](https://
 - Exmples:
     - `cat iris.txt | movw -Num 1 -WindowSize 5 -AcceptableLevel 4.7 -MaxLimit 5.5 -MaxFrequency 3`
 - Notes:
-    - Corrective action is triggered by exceeding either (c) or (M):
+    - Corrective action is triggered by exceeding either `(c)` or `(M)`:
         - Limit that will start corrective measures when this value deviates at least once in the window
             - `(M)` Max limit
-		- Levels that will start corrective measures when "-AcceptableLevel" deviations occur more than "-MaxFrequency" times in "-WindowSize" range
+		- Levels that will start corrective measures when `-AcceptableLevel` deviations occur more than `-MaxFrequency` times in "-WindowSize" range
             - `(m)` AcceptableLevel: a marginally acceptable level
             - `(n)` WindowSize: moving window size
-            - `(c)` Maximum frequency (c) of all samples taken during the specified period (n)
+            - `(c)` Maximum frequency `(c)` of all samples taken during the specified period `(n)`
     - The evaluation result is output in the "Res" field.<br />The meaning of the numerical value is as follows:
         - `0`: Clear (no need to start corrective action)
         - `1`: Over MaxFrequency (need to start corrective action)
@@ -2853,13 +2857,16 @@ s_l AcceptableLevel MaxLimit MaxFrequency WindowSize Res
 [dot2gviz]: src/dot2gviz_function.ps1
 [Graphviz]: https://graphviz.org/
 
-[Graphviz]の`dot`ファイルを実行し、グラフ（棒グラフのグラフではなく、箱と矢印・ノードとエッジのほうのグラフ）を描画する。`dot -Tpng -o a.png a.dot`と等価。日本語WindowsでUTF-8な環境下での使用を想定。
+[Graphviz]の`dot`ファイルを実行し、グラフ（棒グラフのグラフではなく、箱と矢印・ノードとエッジのほうのグラフ）を描画する。
+`dot -Tpng -o a.png a.dot`と等価。日本語WindowsでUTF-8な環境下での使用を想定。
 
 [Graphviz]で日本語を用いるときは次のようにフォントを指定せねばならない。
 
 - `dot -Nfontname="Meiryo" -Efontname="Meiryo" -Gfontname="Meiryo" -Tsvg -o a.svg a.dot`
 
-これでは長くて覚えられないので、ラッパースクリプトを作成した。最もシンプルに書くと`dot2gviz a.dot`。デフォルトで入力ファイル名と同ファイル名の`png`画像をカレントディレクトリに出力する。
+これでは長くて覚えられないので、ラッパースクリプトを作成した。
+最もシンプルに書くと`dot2gviz a.dot`。
+デフォルトで入力ファイル名と同ファイル名の`png`画像をカレントディレクトリに出力する。
 
 - Usage
     - `man2 dot2gviz`
@@ -4078,41 +4085,41 @@ cat a.md | flow2pu -Kinsoku 10 -KinsokuNote 20 > a.pu; pu2java a.pu svg | ii
 より複雑な入力例： （Level2ヘッダで、次の空行もしくは次のLevel2ヘッダが現れるまでの区間をパーティショニング）
 
 ```markdown
-    # How to cook curry
+# How to cook curry
 
-    |Counter|
-    start
+|Counter|
+start
 
-    ## Order
-    0. order
+## Order
+0. order
 
-    |#LightGray|Kitchen|
+|#LightGray|Kitchen|
 
-    ## Preparation
-    1. cut vegetables and meats
+## Preparation
+1. cut vegetables and meats
 
-    ## Fry
-    2. fry meats
-    if (is there \n cumin seed?) then (yes)
-    - fry cumin seed
-    else (no)
-    endif
-    3. fry vegetables
-        + **Point**
-        + Fry the onions until they are translucent
+## Fry
+2. fry meats
+if (is there \n cumin seed?) then (yes)
+- fry cumin seed
+else (no)
+endif
+3. fry vegetables
+    + **Point**
+    + Fry the onions until they are translucent
 
-    ## Boil
-    4. boil meat and vegetables
-        + If you have Laurel, put it in, and take the lye
-    5. add roux and simmer
+## Boil
+4. boil meat and vegetables
+    + If you have Laurel, put it in, and take the lye
+5. add roux and simmer
 
-    |Counter|
+|Counter|
 
-    ## Finish
-    6. serve on a plate
-    7. topping
-        - add garam masala
-    end
+## Finish
+6. serve on a plate
+7. topping
+    - add garam masala
+end
 ```
 
 描画コマンド例：
@@ -4939,10 +4946,19 @@ bumon-C tank    17:46 2017/05/10        fuga    fuga
 
 Markdownファイルのyamlヘッダに外部yamlヘッダのアイテムを追加する。
 キーが重複した場合はmarkdownファイルのyamlデータが優先される。
-
-yamlデータの共用可能部分を外部ファイル化することで、markdownファイルに書かれる記事固有のyamlセッティングを最小限ですませられる。要するに、筆者は長いYamlヘッダは記憶できない。覚えていられるのは`title`、`author`、`date`程度である。
-
 markdownに記述するyamlは単行のみとする。
+
+yamlデータの共用可能部分を外部ファイル化することで、markdownファイルに書かれる記事固有のyamlセッティングを最小限ですませられる。
+
+動機：筆者は長いYamlヘッダは記憶できない。覚えていられるのは`title`、`author`、`date`程度である。
+
+```yaml
+title: "Can't remember longer yaml!"
+subtitle: "subtitle"
+author: "btklab"
+date: today
+...
+```
 
 
 - Usage
@@ -4972,13 +4988,13 @@ fuga
 Input2: yaml (complex and too long)
 
 ```yaml
-title: "title"
-author: hoge
+title: dummy
+author: dummy
 lang: ja
-date: 2022-05-12
+date: dummy
 date-format: "YYYY-M-D (ddd)"
 citation:
-  url: https://example.com/summarizing-output
+  url: https://example.com/
 abstract: "abstract"
 ...
 ```
@@ -5342,7 +5358,7 @@ cat a.json | json2txt
 .widget.text.onMouseUp = "sun1.opacity = (sun1.opacity / 100) * 90;"
 ```
 
-#### [csv2txt] - Convert CSV to TSV
+#### [csv2txt] - Convert CSV to SSV
 
 [csv2txt]: src/csv2txt_function.ps1
 
