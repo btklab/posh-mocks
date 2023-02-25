@@ -9,11 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- None
+- Fixed [README.md], [logi2dot], [logi2pu], [percentile] typo
 
 ### Added
 
 -None
+
 
 ## [2.0.0]
 
@@ -21,7 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Breaking Change [chead], [ctail] refactored.
 - Fixed [i] error handling when file does not exist.
-
 
 
 ## [1.1.0]

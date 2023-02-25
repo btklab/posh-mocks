@@ -44,7 +44,7 @@
         B soak rice in fresh water [A]
         C cook rice [B]
 
-        -- ccurry roux --
+        -- curry roux --
         D cut vegetables [-]
         E cut meat into cubes [-]
         F stew vegetables and meat [D,E]
@@ -97,13 +97,13 @@
          };
 
          subgraph cluster_G2 {
-          label = "ccurry roux";
+          label = "curry roux";
           shape = "rectangle";
           style = "dotted";
           //fontsize = 11;
           labelloc = "t";
           labeljust = "l";
-          //-- ccurry roux --
+          //-- curry roux --
           "D" [label="D\lcut vegetables", shape="rectangle" ];
           "E" [label="E\lcut meat into cubes", shape="rectangle" ];
           "F" [label="F\lstew vegetables and meat", shape="rectangle" ];

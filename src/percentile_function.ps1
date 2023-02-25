@@ -7,7 +7,7 @@
     -SkipHeader switch.
 
     Usage:
-        cat data.txt | percentile [-v] <n> [-k <n>[,<n>]] [-NoHeader] [-SkipHeader] [-Rank] [-Level5]
+        cat data.txt | percentile [[-Val] <Int32>] [[-Key] <Int32[]>] [-SkipHeader] [-Rank] [-Cast <String>] [-Level5]
 
     Example:
         cat iris.csv | percentile -v 1 -k 5 -d "," -SkipHeader | ft
