@@ -51,7 +51,7 @@
         B soak rice in fresh water [A]
         C cook rice [B]
 
-        -- ccurry roux --
+        -- curry roux --
         D cut vegetables [-]
         E cut meat into cubes [-]
         F stew vegetables and meat [D,E]
@@ -87,8 +87,8 @@
           rectangle "**C**\ncook rice" as C
         }
 
-        rectangle "ccurry roux" as G2 {
-        '-- ccurry roux --
+        rectangle "curry roux" as G2 {
+        '-- curry roux --
           rectangle "**D**\ncut vegetables" as D
           rectangle "**E**\ncut meat into cubes" as E
           rectangle "**F**\nstew vegetables and meat" as F

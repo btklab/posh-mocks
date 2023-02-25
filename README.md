@@ -2513,12 +2513,16 @@ lastyear 2/28 -s "_last_year"
 
 半角スペース区切りデータにpercentileまたは四分位数（quartile）を適用してランク付け。
 
+[percentile]と[summary]はどちらも「縦一列の基礎統計量を産出する」点は同じだが、
+[summary]はヘッダありデータ、[percentile]はヘッダなしデータをさばく。
+[percentile]はCategory列を指定するとCategoryごとに基礎統計量を計算できる。
+
 Calculate and ranking with percentile and quartiles on space-delimited data without headers. If data has header rows, they can be skipped with `-SkipHeader` switch.
 
 
 - Usage
     - `man2 percentile`
-    - `cat data.txt | percentile [-v] <n> [-k <n>[,<n>]] [-NoHeader] [-SkipHeader] [-Rank] [-Level5]`
+    - `percentile [[-Val] <Int32>] [[-Key] <Int32[]>] [-SkipHeader] [-Rank] [-Cast <String>] [-Level5]`
 
 Examples:
 
@@ -2584,7 +2588,7 @@ IQR     : 2
 ##  means summary 2nd field using 1st field as key
 "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -k 1 | ft
 
-key count   sum maen stdev  min Qt25 Qt50 Qt75  max
+key count   sum mean stdev  min Qt25 Qt50 Qt75  max
 --- -----   --- ---- -----  --- ---- ---- ----  ---
 a       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
 b       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
@@ -2594,7 +2598,7 @@ d       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
 ## -k 1,2 means fields from 1st to 2nd are considered keys
 "a".."d" | %{ $s=$_; 1..5 | %{ "$s $s $_" } } | percentile 3 -k 1,2 | ft
 
-key count   sum maen stdev  min Qt25 Qt50 Qt75  max
+key count   sum mean stdev  min Qt25 Qt50 Qt75  max
 --- -----   --- ---- -----  --- ---- ---- ----  ---
 a a     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
 b b     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
@@ -2785,6 +2789,10 @@ D01 CZ84 8470022 0.0026600974009877927269611624
 [summary]: src/summary_function.ps1
 
 半角スペース区切りデータのうち数値列1列分の基礎統計量を算出する。
+
+[percentile]と[summary]はどちらも「縦一列の基礎統計量を産出する」点は同じだが、
+[summary]はヘッダありデータ、[percentile]はヘッダなしデータをさばく。
+[percentile]はCategory列を指定するとCategoryごとに基礎統計量を計算できる。
 
 - デフォルトで四分位数を計算
     - 四分位数の中央値はExclusive
@@ -3565,7 +3573,7 @@ A wash rice [-]
 B soak rice in fresh water [A]
 C cook rice [B]
 
--- ccurry roux --
+-- curry roux --
 D cut vegetables [-]
 E cut meat into cubes [-]
 F stew vegetables and meat [D,E]
@@ -3622,13 +3630,13 @@ strict digraph logictree {
  };
 
  subgraph cluster_G2 {
-  label = "ccurry roux";
+  label = "curry roux";
   shape = "rectangle";
   style = "dotted";
   //fontsize = 11;
   labelloc = "t";
   labeljust = "l";
-  //-- ccurry roux --
+  //-- curry roux --
   "D" [label="D\lcut vegetables", shape="rectangle" ];
   "E" [label="E\lcut meat into cubes", shape="rectangle" ];
   "F" [label="F\lstew vegetables and meat", shape="rectangle" ];
@@ -3810,7 +3818,7 @@ end note
 B soak rice in fresh water [A]
 C cook rice [B]
 
--- ccurry roux --
+-- curry roux --
 D cut vegetables [-]
 E cut meat into cubes [-]
 F stew vegetables and meat [D,E]
@@ -3850,8 +3858,8 @@ rectangle "rice" as G1 {
   rectangle "**C**\ncook rice" as C
 }
 
-rectangle "ccurry roux" as G2 {
-'-- ccurry roux --
+rectangle "curry roux" as G2 {
+'-- curry roux --
   rectangle "**D**\ncut vegetables" as D
   rectangle "**E**\ncut meat into cubes" as E
   rectangle "**F**\nstew vegetables and meat" as F
