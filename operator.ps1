@@ -21,7 +21,6 @@ if ($IsWindows){
     . $pwshSrcDir/tail_function.ps1
     . $pwshSrcDir/chead_function.ps1
     . $pwshSrcDir/ctail_function.ps1
-    . $pwshSrcDir/ctail2_function.ps1
 
     . $pwshSrcDir/cat2_function.ps1
     . $pwshSrcDir/tac_function.ps1

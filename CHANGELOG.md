@@ -15,6 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -None
 
+## [2.0.0]
+
+### Changed
+
+- Breaking Change [chead], [ctail] refactored.
+- Fixed [i] error handling when file does not exist.
+
+
 
 ## [1.1.0]
 
@@ -66,7 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added 
 
-- Added [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [ctail2], [delf], [dot2gviz], [filehame], [fillretu], [flat], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [nextyear], [Override-Yaml], [pawk], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [sleepy], [sm2], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [yarr], [zen]
+- Added [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], ctail2, [delf], [dot2gviz], [filehame], [fillretu], [flat], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [nextyear], [Override-Yaml], [pawk], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [sleepy], [sm2], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [yarr], [zen]
 
 
 
@@ -90,7 +98,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [csv2sqlite]: src/csv2sqlite_function.ps1
 [csv2txt]: src/csv2txt_function.ps1
 [ctail]: src/ctail_function.ps1
-[ctail2]: src/ctail2_function.ps1
 [delf]: src/delf_function.ps1
 [dot2gviz]: src/dot2gviz_function.ps1
 [filehame]: src/filehame_function.ps1
@@ -164,7 +171,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [seq2pu]: src/seq2pu_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/1.1.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/2.0.0..HEAD
+[2.0.0]: https://github.com/btklab/posh-mocks/releases/tag/1.1.0
 [1.1.0]: https://github.com/btklab/posh-mocks/releases/tag/1.1.0
 [1.0.0]: https://github.com/btklab/posh-mocks/releases/tag/1.0.0
 [0.2.0]: https://github.com/btklab/posh-mocks/releases/tag/0.2.0

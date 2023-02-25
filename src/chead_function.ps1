@@ -8,77 +8,68 @@
     Accepts input only from pipline.
     Cut 1 row by default.
 
-    The +h option treats the 1st row as a
-    header and skips it.
-
-    chead [+h] [-n num]
-
 .LINK
-    head, tail, chead, ctail, ctail2
+    head, tail, chead, chead
 
 .EXAMPLE
-1..5 | chead
-2
-3
-4
-5
+    # read from stdin
 
-PS > 1..5 | chead -n 3
-4
-5
+    PS > 1..5 | chead
+    2
+    3
+    4
+    5
 
-PS > 1..5 | chead +h -n 3
-1
-5
+    PS > 1..5 | chead -n 2
+    3
+    4
+    5
+
+.EXAMPLE
+    # read from file
+    
+    PS > 1..5 > a.txt; chead a.txt
+    2
+    3
+    4
+    5
+    
+    PS > 1..5 > a.txt; chead -n 2 a.txt
+    3
+    4
+    5
+
+.NOTES
+    learn: Select-Object
+    https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.utility/select-object
+
 
 #>
 function chead {
 
-    begin
-    {
-        [int] $readRowCounter = 0
-        [bool] $headerFlag = $false
-        # get nubmer of rows to cut
-        if($args.Count -eq 0){
-            # cut 1 row by default
-            [int] $cutRowNum = 1
-    
-        }elseif( [string] ($args[0]) -eq '-n'){
-            # number of cut rows specified
-            if($args.Count -lt 2){
-                Write-Error "Invalid args." -ErrorAction Stop
-            }
-            $cutRowNum = [int] ($args[1])
+    param (
+        [Parameter( Mandatory=$False )]
+        [Alias('n')]
+        [int] $Num = 1,
         
-        }elseif( [string] ($args[0]) -eq '+h'){
-            $headerFlag = $True
-            $cutRowNum = 1
-            if( [string] ($args[1]) -eq '-n' ){
-                # -n 行数指定ありの場合
-                if($args.Count -lt 3){
-                    Write-Error "Insufficient args." -ErrorAction Stop}
-                $cutRowNum = [int] ($args[2])
-            }
-        }else{
-          Write-Error "Invalid args." -ErrorAction Stop
+        [Parameter( Mandatory=$False, Position=0 )]
+        [Alias('f')]
+        [string[]] $Files,
+        
+        [parameter( Mandatory=$False, ValueFromPipeline=$True )]
+        [string[]] $InputText
+    )
+    $splatting = @{
+        Skip = $Num
+    }
+    #$splatting.Set_Item('NoEmphasis', $True)
+    if ( $Files ){
+        foreach ( $f in $Files){
+            Get-Content -LiteralPath $f `
+                | Select-Object @splatting
         }
-    } # end of begin block
-    process
-    {
-        $readRowCounter++
-        [string] $readLine = [string] $_
-        if($headerFlag){
-            if($readRowCounter -eq 1){
-                Write-Output $readLine
-            }else{
-                if( ($readRowCounter - 1) -gt $cutRowNum){
-                    Write-Output $readLine
-                }
-            }
-        } else {
-            if($readRowCounter -gt $cutRowNum){
-                Write-Output $readLine
-            }
-        }
-    } # end of process block
+    } else {
+        $input `
+            | Select-Object @splatting
+    }
 }
