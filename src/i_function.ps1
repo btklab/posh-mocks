@@ -142,6 +142,14 @@ function i {
             return $False
         }
     }
+    function editFile ( [string] $fpath ){
+        if ( $isWindows ){
+            notepad $fpath
+        } else {
+            vi $fpath
+        }
+        return
+    }
     # set links
     if ( $File ){
         # is path directory?
@@ -155,6 +163,26 @@ function i {
                 return
             }
         }
+        # is file exist?
+        if ( -not ( Test-Path -LiteralPath $File ) ){
+            if ( $Edit ){
+                editFile $File
+                return
+            } else {
+                # about Read-Host
+                # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/read-host
+                [string] $resp = Read-Host "$File is not exists. Create and Edit? (y/n)"
+                if ( $resp -eq 'y' ){
+                    editFile $File
+                }
+                return
+            }
+        }
+        # edit file mode
+        if ( $Edit ){
+            editFile $File
+            return
+        }
         # is windows shortcut?
         [string] $ext = (Get-Item -LiteralPath $File).Extension
         if ( ( $ext -eq '.lnk' ) -or ( $ext -eq '.url') ){
@@ -165,14 +193,6 @@ function i {
                 Invoke-Item -LiteralPath $File
                 return
             }
-        }
-        if ( $Edit ){
-            if ( $isWindows ){
-                notepad $File
-            } else {
-                vi $File
-            }
-            return
         }
         [string[]] $linkLines = Get-Content -LiteralPath $File -Encoding utf8 `
             | ForEach-Object {

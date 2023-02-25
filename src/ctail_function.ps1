@@ -1,38 +1,77 @@
 <#
 .SYNOPSIS
+    ctail - Cut the last part of files
 
-ctail  - 行末尾から1行削除して出力する
+    Cut the last lines of input for the
+    specified number of lines.
 
-削除する行数は最後の1行のみだが、
-省メモリで処理する。
+    Cut last one line by default.
 
-入力はパイプラインからのみ受け付け
+    If no file is specified,
+    read from pipeline input.
 
 .LINK
-    head, tail, chead, ctail, ctail2
-
+    head, tail, chead, ctail
 
 .EXAMPLE
-PS C:\> cat a.txt | ctail
-a.txt の最後の 1 行を削除し残りの行を出力
+    # read from stdin
+
+    PS > 1..5 | ctail
+    1
+    2
+    3
+    4
+
+    PS > 1..5 | ctail -n 2
+    1
+    2
+    3
+
+.EXAMPLE
+    # read from file
+
+    PS > 1..5 > a.txt; ctail a.txt
+    1
+    2
+    3
+    4
+
+    PS > 1..5 > a.txt; ctail -n 2 a.txt
+    1
+    2
+    3
+
+.NOTES
+    learn: Select-Object
+    https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.utility/select-object
+
 
 #>
 function ctail {
 
-    begin
-    {
-        $readRowCounter = 0
-        $line = ''
+    param (
+        [Parameter( Mandatory=$False )]
+        [Alias('n')]
+        [int] $Num = 1,
+        
+        [Parameter( Mandatory=$False, Position=0 )]
+        [Alias('f')]
+        [string[]] $Files,
+        
+        [parameter( Mandatory=$False, ValueFromPipeline=$True )]
+        [string[]] $InputText
+    )
+    $splatting = @{
+        SkipLast = $Num
     }
-
-    process
-    {
-        $readRowCounter++
-        if($readRowCounter -ne 1){
-            Write-Output $line
-            $line = [string]$_
-        }else{
-            $line = [string]$_
+    #$splatting.Set_Item('NoEmphasis', $True)
+    if ( $Files ){
+        foreach ( $f in $Files){
+            Get-Content -LiteralPath $f `
+                | Select-Object @splatting
         }
+    } else {
+        $input `
+            | Select-Object @splatting
     }
 }

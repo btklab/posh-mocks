@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [ctail2], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [yarr], [zen]
+- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [yarr], [zen]
 
 Inspired by:
 
@@ -559,11 +559,10 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 - Inspired by Unix/Linux Commands
     - Command: `head`, `tail`
 
-#### [chead], [ctail], [ctail2] - Cut the first/last part of files
+#### [chead], [ctail] - Cut the first/last part of files
 
 [chead]: src/chead_function.ps1
 [ctail]: src/ctail_function.ps1
-[ctail2]: src/ctail2_function.ps1
 
 
 入力文字列の最初の数行または最後の数行を削除（カット）して出力する。
@@ -571,16 +570,81 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 
 - Usage
     - `man2 chead`
+        - `chead [-Num <Int32>] [[-Files] <String[]>]`
     - `man2 ctail`
-    - `man2 ctail2`,
+        - `ctail [-Num <Int32>] [[-Files] <String[]>] [-InputText <String[]>]`
 - Examples
-    - `1..20 | chead  [-n <int>]`
-    - `1..20 | ctail2 [-n <int>]`
-    - `1..20 | ctail`
-        - `ctail`は**末尾1行のみ**削除
-        - 場合により`ctail2`よりも高速に動作するかもしれない
+    - `1..20 | chead [-n <int>]`
+    - `1..20 | ctail [-n <int>]`
 - Inspired by Unix/Linux Commands
     - Command: `chead`
+
+
+Examples:
+
+[chead] - Cut the first part of files
+
+```powershell
+# read from stdin
+
+1..5 | chead
+2
+3
+4
+5
+
+1..5 | chead -n 2
+3
+4
+5
+```
+
+```powershell
+# read from file
+
+1..5 > a.txt; chead a.txt
+2
+3
+4
+5
+
+1..5 > a.txt; chead -n 2 a.txt
+3
+4
+5
+```
+
+[ctail] - Cut the last part of files
+
+```powershell
+# read from stdin
+
+1..5 | ctail
+1
+2
+3
+4
+
+1..5 | ctail -n 2
+1
+2
+3
+```
+
+```powershell
+# read from file
+
+1..5 > a.txt; ctail a.txt
+1
+2
+3
+4
+
+1..5 > a.txt; ctail -n 2 a.txt
+1
+2
+3
+```
 
 #### [uniq] - Report or omit repeated lines
 
