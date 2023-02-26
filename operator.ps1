@@ -55,6 +55,7 @@ if ($IsWindows){
 . $pwshSrcDir/count_function.ps1
 . $pwshSrcDir/getfirst_function.ps1
 . $pwshSrcDir/getlast_function.ps1
+. $pwshSrcDir/fval_function.ps1
 
 . $pwshSrcDir/Add-CrLf_function.ps1
 . $pwshSrcDir/Add-CrLf-EndOfFile_function.ps1
@@ -137,6 +138,8 @@ Set-Alias -name ml -value Get-OGP
 . $pwshSrcDir/decil_function.ps1
 . $pwshSrcDir/summary_function.ps1
 . $pwshSrcDir/movw_function.ps1
+. $pwshSrcDir/ysort_function.ps1
+. $pwshSrcDir/ycalc_function.ps1
 
 ## math
 

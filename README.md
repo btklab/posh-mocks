@@ -2504,6 +2504,27 @@ lastyear 2/28 -s "_last_year"
 2022-02-28_last_year
 ```
 
+#### [fval] - Format values of specified column
+
+[fval]: src/fval_function.ps1
+
+任意列の値を整形する。
+
+```powershell
+"1111 2222 3333" | fval '#,0.0' 2, 3
+1111 2,222.0 3,333.0
+```
+
+- Usage
+    - `man2 fval`
+    - `fval [-f|-Format] <String> [[-n|-Num] <Int32[]>] [-SkipHeader]`
+
+Example:
+
+```powershell
+"1111 2222 3333" | fval '#,0.0' 2, 3
+1111 2,222.0 3,333.0
+```
 
 ### Statistics
 
@@ -2919,6 +2940,210 @@ s_l AcceptableLevel MaxLimit MaxFrequency WindowSize Res
 4.9 4.7             5.5      3            5          1
 5.4 4.7             5.5      3            5          1
 4.8 4.7             5.5      3            5          1
+```
+
+#### [ysort] - Sort horizontally ignoring key fields
+
+[ysort]: src/ysort_function.ps1
+
+水平方向の値ソート。任意のキーフィールドを無視して並び変えることもできる。
+
+```powerhshell
+"key1 key2 2 4 7 1 3" | ysort -n 2
+key1 key2 1 2 3 4 7
+```
+
+左列のキーを無視できる以外は、おおよそ以下のスクリプトと等価。
+Roughly equivalent to the script below:
+
+```powershell
+"3 1 2 11" | %{ ($_ -split " " | sort) -join " " }
+"3 1 2 11" | %{ ($_ -split " " | sort { [double]$_ }) -join " " }
+```
+
+- Usage
+    - `man2 ysort`
+    - `ysort [[-n|-Num] <Int32>] [-Cast <String>] [-Descending] [-CaseSensitive] [-Unique] [-SkipHeader]`
+- Options
+    - `-SkipHeader`: skip first record
+    - `-Cast <datatype>`: any data type can be specified.
+- Notes
+    - Auto detect types:
+        - double   `[System.Double]`
+        - datetime `[System.DateTime]`
+        - version  `[System.Version]`
+        - string   `[System.String]]`
+    - Empty records are skipped.
+
+Examples
+
+simple usage
+
+```powershell
+"C B A" | ysort
+A B C
+```
+
+basic usage (sort value fields as `System.Double`)
+
+```powershell
+# input
+$dat = @("3 2 2 1 12 22", "123 75 12 12 22 01 87 26", "98 21 21 67 59 1")
+
+$dat
+3 2 2 1 12 22
+123 75 12 12 22 01 87 26
+98 21 21 67 59 198 21 67 59 1
+
+$dat | ysort
+1 2 3 12 22
+01 12 22 26 75 87 123
+1 21 59 67 98
+
+$dat | ysort -Unique
+1 2 3 12 22
+01 12 22 26 75 87 123
+1 21 59 67 98
+
+$dat | ysort -Descending
+22 12 3 2 2 1
+123 87 75 26 22 12 12 01
+98 67 59 21 21 1
+
+$dat | ysort -Cast double
+1 2 2 3 12 22
+01 12 12 22 26 75 87 123
+1 21 21 59 67 98
+
+$dat | ysort -Cast string
+1 12 2 2 22 3
+01 12 12 123 22 26 75 87
+1 21 21 59 67 98
+```
+
+sort key-value fields (`-n <n>` option)
+
+```powershell
+# input (leftmost value is key string)
+$dat = @("ABC 2 2 3 12 22", "DEF 123 75 12 22 01", "XYZ 98 21 67 59 1")
+
+$dat
+ABC 2 2 3 12 22
+DEF 123 75 12 22 01
+XYZ 98 21 67 59 1
+
+# "-n 1" means key fields from 1 to 1, others are value fields
+# or "-n <n>" means sort by ignoring 1 to <n> fields
+$dat | ysort -n 1
+ABC 2 2 3 12 22
+DEF 01 12 22 75 123
+XYZ 1 21 59 67 98
+
+# If the key string is in the leftmost column,
+# it will be sorted as a string if no key field is specified.
+$dat | ysort  ## Oops! forgot to specify a key field (-n 1)!
+12 2 2 22 3 ABC
+01 12 123 22 75 DEF
+1 21 59 67 98 XYZ
+```
+
+If detect different data type, raise error and stop processing
+
+```powershell
+# error example
+
+# sort data type detected from first record
+# input (second record type (string) is different fron first (double))
+$dat = @("3 2 2 1 12 22", "ABC 75 12 12 22 01 87 26", "98 21 21 67 59 1")
+
+$dat
+3 2 2 1 12 22
+ABC 75 12 12 22 01 87 26 ## leftmost field is different data type to 1st record
+98 21 21 67 59 1
+
+# so the following raises an error and stop processing
+$dat | ysort
+1 2 2 3 12 22
+Sort-Object: C:\Users\btklab\cms\drafts\ysort_function.ps1:152
+Line |
+    152 |                  | Sort-Object { [double] $_ } `
+        |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        | Cannot convert value "ABC" to type "System.Double". Error: "The input string 'ABC' was not in a correct format."
+ysort: Different record type detected: 2 : ABC 75 12 12 22 01 87 26
+```
+
+Version-sort example
+
+```powershell
+# version sort example
+"192.1.3.2 192.11.3.1 192.2.3.5" | ysort
+
+"192.1.3.2 192.11.3.1 192.2.3.5" | ysort -Cast version
+192.1.3.2 192.2.3.5 192.11.3.1
+```
+Datetime-sort example
+
+```powershell
+# datetime sort example
+"2021-4-10 2021-4-1 2021-4-5" | ysort
+2021-4-1 2021-4-5 2021-4-10
+
+"2021/4/10 2021/4/1 2021/4/5" | ysort -Cast datetime
+2021-4-1 2021-4-5 2021-4-10
+```
+
+Miscellaneous
+
+```powershell
+# specified delimiter
+"ABC321" | ysort -n 3 -fs ""
+ABC123
+```
+
+
+#### [ycalc] - Calculates the numeric properties horizontally ignoring key fields
+
+[ycalc]: src/ycalc_function.ps1
+
+水平方向の集計。任意のキーフィールドを無視しての集計も可能
+
+```powerhshell
+# no-key data
+"11 12 33" | ycalc -Sum
+F1 F2 F3 sum
+11 12 33 56
+
+# key-value data
+"k1 k2 12 24 37 11 23" | ycalc -n 2 -Sum -Average -Minimum -Maximum
+F1 F2 F3 F4 F5 F6 F7 sum ave max min
+k1 k2 12 24 37 11 23 107 21.4 37 11
+```
+
+- Usage
+    - `man2 ycalc`
+    - `ycalc [[-n|-Num] <Int32>] [-Sum] [-Average] [-Mean] [-Maximum] [-Minimum] [-StandardDeviation] [-AllStats] [-Header]`
+- Example
+    - `cat data | ycalc -n 2 -Sum`
+        - Means ignore fields 1-2 as keys, sum remaining fields horizontally
+- Options
+    - `-Header`: Data with header
+
+Examples
+
+```powershell
+"11 12 33" | ycalc -Sum
+F1 F2 F3 sum
+11 12 33 56
+```
+
+```powershell
+"k1 k2 12 24 37 11 23" | ycalc -n 2 -Sum -Average -Minimum -Maximum
+F1 F2 F3 F4 F5 F6 F7 sum ave max min
+k1 k2 12 24 37 11 23 107 21.4 37 11
+
+# "ycalc -n 2 -Sum":
+#     means ignore fields 1-2 as keys,
+#     sum remaining fields horizontally.
 ```
 
 
