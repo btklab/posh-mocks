@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--None
+- Added [ysort], [ycalc], [fval] functions
 
 
 ## [2.0.0]
@@ -169,6 +169,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [flow2pu]: src/flow2pu_function.ps1
 [seq2pu]: src/seq2pu_function.ps1
+
+[ysort]: src/ysort_function.ps1
+[ycalc]: src/ycalc_function.ps1
+[fval]: src/fval_function.ps1
 
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/2.0.0..HEAD
