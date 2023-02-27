@@ -2,25 +2,27 @@
 .SYNOPSIS
     ycalc - Calculates the numeric properties horizontally ignoring key fields
 
-        PS > "11 12 33" | ycalc -Sum
+        PS > "11 12 33" | ycalc -NoHeader -Sum
         F1 F2 F3 sum
         11 12 33 56
 
-        PS > "k1 k2 12 24 37 11 23" | ycalc -n 2 -Sum -Average -Minimum -Maximum
+        PS > "k1 k2 12 24 37 11 23" | ycalc -n 2 -NoHeader -Sum -Average -Minimum -Maximum
         F1 F2 F3 F4 F5 F6 F7 sum ave max min
         k1 k2 12 24 37 11 23 107 21.4 37 11
 
     Usage
-        ycalc [[-n|-Num] <Int32>] [-Sum] [-Average] [-Mean] [-Maximum] [-Minimum] [-StandardDeviation] [-AllStats] [-Header]
+        ycalc [[-n|-Num] <Int32>] [-Sum] [-Average] [-Mean] [-Maximum] [-Minimum] [-StandardDeviation] [-AllStats] [-NoHeader]
     
         "ycalc -n 2 -Sum":
             means ignore fields 1-2 as keys,
             sum remaining fields horizontally.
     
     Empty records are skipped.
+    Input expects space-separated data with headers.
+    Headers should be string, not double
     
     Options
-        -Header: Data with header
+        -NoHeader: No header data
 
 .PARAMETER Delimiter
     Input/Output field separator.
@@ -38,12 +40,12 @@
     If fs is already set, this option is primarily used.
 
 .EXAMPLE
-    "11 12 33" | ycalc -Sum
+    "11 12 33" | ycalc -NoHeader -Sum
     F1 F2 F3 sum
     11 12 33 56
 
 .EXAMPLE
-    "k1 k2 12 24 37 11 23" | ycalc -n 2 -Sum -Average -Minimum -Maximum
+    "k1 k2 12 24 37 11 23" | ycalc -n 2 -NoHeader -Sum -Average -Minimum -Maximum
     F1 F2 F3 F4 F5 F6 F7 sum ave max min
     k1 k2 12 24 37 11 23 107 21.4 37 11
 
@@ -90,7 +92,7 @@ function ycalc {
         [switch] $AllStats,
         
         [Parameter( Mandatory=$False )]
-        [switch] $Header,
+        [switch] $NoHeader,
         
         [Parameter( Mandatory=$False )]
         [Alias('fs')]
@@ -137,6 +139,22 @@ function ycalc {
                 }
             }
             return
+        }
+        function isDouble {
+            param(
+                [parameter(Mandatory=$True, Position=0)]
+                [string] $Token
+            )
+            $Token = $Token.Trim()
+            $double = New-Object System.Double
+            switch -Exact ( $Token.ToString() ) {
+                {[Double]::TryParse( $Token.Replace('_',''), [ref] $double )} {
+                    return $True
+                }
+                default {
+                    return $False
+                }
+            }
         }
         function parseValueField {
             param(
@@ -254,14 +272,17 @@ function ycalc {
         $rowCounter++
         [string] $readLine = [string] $_
         [string[]] $splitReadLine = $readLine -split $iDelim
+        if ( $emptyDelimiterFlag ){
+            # delete first and last element in $splitReadLine
+            [string[]] $splitReadLine = $splitReadLine[1..($splitReadLine.Count - 2)]
+        }
+        # skip empty line
+        if ( $readLine -eq '' ){
+            return
+        }
         # header
         if ( $rowCounter -eq 1 ){
-            if ( $Header ){
-                # output header
-                [string] $headerStr = createHeader $readLine
-                Write-Output $headerStr
-                return
-            } else {
+            if ( $NoHeader ){
                 # output header
                 [string[]] $headerAry = @()
                 for ( $i = 1; $i -le $splitReadLine.Count; $i++){
@@ -270,17 +291,20 @@ function ycalc {
                 [string] $headerStr = $headerAry -join $oDelim
                 [string] $headerStr = createHeader $headerStr
                 Write-Output $headerStr
+            } else {
+                # are val fields string?
+                foreach ( $f in $splitReadLine[($keyPos + 1)..($splitReadLine.Count - 1)]){
+                    if ( isDouble $f ) {
+                        Write-Error "Header: ""$f"" should be string." -ErrorAction Stop
+                    }
+                }
+                # output header
+                [string] $headerStr = createHeader $readLine
+                Write-Output $headerStr
+                return
             }
         }
-        # skip empty line
-        if ( $readLine -eq '' ){
-            return
-        }
         $recordCounter++
-        if ( $emptyDelimiterFlag ){
-            # delete first and last element in $splitReadLine
-            [string[]] $splitReadLine = $splitReadLine[1..($splitReadLine.Count - 2)]
-        }
         # test opt
         testOpt $splitReadLine $keyPos
         # set key fields
@@ -300,6 +324,7 @@ function ycalc {
         [string] $valFields = @(createValFields $splitReadLine) -join $oDelim
         # test data type
         [string] $tmpValType = parseValueField ($splitReadLine[0])
+        Write-Debug "$valType -> $tmpValType"
         if ( $tmpValType -ne $valType ){
             Write-Error "Different record-type detected: $recordCounter : $readLine" -ErrorAction Stop
         }

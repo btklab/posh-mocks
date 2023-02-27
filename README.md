@@ -2534,27 +2534,26 @@ Example:
 
 半角スペース区切りデータにpercentileまたは四分位数（quartile）を適用してランク付け。
 
-[percentile]と[summary]はどちらも「縦一列の基礎統計量を産出する」点は同じだが、
-[summary]はヘッダありデータ、[percentile]はヘッダなしデータをさばく。
+[percentile]と[summary]はどちらも「ヘッダありスペース区切りデータの縦一列ぶんの基礎統計量を産出する」点は同じ。
 [percentile]はCategory列を指定するとCategoryごとに基礎統計量を計算できる。
 
-Calculate and ranking with percentile and quartiles on space-delimited data without headers. If data has header rows, they can be skipped with `-SkipHeader` switch.
+Calculate and ranking with percentile and quartiles on space-delimited data without headers.
 
 
 - Usage
     - `man2 percentile`
-    - `percentile [[-Val] <Int32>] [[-Key] <Int32[]>] [-SkipHeader] [-Rank] [-Cast <String>] [-Level5]`
+    - `percentile [[-Val] <Int32>] [[-Key] <Int32[]>] [-Rank|-Level5] [-NoHeader] [-Cast <String>]`
 
 Examples:
 
 ```powershell
-cat iris.csv | percentile -v 1 -k 5 -d "," -SkipHeader | ft
+cat iris.csv | percentile -v 1 -k 5 -d "," | ft
 
-key        count    sum mean stdev  min Qt25 Qt50 Qt75  max
----        -----    --- ---- -----  --- ---- ---- ----  ---
-setosa        50 250.30 5.01  0.35 4.30 4.80 5.00 5.20 5.80
-versicolor    50 296.80 5.94  0.52 4.90 5.60 5.90 6.30 7.00
-virginica     50 329.40 6.59  0.64 4.90 6.20 6.50 7.00 7.90
+field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
+-----        ---        -----    --- ---- -----  --- ---- ---- ----
+sepal_length setosa        50 250.30 5.01  0.35 4.30 4.80 5.00 5.20
+sepal_length versicolor    50 296.80 5.94  0.52 4.90 5.60 5.90 6.30
+sepal_length virginica     50 329.40 6.59  0.64 4.90 6.20 6.50 7.00
 ```
 
 Input
@@ -2589,94 +2588,97 @@ Output
 
 ```powershell
 ## calc summary of 2nd field
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -NoHeader
 
-count   : 20
-sum     : 60
-mean    : 3
-stdev   : 1.45095250022002
-min     : 1
-Qt25    : 2
-Qt50    : 3
-Qt75    : 4
-max     : 5
-IQR     : 2
+field : F2
+count : 20
+sum   : 60
+mean  : 3
+stdev : 1.45095250022002
+min   : 1
+Qt25  : 2
+Qt50  : 3
+Qt75  : 4
+max   : 5
+IQR   : 2
+HiIQR : 7
+LoIQR : -1
 
 ## same as below (calc rightmost field by default)
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile -NoHeader
 
 ## percentile 2 -k 1 :
 ##  means summary 2nd field using 1st field as key
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -k 1 | ft
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -k 1 -NoHeader | ft
 
-key count   sum mean stdev  min Qt25 Qt50 Qt75  max
---- -----   --- ---- -----  --- ---- ---- ----  ---
-a       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
-b       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
-c       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
-d       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+field key count   sum mean stdev  min Qt25 Qt50 Qt75
+----- --- -----   --- ---- -----  --- ---- ---- ----
+F2    a       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
+F2    b       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
+F2    c       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
+F2    d       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
 
 ## -k 1,2 means fields from 1st to 2nd are considered keys
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $s $_" } } | percentile 3 -k 1,2 | ft
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $s $_" } } | percentile 3 -k 1,2 -NoHeader | ft
 
-key count   sum mean stdev  min Qt25 Qt50 Qt75  max
---- -----   --- ---- -----  --- ---- ---- ----  ---
-a a     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
-b b     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
-c c     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
-d d     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+field key count   sum mean stdev  min Qt25 Qt50 Qt75
+----- --- -----   --- ---- -----  --- ---- ---- ----
+F3    a a     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
+F3    b b     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
+F3    c c     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
+F3    d d     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
 ```
 
 ```powershell
 ## -Rank means ranking with quartile
 ##   add cumulative-ratio and quartile-labels
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Rank | ft
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Rank -NoHeader | keta
+F1 F2 percentile label
+ a  1     0.0167   Qt1
+ b  1     0.0333   Qt1
+ c  1     0.0500   Qt1
+ d  1     0.0667   Qt1
+ a  2     0.1000   Qt1
+ b  2     0.1333   Qt1
+ c  2     0.1667   Qt1
+ d  2     0.2000   Qt1
+ a  3     0.2500   Qt2
+ d  3     0.3000   Qt2
+ b  3     0.3500   Qt2
+ c  3     0.4000   Qt2
+ a  4     0.4667   Qt3
+ b  4     0.5333   Qt3
+ d  4     0.6000   Qt3
+ c  4     0.6667   Qt3
+ b  5     0.7500   Qt4
+ a  5     0.8333   Qt4
+ c  5     0.9167   Qt4
+ d  5     1.0000   Qt
 
-a 1 0.0167 Qt1
-b 1 0.0333 Qt1
-c 1 0.0500 Qt1
-d 1 0.0667 Qt1
-a 2 0.1000 Qt1
-b 2 0.1333 Qt1
-c 2 0.1667 Qt1
-d 2 0.2000 Qt1
-a 3 0.2500 Qt2
-d 3 0.3000 Qt2
-b 3 0.3500 Qt2
-c 3 0.4000 Qt2
-a 4 0.4667 Qt3
-b 4 0.5333 Qt3
-d 4 0.6000 Qt3
-c 4 0.6667 Qt3
-b 5 0.7500 Qt4
-a 5 0.8333 Qt4
-c 5 0.9167 Qt4
-d 5 1.0000 Qt4
-
-## -Rank and -Level5 means ranking by 20% cumurative ratio
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Rank -Level5 | ft
-
-a 1 0.0167 E
-b 1 0.0333 E
-c 1 0.0500 E
-d 1 0.0667 E
-a 2 0.1000 E
-b 2 0.1333 E
-c 2 0.1667 E
-d 2 0.2000 D
-a 3 0.2500 D
-d 3 0.3000 D
-b 3 0.3500 D
-c 3 0.4000 C
-a 4 0.4667 C
-b 4 0.5333 C
-d 4 0.6000 B
-c 4 0.6667 B
-b 5 0.7500 B
-a 5 0.8333 A
-c 5 0.9167 A
-d 5 1.0000 A
-```
+## -Level5 means ranking by 20% cumurative ratio
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Level5 -Rank -NoHeader | keta
+F1 F2 percentile label
+ a  1     0.0167     E
+ b  1     0.0333     E
+ c  1     0.0500     E
+ d  1     0.0667     E
+ a  2     0.1000     E
+ b  2     0.1333     E
+ c  2     0.1667     E
+ d  2     0.2000     D
+ a  3     0.2500     D
+ d  3     0.3000     D
+ b  3     0.3500     D
+ c  3     0.4000     C
+ a  4     0.4667     C
+ b  4     0.5333     C
+ d  4     0.6000     B
+ c  4     0.6667     B
+ b  5     0.7500     B
+ a  5     0.8333     A
+ c  5     0.9167     A
+ d  5     1.0000     A
+ ```
 
 #### [decil] - Decile analysis (Divide records about 10 equal parts)
 
@@ -2811,8 +2813,7 @@ D01 CZ84 8470022 0.0026600974009877927269611624
 
 半角スペース区切りデータのうち数値列1列分の基礎統計量を算出する。
 
-[percentile]と[summary]はどちらも「縦一列の基礎統計量を産出する」点は同じだが、
-[summary]はヘッダありデータ、[percentile]はヘッダなしデータをさばく。
+[percentile]と[summary]はどちらも「ヘッダありスペース区切りデータの縦一列ぶんの基礎統計量を産出する」点は同じ。
 [percentile]はCategory列を指定するとCategoryごとに基礎統計量を計算できる。
 
 - デフォルトで四分位数を計算
@@ -3105,39 +3106,46 @@ ABC123
 
 [ycalc]: src/ycalc_function.ps1
 
-水平方向の集計。任意のキーフィールドを無視しての集計も可能
+水平方向の集計。任意のキーフィールドを無視しての集計も可能。
+デフォルトでヘッダありスペース区切りデータを期待する。
 
 ```powerhshell
-# no-key data
-"11 12 33" | ycalc -Sum
+# non-key data
+"11 12 33" | ycalc -NoHeader -Sum
 F1 F2 F3 sum
 11 12 33 56
 
 # key-value data
-"k1 k2 12 24 37 11 23" | ycalc -n 2 -Sum -Average -Minimum -Maximum
+"k1 k2 12 24 37 11 23" | ycalc -n 2 -NoHeader -Sum -Average -Minimum -Maximum
 F1 F2 F3 F4 F5 F6 F7 sum ave max min
 k1 k2 12 24 37 11 23 107 21.4 37 11
+
+# "ycalc -n 2 -Sum":
+#     means ignore fields 1-2 as keys,
+#     sum remaining fields horizontally.
 ```
 
 - Usage
     - `man2 ycalc`
-    - `ycalc [[-n|-Num] <Int32>] [-Sum] [-Average] [-Mean] [-Maximum] [-Minimum] [-StandardDeviation] [-AllStats] [-Header]`
+    - `ycalc [[-n|-Num] <Int32>] [-Sum] [-Average] [-Mean] [-Maximum] [-Minimum] [-StandardDeviation] [-AllStats] [-NoHeader]`
 - Example
     - `cat data | ycalc -n 2 -Sum`
         - Means ignore fields 1-2 as keys, sum remaining fields horizontally
 - Options
-    - `-Header`: Data with header
+    - `-NoHeader`: No header data
 
 Examples
 
 ```powershell
-"11 12 33" | ycalc -Sum
+# non-key data
+"11 12 33" | ycalc -NoHeader -Sum
 F1 F2 F3 sum
 11 12 33 56
 ```
 
 ```powershell
-"k1 k2 12 24 37 11 23" | ycalc -n 2 -Sum -Average -Minimum -Maximum
+# key-value data
+"k1 k2 12 24 37 11 23" | ycalc -n 2 -NoHeader -Sum -Average -Minimum -Maximum
 F1 F2 F3 F4 F5 F6 F7 sum ave max min
 k1 k2 12 24 37 11 23 107 21.4 37 11
 
@@ -4220,26 +4228,29 @@ Examples:
 ```markdown
 # How to cook curry
 
-Actor Alice as Alice
-box "in the kitchen"
-Participant Bob as Bob #white
-end box
+    Actor Alice as Alice
+    box "in the kitchen"
+    Participant Bob as Bob #white
+    end box
 
 ## init
 
-0. Alice ->o Bob  : order
-1. Bob --> Alice  : cut vegetables and meats
-2. Alice -> Bob   : fry meats
-3. Alice <- Alice : fry vegetables
+0. Alice ->  Bob   : order
+1. Alice <-- Bob   : cut vegetables and meats
+2. Alice ->  Bob   : fry meats
+3. Alice <-  Alice : fry vegetables
     + **Point**
     + Fry the onions until they are translucent
-4. Alice -> Bob  : boil meat and vegetables
+4. Alice ->  Bob : boil meat and vegetables
     + If you have Laurel, put it in, and take the lye
-5. Bob --> Alice : add roux and simmer
-6. Alice -> Bob  : serve on a plate
-7. Bob --> Alice : topping
+5. Alice <-- Bob : add roux and simmer
+6. Alice ->  Bob : serve on a plate
+7. Alice <-- Bob : topping
     - add garam masala
 ```
+
+
+
 
 シーケンス図描画コマンド例：
 
@@ -4259,12 +4270,13 @@ cat a.md | seq2pu -KinsokuNote 24 -ResponseMessageBelowArrow > a.pu; pu2java a.p
 ```markdown
 # How to cook curry
 
-Actor Alice as Alice
-box "in the kitchen"
-Participant Bob as Bob #white
-end box
+    Actor Alice as Alice
+    box "in the kitchen"
+    Participant Bob as Bob #white
+    end box
 
 ## init
+
 0. Alice ->o Bob : order
     - Activate Alice #gold
     - ref over Alice, Bob : recipe of curry
@@ -5879,7 +5891,7 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 
 PowerShell版make-like command。劣化コピー。
 カレントディレクトリにあるMakefileを読み実行する。
-ただし、GNU make用のMakefileとの互換性はほとんどない。
+ただし、GNU make用のMakefileとの互換性はあまりない。
 
 特徴は、実行コマンドにPowerShellコマンドを使用できる点、およびタスクランナーとしてカレントプロセスで動作する点。
 たとえば、カレントプロセスのPowerShellにドットソースで読み込んだ関数も、Makefileに記述して走らせることができる。

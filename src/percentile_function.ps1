@@ -3,14 +3,20 @@
     percentile - Ranking with percentile and quartile
 
     Calculate and ranking with percentile and quartiles on space-delimited
-    data without headers. If data has header rows, they can be skipped with
-    -SkipHeader switch.
+    data without headers. 
 
     Usage:
-        cat data.txt | percentile [[-Val] <Int32>] [[-Key] <Int32[]>] [-SkipHeader] [-Rank] [-Cast <String>] [-Level5]
+        cat data.txt | percentile [[-Val] <Int32>] [[-Key] <Int32[]>] [-Rank|-Level5] [-NoHeader] [-Cast <String>]
+
+    Empty records are skipped.
+    Input expects space-separated data with headers.
+    Headers should be string, not double
+    
+    Options:
+        -NoHeader: No header data
 
     Example:
-        cat iris.csv | percentile -v 1 -k 5 -d "," -SkipHeader | ft
+        cat iris.csv | percentile -v 1 -k 5 -d "," -NoHeader | ft
 
         key        count    sum mean stdev  min Qt25 Qt50 Qt75  max
         ---        -----    --- ---- -----  --- ---- ---- ----  ---
@@ -62,91 +68,130 @@
     d 5
 
     ## calc summary of 2nd field
-    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2
+    "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -NoHeader
 
-    count   : 20
-    sum     : 60
-    mean    : 3
-    stdev   : 1.45095250022002
-    min     : 1
-    Qt25    : 2
-    Qt50    : 3
-    Qt75    : 4
-    max     : 5
-    IQR     : 2
+    field : F2
+    count : 20
+    sum   : 60
+    mean  : 3
+    stdev : 1.45095250022002
+    min   : 1
+    Qt25  : 2
+    Qt50  : 3
+    Qt75  : 4
+    max   : 5
+    IQR   : 2
+    HiIQR : 7
+    LoIQR : -1
 
     ## same as below (calc rightmost field by default)
-    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile
+    "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile -NoHeader
 
     ## percentile 2 -k 1 :
     ##  means summary 2nd field using 1st field as key
-    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -k 1 | ft
+    "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -k 1 -NoHeader | ft
 
-    key count   sum mean stdev  min Qt25 Qt50 Qt75  max
-    --- -----   --- ---- -----  --- ---- ---- ----  ---
-    a       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
-    b       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
-    c       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
-    d       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    field key count   sum mean stdev  min Qt25 Qt50 Qt75
+    ----- --- -----   --- ---- -----  --- ---- ---- ----
+    F2    a       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
+    F2    b       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
+    F2    c       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
+    F2    d       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
 
     ## -k 1,2 means fields from 1st to 2nd are considered keys
-    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $s $_" } } | percentile 3 -k 1,2 | ft
+    "a".."d" | %{ $s=$_; 1..5 | %{ "$s $s $_" } } | percentile 3 -k 1,2 -NoHeader | ft
 
-    key count   sum mean stdev  min Qt25 Qt50 Qt75  max
-    --- -----   --- ---- -----  --- ---- ---- ----  ---
-    a a     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
-    b b     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
-    c c     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
-    d d     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50 5.00
+    field key count   sum mean stdev  min Qt25 Qt50 Qt75
+    ----- --- -----   --- ---- -----  --- ---- ---- ----
+    F3    a a     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
+    F3    b b     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
+    F3    c c     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
+    F3    d d     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
 
 .EXAMPLE
     ## -Rank means ranking with quartile
-    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Rank | ft
+    ##   add cumulative-ratio and quartile-labels
+    "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Rank -NoHeader | keta
+    F1 F2 percentile label
+     a  1     0.0167   Qt1
+     b  1     0.0333   Qt1
+     c  1     0.0500   Qt1
+     d  1     0.0667   Qt1
+     a  2     0.1000   Qt1
+     b  2     0.1333   Qt1
+     c  2     0.1667   Qt1
+     d  2     0.2000   Qt1
+     a  3     0.2500   Qt2
+     d  3     0.3000   Qt2
+     b  3     0.3500   Qt2
+     c  3     0.4000   Qt2
+     a  4     0.4667   Qt3
+     b  4     0.5333   Qt3
+     d  4     0.6000   Qt3
+     c  4     0.6667   Qt3
+     b  5     0.7500   Qt4
+     a  5     0.8333   Qt4
+     c  5     0.9167   Qt4
+     d  5     1.0000   Qt
+    
+    ## -Level5 means ranking by 20% cumurative ratio
+    "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Level5 -Rank -NoHeader | keta
+    F1 F2 percentile label
+     a  1     0.0167     E
+     b  1     0.0333     E
+     c  1     0.0500     E
+     d  1     0.0667     E
+     a  2     0.1000     E
+     b  2     0.1333     E
+     c  2     0.1667     E
+     d  2     0.2000     D
+     a  3     0.2500     D
+     d  3     0.3000     D
+     b  3     0.3500     D
+     c  3     0.4000     C
+     a  4     0.4667     C
+     b  4     0.5333     C
+     d  4     0.6000     B
+     c  4     0.6667     B
+     b  5     0.7500     B
+     a  5     0.8333     A
+     c  5     0.9167     A
+     d  5     1.0000     A
 
-    a 1 0.0167 Qt1
-    b 1 0.0333 Qt1
-    c 1 0.0500 Qt1
-    d 1 0.0667 Qt1
-    a 2 0.1000 Qt1
-    b 2 0.1333 Qt1
-    c 2 0.1667 Qt1
-    d 2 0.2000 Qt1
-    a 3 0.2500 Qt2
-    d 3 0.3000 Qt2
-    b 3 0.3500 Qt2
-    c 3 0.4000 Qt2
-    a 4 0.4667 Qt3
-    b 4 0.5333 Qt3
-    d 4 0.6000 Qt3
-    c 4 0.6667 Qt3
-    b 5 0.7500 Qt4
-    a 5 0.8333 Qt4
-    c 5 0.9167 Qt4
-    d 5 1.0000 Qt4
+.EXAMPLE
+    cat iris.csv | percentile -d "," 1 | ft
 
-    ## -NoGouping and -Level5 means ranking by 20% cumurative ratio
-    "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Rank -Level5 | ft
-    a 1 0.0167 E
-    b 1 0.0333 E
-    c 1 0.0500 E
-    d 1 0.0667 E
-    a 2 0.1000 E
-    b 2 0.1333 E
-    c 2 0.1667 E
-    d 2 0.2000 D
-    a 3 0.2500 D
-    d 3 0.3000 D
-    b 3 0.3500 D
-    c 3 0.4000 C
-    a 4 0.4667 C
-    b 4 0.5333 C
-    d 4 0.6000 B
-    c 4 0.6667 B
-    b 5 0.7500 B
-    a 5 0.8333 A
-    c 5 0.9167 A
-    d 5 1.0000 A
+    field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
+    -----        -----    --- ---- -----  --- ---- ---- ----  ---
+    sepal_length   150 876.50 5.84  0.83 4.30 5.10 5.80 6.40 7.90
 
+
+    PS > 1..4 | %{ cat iris.csv | percentile -d "," $_ } | ft
+
+    field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
+    -----        -----    --- ---- -----  --- ---- ---- ----  ---
+    sepal_length   150 876.50 5.84  0.83 4.30 5.10 5.80 6.40 7.90
+    sepal_width    150 458.60 3.06  0.44 2.00 2.80 3.00 3.35 4.40
+    petal_length   150 563.70 3.76  1.77 1.00 1.55 4.35 5.10 6.90
+    petal_width    150 179.90 1.20  0.76 0.10 0.30 1.30 1.80 2.50
+
+
+    PS > 1..4 | %{ cat iris.csv | percentile -d "," -k 5 $_ } | ft
+
+    field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
+    -----        ---        -----    --- ---- -----  --- ---- ---- ----
+    sepal_length setosa        50 250.30 5.01  0.35 4.30 4.80 5.00 5.20
+    sepal_length versicolor    50 296.80 5.94  0.52 4.90 5.60 5.90 6.30
+    sepal_length virginica     50 329.40 6.59  0.64 4.90 6.20 6.50 7.00
+    sepal_width  setosa        50 171.40 3.43  0.38 2.30 3.15 3.40 3.70
+    sepal_width  versicolor    50 138.50 2.77  0.31 2.00 2.50 2.80 3.00
+    sepal_width  virginica     50 148.70 2.97  0.32 2.20 2.80 3.00 3.20
+    petal_length setosa        50  73.10 1.46  0.17 1.00 1.40 1.50 1.60
+    petal_length versicolor    50 213.00 4.26  0.47 3.00 4.00 4.35 4.60
+    petal_length virginica     50 277.60 5.55  0.55 4.50 5.10 5.55 5.90
+    petal_width  setosa        50  12.30 0.25  0.11 0.10 0.20 0.20 0.30
+    petal_width  versicolor    50  66.30 1.33  0.20 1.00 1.20 1.30 1.50
+    petal_width  virginica     50 101.30 2.03  0.27 1.40 1.80 2.00 2.30
 
 .LINK
     summary
@@ -180,7 +225,7 @@ function percentile {
         [string] $OutputDelimiter,
         
         [Parameter( Mandatory=$False )]
-        [switch] $SkipHeader,
+        [switch] $NoHeader,
         
         [Parameter( Mandatory=$False )]
         [switch] $Rank,
@@ -235,6 +280,23 @@ function percentile {
                 [int] $eKey = $Key[1] - 1
             }
         }
+        # private function
+        function isDouble {
+            param(
+                [parameter(Mandatory=$True, Position=0)]
+                [string] $Token
+            )
+            $Token = $Token.Trim()
+            $double = New-Object System.Double
+            switch -Exact ( $Token.ToString() ) {
+                {[Double]::TryParse( $Token.Replace('_',''), [ref] $double )} {
+                    return $True
+                }
+                default {
+                    return $False
+                }
+            }
+        }
         # init variables
         [bool] $getValFieldFlag = $False
         [int] $rowCounter = 0
@@ -245,18 +307,57 @@ function percentile {
 
     process {
         $rowCounter++
-        if ( ($rowCounter -eq 1) -and $SkipHeader ){
-            return
-        }
         [string] $readLine = $_.Trim()
-        if ( $readLine -eq '' ){
-            # skip empty line
-            return
-        }
         [string[]] $splitReadLine = $readLine -split $iDelim
         if ( $emptyDelimiterFlag ){
             # delete first and last element in $splitReadLine
             [string[]] $splitReadLine = $splitReadLine[1..($splitReadLine.Count - 2)]
+        }
+        if ( $readLine -eq '' ){
+            # skip empty line
+            return
+        }
+        # add header
+        if ( $rowCounter -eq 1 ){
+            if ( $NoHeader ){
+                if ( ($Rank -or $Level5) -and ( -not $Key) ) {
+                    # output header
+                    [string[]] $headerAry = @()
+                    for ( $i = 1; $i -le $splitReadLine.Count; $i++){
+                        $headerAry += "F$i"
+                    }
+                    $headerAry += "percentile"
+                    $headerAry += "label"
+                    [string] $headerStr = $headerAry -join $oDelim
+                    Write-Output $headerStr
+                } else {
+                    if ( $Val ){
+                        [string] $headerStr = "F" + [string]($Val)
+                    } else {
+                        [string] $headerStr = "F" + [string]($splitReadLine.Count)
+                    }
+                }
+            } else {
+                # is header string?
+                [string] $headerStr = ''
+                if ( $Val ){
+                    [string] $headerStr = $splitReadLine[($Val - 1)]
+                } else {
+                    [string] $headerStr = $splitReadLine[($splitReadLine.Count - 1)]
+                }
+                if ( isDouble $headerStr ){
+                    Write-Error "Header: ""$headerStr"" should be string." -ErrorAction Stop
+                }
+                # output header
+                if ( ($Rank -or $Level5) -and ( -not $Key) ) {
+                    # output header
+                    $splitReadLine += "percentile"
+                    $splitReadLine += "label"
+                    [string] $headerStr = $splitReadLine -join $oDelim
+                    Write-Output $headerStr
+                }
+                return
+            }
         }
         if ( -not $getValFieldFlag ){
             ## set number of value field
@@ -267,8 +368,12 @@ function percentile {
             }
             [bool] $getValFieldFlag = $True
         }
-        $tempAryList.Add( [string] ($readLine) )
-        $tempValList.Add( [double] ($splitReadLine[$sVal]) )
+        try {
+            $tempAryList.Add( [string] ($readLine) )
+            $tempValList.Add( [double] ($splitReadLine[$sVal]) )
+        } catch {
+            Write-Error $Error[0] -ErrorAction Stop
+        }
     }
 
     end {
@@ -417,9 +522,14 @@ function percentile {
             ApplyQuartile $sortedAry
             return
         }
+        if ( ( $Level5 ) -and ( -not $Key ) ) {
+            ApplyQuartile $sortedAry
+            return
+        }
 
         function OutObject {
             param (
+                [string] $valField,
                 [string] $keyStr,
                 [int] $statCnt,
                 [double] $statMax,
@@ -435,6 +545,7 @@ function percentile {
                 [double] $LoIQR
             )
             $outObject = [ordered]@{}
+            $outObject["field"]  = $valField
             if ( $keyStr -ne ''){
                 $outObject["key"]  = $keyStr
             }
@@ -497,7 +608,7 @@ function percentile {
                     Write-Debug "statSum: $statSum"
                     Write-Debug "statAvg: $statAvg"
                     Write-Debug "statStd: $statStd"
-                    OutObject $oldKey $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
+                    OutObject $headerStr $oldKey $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
                     $keyAryList = New-Object 'System.Collections.Generic.List[System.String]'
                     $ValAryList = New-Object 'System.Collections.Generic.List[System.String]'
                     $keyAryList.Add( [string]($readLine) )
@@ -515,7 +626,7 @@ function percentile {
                 Write-Debug "statSum: $statSum"
                 Write-Debug "statAvg: $statAvg"
                 Write-Debug "statStd: $statStd"
-                OutObject $nowKey $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
+                OutObject $headerStr $nowKey $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
             }
             return
         }
@@ -527,7 +638,7 @@ function percentile {
             Write-Debug "statAvg: $statAvg"
             Write-Debug "statStd: $statStd"
             $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $sortedAry   
-            OutObject '' $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
+            OutObject $headerStr '' $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
             return
         }
     }
