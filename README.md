@@ -374,11 +374,11 @@ Get-Alias   | Out-File -FilePath .\Alias.txt   -Encoding UTF8
 Get-Command | Out-File -FilePath .\Command.txt -Encoding UTF8
 grep 'Get\-' -H .\*.txt | Select-Object -First 5
 
-Alias.txt:7:Alias           cal2 -> Get-OLCalendar
-Alias.txt:8:Alias           cat -> Get-Content
-Alias.txt:28:Alias           dir -> Get-ChildItem
-Alias.txt:44:Alias           gal -> Get-Alias
-Alias.txt:46:Alias           gbp -> Get-PSBreakpoint
+Alias.txt:7:Alias       cal2 -> Get-OLCalendar
+Alias.txt:8:Alias       cat  -> Get-Content
+Alias.txt:28:Alias      dir  -> Get-ChildItem
+Alias.txt:44:Alias      gal  -> Get-Alias
+Alias.txt:46:Alias      gbp  -> Get-PSBreakpoint
 ```
 
 ```powershell
@@ -3065,7 +3065,7 @@ ABC 75 12 12 22 01 87 26 ## leftmost field is different data type to 1st record
 # so the following raises an error and stop processing
 $dat | ysort
 1 2 2 3 12 22
-Sort-Object: C:\Users\btklab\cms\drafts\ysort_function.ps1:152
+Sort-Object: ysort_function.ps1:152
 Line |
     152 |                  | Sort-Object { [double] $_ } `
         |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -5887,7 +5887,7 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 
 #### [pwmake] - Pwsh implementation of GNU make command
 
-[pwmake]: src/pwmake_function.ps1]
+[pwmake]: src/pwmake_function.ps1
 
 PowerShell版make-like command。劣化コピー。
 カレントディレクトリにあるMakefileを読み実行する。
