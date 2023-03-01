@@ -16,13 +16,37 @@
         -NoHeader: No header data
 
     Example:
-        cat iris.csv | percentile -v 1 -k 5 -d "," -NoHeader | ft
+        cat iris.csv | percentile -v 1 -k 5 -d "," | ft
 
-        key        count    sum mean stdev  min Qt25 Qt50 Qt75  max
-        ---        -----    --- ---- -----  --- ---- ---- ----  ---
-        setosa        50 250.30 5.01  0.35 4.30 4.80 5.00 5.20 5.80
-        versicolor    50 296.80 5.94  0.52 4.90 5.60 5.90 6.30 7.00
-        virginica     50 329.40 6.59  0.64 4.90 6.20 6.50 7.00 7.90
+            field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
+            -----        ---        -----    --- ---- -----  --- ---- ---- ----
+            sepal_length setosa        50 250.30 5.01  0.35 4.30 4.80 5.00 5.20
+            sepal_length versicolor    50 296.80 5.94  0.52 4.90 5.60 5.90 6.30
+            sepal_length virginica     50 329.40 6.59  0.64 4.90 6.20 6.50 7.00
+
+        "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Level5 -NoHeader | keta
+        F1 F2 percentile label
+         a  1     0.0167     E
+         b  1     0.0333     E
+         c  1     0.0500     E
+         d  1     0.0667     E
+         a  2     0.1000     E
+         b  2     0.1333     E
+         c  2     0.1667     E
+         d  2     0.2000     D
+         a  3     0.2500     D
+         d  3     0.3000     D
+         b  3     0.3500     D
+         c  3     0.4000     C
+         a  4     0.4667     C
+         b  4     0.5333     C
+         d  4     0.6000     B
+         c  4     0.6667     B
+         b  5     0.7500     B
+         a  5     0.8333     A
+         c  5     0.9167     A
+         d  5     1.0000     A
+
 
 .LINK
     decil, percentile, summary
@@ -135,7 +159,7 @@
      d  5     1.0000   Qt
     
     ## -Level5 means ranking by 20% cumurative ratio
-    "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Level5 -Rank -NoHeader | keta
+    "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Level5 -NoHeader | keta
     F1 F2 percentile label
      a  1     0.0167     E
      b  1     0.0333     E

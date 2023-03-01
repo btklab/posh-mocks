@@ -2534,8 +2534,8 @@ Example:
 
 半角スペース区切りデータにpercentileまたは四分位数（quartile）を適用してランク付け。
 
-[percentile]と[summary]はどちらも「ヘッダありスペース区切りデータの縦一列ぶんの基礎統計量を産出する」点は同じ。
-[percentile]はCategory列を指定するとCategoryごとに基礎統計量を計算できる。
+[percentile]と[summary]はどちらも「ヘッダありスペース区切りデータの縦一列ぶんの要約統計量を算出する」点は同じ。
+[percentile]はCategory列を指定するとCategoryごとに要約統計量を計算できる。
 
 Calculate and ranking with percentile and quartiles on space-delimited data without headers.
 
@@ -2680,6 +2680,45 @@ F1 F2 percentile label
  d  5     1.0000     A
  ```
 
+Another example:
+
+```powershell
+cat iris.csv | percentile -d "," 1 | ft
+
+field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
+-----        -----    --- ---- -----  --- ---- ---- ----  ---
+sepal_length   150 876.50 5.84  0.83 4.30 5.10 5.80 6.40 7.90
+
+
+1..4 | %{ cat iris.csv | percentile -d "," $_ } | ft
+
+field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
+-----        -----    --- ---- -----  --- ---- ---- ----  ---
+sepal_length   150 876.50 5.84  0.83 4.30 5.10 5.80 6.40 7.90
+sepal_width    150 458.60 3.06  0.44 2.00 2.80 3.00 3.35 4.40
+petal_length   150 563.70 3.76  1.77 1.00 1.55 4.35 5.10 6.90
+petal_width    150 179.90 1.20  0.76 0.10 0.30 1.30 1.80 2.50
+
+
+1..4 | %{ cat iris.csv | percentile -d "," -k 5 $_ } | ft
+
+field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
+-----        ---        -----    --- ---- -----  --- ---- ---- ----
+sepal_length setosa        50 250.30 5.01  0.35 4.30 4.80 5.00 5.20
+sepal_length versicolor    50 296.80 5.94  0.52 4.90 5.60 5.90 6.30
+sepal_length virginica     50 329.40 6.59  0.64 4.90 6.20 6.50 7.00
+sepal_width  setosa        50 171.40 3.43  0.38 2.30 3.15 3.40 3.70
+sepal_width  versicolor    50 138.50 2.77  0.31 2.00 2.50 2.80 3.00
+sepal_width  virginica     50 148.70 2.97  0.32 2.20 2.80 3.00 3.20
+petal_length setosa        50  73.10 1.46  0.17 1.00 1.40 1.50 1.60
+petal_length versicolor    50 213.00 4.26  0.47 3.00 4.00 4.35 4.60
+petal_length virginica     50 277.60 5.55  0.55 4.50 5.10 5.55 5.90
+petal_width  setosa        50  12.30 0.25  0.11 0.10 0.20 0.20 0.30
+petal_width  versicolor    50  66.30 1.33  0.20 1.00 1.20 1.30 1.50
+petal_width  virginica     50 101.30 2.03  0.27 1.40 1.80 2.00 2.30
+```
+
+
 #### [decil] - Decile analysis (Divide records about 10 equal parts)
 
 [decil]: src/decil_function.ps1
@@ -2764,7 +2803,7 @@ U040 6500047
 U041 6751113
 
 
-cat .\data.txt | decil -Rank | head
+cat data.txt | decil -Rank | head
 Seg Customers Sales
 D01 BZ30 9830001
 D01 CZ31 9600101
@@ -2813,7 +2852,7 @@ D01 CZ84 8470022 0.0026600974009877927269611624
 
 半角スペース区切りデータのうち数値列1列分の基礎統計量を算出する。
 
-[percentile]と[summary]はどちらも「ヘッダありスペース区切りデータの縦一列ぶんの基礎統計量を産出する」点は同じ。
+[percentile]と[summary]はどちらも「ヘッダありスペース区切りデータの縦一列ぶんの要約統計量を算出する」点は同じ。
 [percentile]はCategory列を指定するとCategoryごとに基礎統計量を計算できる。
 
 - デフォルトで四分位数を計算
@@ -3214,11 +3253,11 @@ k1 k2 12 24 37 11 23 107 21.4 37 11
     - `pu2java [-InputFile] <String> [[-OutputFileType] <String>] [-ConfigFile <String>] [-OutputDir <String>] [-Charset <String>] [-Jar <String>] [-TestDot] [-CheckOnly] [-NoMetadata] [-NotOverWrite] [-ErrorCheck]`
 - Examples
     - `pu2java a.pu`
-        - `java -jar plantuml.jar" -charset "UTF-8" -t"png" a.pu`と等価
+        - `java -jar plantuml.jar -charset "UTF-8" -t"png" a.pu`と等価
     - `pu2java a.pu -OutputFileType png`
-        - `java -jar plantuml.jar" -charset "UTF-8" -t"png" a.pu`と等価
+        - `java -jar plantuml.jar -charset "UTF-8" -t"png" a.pu`と等価
     - `pu2java a.pu -OutputFileType svg`
-        - `java -jar plantuml.jar" -charset "UTF-8" -t"svg" a.pu`と等価
+        - `java -jar plantuml.jar -charset "UTF-8" -t"svg" a.pu`と等価
 - Options
     - `-ErrorCheck`スイッチで、等価なplantumlコマンド文字列が出力される
         - `pu2java a.pu svg -ErrorCheck`
@@ -4795,6 +4834,48 @@ cat contents.md | pandoc -f markdown -t html5 | filehame -l TEXTBODY template.ht
     - License: Apache License Version 2.0, January 2004, https://www.apache.org/licenses/LICENSE-2.0
     - Command: [Get-OGP] (Alias: ml)
 
+
+Examples:
+
+```powershell
+"https://github.com/" | Get-OGP | fl
+curl https://github.com/
+200 OK
+
+description : GitHub is where over 94 million developers shape the future of software, together. Contribute to the open
+                source community, manage your Git repositories, review code like a pro, track bugs and feat...
+image       : https://github.githubassets.com/images/modules/site/social-cards/campaign-social.png
+title       : GitHub: Let’s build from here
+uri         : https://github.com/
+```
+
+```powershell
+Get-OGP "https://github.com/" | fl
+curl https://github.com/
+200 OK
+
+description : GitHub is where over 94 million developers shape the future of software, together. Contribute to the open
+                source community, manage your Git repositories, review code like a pro, track bugs and feat...
+image       : https://github.githubassets.com/images/modules/site/social-cards/campaign-social.png
+title       : GitHub: Let’s build from here
+uri         : https://github.com/
+```
+
+
+```powershell
+Get-OGP -m https://github.com/
+curl https://github.com/
+200 OK
+[GitHub: Let’s build from here](https://github.com/)
+```
+
+```powershell
+"https://github.com/" | Set-Clipboard
+Get-OGP -m | Set-Clipboard
+Get-Clipboard
+
+[GitHub: Let’s build from here](https://github.com/)
+```
 
 #### [fpath] - Remove double-quotes and replace backslashes to slashes from windows path
 
