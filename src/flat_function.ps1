@@ -25,19 +25,19 @@
     If fs is already set, this option is primarily used.
 
 .EXAMPLE
-1..9 | flat
-1 2 3 4 5 6 7 8 9
+    1..9 | flat
+    1 2 3 4 5 6 7 8 9
 
 .EXAMPLE
-1..9 | flat 4
-1 2 3 4
-5 6 7 8
-9
+    1..9 | flat 4
+    1 2 3 4
+    5 6 7 8
+    9
 
 .EXAMPLE
-echo "aiueo" | flat -fs ""
-aiu
-eo
+    echo "aiueo" | flat -fs ""
+    aiu
+    eo
 
 #>
 function flat {

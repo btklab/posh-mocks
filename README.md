@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [yarr], [zen]
+- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 Inspired by:
 
@@ -33,7 +33,7 @@ Inspired by:
     - Commands: `man2`, `keta`, `tateyoko`, `gyo`, `fillretu`, `yarr`, `count`, `han`, `zen`, `filehame`, and more...
 - [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
     - License: The MIT License (MIT): Copyright (c) 2016 Yasuhiro, Yamada
-    - Commands: `flat`, `addt`, `addb`, `addr`, `addl`, `mirror`, and more...
+    - Commands: `flat`, `addt`, `addb`, `addr`, `addl`, `mirror`,`wrap`, and more...
 - [mattn/sleepy - GitHub](https://github.com/mattn/sleepy)
     - License: The MIT License (MIT): Copyright (c) 2022 Yasuhiro Matsumoto
     - Commands: `sleepy`
@@ -2108,6 +2108,53 @@ Examples
 "aiueo" | flat 3 -ifs "" -ofs ""
 aiu
 eo
+```
+
+#### [wrap] - Wrap each fields in specified format
+
+[wrap]: src/wrap_function.ps1
+
+半角スペース区切り文字列を任意の書式で**くるむ**。
+`-ifs`で入力テキストの区切り文字を、
+`-ofs`で出力テキストの区切り文字をそれぞれ指定できる。
+それぞれ空文字も指定可能。（`-ifs ""`, `-ofs ""`）
+
+- Usage
+    - `man2 wrap`
+    - `wrap [[--f|Format] <String>] [-p|-Placeholder <String>] [-fs|-Delimiter <String>]`
+- Examples
+    - `"A B C D" | wrap '[*]'`
+    - `"A B C D" | wrap '[?]' -Placeholder '?'`
+    - `"A B C D" | wrap '[*]' -fs "_"`
+    - `"ABCD" | wrap '[*]' -fs ''`
+- Inspired by [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
+    - License: The MIT License (MIT): Copyright (c) 2016 Yasuhiro, Yamada
+    - Command: `wrap`
+
+Examples
+
+```powershell
+"A B C D" | wrap '[*]'
+[A] [B] [C] [D]
+
+"A B C D" | wrap '[?]' -Placeholder '?'
+[A] [B] [C] [D]
+
+"A B C D" | wrap '[*]' -fs "_"
+[A B C D]
+
+"ABCD" | wrap '[*]' -fs ""
+[A][B][C][D]
+```
+
+```powershell
+"A B C D","E F G H" | wrap '<td>*</td>' | addt '<table>','<tr>' | addb '</tr>','</table>'
+<table>
+<tr>
+<td>A</td> <td>B</td> <td>C</td> <td>D</td>
+<td>E</td> <td>F</td> <td>G</td> <td>H</td>
+</tr>
+</table>
 ```
 
 #### [Add-CrLf] , [Add-CrLf-EndOfFile] - Add LineFeed
