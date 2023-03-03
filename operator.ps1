@@ -74,6 +74,7 @@ if ($IsWindows){
 . $pwshSrcDir/addt_function.ps1
 . $pwshSrcDir/rev2_function.ps1
 . $pwshSrcDir/conv_function.ps1
+. $pwshSrcDir/wrap_function.ps1
 
 ### gdate includes thisyear, nextyear, lastyear
 . $pwshSrcDir/gdate_function.ps1
