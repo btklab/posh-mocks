@@ -2737,7 +2737,7 @@ field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
 sepal_length   150 876.50 5.84  0.83 4.30 5.10 5.80 6.40 7.90
 
 
-1..4 | %{ cat iris.csv | percentile -d "," $_ } | ft
+cat iris.csv | percentile -d "," 1,2,3,4 | ft
 
 field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
 -----        -----    --- ---- -----  --- ---- ---- ----  ---
@@ -2747,7 +2747,7 @@ petal_length   150 563.70 3.76  1.77 1.00 1.55 4.35 5.10 6.90
 petal_width    150 179.90 1.20  0.76 0.10 0.30 1.30 1.80 2.50
 
 
-1..4 | %{ cat iris.csv | percentile -d "," -k 5 $_ } | ft
+cat iris.csv | percentile -d "," 1,2,3,4 -k 5 | ft
 
 field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
 -----        ---        -----    --- ---- -----  --- ---- ---- ----
