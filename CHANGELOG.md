@@ -15,8 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added [ysort], [ycalc], [fval] functions
-- Added [wrap] functions
+- Added [ysort], [ycalc], [fval] functions.
+- Added [wrap] function.
+- Added [percentile] supports multiple value fields. Missing/Empty value detection/removal/replacement.
 
 
 ## [2.0.0]

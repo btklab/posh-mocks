@@ -2737,7 +2737,7 @@ field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
 sepal_length   150 876.50 5.84  0.83 4.30 5.10 5.80 6.40 7.90
 
 
-1..4 | %{ cat iris.csv | percentile -d "," $_ } | ft
+cat iris.csv | percentile -d "," 1,2,3,4 | ft
 
 field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
 -----        -----    --- ---- -----  --- ---- ---- ----  ---
@@ -2747,7 +2747,7 @@ petal_length   150 563.70 3.76  1.77 1.00 1.55 4.35 5.10 6.90
 petal_width    150 179.90 1.20  0.76 0.10 0.30 1.30 1.80 2.50
 
 
-1..4 | %{ cat iris.csv | percentile -d "," -k 5 $_ } | ft
+cat iris.csv | percentile -d "," 1,2,3,4 -k 5 | ft
 
 field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
 -----        ---        -----    --- ---- -----  --- ---- ---- ----
@@ -2765,6 +2765,163 @@ petal_width  versicolor    50  66.30 1.33  0.20 1.00 1.20 1.30 1.50
 petal_width  virginica     50 101.30 2.03  0.27 1.40 1.80 2.00 2.30
 ```
 
+Missing/Empty value detection/removal/replacement examples
+
+```powershell
+# Empty value control (empty record detection/removal/replacement)
+
+# input (include empty value field)
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s,$_" } } | %{ $_ -replace ',5$',',' }
+a,1
+a,2
+a,3
+a,4
+a,
+b,1
+b,2
+b,3
+b,4
+b,
+c,1
+c,2
+c,3
+c,4
+c,
+d,1
+d,2
+d,3
+d,4
+d,
+
+# detect empty line and stop processing (use -isEmpty option)
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s,$_" } } | %{ $_ -replace ',5$',',' } | percentile -fs "," -NoHeader -isEmpty
+percentile: Detect "Empty" : a,
+
+# fill empty values with "NaN" (use -FillNaN option)
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s,$_" } } | %{ $_ -replace ',5$',',' } | percentile -fs "," -NoHeader -FillNaN
+
+field : F2
+count : 20
+sum   : NaN
+mean  : NaN
+stdev : NaN
+min   : NaN
+Qt25  : 1
+Qt50  : 2
+Qt75  : 3
+max   : 4
+```
+
+```powershell
+# NaN control (Missing value detection/removal/replacement)
+
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' }
+a 1
+a 2
+a 3
+a 4
+a NaN
+b 1
+b 2
+b 3
+b 4
+b NaN
+c 1
+c 2
+c 3
+c 4
+c NaN
+d 1
+d 2
+d 3
+d 4
+d NaN
+
+
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' } | percentile 2 -NoHeader
+
+field : F2
+count : 20
+sum   : NaN
+mean  : NaN
+stdev : NaN
+min   : NaN
+Qt25  : 1
+Qt50  : 2
+Qt75  : 3
+max   : 4
+
+
+# Output "NaN" information (use -Detail option)
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' } | percentile 2 -NoHeader -Detail
+
+field      : F2
+count      : 20
+sum        : NaN
+mean       : NaN
+stdev      : NaN
+min        : NaN
+Qt25       : 1
+Qt50       : 2
+Qt75       : 3
+max        : 4
+IQR        : 2
+HiIQR      : 6
+LoIQR      : -2
+NaN        : 4
+DropNaN    : 0
+FillNaN    : 0
+ReplaceNaN : 0
+
+
+# Detect "NaN" and stop processing (use -isNaN option)
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' } | percentile 2 -NoHeader -isNaN
+percentile: Detect "NaN" : a NaN
+
+
+# Drop "NaN" (use -DropNaN option)
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' } | percentile 2 -NoHeader -DropNaN -Detail
+
+field      : F2
+count      : 16
+sum        : 40
+mean       : 2.5
+stdev      : 1.15470053837925
+min        : 1
+Qt25       : 1
+Qt50       : 2.5
+Qt75       : 4
+max        : 4
+IQR        : 3
+HiIQR      : 8.5
+LoIQR      : -3.5
+NaN        : 4
+DropNaN    : 4
+FillNaN    : 0
+ReplaceNaN : 0
+
+
+# Replace "NaN" (use -ReplaceNaN option)
+"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' } | percentile 2 -NoHeader -ReplaceNaN 0 -Detail
+
+field      : F2
+count      : 20
+sum        : 40
+mean       : 2
+stdev      : 1.45095250022002
+min        : 0
+Qt25       : 1
+Qt50       : 2
+Qt75       : 3
+max        : 4
+IQR        : 2
+HiIQR      : 6
+LoIQR      : -2
+NaN        : 4
+DropNaN    : 0
+FillNaN    : 0
+ReplaceNaN : 4
+```
 
 #### [decil] - Decile analysis (Divide records about 10 equal parts)
 

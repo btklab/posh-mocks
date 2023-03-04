@@ -6,7 +6,7 @@
     data without headers. 
 
     Usage:
-        cat data.txt | percentile [[-Val] <Int32>] [[-Key] <Int32[]>] [-Rank|-Level5] [-NoHeader] [-Cast <String>]
+        cat data.txt | percentile [[-Val] <Int32[]>] [[-Key] <Int32[]>] [-Rank|-Level5] [-NoHeader] [-Cast <String>]
 
     Empty records are skipped.
     Input expects space-separated data with headers.
@@ -25,27 +25,28 @@
             sepal_length virginica     50 329.40 6.59  0.64 4.90 6.20 6.50 7.00
 
         "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Level5 -NoHeader | keta
-        F1 F2 percentile label
-         a  1     0.0167     E
-         b  1     0.0333     E
-         c  1     0.0500     E
-         d  1     0.0667     E
-         a  2     0.1000     E
-         b  2     0.1333     E
-         c  2     0.1667     E
-         d  2     0.2000     D
-         a  3     0.2500     D
-         d  3     0.3000     D
-         b  3     0.3500     D
-         c  3     0.4000     C
-         a  4     0.4667     C
-         b  4     0.5333     C
-         d  4     0.6000     B
-         c  4     0.6667     B
-         b  5     0.7500     B
-         a  5     0.8333     A
-         c  5     0.9167     A
-         d  5     1.0000     A
+
+            F1 F2 percentile label
+             a  1     0.0167     E
+             b  1     0.0333     E
+             c  1     0.0500     E
+             d  1     0.0667     E
+             a  2     0.1000     E
+             b  2     0.1333     E
+             c  2     0.1667     E
+             d  2     0.2000     D
+             a  3     0.2500     D
+             d  3     0.3000     D
+             b  3     0.3500     D
+             c  3     0.4000     C
+             a  4     0.4667     C
+             b  4     0.5333     C
+             d  4     0.6000     B
+             c  4     0.6667     B
+             b  5     0.7500     B
+             a  5     0.8333     A
+             c  5     0.9167     A
+             d  5     1.0000     A
 
 
 .LINK
@@ -190,7 +191,7 @@
     sepal_length   150 876.50 5.84  0.83 4.30 5.10 5.80 6.40 7.90
 
 
-    PS > 1..4 | %{ cat iris.csv | percentile -d "," $_ } | ft
+    PS > cat iris.csv | percentile -d "," 1,2,3,4 | ft
 
     field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
     -----        -----    --- ---- -----  --- ---- ---- ----  ---
@@ -199,8 +200,8 @@
     petal_length   150 563.70 3.76  1.77 1.00 1.55 4.35 5.10 6.90
     petal_width    150 179.90 1.20  0.76 0.10 0.30 1.30 1.80 2.50
 
-
-    PS > 1..4 | %{ cat iris.csv | percentile -d "," -k 5 $_ } | ft
+    
+    PS > cat iris.csv | percentile -d "," 1,2,3,4 -k 5 | ft
 
     field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
     -----        ---        -----    --- ---- -----  --- ---- ---- ----
@@ -217,8 +218,156 @@
     petal_width  versicolor    50  66.30 1.33  0.20 1.00 1.20 1.30 1.50
     petal_width  virginica     50 101.30 2.03  0.27 1.40 1.80 2.00 2.30
 
-.LINK
-    summary
+.EXAMPLE
+    # Empty value control (empty record detection/removal/replacement)
+
+    # input (include empty value field)
+    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s,$_" } } | %{ $_ -replace ',5$',',' }
+        a,1
+        a,2
+        a,3
+        a,4
+        a,
+        b,1
+        b,2
+        b,3
+        b,4
+        b,
+        c,1
+        c,2
+        c,3
+        c,4
+        c,
+        d,1
+        d,2
+        d,3
+        d,4
+        d,
+
+    # detect empty line and stop processing (use -isEmpty option)
+    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s,$_" } } | %{ $_ -replace ',5$',',' } | percentile -fs "," -NoHeader -isEmpty
+        percentile: Detect "Empty" : a,
+
+    # fill empty values with "NaN" (use -FillNaN option)
+    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s,$_" } } | %{ $_ -replace ',5$',',' } | percentile -fs "," -NoHeader -FillNaN
+
+        field : F2
+        count : 20
+        sum   : NaN
+        mean  : NaN
+        stdev : NaN
+        min   : NaN
+        Qt25  : 1
+        Qt50  : 2
+        Qt75  : 3
+        max   : 4
+
+
+.EXAMPLE
+    # NaN control (Missing value detection/removal/replacement)
+
+    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' }
+        a 1
+        a 2
+        a 3
+        a 4
+        a NaN
+        b 1
+        b 2
+        b 3
+        b 4
+        b NaN
+        c 1
+        c 2
+        c 3
+        c 4
+        c NaN
+        d 1
+        d 2
+        d 3
+        d 4
+        d NaN
+
+    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' } | percentile 2 -NoHeader
+
+        field : F2
+        count : 20
+        sum   : NaN
+        mean  : NaN
+        stdev : NaN
+        min   : NaN
+        Qt25  : 1
+        Qt50  : 2
+        Qt75  : 3
+        max   : 4
+
+    # Output "NaN" information (use -Detail option)
+    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' } | percentile 2 -NoHeader -Detail
+
+        field      : F2
+        count      : 20
+        sum        : NaN
+        mean       : NaN
+        stdev      : NaN
+        min        : NaN
+        Qt25       : 1
+        Qt50       : 2
+        Qt75       : 3
+        max        : 4
+        IQR        : 2
+        HiIQR      : 6
+        LoIQR      : -2
+        NaN        : 4
+        DropNaN    : 0
+        FillNaN    : 0
+        ReplaceNaN : 0
+
+    # Detect "NaN" and stop processing (use -isNaN option)
+    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' } | percentile 2 -NoHeader -isNaN
+        percentile: Detect "NaN" : a NaN
+
+    # Drop "NaN" (use -DropNaN option)
+    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' } | percentile 2 -NoHeader -DropNaN -Detail
+
+        field      : F2
+        count      : 16
+        sum        : 40
+        mean       : 2.5
+        stdev      : 1.15470053837925
+        min        : 1
+        Qt25       : 1
+        Qt50       : 2.5
+        Qt75       : 4
+        max        : 4
+        IQR        : 3
+        HiIQR      : 8.5
+        LoIQR      : -3.5
+        NaN        : 4
+        DropNaN    : 4
+        FillNaN    : 0
+        ReplaceNaN : 0
+
+
+    # Replace "NaN" (use -ReplaceNaN option)
+    PS > "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' } | percentile 2 -NoHeader -ReplaceNaN 0 -Detail
+
+        field      : F2
+        count      : 20
+        sum        : 40
+        mean       : 2
+        stdev      : 1.45095250022002
+        min        : 0
+        Qt25       : 1
+        Qt50       : 2
+        Qt75       : 3
+        max        : 4
+        IQR        : 2
+        HiIQR      : 6
+        LoIQR      : -2
+        NaN        : 4
+        DropNaN    : 0
+        FillNaN    : 0
+        ReplaceNaN : 4
 
 .NOTES
     learn: about sort-object
@@ -230,7 +379,7 @@ function percentile {
     param (
         [Parameter( Mandatory=$False, Position=0 )]
         [Alias('v')]
-        [int] $Val,
+        [int[]] $Val,
         
         [Parameter( Mandatory=$False, Position=1 )]
         [Alias('k')]
@@ -269,6 +418,25 @@ function percentile {
         [Parameter( Mandatory=$False )]
         [switch] $Ascending,
         
+        [Parameter( Mandatory=$False )]
+        [switch] $DropNaN,
+        
+        [Parameter( Mandatory=$False )]
+        [switch] $FillNaN,
+        
+        [Parameter( Mandatory=$False )]
+        [switch] $isNaN,
+        
+        [Parameter( Mandatory=$False )]
+        [switch] $isEmpty,
+        
+        [Parameter( Mandatory=$False )]
+        [string] $ReplaceNaN,
+        
+        [Parameter( Mandatory=$False )]
+        [Alias('d')]
+        [switch] $Detail,
+        
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
         [string[]] $InputText
     )
@@ -296,12 +464,20 @@ function percentile {
         }
         # set number of key fields
         if ( $Key ){
+            if ( $Rank -or $Level5 ){
+                Write-Error "-Key option cannot be used with -Rank or -Level5 options." -ErrorAction Stop
+            }
             if ( $Key.Count -eq 1 ){
                 [int] $sKey = $Key[0] - 1
                 [int] $eKey = $Key[0] - 1
             } else {
                 [int] $sKey = $Key[0] - 1
                 [int] $eKey = $Key[1] - 1
+            }
+        }
+        if ( $Rank -or $Level5 ){
+            if ( $Val.Count -gt 1 ){
+                Write-Error "Specify a single value column when -Val using with the -Rank or -Level5 options." -ErrorAction Stop
             }
         }
         # private function
@@ -322,15 +498,12 @@ function percentile {
             }
         }
         # init variables
-        [bool] $getValFieldFlag = $False
         [int] $rowCounter = 0
         [string] $tempLine = ''
         $tempAryList = New-Object 'System.Collections.Generic.List[System.String]'
-        $tempValList = New-Object 'System.Collections.Generic.List[System.String]'
     }
 
     process {
-        $rowCounter++
         [string] $readLine = $_.Trim()
         [string[]] $splitReadLine = $readLine -split $iDelim
         if ( $emptyDelimiterFlag ){
@@ -341,70 +514,56 @@ function percentile {
             # skip empty line
             return
         }
+        $rowCounter++
         # add header
         if ( $rowCounter -eq 1 ){
+            # set value fields
+            if ( -not $Val ){
+                [int[]] $vFields = @($splitReadLine.Count - 1)
+            } else {
+                [int[]] $vFields = foreach ($v in $Val) { $v - 1 }
+            }
             if ( $NoHeader ){
+                # output header
+                [string[]] $headerAry = @()
+                for ( $i = 1; $i -le $splitReadLine.Count; $i++){
+                    $headerAry += "F$i"
+                }
                 if ( ($Rank -or $Level5) -and ( -not $Key) ) {
-                    # output header
-                    [string[]] $headerAry = @()
-                    for ( $i = 1; $i -le $splitReadLine.Count; $i++){
-                        $headerAry += "F$i"
-                    }
                     $headerAry += "percentile"
                     $headerAry += "label"
                     [string] $headerStr = $headerAry -join $oDelim
                     Write-Output $headerStr
-                } else {
-                    if ( $Val ){
-                        [string] $headerStr = "F" + [string]($Val)
-                    } else {
-                        [string] $headerStr = "F" + [string]($splitReadLine.Count)
-                    }
                 }
             } else {
-                # is header string?
-                [string] $headerStr = ''
-                if ( $Val ){
-                    [string] $headerStr = $splitReadLine[($Val - 1)]
-                } else {
-                    [string] $headerStr = $splitReadLine[($splitReadLine.Count - 1)]
-                }
-                if ( isDouble $headerStr ){
-                    Write-Error "Header: ""$headerStr"" should be string." -ErrorAction Stop
+                # set headers into array
+                [string[]] $headerAry = $splitReadLine
+                # test value field
+                foreach ( $v in $vFields ){
+                    [string] $vStr = $headerAry[$v]
+                    if ( isDouble $vStr ){
+                        Write-Error "Header: ""$vStr"" should be string." -ErrorAction Stop
+                    }
                 }
                 # output header
                 if ( ($Rank -or $Level5) -and ( -not $Key) ) {
                     # output header
-                    $splitReadLine += "percentile"
-                    $splitReadLine += "label"
-                    [string] $headerStr = $splitReadLine -join $oDelim
+                    $headerAry += "percentile"
+                    $headerAry += "label"
+                    [string] $headerStr = $headerAry -join $oDelim
                     Write-Output $headerStr
                 }
                 return
             }
         }
-        if ( -not $getValFieldFlag ){
-            ## set number of value field
-            if ( $Val ){
-                [int] $sVal = $Val - 1
-            } else {
-                [int] $sVal = $splitReadLine.Count - 1
-            }
-            [bool] $getValFieldFlag = $True
-        }
         try {
             $tempAryList.Add( [string] ($readLine) )
-            $tempValList.Add( [double] ($splitReadLine[$sVal]) )
         } catch {
             Write-Error $Error[0] -ErrorAction Stop
         }
     }
 
     end {
-        [double[]] $valAry =  $tempValList.ToArray()
-        if ($valAry.Count -eq 0){
-            return
-        }
         # statistics
         function GetStat ( [double[]] $valAry){
             $measureStat = $valAry | Measure-Object -AllStats
@@ -416,7 +575,6 @@ function percentile {
             [double] $statStd = $measureStat.StandardDeviation
             return [double[]]@($statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd)
         }
-        $statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd = GetStat $valAry
 
         # private function
         function getMedianPos ( [int] $cnt ){
@@ -435,17 +593,94 @@ function percentile {
         }
 
         # sort by key, value
-        Write-Debug "$sKey, $eKey, $sVal"
-        [double] $sum = 0
-        if ( $Key ){
-            [string[]] $sortedAry = $tempAryList.ToArray() `
-                | Sort-Object -Property `
-                    { [string](($_ -split $iDelim)[$sKey..$eKey] -join "") },
-                    { [double](($_ -split $iDelim)[$sVal]) }
-        } else {
-            [string[]] $sortedAry = $tempAryList.ToArray() `
-                | Sort-Object -Property `
-                    { [double](($_ -split $iDelim)[$sVal]) }
+        function getSortedAry ([string[]] $lineAry, [int] $vField) {
+            [double] $sumVal  = 0
+            [int] $countNaN   = 0
+            [int] $countDropNaN = 0
+            [int] $countReplaceNaN = 0
+            [int] $countFillNaN    = 0
+            if ( $Key ){
+                [string[]] $sortedAry = $lineAry `
+                    | ForEach-Object {
+                        [string[]] $tmpSplitAry = $_ -split $iDelim
+                        # treat empty item
+                        if ( [string]($tmpSplitAry[$vField]) -eq '' ){
+                            # isEmpty
+                            if ( $isEmpty ){
+                                Write-Error "Detect ""Empty"" : $_" -ErrorAction Stop
+                            }
+                            # fill NaN
+                            if ( $FillNaN ){
+                                $countFillNaN++
+                                $tmpSplitAry[$vField] = 'NaN'
+                            }
+                        }
+                        # treat NaN
+                        if ( [string]($tmpSplitAry[$vField]) -eq 'NaN' ){
+                            if ( $isNaN ){
+                                Write-Error "Detect ""NaN"" : $_" -ErrorAction Stop
+                            }
+                            # count NaN
+                            $countNaN++
+                            # drom NaN
+                            if ( $DropNaN ){
+                                $countDropNaN++; return
+                            }
+                            # replace NaN
+                            if ( $ReplaceNaN ){
+                                $countReplaceNaN++ 
+                                $tmpSplitAry[$vField] = ($tmpSplitAry[$vField]).Replace('NaN', $ReplaceNaN)
+                            }
+                        }
+                        $sumVal += [double]($tmpSplitAry[$vField])
+                        [string] $writeLine = $tmpSplitAry -join $iDelim
+                        Write-Output $writeLine
+                        } `
+                    | Sort-Object -Property `
+                        { [string](($_ -split $iDelim)[$sKey..$eKey] -join "") },
+                        { [double](($_ -split $iDelim)[$vField]) }
+                return $sortedAry, $sumVal, $countNaN
+            } else {
+                [string[]] $sortedAry = $lineAry `
+                    | ForEach-Object {
+                        [string[]] $tmpSplitAry = $_ -split $iDelim
+                        # treat empty item
+                        if ( [string]($tmpSplitAry[$vField]) -eq '' ){
+                            # isEmpty
+                            if ( $isEmpty ){
+                                Write-Error "Detect ""Empty"" : $_" -ErrorAction Stop
+                            }
+                            # fill NaN
+                            if ( $FillNaN ){
+                                $countFillNaN++
+                                $tmpSplitAry[$vField] = 'NaN'
+                            }
+                        }
+                        # treat NaN
+                        if ( [string]($tmpSplitAry[$vField]) -eq 'NaN' ){
+                            if ( $isNaN ){
+                                Write-Error "Detect ""NaN"" : $_" -ErrorAction Stop
+                            }
+                            # count NaN
+                            $countNaN++
+                            # drom NaN
+                            if ( $DropNaN ){ 
+                                $countDropNaN++; return
+                            }
+                            # replace NaN
+                            if ( $ReplaceNaN ){
+                                $countReplaceNaN++
+                                $tmpSplitAry[$vField] = ($tmpSplitAry[$vField]).Replace('NaN', $ReplaceNaN)
+                            }
+                        }
+                        $sumVal += [double]($tmpSplitAry[$vField])
+                        [string] $writeLine = $tmpSplitAry -join $iDelim
+                        Write-Output $writeLine
+                        } `
+                    | Sort-Object -Property `
+                        { [double](($_ -split $iDelim)[$vField]) }
+                return $sortedAry, $sumVal, $countNaN, $countDropNaN, $countFillNaN, $countReplaceNaN
+            }
         }
 
         # calc quartile
@@ -467,7 +702,7 @@ function percentile {
                 [int[]] $posQt50 = @(1, 2)
                 [int[]] $posQt75 = @(3, 3)
             } else {
-                [int[]] $posQt50 = getMedianPos $statCnt
+                [int[]] $posQt50 = getMedianPos $lineAry.Count
                 [string[]] $tmpQt25 = $lineAry[0..($posQt50[0]-1)]
                 [string[]] $tmpQt75 = $lineAry[($posQt50[1]+1)..($lineAry.Count - 1)]
                 [int[]] $posQt25 = getMedianPos $tmpQt25.Count
@@ -484,13 +719,13 @@ function percentile {
             return $posHash
         }
 
-        function CalcQuartile ( [string[]] $lineAry){
+        function CalcQuartile ( [string[]] $lineAry, $vField){
             $posHash = @{}
             $posHash = CalcQuartilePos $lineAry
             [int[]] $posQt25 = $posHash["posQt25"]
             [int[]] $posQt50 = $posHash["posQt50"]
             [int[]] $posQt75 = $posHash["posQt75"]
-            [int] $cumCol = $sVal
+            [int] $cumCol = $vField
             Write-Debug "$($cumCol)"
             [double] $Qt25 = ( [double](($lineAry[($posQt25[0])].split($iDelim))[$cumCol]) + [double](($lineAry[($posQt25[1])].split($iDelim))[$cumCol]) ) / 2
             [double] $Qt50 = ( [double](($lineAry[($posQt50[0])].split($iDelim))[$cumCol]) + [double](($lineAry[($posQt50[1])].split($iDelim))[$cumCol]) ) / 2
@@ -501,12 +736,13 @@ function percentile {
             return [double[]]@($Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR)
         }
 
-        function ApplyQuartile ( [string[]] $lineAry ){
-            $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $lineAry
+        function ApplyQuartile ( [string[]] $lineAry, [int] $vField, [double] $statSum ){
+            [double] $sum = 0
+            $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $lineAry $vField
             $lineAry | ForEach-Object {
                 [string] $readLine = $_
                 [string[]] $splitReadLine = $readLine -split $iDelim
-                [double] $calcVal = [double] ($splitReadLine[($sVal)])
+                [double] $calcVal = [double] ($splitReadLine[($vField)])
                 [double] $sum += $calcVal
                 [double] $cum = $sum / $statSum
                 $splitReadLine += $cum.ToString('#,0.0000')
@@ -542,14 +778,6 @@ function percentile {
                 Write-Output $writeLine
             }
         }
-        if ( ( $Rank ) -and ( -not $Key ) ) {
-            ApplyQuartile $sortedAry
-            return
-        }
-        if ( ( $Level5 ) -and ( -not $Key ) ) {
-            ApplyQuartile $sortedAry
-            return
-        }
 
         function OutObject {
             param (
@@ -566,104 +794,163 @@ function percentile {
                 [double] $Qt75,
                 [double] $IQR,
                 [double] $HiIQR,
-                [double] $LoIQR
+                [double] $LoIQR,
+                [int] $NaNCnt,
+                [int] $countDropNaN,
+                [int] $countFillNaN,
+                [int] $countReplaceNaN
             )
             $outObject = [ordered]@{}
-            $outObject["field"]  = $valField
-            if ( $keyStr -ne ''){
+            if ( $valField -ne '' ) {
+                $outObject["field"]  = $valField
+            }
+            if ( $keyStr -ne '' ){
                 $outObject["key"]  = $keyStr
             }
-            if ( $Cast -eq 'int'){
+            if ( $Cast -eq 'int' ){
                 $outObject["count"]   = [int64] $statCnt
                 $outObject["sum"]     = [int64] $statSum
-                $outObject["mean"]     = [int64] $statAvg
+                $outObject["mean"]    = [int64] $statAvg
                 $outObject["stdev"]   = [int64] $statStd
                 $outObject["min"]     = [int64] $statMin
                 $outObject["Qt25"]    = [int64] $Qt25
                 $outObject["Qt50"]    = [int64] $Qt50
                 $outObject["Qt75"]    = [int64] $Qt75
                 $outObject["max"]     = [int64] $statMax
-                $outObject["IQR"]     = [int64] $IQR
-                $outObject["HiIQR"]   = [int64] $HiIQR
-                $outObject["LoIQR"]   = [int64] $LoIQR
+                if ( $Detail ){
+                    $outObject["IQR"]        = [int64] $IQR
+                    $outObject["HiIQR"]      = [int64] $HiIQR
+                    $outObject["LoIQR"]      = [int64] $LoIQR
+                    $outObject["NaN"]        = [int] $NaNCnt
+                    $outObject["DropNaN"]    = [int] $countDropNaN
+                    $outObject["FillNaN"]    = [int] $countFillNaN
+                    $outObject["ReplaceNaN"] = [int] $countReplaceNaN
+                }
             } else {
                 $outObject["count"]   = [int]    $statCnt
                 $outObject["sum"]     = [double] $statSum
-                $outObject["mean"]     = [double] $statAvg
+                $outObject["mean"]    = [double] $statAvg
                 $outObject["stdev"]   = [double] $statStd
                 $outObject["min"]     = [double] $statMin
                 $outObject["Qt25"]    = [double] $Qt25
                 $outObject["Qt50"]    = [double] $Qt50
                 $outObject["Qt75"]    = [double] $Qt75
                 $outObject["max"]     = [double] $statMax
-                $outObject["IQR"]     = [double] $IQR
-                $outObject["HiIQR"]   = [double] $HiIQR
-                $outObject["LoIQR"]   = [double] $LoIQR
+                if ( $Detail ){
+                    $outObject["IQR"]        = [double] $IQR
+                    $outObject["HiIQR"]      = [double] $HiIQR
+                    $outObject["LoIQR"]      = [double] $LoIQR
+                    $outObject["NaN"]        = [int] $NaNCnt
+                    $outObject["DropNaN"]    = [int] $countDropNaN
+                    $outObject["FillNaN"]    = [int] $countFillNaN
+                    $outObject["ReplaceNaN"] = [int] $countReplaceNaN
+                }
             }
             return [pscustomobject]($outObject)
         }
-        if ( $Key ){
-            [string] $oldKey = ''
-            [string] $nowKey = ''
-            [int] $rowCounter = 0
-            $sortedAry | ForEach-Object {
-                $rowCounter++
-                [string] $readLine = $_
-                [string[]] $splitLine = $readLine -split $iDelim
-                [string] $nowKey = $splitLine[$sKey..$eKey] -join $oDelim
-                if ( $rowCounter -eq 1 ){
-                    $keyAryList = New-Object 'System.Collections.Generic.List[System.String]'
-                    $ValAryList = New-Object 'System.Collections.Generic.List[System.String]'
-                    $keyAryList.Add( [string]($readLine) )
-                    $valAryList.Add( [double]($splitLine[$sVal]) )
+
+        # main
+        [string[]] $tmpAry = $tempAryList.ToArray()
+        if ($tmpAry.Count -eq 0){
+            return
+        }
+        if ( ( $Rank ) -and ( -not $Key ) ) {
+            try {
+                [string[]] $sortedAry, $sumVal, $countNaN, $countDropNaN, $countFillNaN, $countReplaceNaN = getSortedAry $tmpAry $vFields[0]
+            } catch {
+                Write-Error $Error[0] -ErrorAction Stop
+            }
+            ApplyQuartile $sortedAry $vFields[0] $sumVal
+            return
+        }
+        if ( ( $Level5 ) -and ( -not $Key ) ) {
+            try {
+                [string[]] $sortedAry, $sumVal, $countNaN, $countDropNaN, $countFillNaN, $countReplaceNaN = getSortedAry $tmpAry $vFields[0]
+            } catch {
+                Write-Error $Error[0] -ErrorAction Stop
+            }
+            ApplyQuartile $sortedAry $vFields[0] $sumVal
+            return
+        }
+        foreach ( $vField in $vFields ) {
+            try {
+                [string[]] $sortedAry, $sumVal, $countNaN, $countDropNaN, $countFillNaN, $countReplaceNaN = getSortedAry $tmpAry $vField
+            } catch {
+                Write-Error $Error[0] -ErrorAction Stop
+            }
+            if ( $Key ){
+                [string] $oldKey = ''
+                [string] $nowKey = ''
+                [int] $rowCounter = 0
+                $sortedAry | ForEach-Object {
+                    $rowCounter++
+                    [string] $readLine = $_
+                    [string[]] $splitLine = $readLine -split $iDelim
+                    [string] $nowKey = $splitLine[$sKey..$eKey] -join $oDelim
+                    if ( $rowCounter -eq 1 ){
+                        $keyAryList = New-Object 'System.Collections.Generic.List[System.String]'
+                        $ValAryList = New-Object 'System.Collections.Generic.List[System.String]'
+                        $keyAryList.Add( [string]($readLine) )
+                        $valAryList.Add( [double]($splitLine[$vField]) )
+                        $oldKey = $nowKey
+                        return
+                    }
+                    if ( $nowKey -eq $oldKey){
+                        $keyAryList.Add( $readLine )
+                        $valAryList.Add( $splitLine[$vField] )
+                    } else {
+                        Write-Debug "$($keyAryList.ToArray())"
+                        $statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd = GetStat $valAryList.ToArray()
+                        $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $keyAryList.ToArray() $vField
+                        Write-Debug "statCnt: $statCnt"
+                        Write-Debug "statMax: $statMax"
+                        Write-Debug "statMin: $statMin"
+                        Write-Debug "statSum: $statSum"
+                        Write-Debug "statAvg: $statAvg"
+                        Write-Debug "statStd: $statStd"
+                        OutObject $headerAry[$vField] $oldKey $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR $countNaN $countDropNaN $countFillNaN $countReplaceNaN
+                        $keyAryList = New-Object 'System.Collections.Generic.List[System.String]'
+                        $ValAryList = New-Object 'System.Collections.Generic.List[System.String]'
+                        $keyAryList.Add( [string]($readLine) )
+                        $valAryList.Add( [double]($splitLine[$vField]) )
+                    }
                     $oldKey = $nowKey
-                    return
                 }
-                if ( $nowKey -eq $oldKey){
-                    $keyAryList.Add( $readLine )
-                    $valAryList.Add( $splitLine[$sVal] )
-                } else {
+                if ( $keyAryList.ToArray() -ne 0 ){
                     Write-Debug "$($keyAryList.ToArray())"
                     $statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd = GetStat $valAryList.ToArray()
-                    $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $keyAryList.ToArray()
+                    $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $keyAryList.ToArray() $vField
                     Write-Debug "statCnt: $statCnt"
                     Write-Debug "statMax: $statMax"
                     Write-Debug "statMin: $statMin"
                     Write-Debug "statSum: $statSum"
                     Write-Debug "statAvg: $statAvg"
                     Write-Debug "statStd: $statStd"
-                    OutObject $headerStr $oldKey $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
-                    $keyAryList = New-Object 'System.Collections.Generic.List[System.String]'
-                    $ValAryList = New-Object 'System.Collections.Generic.List[System.String]'
-                    $keyAryList.Add( [string]($readLine) )
-                    $valAryList.Add( [double]($splitLine[$sVal]) )
+                    OutObject $headerAry[$vField] $nowKey $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR $countNaN $countDropNaN $countFillNaN $countReplaceNaN
                 }
-                $oldKey = $nowKey
+                continue
             }
-            if ( $keyAryList.ToArray() -ne 0 ){
-                Write-Debug "$($keyAryList.ToArray())"
-                $statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd = GetStat $valAryList.ToArray()
-                $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $keyAryList.ToArray()
+            if ( $True ){
                 Write-Debug "statCnt: $statCnt"
                 Write-Debug "statMax: $statMax"
                 Write-Debug "statMin: $statMin"
                 Write-Debug "statSum: $statSum"
                 Write-Debug "statAvg: $statAvg"
                 Write-Debug "statStd: $statStd"
-                OutObject $headerStr $nowKey $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
+                try {
+                    [string[]] $sortedAry, $sumVal, $countNaN, $countDropNaN, $countFillNaN, $countReplaceNaN = getSortedAry $tmpAry $vField
+                } catch {
+                    Write-Error $Error[0] -ErrorAction Stop
+                }
+                $statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd = GetStat @(
+                    $sortedAry | ForEach-Object {
+                        ($_ -split $iDelim)[$vField]
+                    }
+                )
+                $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $sortedAry $vField
+                OutObject $headerAry[$vField] '' $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR $countNaN $countDropNaN $countFillNaN $countReplaceNaN
+                continue
             }
-            return
-        }
-        if ( $True ){
-            Write-Debug "statCnt: $statCnt"
-            Write-Debug "statMax: $statMax"
-            Write-Debug "statMin: $statMin"
-            Write-Debug "statSum: $statSum"
-            Write-Debug "statAvg: $statAvg"
-            Write-Debug "statStd: $statStd"
-            $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $sortedAry   
-            OutObject $headerStr '' $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
-            return
         }
     }
 }
