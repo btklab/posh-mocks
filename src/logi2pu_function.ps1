@@ -333,6 +333,9 @@ function logi2pu {
         [Parameter(Mandatory=$False)]
         [string]$FontNameWindowsDefault = "MS Gothic",
 
+        [Parameter(Mandatory=$False)]
+        [int]$FontSize,
+
         [Parameter( Mandatory=$False)]
         [ValidateSet(
             "none", "amiga", "aws-orange", "blueprint", "cerulean",
@@ -736,6 +739,9 @@ function logi2pu {
             if($FontName){
                 $readLineAryHeader += "skinparam DefaultFontName ""$FontName"""
             }
+        }
+        if ($FontSize){
+            $readLineAryHeader += "skinparam defaultFontSize $FontSize"
         }
         if (!$OffRoundCorner){
             $readLineAryHeader += "skinparam roundCorner 15"

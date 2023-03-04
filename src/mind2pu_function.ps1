@@ -185,6 +185,9 @@ function mind2pu {
         [string]$FontNameWindowsDefault = "Meiryo",
 
         [Parameter( Mandatory=$False)]
+        [int]$FontSize,
+
+        [Parameter( Mandatory=$False)]
         [ValidateSet(
             "none", "amiga", "aws-orange", "blueprint", "cerulean",
             "cerulean-outline", "crt-amber", "crt-green",
@@ -369,6 +372,9 @@ function mind2pu {
             if($FontName){
                 $readLineAryHeader += "skinparam DefaultFontName ""$FontName"""
             }
+        }
+        if ($FontSize){
+            $readLineAryHeader += "skinparam defaultFontSize $FontSize"
         }
         if ($Monochrome){
             $readLineAryHeader += "skinparam monochrome true"
