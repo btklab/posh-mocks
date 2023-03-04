@@ -6,7 +6,7 @@
     data without headers. 
 
     Usage:
-        cat data.txt | percentile [[-Val] <Int32>] [[-Key] <Int32[]>] [-Rank|-Level5] [-NoHeader] [-Cast <String>]
+        cat data.txt | percentile [[-Val] <Int32[]>] [[-Key] <Int32[]>] [-Rank|-Level5] [-NoHeader] [-Cast <String>]
 
     Empty records are skipped.
     Input expects space-separated data with headers.
@@ -190,7 +190,7 @@
     sepal_length   150 876.50 5.84  0.83 4.30 5.10 5.80 6.40 7.90
 
 
-    PS > 1..4 | %{ cat iris.csv | percentile -d "," $_ } | ft
+    PS > cat iris.csv | percentile -d "," 1,2,3,4 | ft
 
     field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
     -----        -----    --- ---- -----  --- ---- ---- ----  ---
@@ -199,8 +199,8 @@
     petal_length   150 563.70 3.76  1.77 1.00 1.55 4.35 5.10 6.90
     petal_width    150 179.90 1.20  0.76 0.10 0.30 1.30 1.80 2.50
 
-
-    PS > 1..4 | %{ cat iris.csv | percentile -d "," -k 5 $_ } | ft
+    
+    PS > cat iris.csv | percentile -d "," 1,2,3,4 -k 5 | ft
 
     field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
     -----        ---        -----    --- ---- -----  --- ---- ---- ----
@@ -230,7 +230,7 @@ function percentile {
     param (
         [Parameter( Mandatory=$False, Position=0 )]
         [Alias('v')]
-        [int] $Val,
+        [int[]] $Val,
         
         [Parameter( Mandatory=$False, Position=1 )]
         [Alias('k')]
@@ -296,12 +296,20 @@ function percentile {
         }
         # set number of key fields
         if ( $Key ){
+            if ( $Rank -or $Level5 ){
+                Write-Error "-Key option cannot be used with -Rank or -Level5 options." -ErrorAction Stop
+            }
             if ( $Key.Count -eq 1 ){
                 [int] $sKey = $Key[0] - 1
                 [int] $eKey = $Key[0] - 1
             } else {
                 [int] $sKey = $Key[0] - 1
                 [int] $eKey = $Key[1] - 1
+            }
+        }
+        if ( $Rank -or $Level5 ){
+            if ( $Val.Count -gt 1 ){
+                Write-Error "Specify a single value column when -Val using with the -Rank or -Level5 options." -ErrorAction Stop
             }
         }
         # private function
@@ -322,7 +330,6 @@ function percentile {
             }
         }
         # init variables
-        [bool] $getValFieldFlag = $False
         [int] $rowCounter = 0
         [string] $tempLine = ''
         $tempAryList = New-Object 'System.Collections.Generic.List[System.String]'
@@ -343,68 +350,53 @@ function percentile {
         }
         # add header
         if ( $rowCounter -eq 1 ){
+            # set value fields
+            if ( -not $Val ){
+                [int[]] $vFields = @($splitReadLine.Count - 1)
+            } else {
+                [int[]] $vFields = foreach ($v in $Val) { $v - 1 }
+            }
             if ( $NoHeader ){
+                # output header
+                [string[]] $headerAry = @()
+                for ( $i = 1; $i -le $splitReadLine.Count; $i++){
+                    $headerAry += "F$i"
+                }
                 if ( ($Rank -or $Level5) -and ( -not $Key) ) {
-                    # output header
-                    [string[]] $headerAry = @()
-                    for ( $i = 1; $i -le $splitReadLine.Count; $i++){
-                        $headerAry += "F$i"
-                    }
                     $headerAry += "percentile"
                     $headerAry += "label"
                     [string] $headerStr = $headerAry -join $oDelim
                     Write-Output $headerStr
-                } else {
-                    if ( $Val ){
-                        [string] $headerStr = "F" + [string]($Val)
-                    } else {
-                        [string] $headerStr = "F" + [string]($splitReadLine.Count)
-                    }
                 }
             } else {
-                # is header string?
-                [string] $headerStr = ''
-                if ( $Val ){
-                    [string] $headerStr = $splitReadLine[($Val - 1)]
-                } else {
-                    [string] $headerStr = $splitReadLine[($splitReadLine.Count - 1)]
-                }
-                if ( isDouble $headerStr ){
-                    Write-Error "Header: ""$headerStr"" should be string." -ErrorAction Stop
+                # set headers into array
+                [string[]] $headerAry = $splitReadLine
+                # test value field
+                foreach ( $v in $vFields ){
+                    [string] $vStr = $headerAry[$v]
+                    if ( isDouble $vStr ){
+                        Write-Error "Header: ""$vStr"" should be string." -ErrorAction Stop
+                    }
                 }
                 # output header
                 if ( ($Rank -or $Level5) -and ( -not $Key) ) {
                     # output header
-                    $splitReadLine += "percentile"
-                    $splitReadLine += "label"
-                    [string] $headerStr = $splitReadLine -join $oDelim
+                    $headerAry += "percentile"
+                    $headerAry += "label"
+                    [string] $headerStr = $headerAry -join $oDelim
                     Write-Output $headerStr
                 }
                 return
             }
         }
-        if ( -not $getValFieldFlag ){
-            ## set number of value field
-            if ( $Val ){
-                [int] $sVal = $Val - 1
-            } else {
-                [int] $sVal = $splitReadLine.Count - 1
-            }
-            [bool] $getValFieldFlag = $True
-        }
         try {
             $tempAryList.Add( [string] ($readLine) )
-            $tempValList.Add( [double] ($splitReadLine[$sVal]) )
         } catch {
             Write-Error $Error[0] -ErrorAction Stop
         }
     }
 
     end {
-        [double[]] $valAry =  $tempValList.ToArray()
-        if ($valAry.Count -eq 0){
-            return
-        }
         # statistics
         function GetStat ( [double[]] $valAry){
             $measureStat = $valAry | Measure-Object -AllStats
@@ -416,7 +408,6 @@ function percentile {
             [double] $statStd = $measureStat.StandardDeviation
             return [double[]]@($statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd)
         }
-        $statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd = GetStat $valAry
 
         # private function
         function getMedianPos ( [int] $cnt ){
@@ -435,17 +426,28 @@ function percentile {
         }
 
         # sort by key, value
-        Write-Debug "$sKey, $eKey, $sVal"
-        [double] $sum = 0
-        if ( $Key ){
-            [string[]] $sortedAry = $tempAryList.ToArray() `
-                | Sort-Object -Property `
-                    { [string](($_ -split $iDelim)[$sKey..$eKey] -join "") },
-                    { [double](($_ -split $iDelim)[$sVal]) }
-        } else {
-            [string[]] $sortedAry = $tempAryList.ToArray() `
-                | Sort-Object -Property `
-                    { [double](($_ -split $iDelim)[$sVal]) }
+        function getSortedAry ([string[]] $lineAry, [int] $vField) {
+            [double] $sum = 0
+            if ( $Key ){
+                [string[]] $sortedAry = $lineAry `
+                    | ForEach-Object {
+                        $sum += [double](($_ -split $iDelim)[$vField])
+                        Write-Output $_
+                        } `
+                    | Sort-Object -Property `
+                        { [string](($_ -split $iDelim)[$sKey..$eKey] -join "") },
+                        { [double](($_ -split $iDelim)[$vField]) }
+                return $sortedAry, $sum
+            } else {
+                [string[]] $sortedAry = $lineAry `
+                    | ForEach-Object {
+                        $sum += [double](($_ -split $iDelim)[$vField])
+                        Write-Output $_
+                        } `
+                    | Sort-Object -Property `
+                        { [double](($_ -split $iDelim)[$vField]) }
+                return $sortedAry, $sum
+            }
         }
 
         # calc quartile
@@ -467,7 +469,7 @@ function percentile {
                 [int[]] $posQt50 = @(1, 2)
                 [int[]] $posQt75 = @(3, 3)
             } else {
-                [int[]] $posQt50 = getMedianPos $statCnt
+                [int[]] $posQt50 = getMedianPos $lineAry.Count
                 [string[]] $tmpQt25 = $lineAry[0..($posQt50[0]-1)]
                 [string[]] $tmpQt75 = $lineAry[($posQt50[1]+1)..($lineAry.Count - 1)]
                 [int[]] $posQt25 = getMedianPos $tmpQt25.Count
@@ -484,13 +486,13 @@ function percentile {
             return $posHash
         }
 
-        function CalcQuartile ( [string[]] $lineAry){
+        function CalcQuartile ( [string[]] $lineAry, $vField){
             $posHash = @{}
             $posHash = CalcQuartilePos $lineAry
             [int[]] $posQt25 = $posHash["posQt25"]
             [int[]] $posQt50 = $posHash["posQt50"]
             [int[]] $posQt75 = $posHash["posQt75"]
-            [int] $cumCol = $sVal
+            [int] $cumCol = $vField
             Write-Debug "$($cumCol)"
             [double] $Qt25 = ( [double](($lineAry[($posQt25[0])].split($iDelim))[$cumCol]) + [double](($lineAry[($posQt25[1])].split($iDelim))[$cumCol]) ) / 2
             [double] $Qt50 = ( [double](($lineAry[($posQt50[0])].split($iDelim))[$cumCol]) + [double](($lineAry[($posQt50[1])].split($iDelim))[$cumCol]) ) / 2
@@ -501,12 +503,13 @@ function percentile {
             return [double[]]@($Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR)
         }
 
-        function ApplyQuartile ( [string[]] $lineAry ){
-            $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $lineAry
+        function ApplyQuartile ( [string[]] $lineAry, [int] $vField, [double] $statSum ){
+            [double] $sum = 0
+            $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $lineAry $vField
             $lineAry | ForEach-Object {
                 [string] $readLine = $_
                 [string[]] $splitReadLine = $readLine -split $iDelim
-                [double] $calcVal = [double] ($splitReadLine[($sVal)])
+                [double] $calcVal = [double] ($splitReadLine[($vField)])
                 [double] $sum += $calcVal
                 [double] $cum = $sum / $statSum
                 $splitReadLine += $cum.ToString('#,0.0000')
@@ -542,14 +545,6 @@ function percentile {
                 Write-Output $writeLine
             }
         }
-        if ( ( $Rank ) -and ( -not $Key ) ) {
-            ApplyQuartile $sortedAry
-            return
-        }
-        if ( ( $Level5 ) -and ( -not $Key ) ) {
-            ApplyQuartile $sortedAry
-            return
-        }
 
         function OutObject {
             param (
@@ -569,11 +564,13 @@ function percentile {
                 [double] $LoIQR
             )
             $outObject = [ordered]@{}
-            $outObject["field"]  = $valField
-            if ( $keyStr -ne ''){
+            if ( $valField -ne '' ) {
+                $outObject["field"]  = $valField
+            }
+            if ( $keyStr -ne '' ){
                 $outObject["key"]  = $keyStr
             }
-            if ( $Cast -eq 'int'){
+            if ( $Cast -eq 'int' ){
                 $outObject["count"]   = [int64] $statCnt
                 $outObject["sum"]     = [int64] $statSum
                 $outObject["mean"]     = [int64] $statAvg
@@ -602,68 +599,109 @@ function percentile {
             }
             return [pscustomobject]($outObject)
         }
-        if ( $Key ){
-            [string] $oldKey = ''
-            [string] $nowKey = ''
-            [int] $rowCounter = 0
-            $sortedAry | ForEach-Object {
-                $rowCounter++
-                [string] $readLine = $_
-                [string[]] $splitLine = $readLine -split $iDelim
-                [string] $nowKey = $splitLine[$sKey..$eKey] -join $oDelim
-                if ( $rowCounter -eq 1 ){
-                    $keyAryList = New-Object 'System.Collections.Generic.List[System.String]'
-                    $ValAryList = New-Object 'System.Collections.Generic.List[System.String]'
-                    $keyAryList.Add( [string]($readLine) )
-                    $valAryList.Add( [double]($splitLine[$sVal]) )
+
+        # main
+        [string[]] $tmpAry = $tempAryList.ToArray()
+        if ($tmpAry.Count -eq 0){
+            return
+        }
+        if ( ( $Rank ) -and ( -not $Key ) ) {
+            try {
+                [string[]] $sortedAry, $sum = getSortedAry $tmpAry $vFields[0]
+            } catch {
+                Write-Error $Error[0] -ErrorAction Stop
+            }
+            ApplyQuartile $sortedAry $vFields[0] $sum
+            return
+        }
+        if ( ( $Level5 ) -and ( -not $Key ) ) {
+            try {
+                [string[]] $sortedAry, $sum = getSortedAry $tmpAry $vFields[0]
+            } catch {
+                Write-Error $Error[0] -ErrorAction Stop
+            }
+            ApplyQuartile $sortedAry $vFields[0] $sum
+            return
+        }
+        foreach ( $vField in $vFields ) {
+            try {
+                [string[]] $sortedAry, $sum = getSortedAry $tmpAry $vField
+            } catch {
+                Write-Error $Error[0] -ErrorAction Stop
+            }
+            if ( $Key ){
+                [string] $oldKey = ''
+                [string] $nowKey = ''
+                [int] $rowCounter = 0
+                $sortedAry | ForEach-Object {
+                    $rowCounter++
+                    [string] $readLine = $_
+                    [string[]] $splitLine = $readLine -split $iDelim
+                    [string] $nowKey = $splitLine[$sKey..$eKey] -join $oDelim
+                    if ( $rowCounter -eq 1 ){
+                        $keyAryList = New-Object 'System.Collections.Generic.List[System.String]'
+                        $ValAryList = New-Object 'System.Collections.Generic.List[System.String]'
+                        $keyAryList.Add( [string]($readLine) )
+                        $valAryList.Add( [double]($splitLine[$vField]) )
+                        $oldKey = $nowKey
+                        return
+                    }
+                    if ( $nowKey -eq $oldKey){
+                        $keyAryList.Add( $readLine )
+                        $valAryList.Add( $splitLine[$vField] )
+                    } else {
+                        Write-Debug "$($keyAryList.ToArray())"
+                        $statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd = GetStat $valAryList.ToArray()
+                        $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $keyAryList.ToArray() $vField
+                        Write-Debug "statCnt: $statCnt"
+                        Write-Debug "statMax: $statMax"
+                        Write-Debug "statMin: $statMin"
+                        Write-Debug "statSum: $statSum"
+                        Write-Debug "statAvg: $statAvg"
+                        Write-Debug "statStd: $statStd"
+                        OutObject $headerAry[$vField] $oldKey $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
+                        $keyAryList = New-Object 'System.Collections.Generic.List[System.String]'
+                        $ValAryList = New-Object 'System.Collections.Generic.List[System.String]'
+                        $keyAryList.Add( [string]($readLine) )
+                        $valAryList.Add( [double]($splitLine[$vField]) )
+                    }
                     $oldKey = $nowKey
-                    return
                 }
-                if ( $nowKey -eq $oldKey){
-                    $keyAryList.Add( $readLine )
-                    $valAryList.Add( $splitLine[$sVal] )
-                } else {
+                if ( $keyAryList.ToArray() -ne 0 ){
                     Write-Debug "$($keyAryList.ToArray())"
                     $statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd = GetStat $valAryList.ToArray()
-                    $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $keyAryList.ToArray()
+                    $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $keyAryList.ToArray() $vField
                     Write-Debug "statCnt: $statCnt"
                     Write-Debug "statMax: $statMax"
                     Write-Debug "statMin: $statMin"
                     Write-Debug "statSum: $statSum"
                     Write-Debug "statAvg: $statAvg"
                     Write-Debug "statStd: $statStd"
-                    OutObject $headerStr $oldKey $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
-                    $keyAryList = New-Object 'System.Collections.Generic.List[System.String]'
-                    $ValAryList = New-Object 'System.Collections.Generic.List[System.String]'
-                    $keyAryList.Add( [string]($readLine) )
-                    $valAryList.Add( [double]($splitLine[$sVal]) )
+                    OutObject $headerAry[$vField] $nowKey $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
                 }
-                $oldKey = $nowKey
+                continue
             }
-            if ( $keyAryList.ToArray() -ne 0 ){
-                Write-Debug "$($keyAryList.ToArray())"
-                $statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd = GetStat $valAryList.ToArray()
-                $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $keyAryList.ToArray()
+            if ( $True ){
                 Write-Debug "statCnt: $statCnt"
                 Write-Debug "statMax: $statMax"
                 Write-Debug "statMin: $statMin"
                 Write-Debug "statSum: $statSum"
                 Write-Debug "statAvg: $statAvg"
                 Write-Debug "statStd: $statStd"
-                OutObject $headerStr $nowKey $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
+                try {
+                    [string[]] $sortedAry, $sum = getSortedAry $tmpAry $vField
+                } catch {
+                    Write-Error $Error[0] -ErrorAction Stop
+                }
+                $statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd = GetStat @(
+                    $tmpAry | ForEach-Object {
+                        ($_ -split $iDelim)[$vField]
+                    }
+                )
+                $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $sortedAry $vField
+                OutObject $headerAry[$vField] '' $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
+                continue
             }
-            return
-        }
-        if ( $True ){
-            Write-Debug "statCnt: $statCnt"
-            Write-Debug "statMax: $statMax"
-            Write-Debug "statMin: $statMin"
-            Write-Debug "statSum: $statSum"
-            Write-Debug "statAvg: $statAvg"
-            Write-Debug "statStd: $statStd"
-            $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $sortedAry   
-            OutObject $headerStr '' $statCnt $statMax $statMin $statSum $statAvg $statStd $Qt25 $Qt50 $Qt75 $IQR $HiIQR $LoIQR
-            return
         }
     }
 }
