@@ -68,9 +68,9 @@ function tarr {
         [int] $sVal = $eKey + 1
         [int] $eVal = $keyValAry.Count - 1
         [string] $key = $keyValAry[($sKey..$eKey)] -Join "$Delimiter"
-		foreach ($val in $keyValAry[($sVal..$eVal)]){
-			[string] $writeLine = $key + "$Delimiter" + $val
-			Write-Output $writeLine
-		}
+        foreach ($val in $keyValAry[($sVal..$eVal)]){
+            [string] $writeLine = $key + "$Delimiter" + $val
+            Write-Output $writeLine
+        }
     }
 }
