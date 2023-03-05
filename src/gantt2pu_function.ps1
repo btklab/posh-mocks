@@ -463,6 +463,9 @@ function gantt2pu {
         [string]$DefaultFontName = "MS Gothic",
 
         [Parameter(Mandatory=$False)]
+        [int]$FontSize,
+
+        [Parameter(Mandatory=$False)]
         [ValidateSet(
             "none", "amiga", "aws-orange", "blueprint", "cerulean",
             "cerulean-outline", "crt-amber", "crt-green",
@@ -1096,7 +1099,9 @@ function gantt2pu {
         if ($HandWritten) {
             Write-Output "skinparam handwritten true" }
         if ($DefaultFontName){
-            Write-Output "skinparam DefaultFontName ""$DefaultFontName""" }
+            Write-Output "skinparam defaultFontName ""$DefaultFontName""" }
+        if ($FontSize){
+            Write-Output "skinparam defaultFontSize $FontSize" }
         if ($Theme) {
             Write-Output "!theme $Theme" }
         Write-Output ""

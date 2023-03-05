@@ -218,6 +218,9 @@ function seq2pu {
         [string] $FontNameWindowsDefault = "Meiryo",
 
         [Parameter( Mandatory=$False)]
+        [int] $FontSize,
+
+        [Parameter( Mandatory=$False)]
         [ValidateSet(
             "none", "amiga", "aws-orange", "blueprint", "cerulean",
             "cerulean-outline", "crt-amber", "crt-green",
@@ -468,15 +471,18 @@ function seq2pu {
         if($IsWindows){
             ## case  windows
             if($FontName){
-                $readLineAryHeader += "skinparam DefaultFontName ""$FontName"""
+                $readLineAryHeader += "skinparam defaultFontName ""$FontName"""
             } else {
-                $readLineAryHeader += "skinparam DefaultFontName ""$FontNameWindowsDefault"""
+                $readLineAryHeader += "skinparam defaultFontName ""$FontNameWindowsDefault"""
             }
         } else {
             ## case linux and mac
             if($FontName){
-                $readLineAryHeader += "skinparam DefaultFontName ""$FontName"""
+                $readLineAryHeader += "skinparam defaultFontName ""$FontName"""
             }
+        }
+        if ($FontSize){
+            $readLineAryHeader += "skinparam defaultFontSize $FontSize"
         }
         if ($Monochrome){
             $readLineAryHeader += "skinparam monochrome true"

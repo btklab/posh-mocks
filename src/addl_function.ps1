@@ -7,12 +7,12 @@
         https://github.com/greymd/egzact
 
 .EXAMPLE
-PS C:\>Write-Output "A B C D" | addl '0 '
-0 A B C D
+    "A B C D" | addl '0 '
+    0 A B C D
 
 .EXAMPLE
-PS C:\>Write-Output "A B C D" | addl '0' -Delimiter ' '
-0 A B C D E
+    "A B C D" | addl '0' -d ' '
+    0 A B C D E
 
 .LINK
     addt, addb, addl, addr
@@ -33,13 +33,11 @@ function addl {
     [string[]] $Body
   )
   begin {
-	  [string] $writeLine = ''
+    [string] $writeLine = ''
   }
-
   process {
-	  [string] $tmpLine = [string] $_
-	  [string] $writeLine = "$AddText" + "$Delimiter" + "$tmpLine"
-	  Write-Output $writeLine
+    [string] $tmpLine = [string] $_
+    [string] $writeLine = "$AddText" + "$Delimiter" + "$tmpLine"
+    Write-Output $writeLine
   }
-
 }

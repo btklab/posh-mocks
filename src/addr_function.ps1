@@ -7,19 +7,18 @@
         https://github.com/greymd/egzact
 
 .EXAMPLE
-"A B C D" | addr ' E'
-A B C D E
+    "A B C D" | addr ' E'
+    A B C D E
 
 .EXAMPLE
-"A B C D" | addr 'E' -d ' '
-A B C D E
+    "A B C D" | addr 'E' -d ' '
+    A B C D E
 
 .LINK
     addt, addb, addl, addr
 
 #>
 function addr {
-
   Param (
     [Parameter(Position=0, Mandatory=$True)]
     [string] $AddText,
@@ -33,11 +32,11 @@ function addr {
     [string[]] $Body
   )
   begin {
-	  [string] $writeLine = ''
+    [string] $writeLine = ''
   }
   process {
-	  [string] $tmpLine = [string] $_
-	  [string] $writeLine = [string]$tmpLine + "$Delimiter" + "$AddText"
-	  Write-Output $writeLine
+    [string] $tmpLine = [string] $_
+    [string] $writeLine = [string]$tmpLine + "$Delimiter" + "$AddText"
+    Write-Output $writeLine
   }
 }

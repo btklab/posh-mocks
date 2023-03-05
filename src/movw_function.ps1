@@ -25,19 +25,19 @@
 
     Corrective action is triggered by exceeding either (c) or (M):
 
-		Limit that will start corrective measures when
-		this value deviates at least once in the window
+        Limit that will start corrective measures when
+        this value deviates at least once in the window
 
-	        (M) Max limit
+            (M) Max limit
 
-		Levels that will start corrective measures when
-		"-AcceptableLevel" deviations occur more than
-		"-MaxFrequency" times in "-WindowSize" range
+        Levels that will start corrective measures when
+        "-AcceptableLevel" deviations occur more than
+        "-MaxFrequency" times in "-WindowSize" range
 
-	        (m) AcceptableLevel: a marginally acceptable level
-	        (n) WindowSize: moving window size
-	        (c) Maximum frequency (c) of all samples taken
-	            during the specified period (n)
+            (m) AcceptableLevel: a marginally acceptable level
+            (n) WindowSize: moving window size
+            (c) Maximum frequency (c) of all samples taken
+                during the specified period (n)
 
 
     The evaluation result is output in the "Res" field.

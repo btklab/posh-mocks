@@ -9,15 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Fixed [README.md], [logi2dot], [logi2pu], [percentile] typo
 - Breaking Change [ycalc], [percentile] change `-SkipHeader` option to `NoHeader` option. Input expects space-separated data with headers.
-
+- Fixed [README.md], [logi2dot], [logi2pu], [percentile] typo
+- Fixed [addb], [addl], [addr], [movw], [tarr] replace tab to 4-spaces.
 
 ### Added
 
 - Added [ysort], [ycalc], [fval] functions.
 - Added [wrap] function.
 - Added [percentile] supports multiple value fields. Missing/Empty value detection/removal/replacement.
+- Added [flow2pu] [gantt2pu] [logi2pu] [mind2pu] [seq2pu] `-FontSize` option.
 
 
 ## [2.0.0]
