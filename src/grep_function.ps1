@@ -301,7 +301,9 @@ function grep {
     }
     # main
     if ($Path){
-        if ($FileNameOnly){
+        if ($AllMatches){
+            (Select-String @splatting).Matches.Value; return
+        } elseif ($FileNameOnly){
             (Select-String @splatting).FileName | Sort-Object -Stable -Unique; return
         } elseif ($FileNameAndLineNumber){
             Select-String @splatting | Out-String -Stream  ; return
