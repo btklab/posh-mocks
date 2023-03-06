@@ -213,7 +213,7 @@
 
 .EXAMPLE
     cat input.txt
-    # logick tree
+    # logic tree
 
     Goal Making a profit for the company [ReqA, ReqB]
 
@@ -230,7 +230,7 @@
     PS > cat input.txt | logi2pu > a.pu; pu2java a.pu svg | ii
         @startuml
 
-        title "logick tree"
+        title "logic tree"
         skinparam DefaultFontName "MS Gothic"
         skinparam roundCorner 15
         skinparam shadowing false

@@ -2700,7 +2700,7 @@ F1 F2 percentile label
  b  5     0.7500   Qt4
  a  5     0.8333   Qt4
  c  5     0.9167   Qt4
- d  5     1.0000   Qt
+ d  5     1.0000   Qt4
 
 ## -Level5 means ranking by 20% cumurative ratio
 "a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Level5 -Rank -NoHeader | keta
@@ -3237,12 +3237,12 @@ $dat = @("3 2 2 1 12 22", "123 75 12 12 22 01 87 26", "98 21 21 67 59 1")
 $dat
 3 2 2 1 12 22
 123 75 12 12 22 01 87 26
-98 21 21 67 59 198 21 67 59 1
+98 21 21 67 59 1
 
 $dat | ysort
-1 2 3 12 22
-01 12 22 26 75 87 123
-1 21 59 67 98
+1 2 2 3 12 22
+01 12 12 22 26 75 87 123
+1 21 21 59 67 98
 
 $dat | ysort -Unique
 1 2 3 12 22
@@ -4150,7 +4150,7 @@ Input2:
 
 ```powershell
 cat input.txt
-# logick tree
+# logic tree
 
 Goal Making a profit for the company  [ReqA, ReqB]
 
@@ -4178,7 +4178,7 @@ strict digraph logictree {
   charset = "UTF-8";
   compound = true;
   fontname = "MS Gothic";
-  label = "logick tree";
+  label = "logic tree";
   rankdir = "BT";
   newrank = true;
  ];
@@ -4373,7 +4373,7 @@ Input2:
 
 ```powershell
 cat input.txt
-# logick tree
+# logic tree
 
 Goal Making a profit for the company [ReqA, ReqB]
 
@@ -4394,7 +4394,7 @@ Output2:
 cat input.txt | logi2pu -BottomToTopDirection -Kinsoku 10 > a.pu; pu2java a.pu png | ii
 @startuml
 
-title "logick tree"
+title "logic tree"
 skinparam DefaultFontName "MS Gothic"
 skinparam roundCorner 15
 skinparam shadowing false

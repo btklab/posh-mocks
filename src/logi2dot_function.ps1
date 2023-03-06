@@ -230,7 +230,7 @@
 
 .EXAMPLE
     cat input.txt
-    # logick tree
+    # logic tree
 
     Goal Making a profit for the company  [ReqA, ReqB]
 
