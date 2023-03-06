@@ -15,12 +15,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - None
 
+## [2.1.1]
+
+### Changed
+
+- Changed [i] behavior when non-existent file is specified.
+- Fixed [README.md] examples.
+
+
 ## [2.1.0]
 
 ### Changed
 
 - Breaking Change [ycalc], [percentile] change `-SkipHeader` option to `NoHeader` option. Input expects space-separated data with headers.
-- Fixed [README.md], [logi2dot], [logi2pu], [percentile] typo
+- Fixed [README.md], [logi2dot], [logi2pu], [percentile] typo.
 - Fixed [addb], [addl], [addr], [movw], [tarr] replace tab to 4-spaces.
 
 ### Added
@@ -191,7 +199,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [fval]: src/fval_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/2.1.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/2.1.1..HEAD
+[2.1.1]: https://github.com/btklab/posh-mocks/releases/tag/2.1.1
 [2.1.0]: https://github.com/btklab/posh-mocks/releases/tag/2.1.0
 [2.0.0]: https://github.com/btklab/posh-mocks/releases/tag/2.0.0
 [1.1.0]: https://github.com/btklab/posh-mocks/releases/tag/1.1.0

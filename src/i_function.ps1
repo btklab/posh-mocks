@@ -166,9 +166,6 @@ function i {
         # is file exist?
         if ( -not ( Test-Path -LiteralPath $File ) ){
             if ( $Edit ){
-                editFile $File
-                return
-            } else {
                 # about Read-Host
                 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/read-host
                 [string] $resp = Read-Host "$File is not exists. Create and Edit? (y/n)"
@@ -177,6 +174,8 @@ function i {
                 }
                 return
             }
+            Invoke-Item -LiteralPath $File
+            return
         }
         # edit file mode
         if ( $Edit ){
