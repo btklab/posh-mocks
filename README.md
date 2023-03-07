@@ -47,13 +47,13 @@ Inspired by:
 - [ImageMagick](https://imagemagick.org/index.php)
     - Commands: `convert`, `magick convert`(on windows)
 - [Water.css](https://watercss.kognise.dev/)
-    - GitHub: <https://github.com/kognise/water.css)https://github.com/kognise/water.css>
+    - GitHub: <https://github.com/kognise/water.css>
     - License: The MIT License (MIT) Copyright © 2019 Kognise
 
 
 
 
-コード群にまとまりはないが、事務職（非技術職）な筆者の毎日の仕事（おもに文字列処理）を、より素早くさばくための道具としてのコマンドセットを想定している（毎日使用する関数は5個に満たないが）。
+コード群にまとまりはない。事務職（非技術職）な筆者の毎日の仕事（おもに文字列処理）を、より素早くさばくための道具としてのコマンドセットを想定している。
 
 基本的に入力としてUTF-8で半角スペース区切り、行指向の文字列データ（テキストオブジェクト）を期待する、主にパターンマッチング処理を行うためのフィルタ群。少しながら、オブジェクトのパイプライン入力を受け付けたり、オブジェクトとして出力する「PowerShellのコマンドレット的といえるもの」も、ある。Windows上でしか動かない関数も、ある。
 
@@ -5157,7 +5157,7 @@ PS > watercss -Light
     - `watercss -CDN`
     - `watercss -CDNVersion 2`
 - Inspired by [Water.css](https://watercss.kognise.dev/)
-    - GitHub: <https://github.com/kognise/water.css)https://github.com/kognise/water.css>
+    - GitHub: <https://github.com/kognise/water.css>
     - License: The MIT License (MIT) Copyright © 2019 Kognise
 
 
