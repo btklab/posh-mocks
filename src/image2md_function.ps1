@@ -117,16 +117,20 @@ function image2md {
             return $False
         }
         function ReplaceLine ([string]$line){
-            [string] $fname = $line -replace '^([^ ]+)\.(png|jpe?g|bmp|gif)(.*)$','$1'
-            [string] $fext  = $line -replace '^([^ ]+)\.(png|jpe?g|bmp|gif)(.*)$','$2'
-            [string] $falt  = $line -replace '^([^ ]+)\.(png|jpe?g|bmp|gif)(.*)$','$3'
+            if ( $line -notmatch ' '){
+                [string] $fname = $line
+                [string] $falt  = ''
+            } else {
+                [string] $fname = $line -replace '^([^ ]+) (.*)$','$1'
+                [string] $falt  = $line -replace '^([^ ]+) (.*)$','$2'
+            }
             $fname = $fname.trim()
             $falt  = $falt.trim()
             if($Hugo){
                 if ($Option){
-                    [string] $md = "{{< img src=""$fname.$fext"" caption=""$falt"" $Option >}}"
+                    [string] $md = "{{< img src=""$fname"" caption=""$falt"" $Option >}}"
                 } else {
-                    [string] $md = "{{< img src=""$fname.$fext"" caption=""$falt"" >}}"
+                    [string] $md = "{{< img src=""$fname"" caption=""$falt"" >}}"
                 }
             } elseif ($Html){
                 if (($Markdownify) -and ($falt -ne '')){
@@ -139,12 +143,12 @@ function image2md {
                         | ForEach-Object {$_ -replace '<p>|</p>',''}
                 }
                 if ($Option){
-                    [string] $md = "<img src=""$fname.$fext"" alt=""$falt"" $Option />"
+                    [string] $md = "<img src=""$fname"" alt=""$falt"" $Option />"
                 } else {
-                    [string] $md = "<img src=""$fname.$fext"" alt=""$falt"" />"
+                    [string] $md = "<img src=""$fname"" alt=""$falt"" />"
                 }
             } else {
-                [string] $md = "![$falt]($fname.$fext)"
+                [string] $md = "![$falt]($fname)"
                 if ($Option){$md = $md + "{$Option}"}
             }
             return $md
