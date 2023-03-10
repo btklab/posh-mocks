@@ -9,11 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Enable [grep] `-AllMatches` when `-Pat`h specified.
+- None
 
 ### Added
 
 - None
+
+## [2.1.3]
+
+### Changed
+
+- Fix [image2md] parse imagefile regardless of extension.
+
+## [2.1.2]
+
+### Changed
+
+- Enable [grep] `-AllMatches` when `-Path` specified.
+- Fix [image2md] parse imagefile regardless of extension.
+
 
 ## [2.1.1]
 
@@ -199,7 +213,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [fval]: src/fval_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/2.1.1..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/2.1.3..HEAD
+[2.1.3]: https://github.com/btklab/posh-mocks/releases/tag/2.1.3
+[2.1.2]: https://github.com/btklab/posh-mocks/releases/tag/2.1.2
 [2.1.1]: https://github.com/btklab/posh-mocks/releases/tag/2.1.1
 [2.1.0]: https://github.com/btklab/posh-mocks/releases/tag/2.1.0
 [2.0.0]: https://github.com/btklab/posh-mocks/releases/tag/2.0.0
