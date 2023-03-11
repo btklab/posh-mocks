@@ -122,6 +122,7 @@ function conv {
     param (
         [Parameter( Mandatory=$True, Position=0 )]
         [Alias('n')]
+        [ValidateScript({ $_ -gt 0 })]
         [int] $Num,
         
         [Parameter( Mandatory=$False )]
@@ -201,15 +202,21 @@ function conv {
             }
             return
         }
-        [string[]] $splitReadLine = $readLine -split $iDelim
         if ( $emptyDelimiterFlag ){
-            # delete first and last element in $splitReadLine
-            [string[]] $splitReadLine = $splitReadLine[1..($splitReadLine.Count - 2)]
+            [string[]] $splitReadLine = $readLine.ToCharArray()
+        } else {
+            [string[]] $splitReadLine = $readLine.Split( $iDelim )
         }
         [int] $sField = 0
         [int] $eField = $splitReadLine.Count - $Num
-        if ( $eField -lt 0 ) {
-            [int] $eField = 0
+        if ( ($eField -lt 1) ) {
+            [string[]] $writeLineAry = @()
+            $writeLineAry += [string] $rowCounter
+            $writeLineAry += "1"
+            $writeLineAry += $readLine
+            [string] $writeLine = $writeLineAry -join $NumberDelimiter
+            Write-Output $writeLine
+            return
         }
         # output conv
         for ( $i=0; $i -le $eField; $i++ ) {

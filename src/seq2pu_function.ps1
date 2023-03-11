@@ -401,7 +401,7 @@ function seq2pu {
             ## target row pattern:
             ## - 1. Alice -> Bob : order
             [string] $contents  = $rdLine -replace '^(\s*)([-+*]+|[0-9]+\.)(..*)$','$3'
-            [string[]] $splitContents = $contents -split ':', 2
+            [string[]] $splitContents = $contents -split ':', 2, "simplematch"
             if ( $splitContents.Count -ne 2 ){
                 Write-Error "Missing separator "":"" in $rdLine" -ErrorAction Stop
             }

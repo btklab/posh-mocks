@@ -103,13 +103,21 @@ function retu {
     process
     {
         [string] $readLine = $_
-        [string[]] $splitLine = $readLine -Split "$Delimiter"
+        if ( $Delimiter -eq '' ){
+            [string[]] $splitLine = $readLine.ToCharArray()
+        } else {
+            [string[]] $splitLine = $readLine.Split( $Delimiter )
+        }
         if($Count){
             [int] $cnt = $splitLine.Count
             if($readLine -match '^$'){
                 $cnt = 0
             }
-            [string] $writeLine = [string] $cnt + [string] $Delimiter + [string] $readLine
+            if ( $Delimiter -eq '' ){
+                [string] $writeLine = [string] $cnt + " " + [string] $readLine
+            } else {
+                [string] $writeLine = [string] $cnt + [string] $Delimiter + [string] $readLine
+            }
             Write-Output $writeLine
         }else{
             $rowCounter++

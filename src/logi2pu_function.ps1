@@ -551,7 +551,7 @@ function logi2pu {
             } elseif ($dPrec -match ','){
                 ## if the preceding task is separated by commas,
                 ## the process branches ito multiple.
-                [string[]] $splitId = $dPrec -Split ','
+                [string[]] $splitId = $dPrec.Split(',')
                 for($j = 0; $j -lt $splitId.Count; $j++){
                     [string] $from = [string]($splitId[$j])
                     [string] $to   = $dId
@@ -569,7 +569,7 @@ function logi2pu {
     }
     process{
         $lineCounter++
-        $rdLine = [string]$_
+        [string] $rdLine = [string] $_
         if (($lineCounter -eq 1) -and ($rdLine -match '^# ')) {
             ## treat first line as title
             $fTitle = $rdLine -replace '^# ', ''
@@ -658,14 +658,14 @@ function logi2pu {
                     $nodeCounter++
                     ## key is the leftmost column,
                     ## the others are the value
-                    $splitLine = $rdLine -split ' '
+                    $splitLine = $rdLine.Split(' ')
                     if ($splitLine.Count -lt 2){
                         Write-Error "Insufficient columns: $rdLine" -ErrorAction Stop
                     }
                     $readLineAryNode += parseNode $rdLine
                     ## Parse edge
                     $parsedEdgeStr = parseEdge $rdLine
-                    $splitEdgeAry = $parsedEdgeStr -split "$edgeJoinDelim"
+                    $splitEdgeAry = $parsedEdgeStr.Split( $edgeJoinDelim )
                     for ($i = 0; $i -lt $splitEdgeAry.Count; $i++){
                         $tmpStr = [string]($splitEdgeAry[$i])
                         if ($tmpStr -ne ''){

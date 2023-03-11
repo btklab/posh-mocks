@@ -99,10 +99,10 @@ function flat {
             # flatten input
             $tempAryList.Add($line)
         } else {
-            [string[]] $splitLine = $line -split $iDelim
-            if ($emptyDelimiterFlag){
-                # delete first and last element in $splitLine
-                $splitLine = $splitLine[1..($splitLine.Count - 2)]
+            if ( $emptyDelimiterFlag ){
+                [string[]] $splitLine = $line.ToCharArray()
+            } else {
+                [string[]] $splitLine = $line.Split( $iDelim )
             }
             foreach ($s in $splitLine){
                 $cnt++

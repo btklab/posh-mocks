@@ -241,6 +241,7 @@ function decil {
         [int] $Val = 2,
 
         [Parameter(Mandatory=$False, HelpMessage="delimiter")]
+        [Alias('fs')]
         [string] $Delimiter = ' ',
 
         [Parameter(Mandatory=$False, HelpMessage="Rank")]
@@ -290,7 +291,11 @@ function decil {
     {
         $rowCounter++
         [string] $line = $_
-        [string[]] $splitLine = $line -Split "$Delimiter"
+        if ( $Delimiter -eq '' ){
+            [string[]] $splitLine = $line.ToCharArray()
+        } else {
+            [string[]] $splitLine = $line.Split( $Delimiter )
+        }
         
         ## tests ##################################
         ### raise error if detect empty row
@@ -402,7 +407,7 @@ function decil {
                 | ForEach-Object {
                     $rowCounter++
                     $endRowCounter++
-                    $splitLine = $_ -Split "$Delimiter"
+                    $splitLine = "$_".Split( $Delimiter )
                     
                     ## Add the number of rows by the remainders
                     if($decilCounter -le $remainder){

@@ -12,19 +12,19 @@
 
 
 .EXAMPLE
-"1 2 3","4 5 6","7 8 9" | delf 1 2
-3
-6
-9
-
-# delete field 1 and 2
+    # delete field 1 and 2
+    "1 2 3","4 5 6","7 8 9" | delf 1 2
+    3
+    6
+    9
+    
 
 .EXAMPLE
-"1 2 3 4 5","6 7 8 9 10" | delf 1 NF-1
-2 3 5
-7 8 10
-
-# delete field 1 and 2nd field from right
+    # delete field 1 and 2nd field from right
+    "1 2 3 4 5","6 7 8 9 10" | delf 1 NF-1
+    2 3 5
+    7 8 10
+    
 
 #>
 function delf {
@@ -34,6 +34,7 @@ function delf {
         # init var
         [string] $writeLine  = ''
         [string] $getLineExp = ''
+        [string] $Delimiter = ' '
 
         # test args
         if($args.Count -lt 1){
@@ -55,7 +56,11 @@ function delf {
     process
     {
         [string] $readLine = [string] $_
-        [string[]] $splitLine = $readLine -Split ' '
+        if ( $Delimiter -eq '' ){
+            [string[]] $splitLine = $readLine.ToCharArray()
+        } else {
+            [string[]] $splitLine = $readLine.Split( $Delimiter )
+        }
         for($i=0;$i -lt $splitLine.Count;$i++){
             $ifExp = Invoke-Expression "$getLineExp"
             if($ifExp){$writeLine += ' ' + [string]$splitLine[$i]}

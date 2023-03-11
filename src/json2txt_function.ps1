@@ -167,7 +167,7 @@ function json2txt {
         #Write-Debug $exp
         if ($exp -match 'PS'){
             [string[]] $expAry = @()
-            $splitExp = $exp -split '.'
+            $splitExp = $exp.Split('.')
             foreach ($i in $splitExp){
                 if ($i -match 'PS'){
                     $expAry += """$i"""

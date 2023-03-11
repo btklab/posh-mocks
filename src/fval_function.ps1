@@ -127,10 +127,10 @@ function fval {
             # skip empty line
             return
         }
-        [string[]] $splitReadLine = $readLine -split $iDelim
         if ( $emptyDelimiterFlag ){
-            # delete first and last element in $splitReadLine
-            [string[]] $splitReadLine = $splitReadLine[1..($splitReadLine.Count - 2)]
+            [string[]] $splitReadLine = $readLine.ToCharArray()
+        } else {
+            [string[]] $splitReadLine = $readLine.Split( $iDelim )
         }
         [string[]] $tmpAry = @()
         [int] $aryCounter = 0

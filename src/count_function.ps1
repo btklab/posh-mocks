@@ -109,7 +109,11 @@ function count {
     {
         $readRow++
         [string] $readLine = [string] $_
-        [string[]]$splitLine = $readLine -Split "$Delimiter"
+        if ( $Delimiter -eq '' ){
+            [string[]] $splitLine = $readLine.ToCharArray()
+        } else {
+            [string[]] $splitLine = $readLine.Split( $Delimiter )
+        }
         # create key string
         [string] $key = $splitLine[($k1..$k2)] -Join "$Delimiter"
         # reset count if key changed

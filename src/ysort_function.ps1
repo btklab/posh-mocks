@@ -10,8 +10,8 @@
 
     Roughly equivalent to the script below:
 
-        "3 1 2 11" | %{ ($_ -split " " | sort) -join " " }
-        "3 1 2 11" | %{ ($_ -split " " | sort { [double]$_ }) -join " " }
+        "3 1 2 11" | %{ ("$_".Split(" ") | sort) -join " " }
+        "3 1 2 11" | %{ ("$_".Split(" ") | sort { [double]$_ }) -join " " }
 
     The type of values to be sorted is determined by the leftmost column of the first
     record. If the type changes after 2 records, exit with an error.
@@ -328,10 +328,10 @@ function ysort {
             return
         }
         $recordCounter++
-        [string[]] $splitReadLine = $readLine -split $iDelim
         if ( $emptyDelimiterFlag ){
-            # delete first and last element in $splitReadLine
-            [string[]] $splitReadLine = $splitReadLine[1..($splitReadLine.Count - 2)]
+            [string[]] $splitReadLine = $readLine.ToCharArray()
+        } else {
+            [string[]] $splitReadLine = $readLine.Split( $iDelim )
         }
         # test opt
         testOpt $splitReadLine $keyPos

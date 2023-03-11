@@ -135,7 +135,11 @@ function sm2 {
     {
         # calculator mode
         if($dentakuFlag){
-            [string[]] $splitLine = $_ -Split $Delimiter
+            if ( $Delimiter -eq '' ){
+                [string[]] $splitLine = "$_".ToCharArray()
+            } else {
+                [string[]] $splitLine = "$_".Split( $Delimiter )
+            }
             $rowCounter++
             # create values dictionary
             for($i = $s1; $i -le $s2; $i++){
@@ -144,7 +148,11 @@ function sm2 {
         }else{
         # sum up mode per key
             $readRow++
-            [string[]] $splitLine = $_ -Split $Delimiter
+            if ( $Delimiter -eq '' ){
+                [string[]] $splitLine = "$_".ToCharArray()
+            } else {
+                [string[]] $splitLine = "$_".Split( $Delimiter )
+            }
 
             # create key
             [string] $key = ''

@@ -15,26 +15,26 @@
     getfirst, getlast
 
 .EXAMPLE
-cat dat.txt
-01 aaa 01 xxx 10
-01 aaa 02 yyy 10
-01 aaa 03 zzz 10
-02 bbb 01 xxx 10
-02 bbb 02 yyy 10
-02 bbb 03 zzz 10
-01 aaa 04 ooo 10
-03 ccc 01 xxx 10
-03 ccc 02 yyy 10
-03 ccc 03 zzz 10
-04 ddd 01 xxx 10
-04 ddd 02 yyy 10
-04 ddd 03 zzz 10
+    cat dat.txt
+    01 aaa 01 xxx 10
+    01 aaa 02 yyy 10
+    01 aaa 03 zzz 10
+    02 bbb 01 xxx 10
+    02 bbb 02 yyy 10
+    02 bbb 03 zzz 10
+    01 aaa 04 ooo 10
+    03 ccc 01 xxx 10
+    03 ccc 02 yyy 10
+    03 ccc 03 zzz 10
+    04 ddd 01 xxx 10
+    04 ddd 02 yyy 10
+    04 ddd 03 zzz 10
 
-PS > cat dat.txt | sort | getlast 1 2
-01 aaa 04 ooo 10
-02 bbb 03 zzz 10
-03 ccc 03 zzz 10
-04 ddd 03 zzz 10
+    PS > cat dat.txt | sort | getlast 1 2
+    01 aaa 04 ooo 10
+    02 bbb 03 zzz 10
+    03 ccc 03 zzz 10
+    04 ddd 03 zzz 10
 
 #>
 function getlast {
@@ -43,7 +43,8 @@ function getlast {
         [string] $Delimiter = ' '
         # test args
         if($args.Count -ne 2){
-            Write-Error "not enough arguments." -ErrorAction Stop }
+            Write-Error "not enough arguments." -ErrorAction Stop
+        }
         [int] $k1 = [int]($args[0]) - 1
         [int] $k2 = [int]($args[1]) - 1
         if (($k1 -lt 0) -or ($k2 -lt 0)){
@@ -63,7 +64,11 @@ function getlast {
     process
     {
         [string] $readLine = [string] $_
-        $splitLine = $readLine -Split "$Delimiter"
+        if ( $Delimiter -eq '' ){
+            [string[]] $splitLine = $readLine.ToCharArray()
+        } else {
+            [string[]] $splitLine = $readLine.Split( $Delimiter )
+        }
         if ($k2 -gt $splitLine.Count - 1){
             Write-Error "More than the number of columns was specified" -ErrorAction Stop
         }
