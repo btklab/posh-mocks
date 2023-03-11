@@ -38,14 +38,12 @@ function gyo {
         }
     }
     process {
-        if($stdinFlag){
-            $readRowCounter++
-        }
+        if($stdinFlag){ $readRowCounter++ }
     }
     end {
         if($readFileFlag){
             for($i = $fileArryStartCounter; $i -lt $args.Count; $i++){
-                $fileList = (Get-ChildItem $args[$i] | %{ $_.FullName })
+                $fileList = (Get-ChildItem $args[$i] | ForEach-Object { $_.FullName })
                 foreach($f in $fileList){
                     $fileFullPath = "$f"
                     $fileCat = (Get-Content -LiteralPath "$fileFullPath" -Encoding UTF8)

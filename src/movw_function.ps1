@@ -355,7 +355,11 @@ function movw {
         }else{
             ## calc movin window
             $mwCounter++
-            [string[]] $splitLine = $readLine -Split $Delimiter
+            if ( $Delimiter -eq '' ){
+                [string[]] $splitLine = $readLine.ToCharArray()
+            } else {
+                [string[]] $splitLine = $readLine.Split( $Delimiter )
+            }
             # add elements to the array up to the number of
             # designated lines
             if($mwCounter -lt $WindowSize){

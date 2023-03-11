@@ -57,7 +57,7 @@ function self {
         # convert args to column select command
         foreach($a in $args){
             [string] $repdot2space = $a -replace '\.', ' '
-            [string[]] $tmpindividualarg = $repdot2space -Split ' '
+            [string[]] $tmpindividualarg = $repdot2space.Split(' ')
             # generate column select command
             # "NF" means rightmost column
             if( [string]($tmpindividualarg[0]) -match "NF" ){
@@ -93,7 +93,11 @@ function self {
     process
     {
         [string] $readLine = [string] $_
-        [string[]] $splitLine = $readLine -Split $Delimiter
+        if ( $Delimiter -eq '' ){
+            [string[]] $splitLine = $readLine.ToCharArray()
+        } else {
+            [string[]] $splitLine = $readLine.Split( $Delimiter )
+        }
         [string] $writeLine = Invoke-Expression $getLineExp
         Write-Output $writeLine
     }

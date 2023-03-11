@@ -47,9 +47,13 @@ function rev2 {
     )
     process {
         [string] $readLine = "$_".Trim()
-        [string[]] $splitReadLine = $readLine -Split "$Delimiter"
+        if ( $Delimiter -eq '' ){
+            [string[]] $splitReadLine = $readLine.ToCharArray()
+        } else {
+            [string[]] $splitReadLine = $readLine.Split( $Delimiter )
+        }
         if($echo){ Write-Output $readLine }
-        [string] $writeLine = [string]::join("$Delimiter", $splitReadLine[($splitReadLine.Count - 1)..0])
+        [string] $writeLine = [string]::join($Delimiter, $splitReadLine[($splitReadLine.Count - 1)..0])
         Write-Output $writeLine
     }
 }

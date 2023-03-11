@@ -572,7 +572,7 @@ function gantt2pu {
             } else {
                 $com = ''
             }
-            $splitDat = $dat -split ','
+            $splitDat = $dat.Split(',')
             if ($splitDat.Count -eq 1){
                 $dat1 = IsDate $splitDat[0]
                 $dat2 = $dat1
@@ -592,8 +592,8 @@ function gantt2pu {
             }
             if($dat -match ','){
                 ## case of $dat=lasts,delay
-                $lasts = ($dat -split ',')[0]
-                $delay = ($dat -split ',')[1]
+                $lasts = ($dat.Split(','))[0]
+                $delay = ($dat.Split(','))[1]
                 if (-not $Rev){
                     try {
                         $lasts = (Get-Date $lasts).ToString('yyyy-MM-dd')
@@ -1066,8 +1066,8 @@ function gantt2pu {
                 Write-Output "ganttDiagram {"
             }
             if ($TaskbarColor){
-                $taskLineColor = ($TaskbarColor -split "/")[0]
-                $taskFillColor = ($TaskbarColor -split "/")[1]
+                $taskLineColor = ($TaskbarColor.Split("/"))[0]
+                $taskFillColor = ($TaskbarColor.Split("/"))[1]
                 Write-Output "    task {"
                 Write-Output "        BackGroundColor $taskFillColor"
                 Write-Output "        LineColor $taskLineColor"
@@ -1223,7 +1223,7 @@ function gantt2pu {
             Write-Output ""
         }
         if ($NamedDates){
-            $splitNamedDates = $NamedDates -split ','
+            $splitNamedDates = $NamedDates.Split(',')
             if ($splitNamedDates.Count -ne 3){
                 Write-Error "-NamedDates <start-date>,<end-date>,<name>" -ErrorAction Stop
             }

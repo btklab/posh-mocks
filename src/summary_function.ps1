@@ -133,7 +133,11 @@ function summary{
   {
     $rowCounter++
     [string] $line = $_
-    [string[]] $splitLine = $line -Split "$Delimiter"
+    if ( $Delimiter -eq '' ){
+        [string[]] $splitLine = $line.ToCharArray()
+    } else {
+        [string[]] $splitLine = $line.Split( $Delimiter )
+    }
 
     ## tests ##################################
     if($line -match '^$'){

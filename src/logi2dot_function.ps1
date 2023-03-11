@@ -497,7 +497,7 @@ function logi2dot {
             }
             ## set option
             if  ($opt -ne 'None'){
-                $splitOpt = $opt -split ','
+                $splitOpt = $opt.Split(',')
                 foreach ($op in $splitOpt){
                     $tmpEdgeStr += ", $op"
                 }
@@ -649,7 +649,7 @@ function logi2dot {
             } elseif ($dPrec -match ','){
                 ## if the preceding task is separated by commas,
                 ## the process branches ito multiple.
-                $splitId = $dPrec -Split ','
+                $splitId = $dPrec.Split(',')
                 for($j = 0; $j -lt $splitId.Count; $j++){
                     $from = ($splitId[$j]).Trim()
                     $to   = $dId
@@ -665,32 +665,32 @@ function logi2dot {
             return $($retStrAry -Join "$edgeJoinDelim")
         }
     }
-    process{
+    process {
         $lineCounter++
-        $rdLine = [string]$_
+        [string] $rdLine = [string] $_
         if (($lineCounter -eq 1) -and ($rdLine -match '^# ')) {
             ## treat first line as title
-            $fTitle = $rdLine -replace '^# ', ''
-            $isFirstRowEqTitle = $true
+            [string] $fTitle = $rdLine -replace '^# ', ''
+            [bool] $isFirstRowEqTitle = $true
         } else {
             ## reading mode switch
             ## if "//-- Dot --" appears,
             ## following lines are output as-is (without processing)
             if ($rdLine -match '^//\-\-\s*[Dd][Oo][tT]'){
-                $DotBlockFlag = $True
-                $NodeBlockFlag = $False
-                $EdgeBlockFlag = $False
+                [bool] $DotBlockFlag = $True
+                [bool] $NodeBlockFlag = $False
+                [bool] $EdgeBlockFlag = $False
             }
             ## if "<--" or "-->" of "<->" appears,
             # end of node block,
             # start of edge block
             if (($rdLine -match ' \<[-.]{2} | [-.]{2}\> | \<[-.]\> ') -and (!$DotBlockFlag)){
-                $NodeBlockFlag = $False
-                $EdgeBlockFlag = $True
+                [bool] $NodeBlockFlag = $False
+                [bool] $EdgeBlockFlag = $True
                 ## close group if not closed
                 if ($NodeGroupFlag){
                     $readLineAryNode += ' };'
-                    $NodeGroupFlag = $False
+                    [bool] $NodeGroupFlag = $False
                 }
             }
             ## Node grouping mode = ON
@@ -700,9 +700,9 @@ function logi2dot {
                 if ($NodeGroupFlag){
                     $readLineAryNode += ' };'
                 }
-                $NodeGroupFlag = $True
+                [bool] $NodeGroupFlag = $True
                 $groupCounter++
-                $groupId = "G" + [string]$groupCounter
+                $groupId = "G" + [string] $groupCounter
                 $groupName = $rdLine -replace '^\-\-\s*',''
                 $groupName = $groupName -replace '\s*\-\-\s*$',''
                 if ($groupName -match '\{..*\}'){
@@ -729,7 +729,7 @@ function logi2dot {
             if ($rdLine -eq '') {
                 if ($NodeGroupFlag){
                     $readLineAryNode += ' };'
-                    $NodeGroupFlag = $False
+                    [bool] $NodeGroupFlag = $False
                 }
                 $wspace = ' '
             }
@@ -754,14 +754,14 @@ function logi2dot {
                     $nodeCounter++
                     ## key is the leftmost column,
                     ## the others are the value
-                    $splitLine = $rdLine -split ' '
+                    $splitLine = $rdLine.Split(' ')
                     if ($splitLine.Count -lt 2){
                         Write-Error "Insufficient columns: $rdLine" -ErrorAction Stop
                     }
                     $readLineAryNode += parseNode $rdLine
                     ## Parse edge
                     $parsedEdgeStr = parseEdge $rdLine
-                    $splitEdgeAry = $parsedEdgeStr -split "$edgeJoinDelim"
+                    $splitEdgeAry = $parsedEdgeStr.Split( $edgeJoinDelim )
                     for ($i = 0; $i -lt $splitEdgeAry.Count; $i++){
                         $tmpStr = [string]($splitEdgeAry[$i])
                         if ($tmpStr -ne ''){

@@ -505,14 +505,14 @@ function percentile {
 
     process {
         [string] $readLine = $_.Trim()
-        [string[]] $splitReadLine = $readLine -split $iDelim
-        if ( $emptyDelimiterFlag ){
-            # delete first and last element in $splitReadLine
-            [string[]] $splitReadLine = $splitReadLine[1..($splitReadLine.Count - 2)]
-        }
         if ( $readLine -eq '' ){
             # skip empty line
             return
+        }
+        if ( $emptyDelimiterFlag ){
+            [string[]] $splitReadLine = $readLine.ToCharArray()
+        } else {
+            [string[]] $splitReadLine = $readLine.Split( $iDelim )
         }
         $rowCounter++
         # add header
@@ -602,7 +602,7 @@ function percentile {
             if ( $Key ){
                 [string[]] $sortedAry = $lineAry `
                     | ForEach-Object {
-                        [string[]] $tmpSplitAry = $_ -split $iDelim
+                        [string[]] $tmpSplitAry = "$_".Split( $iDelim )
                         # treat empty item
                         if ( [string]($tmpSplitAry[$vField]) -eq '' ){
                             # isEmpty
@@ -637,13 +637,13 @@ function percentile {
                         Write-Output $writeLine
                         } `
                     | Sort-Object -Property `
-                        { [string](($_ -split $iDelim)[$sKey..$eKey] -join "") },
-                        { [double](($_ -split $iDelim)[$vField]) }
+                        { [string](("$_".Split( $iDelim ))[$sKey..$eKey] -join "") },
+                        { [double](("$_".Split( $iDelim ))[$vField]) }
                 return $sortedAry, $sumVal, $countNaN
             } else {
                 [string[]] $sortedAry = $lineAry `
                     | ForEach-Object {
-                        [string[]] $tmpSplitAry = $_ -split $iDelim
+                        [string[]] $tmpSplitAry = "$_".Split( $iDelim )
                         # treat empty item
                         if ( [string]($tmpSplitAry[$vField]) -eq '' ){
                             # isEmpty
@@ -678,7 +678,7 @@ function percentile {
                         Write-Output $writeLine
                         } `
                     | Sort-Object -Property `
-                        { [double](($_ -split $iDelim)[$vField]) }
+                        { [double](("$_".Split( $iDelim ))[$vField]) }
                 return $sortedAry, $sumVal, $countNaN, $countDropNaN, $countFillNaN, $countReplaceNaN
             }
         }
@@ -727,9 +727,9 @@ function percentile {
             [int[]] $posQt75 = $posHash["posQt75"]
             [int] $cumCol = $vField
             Write-Debug "$($cumCol)"
-            [double] $Qt25 = ( [double](($lineAry[($posQt25[0])].split($iDelim))[$cumCol]) + [double](($lineAry[($posQt25[1])].split($iDelim))[$cumCol]) ) / 2
-            [double] $Qt50 = ( [double](($lineAry[($posQt50[0])].split($iDelim))[$cumCol]) + [double](($lineAry[($posQt50[1])].split($iDelim))[$cumCol]) ) / 2
-            [double] $Qt75 = ( [double](($lineAry[($posQt75[0])].split($iDelim))[$cumCol]) + [double](($lineAry[($posQt75[1])].split($iDelim))[$cumCol]) ) / 2
+            [double] $Qt25 = ( [double](($lineAry[($posQt25[0])].Split($iDelim))[$cumCol]) + [double](($lineAry[($posQt25[1])].Split($iDelim))[$cumCol]) ) / 2
+            [double] $Qt50 = ( [double](($lineAry[($posQt50[0])].Split($iDelim))[$cumCol]) + [double](($lineAry[($posQt50[1])].Split($iDelim))[$cumCol]) ) / 2
+            [double] $Qt75 = ( [double](($lineAry[($posQt75[0])].Split($iDelim))[$cumCol]) + [double](($lineAry[($posQt75[1])].Split($iDelim))[$cumCol]) ) / 2
             [double] $IQR = $Qt75 - $Qt25
             [double] $HiIQR = $Qt75 + $OutlierMultiple * $IQR
             [double] $LoIQR = $Qt25 - $OutlierMultiple * $IQR
@@ -741,7 +741,7 @@ function percentile {
             $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $lineAry $vField
             $lineAry | ForEach-Object {
                 [string] $readLine = $_
-                [string[]] $splitReadLine = $readLine -split $iDelim
+                [string[]] $splitReadLine = $readLine.Split( $iDelim )
                 [double] $calcVal = [double] ($splitReadLine[($vField)])
                 [double] $sum += $calcVal
                 [double] $cum = $sum / $statSum
@@ -885,7 +885,7 @@ function percentile {
                 $sortedAry | ForEach-Object {
                     $rowCounter++
                     [string] $readLine = $_
-                    [string[]] $splitLine = $readLine -split $iDelim
+                    [string[]] $splitLine = $readLine.Split( $iDelim )
                     [string] $nowKey = $splitLine[$sKey..$eKey] -join $oDelim
                     if ( $rowCounter -eq 1 ){
                         $keyAryList = New-Object 'System.Collections.Generic.List[System.String]'
@@ -944,7 +944,7 @@ function percentile {
                 }
                 $statCnt, $statMax, $statMin, $statSum, $statAvg, $statStd = GetStat @(
                     $sortedAry | ForEach-Object {
-                        ($_ -split $iDelim)[$vField]
+                        ("$_".Split( $iDelim ))[$vField]
                     }
                 )
                 $Qt25, $Qt50, $Qt75, $IQR, $HiIQR, $LoIQR = CalcQuartile $sortedAry $vField

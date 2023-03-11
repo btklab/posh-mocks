@@ -117,12 +117,20 @@ function lcalc {
         $tmpScript = $tmpScript -replace '\$NF','[decimal]$splitLine[$splitLine.Count-1]'
         
         $splitTmp = $tmpScript.Split(";")
+
+        # init var
+        [string] $Delimiter = ' '
     }
     process
     {
         if( -not ($dflag) ){
-            [string]   $writeLine = ''
-            [string[]] $splitLine = $_ -Split ' '
+            [string] $writeLine = ''
+            [string] $readLine = [string] $_
+            if ( $Delimiter -eq ''){
+                [string[]] $splitLine = $readLine.ToCharArray()
+            } else {
+                [string[]] $splitLine = $readLine.Split( $Delimiter )
+            }
             for( $i=0;$i -lt $splitTmp.Count; $i++ ){
                 [string]$tmpWriteLine = Invoke-Expression $splitTmp[$i]
                 $writeLine += ' ' + $tmpWriteLine

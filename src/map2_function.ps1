@@ -203,7 +203,7 @@ function map2 {
     }
     # test is iDelim -eq ''?
     if ($iDelim -eq ''){
-        Write-Error "Empty delimiter." -ErrorAction Stop
+        Write-Error "Could not set empty delimiter." -ErrorAction Stop
     }
 
     ## Get number of vertical and horizontal key fields
@@ -235,7 +235,8 @@ function map2 {
   {
     ## 1st Pass: get vertical and horizontal key fields
     $RowCounter++
-    [string[]] $splitLine = $_ -Split $iDelim
+    [string] $readLine = [string] $_
+    [string[]] $splitLine = $readLine.Split( $iDelim )
 
     ## count number of fields
     ## error if all row fields are not the same
@@ -316,7 +317,7 @@ function map2 {
       # yarr
       for($o = 0; $o -lt $yokoKeyNum; $o++){
         for($n = 0; $n -lt @($uniqYokoKey).Count; $n++){
-          [string[]] $tmpYokoAry = @($uniqYokoKey)[$n] -Split $oDelim
+          [string[]] $tmpYokoAry = (@($uniqYokoKey)[$n]).Split( $oDelim )
           if($n -eq 0){
             [string] $tmpHeader = $tateKeyHeader
             [string] $tmpHeader += ($oDelim + @($tmpYokoAry)[$o]) * $MaxDataColNum
@@ -337,7 +338,7 @@ function map2 {
       # not -yarr
       for($o = 0; $o -lt $yokoKeyNum; $o++){
         for($n = 0; $n -lt @($uniqYokoKey).Count; $n++){
-          [string[]] $tmpYokoAry = @($uniqYokoKey)[$n] -Split $oDelim
+          [string[]] $tmpYokoAry = (@($uniqYokoKey)[$n]).Split( $oDelim )
           if($n -eq 0){
             [string] $tmpHeader = $tateKeyHeader
             [string] $tmpHeader += $oDelim + @($tmpYokoAry)[$o]
@@ -448,7 +449,7 @@ function map2 {
           }else{
             #### if there is multiple value fields
             [string] $tmpWriteLine = ''
-            [string[]] $SplitWriteLine = $writeLine -Split $oDelim
+            [string[]] $SplitWriteLine = $writeLine.Split( $oDelim )
             #$SplitWriteLine
 
             #### since the data array is in one column,

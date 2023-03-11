@@ -71,23 +71,49 @@ function fillretu {
     Param (
         [Parameter(Mandatory=$False)]
         [string] $NaN = '_',
-
+        
         [Parameter(Mandatory=$False)]
         [int] $Max,
-
+        
         [Parameter(Mandatory=$False)]
         [switch] $SkipBlank,
 
-        [Parameter(Mandatory=$False)]
-        [ValidateSet( ' ', ',', "\t")]
-        [Alias('d')]
+        [Parameter( Mandatory=$False )]
+        [Alias('fs')]
         [string] $Delimiter = ' ',
-
-        [parameter(Mandatory=$False,
-            ValueFromPipeline=$True)]
-        [string[]] $Text
+        
+        [Parameter( Mandatory=$False )]
+        [Alias('ifs')]
+        [string] $InputDelimiter,
+        
+        [Parameter( Mandatory=$False )]
+        [Alias('ofs')]
+        [string] $OutputDelimiter,
+        
+        [parameter( Mandatory=$False, ValueFromPipeline=$True )]
+        [string[]] $InputText
     )
     begin {
+        # set input/output delimiter
+        if ( $InputDelimiter -and $OutputDelimiter ){
+            [string] $iDelim = $InputDelimiter
+            [string] $oDelim = $OutputDelimiter
+        } elseif ( $InputDelimiter ){
+            [string] $iDelim = $InputDelimiter
+            [string] $oDelim = $InputDelimiter
+        } elseif ( $OutputDelimiter ){
+            [string] $iDelim = $Delimiter
+            [string] $oDelim = $OutputDelimiter
+        } else {
+            [string] $iDelim = $Delimiter
+            [string] $oDelim = $Delimiter
+        }
+        # test is iDelim -eq ''?
+        if ($iDelim -eq ''){
+            [bool] $emptyDelimiterFlag = $True
+        } else {
+            [bool] $emptyDelimiterFlag = $False
+        }
         ## init var
         [int]$maxCol = 0
         if( -not $Max){
@@ -100,64 +126,80 @@ function fillretu {
                 [int] $MaxCnt,
                 [int] $RowCnt,
                 [string] $nStr = $NaN,
-                [string] $Sep  = $Delimiter
+                [string] $Sep
             )
             [int]$diffCnt = $MaxCnt - $RowCnt
             if ($diffCnt -lt 0){
                 Write-Error "Incorrect column number is specified: $RowCnt > $MaxCnt" -ErrorAction Stop
             }
-            [string]$addRstr = ($Sep + $nStr) * $diffCnt
+            [string[]] $rstrAry = @()
+            for ($i=1; $i -le $diffCnt; $i++){
+                $rstrAry += $nStr
+            }
+            [string]$addRstr = $rstrAry -join $oDelim
+            #[string]$addRstr = ($Sep + $nStr) * $diffCnt
             return $addRstr
         }
     }
     process {
-        $readLine = [string]$_
+        [string] $readLine = [string] $_
         if (($SkipBlank) -and ($readLine -eq '')) {
             #pass
-        }else{
-            if ($readLine -eq ''){
+        } else {
+            if ( $readLine -eq '' ){
                 $readLine = "$NaN"
             }
-            $splitLine = "$readLine" -Split "$Delimiter"
+            if ( $emptyDelimiterFlag ){
+                [string[]] $splitLine = $readLine.ToCharArray()
+            } else {
+                [string[]] $splitLine = $readLine.Split( $iDelim )
+            }
             ## count columns
-            if ($readLine -eq ''){
-                $rowCnt = 0
-            }else{
-                $rowCnt = $splitLine.Count
+            if ( $readLine -eq '' ){
+                [int] $rowCnt = 0
+            } else {
+                [int] $rowCnt = $splitLine.Count
             }
             ## set row
-            if($Max){
+            if( $Max ){
                 # func
-                $rstr = FillCol $Max $rowCnt "$NaN" "$Delimiter"
-                $writeLine = $readLine + $rstr
+                [string] $rstr = FillCol $Max $rowCnt $NaN $oDelim
+                if ( $rstr -ne '' ){
+                    $splitLine += $rstr
+                }
+                [string] $writeLine = $splitLine -join $oDelim
                 Write-Output $writeLine
-            }else{
+            } else {
                 ## even
-                $listObj.Add([int]$rowCnt)
+                $listObj.Add( [int] $rowCnt )
                 ## odd
-                $listObj.Add([string]$readLine)
+                $listObj.Add( [string] $readLine )
                 ## set max col num
                 if($splitLine.Count -gt $maxCol){
-                  $maxCol = $splitLine.Count
+                    $maxCol = $splitLine.Count
                 }
             }
         }
     }
     end {
         if (-not $Max){
-            [int]$aryCnt = 0
-            [string[]]$listAry = @()
+            [int] $aryCnt = 0
+            [string[]] $listAry = @()
             $listAry = $listObj.ToArray()
-            foreach ($line in $listAry){
+            foreach ( $line in $listAry ){
                 $aryCnt++
                 if($aryCnt % 2 -eq 1){
                     ## odd: create add string
-                    [int]$rowCol = $line
+                    [int] $rowCol = $line
                     $rstr = ''
-                    $rstr = FillCol $maxCol $rowCol "$NaN" "$Delimiter"
+                    $rstr = FillCol $maxCol $rowCol $NaN $oDelim
                 }else{
                     ## even: output line with additional columns
-                    $writeLine = [string]$line + $rstr
+                    [string[]] $splitLine = $line.Split( $iDelim )
+                    if ( $rstr -ne ''){
+                        $splitLine += $rstr
+                    }
+                    [string] $writeLine = $splitLine -join $oDelim
                     Write-Output $writeLine
                 }
             }

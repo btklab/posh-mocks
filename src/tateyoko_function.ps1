@@ -52,7 +52,11 @@ function tateyoko{
         [string] $readLine = [string] $_
         $RowList.Add($readLine)
         # get max col num
-        [string[]] $ColAry = $readLine -Split "$Delimiter"
+        if ( $Delimiter -eq '' ){
+            [string[]] $ColAry = $readLine.ToCharArray()
+        } else {
+            [string[]] $ColAry = $readLine.Split( $Delimiter )
+        }
         [int] $tmpColNum = @($ColAry).Count
         if( $tmpColNum -gt $MaxColNum ){
             [int] $MaxColNum = $tmpColNum
@@ -71,7 +75,7 @@ function tateyoko{
                 $outputList.Add(@($RowAry)[$i].Split($Delimiter)[$j])
             }
             [string[]] $outputAry = $outputList.ToArray()
-            [string] $writeLine = $outputAry -Join "$Delimiter"
+            [string] $writeLine = $outputAry -Join $Delimiter
             # trim
             [string] $writeLine = $writeLine -Replace "($Delimiter)+$",''
             # output

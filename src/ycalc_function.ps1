@@ -271,14 +271,14 @@ function ycalc {
     process {
         $rowCounter++
         [string] $readLine = [string] $_
-        [string[]] $splitReadLine = $readLine -split $iDelim
-        if ( $emptyDelimiterFlag ){
-            # delete first and last element in $splitReadLine
-            [string[]] $splitReadLine = $splitReadLine[1..($splitReadLine.Count - 2)]
-        }
         # skip empty line
         if ( $readLine -eq '' ){
             return
+        }
+        if ( $emptyDelimiterFlag ){
+            [string[]] $splitReadLine = $readLine.ToCharArray()
+        } else {
+            [string[]] $splitReadLine = $readLine.Split( $iDelim )
         }
         # header
         if ( $rowCounter -eq 1 ){

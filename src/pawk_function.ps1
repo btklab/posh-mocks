@@ -814,10 +814,10 @@ function pawk {
                 Write-Error 'Detect empty line.' -ErrorAction Stop
             }
         } else {
-            [string[]] $tmpAry = $line -Split "$iDelim"
-            if ($emptyDelimiterFlag){
-                # delete first and last element in $splitLine
-                $tmpAry = $tmpAry[1..($tmpAry.Count - 2)]
+            if ( $emptyDelimiterFlag ){
+                [string[]] $tmpAry = $line.ToCharArray()
+            } else {
+                [string[]] $tmpAry = $line.Split( $iDelim )
             }
             #[int] $NF = $tmpAry.Count
             $self = @()

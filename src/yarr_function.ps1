@@ -38,7 +38,6 @@ function yarr {
         [int] $num = 1,
 
         [Parameter(Mandatory=$False)]
-        [ValidateSet( " ", ",", "\t")]
         [string] $Delimiter = ' ',
 
         [parameter(Mandatory=$False,ValueFromPipeline=$True)]
@@ -56,7 +55,11 @@ function yarr {
             Write-Error "Detect empty line: $readLine" -ErrorAction Stop
         }
         # split key
-        $keyValAry = $readLine -split "$Delimiter"
+        if ( $Delimiter -eq '' ){
+            [string[]] $keyValAry = $readLine.ToCharArray()
+        } else {
+            [string[]] $keyValAry = $readLine.Split( $Delimiter )
+        }
         if ($keyValAry.Count -le $num){
             Write-Error "Detect key-only line: $readLine"  -ErrorAction Stop
         }
@@ -65,11 +68,11 @@ function yarr {
         [int] $eKey = $num - 1
         [int] $sVal = $eKey + 1
         [int] $eVal = $keyValAry.Count - 1
-        [string] $key = $keyValAry[($sKey..$eKey)] -Join "$Delimiter"
-        [string] $val = $keyValAry[($sVal..$eVal)] -Join "$Delimiter"
+        [string] $key = $keyValAry[($sKey..$eKey)] -Join $Delimiter
+        [string] $val = $keyValAry[($sVal..$eVal)] -Join $Delimiter
         if ($hash.Contains($key)){
             # if key already exist
-            [string] $val = $hash["$key"] + "$Delimiter" + $val
+            [string] $val = $hash["$key"] + $Delimiter + $val
             $hash["$key"] = $val
         } else {
             $hash.Add($key, $val)
@@ -78,7 +81,7 @@ function yarr {
     end {
         # output hash
         foreach ($k in $hash.keys){
-            [string] $writeLine = $k + "$Delimiter" + $hash["$k"]
+            [string] $writeLine = $k + $Delimiter + $hash["$k"]
             Write-Output $writeLine
         }
     }

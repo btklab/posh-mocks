@@ -45,7 +45,6 @@ function tarr {
         [int] $num = 1,
 
         [Parameter(Mandatory=$False)]
-        [ValidateSet( ' ', ',', "\t")]
         [string] $Delimiter = ' ',
 
         [parameter(Mandatory=$False,ValueFromPipeline=$True)]
@@ -58,7 +57,11 @@ function tarr {
             Write-Error "detect empty row: $line" -ErrorAction Stop
         }
         # split key
-        [string[]] $keyValAry = $readLine -split "$Delimiter"
+        if ( $Delimiter -eq '' ){
+            [string[]] $keyValAry = $readLine.ToCharArray()
+        } else {
+            [string[]] $keyValAry = $readLine.Split( $Delimiter )
+        }
         if ( $keyValAry.Count -le $num ){
             Write-Error "Detect key-only lines: $line"  -ErrorAction Stop
         }
@@ -67,9 +70,9 @@ function tarr {
         [int] $eKey = $num - 1
         [int] $sVal = $eKey + 1
         [int] $eVal = $keyValAry.Count - 1
-        [string] $key = $keyValAry[($sKey..$eKey)] -Join "$Delimiter"
+        [string] $key = $keyValAry[($sKey..$eKey)] -Join $Delimiter
         foreach ($val in $keyValAry[($sVal..$eVal)]){
-            [string] $writeLine = $key + "$Delimiter" + $val
+            [string] $writeLine = $key + $Delimiter + $val
             Write-Output $writeLine
         }
     }
