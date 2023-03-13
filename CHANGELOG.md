@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added `tests` for Pester-Test
+- Added `.github/workflows/test_pwsh_on_ubuntu_latest.yaml` for [GitHub workflow][githubworkflow]
+
+[githubworkflow]: https://docs.github.com/en/actions/using-workflows
 
 
 ## [3.0.0]
