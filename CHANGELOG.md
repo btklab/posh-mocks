@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- None
+
+## [3.0.1]
+
+### Added
+
+- Added [kinsoku] left parenthesis and fullstop symbols
 - Added `tests` for Pester-Test
 - Added `.github/workflows/test_pwsh_on_ubuntu_latest.yaml` for [GitHub workflow][githubworkflow]
 
@@ -225,7 +232,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [fval]: src/fval_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.0.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.0.1..HEAD
+[3.0.1]: https://github.com/btklab/posh-mocks/releases/tag/3.0.1
 [3.0.0]: https://github.com/btklab/posh-mocks/releases/tag/3.0.0
 [2.1.3]: https://github.com/btklab/posh-mocks/releases/tag/2.1.3
 [2.1.2]: https://github.com/btklab/posh-mocks/releases/tag/2.1.2
