@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added [kinsoku] left parenthesis and fullstop symbols
 - Added `tests` for Pester-Test
 - Added `.github/workflows/test_pwsh_on_ubuntu_latest.yaml` for [GitHub workflow][githubworkflow]
 

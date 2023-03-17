@@ -149,8 +149,8 @@ function kinsoku {
     begin {
         # set prohibited characters at the beginning
         ## prohibited characters at the end of line
-        ### left parenthesis '([｛〔〈《「『【〘〖〝‘“｟«([〔'
-        [string] $leftParenthesis  = '\u0028\u005b\uff5b\u3014\u3008\u300a\u300c\u300e\u3010\u3018\u3016\u301d\u2018\u201c\uff5f\u00ab\u0028\u005b\u3014'
+        ### left parenthesis '([｛〔〈《「『【〘〖〝‘“｟«([〔（'
+        [string] $leftParenthesis  = '\u0028\u005b\uff5b\u3014\u3008\u300a\u300c\u300e\u3010\u3018\u3016\u301d\u2018\u201c\uff5f\u00ab\u0028\u005b\u3014\uff08'
         ### alphabets'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
         [string] $sequenceAlphabets = '\u0041\u0042\u0043\u0044\u0045\u0046\u0047\u0048\u0049\u004a\u004b\u004c\u004d\u004e\u004f\u0050\u0051\u0052\u0053\u0054\u0055\u0056\u0057\u0058\u0059\u005a\u0061\u0062\u0063\u0064\u0065\u0066\u0067\u0068\u0069\u006a\u006b\u006c\u006d\u006e\u006f\u0070\u0071\u0072\u0073\u0074\u0075\u0076\u0077\u0078\u0079\u007a'
         ### numbers '0123456789'
@@ -165,16 +165,16 @@ function kinsoku {
 
         ## prohibited characters at the beginning of line
 
-        ### right parenthesis ',)]｝、〕〉》」』】〙〗〟’”｠»)]〕'
-        [string] $rightParenthesis  = '\u002c\u0029\u005d\uff5d\u3001\u3015\u3009\u300b\u300d\u300f\u3011\u3019\u3017\u301f\u2019\u201d\uff60\u00bb\u0029\u005d\u3015'
+        ### right parenthesis ',)]｝、〕〉》」』】〙〗〟’”｠»)]〕）'
+        [string] $rightParenthesis  = '\u002c\u0029\u005d\uff5d\u3001\u3015\u3009\u300b\u300d\u300f\u3011\u3019\u3017\u301f\u2019\u201d\uff60\u00bb\u0029\u005d\u3015\uff09'
         ### dakuon '゛゜'
         [string] $letterDakuon = '\u309b\u309c'
         ### question marks and exclamation marks '？！?!‼⁇⁈⁉'
         [string] $questionMarks = '\uff1f\uff01\u003f\u0021\u203c\u2047\u2048\u2049'
         ### hyphens "‐゠–〜"
         [string] $hyphens = '\u2010\u30a0\u2013\u301c'
-        ### 中点・句読点 '・･：:；;。．、，.,'
-        [string] $middleDotAndFullStop = '\u30fb\uff65\uff1a\u003a\uff1b\u003b\u3002\uff0e\u3001\uff0c\u002e\u002c'
+        ### 中点・句読点 '・･：:；;。．、，.,､'
+        [string] $middleDotAndFullStop = '\u30fb\uff65\uff1a\u003a\uff1b\u003b\u3002\uff0e\u3001\uff0c\u002e\u002c\uff64'
         ### repeat symbol 'ヽヾー々〻'
         [string] $repeatSymbols = '\u30fd\u30fe\u30fc\u3005\u303b'
         ### 分離禁止文字 '—…‥〳〴〵'
