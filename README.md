@@ -4814,6 +4814,41 @@ before.jpg を after.png に形式変換し、かつ、
 
 [mdgrep]: src/mdgrep_function.ps1
 
+Markdowonファイルの処理に特化した行指向ならぬブロック指向の正規表現パターンマッチングツール。
+指定した正規表現パターンにマッチしたMarkdown形式の第2レベル見出しとそのコンテンツを返す。
+
+たとえばこの[README.MD]ファイルにはたくさんの関数が紹介されているが、ここから[man2]ファンクションについて書かれたセクションだけを抜き出すという仕事をする。
+
+```powershell
+# 当README.mdから「man2」ファンクションのセクションのみ抜き出す
+PS > cat READMD.md | mdgrep man2 -Level 4 -MatchOnlyTitle -VerboseOutput
+PS > cat READMD.md | mdgrep man2 -l 4 -t -o
+
+#### [man2] - Enumerate the function names
+
+[man2]: src/man2_function.ps1
+
+`src`配下の関数（ファイル）名を列挙する。
+筆者は作った関数をすぐに忘れてしまうため。
+
+- Usage
+    - `man2`
+    - `man2 [func-name] [-p|-paging]`
+    - `man2 [[-FunctionName] <String>] [-c|-Column <Int32>] [-Exclude <String>] [-p|-Paging] [-Include <String>] [-Examples] [-l|-Line]`
+- 挙動
+    - `man2`関数ファイルと同階層にある`*_function.ps1`ファイルのファイル名から`_function.ps1`を除去して列挙する
+- 依存
+    - [flat], [tateyoko], [keta]
+- Examples
+    - `man2`
+    - `man2 man2`
+    - `man2 man2 -p`
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `man2`
+```
+
+マークダウンファイルに特化しているというより、マークダウンスタイルで記述された見出し行（`#`）を含むテキストファイルならばなんでも適用できる。
 
 - Usage
     - `man2 mdgrep`
