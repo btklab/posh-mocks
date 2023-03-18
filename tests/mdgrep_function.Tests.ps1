@@ -31,7 +31,7 @@ Describe "mdgrep" {
             )
             $stdin | mdgrep . | Should -Be $stdout
         }
-        It "mdgrep . -o" {
+        It "mdgrep . -e" {
             [string[]] $stdout = @(
                 "## HACCP",
                 "hoge1",
@@ -46,9 +46,9 @@ Describe "mdgrep" {
                 "### Articles",
                 "piyo2"
             )
-            $stdin | mdgrep . -o | Should -Be $stdout
+            $stdin | mdgrep . -e | Should -Be $stdout
         }
-        It "mdgrep hoge1 -o" {
+        It "mdgrep hoge1 -e" {
             [string[]] $stdout = @(
                 "## HACCP",
                 "hoge1",
@@ -57,9 +57,9 @@ Describe "mdgrep" {
                 "### Articles",
                 "piyo1"
             )
-            $stdin | mdgrep hoge1 -o | Should -Be $stdout
+            $stdin | mdgrep hoge1 -e | Should -Be $stdout
         }
-        It "mdgrep hoge1 -NotMatch -o" {
+        It "mdgrep hoge1 -NotMatch -e" {
             [string[]] $stdout = @(
                 "## Computer",
                 "hoge2",
@@ -68,9 +68,9 @@ Describe "mdgrep" {
                 "### Articles",
                 "piyo2"
             )
-            $stdin | mdgrep hoge1 -NotMatch -o | Should -Be $stdout
+            $stdin | mdgrep hoge1 -NotMatch -e | Should -Be $stdout
         }
-        It "mdgrep haccp -MatchOnlyTitle -o" {
+        It "mdgrep haccp -MatchOnlyTitle -e" {
             [string[]] $stdout = @(
                 "## HACCP",
                 "hoge1",
@@ -79,11 +79,11 @@ Describe "mdgrep" {
                 "### Articles",
                 "piyo1"
             )
-            $stdin | mdgrep haccp -MatchOnlyTitle -o | Should -Be $stdout
+            $stdin | mdgrep haccp -MatchOnlyTitle -e | Should -Be $stdout
         }
     }
     Context "invert match" {
-        It "mdgrep haccp -MatchOnlyTitle -NotMatch -o" {
+        It "mdgrep haccp -MatchOnlyTitle -NotMatch -e" {
             [string[]] $stdout = @(
                 "## Computer",
                 "hoge2",
@@ -92,7 +92,7 @@ Describe "mdgrep" {
                 "### Articles",
                 "piyo2"
             )
-            $stdin | mdgrep haccp -MatchOnlyTitle -NotMatch -o | Should -Be $stdout
+            $stdin | mdgrep haccp -MatchOnlyTitle -NotMatch -e | Should -Be $stdout
         }
         It "mdgrep Books -MatchOnlyTitle" {
             $stdout = $Null
@@ -100,18 +100,18 @@ Describe "mdgrep" {
         }
     }
     Context "change section level to grep" {
-        It "mdgrep fuga -Level 3 -o" {
+        It "mdgrep fuga -Level 3 -e" {
             [string[]] $stdout = @(
                 "### Books",
                 "fuga1",
                 "### Books",
                 "fuga2"
             )
-            $stdin | mdgrep fuga -Level 3 -o | Should -Be $stdout
+            $stdin | mdgrep fuga -Level 3 -e | Should -Be $stdout
         }
     }
     Context "Output parent sections" {
-        It "mdgrep fuga -Level 3 -OutputParentSection -o" {
+        It "mdgrep fuga -Level 3 -OutputParentSection -e" {
             [string[]] $stdout = @(
                 "# My favorite links",
                 "## HACCP",
@@ -121,9 +121,9 @@ Describe "mdgrep" {
                 "### Books",
                 "fuga2"
             )
-            $stdin | mdgrep fuga -Level 3 -OutputParentSection -o | Should -Be $stdout
+            $stdin | mdgrep fuga -Level 3 -OutputParentSection -e | Should -Be $stdout
         }
-        It "mdgrep fuga2 -Level 3 -p -o" {
+        It "mdgrep fuga2 -Level 3 -p -e" {
             [string[]] $stdout = @(
                 "# My favorite links",
                 "## HACCP",
@@ -131,7 +131,7 @@ Describe "mdgrep" {
                 "### Books",
                 "fuga2"
             )
-            $stdin | mdgrep fuga2 -Level 3 -p -o | Should -Be $stdout
+            $stdin | mdgrep fuga2 -Level 3 -p -e | Should -Be $stdout
         }
     }
 }

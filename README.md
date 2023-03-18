@@ -4821,8 +4821,8 @@ Markdowonファイルの処理に特化した行指向ならぬブロック指�
 
 ```powershell
 # 当README.mdから「man2」ファンクションのセクションのみ抜き出す
-PS > cat READMD.md | mdgrep man2 -Level 4 -MatchOnlyTitle -VerboseOutput
-PS > cat READMD.md | mdgrep man2 -l 4 -t -o
+PS > cat READMD.md | mdgrep man2 -Level 4 -MatchOnlyTitle -Expand
+PS > cat READMD.md | mdgrep man2 -l 4 -t -e
 
 #### [man2] - Enumerate the function names
 
@@ -4852,7 +4852,7 @@ PS > cat READMD.md | mdgrep man2 -l 4 -t -o
 
 - Usage
     - `man2 mdgrep`
-    - `mdgrep [[-Grep] <String>] [-l|-Level <Int32>] [-t|-MatchOnlyTitle] [-o|-VerboseOutput] [-p|-OutputParentSection] [-v|-NotMatch]`
+    - `mdgrep [[-Grep] <String>] [-l|-Level <Int32>] [-t|-MatchOnlyTitle] [-e|-Expand] [-p|-OutputParentSection] [-v|-NotMatch]`
     - `cat file | mdgrep "<regex>"`
 - Inspired by Unix/Linux Commands
     - Command: `grep`
@@ -4881,8 +4881,8 @@ cat README.md | mdgrep seq2pu -Level 3
 cat README.md | mdgrep seq2pu -Level 4
     #### [seq2pu] - Generate sequence-diagram from markdown-like list format
 
-# get title and contents of "seq2pu function"
-cat README.md | mdgrep seq2pu -Level 4 -o
+# get(expand) title and contents of "seq2pu function"
+cat README.md | mdgrep seq2pu -Level 4 -e
     # output contents in "#### seq2pu section"
 ```
 
@@ -4926,8 +4926,8 @@ PS > $markdown | mdgrep .
     ### Books
     ### Articles
 
-PS > $markdown | mdgrep . -VerboseOutput
-PS > $markdown | mdgrep . -o
+PS > $markdown | mdgrep . -Expand
+PS > $markdown | mdgrep . -e
     ## HACCP
     hoge1
     ### Books
@@ -4945,7 +4945,7 @@ PS > $markdown | mdgrep . -o
 ```powershell
 # grep section title and paragraph
 
-PS > $markdown | mdgrep hoge1 -o
+PS > $markdown | mdgrep hoge1 -e
     ## HACCP
     hoge1
     ### Books
@@ -4954,8 +4954,8 @@ PS > $markdown | mdgrep hoge1 -o
     piyo1
 
 
-PS > $markdown | mdgrep hoge1 -NotMatch -o
-PS > $markdown | mdgrep hoge1 -v -o
+PS > $markdown | mdgrep hoge1 -NotMatch -e
+PS > $markdown | mdgrep hoge1 -v -e
     ## Computer
     hoge2
     ### Books
@@ -4964,8 +4964,8 @@ PS > $markdown | mdgrep hoge1 -v -o
     piyo2
 
 
-PS > $markdown | mdgrep haccp -MatchOnlyTitle -o
-PS > $markdown | mdgrep haccp -t -o
+PS > $markdown | mdgrep haccp -MatchOnlyTitle -e
+PS > $markdown | mdgrep haccp -t -e
     ## HACCP
     hoge1
     ### Books
@@ -4976,8 +4976,8 @@ PS > $markdown | mdgrep haccp -t -o
 
 ```powershell
 # invert match
-    PS > $markdown | mdgrep haccp -MatchOnlyTitle -NotMatch -o
-    PS > $markdown | mdgrep haccp -t -v -o
+    PS > $markdown | mdgrep haccp -MatchOnlyTitle -NotMatch -e
+    PS > $markdown | mdgrep haccp -t -v -e
     ## Computer
     hoge2
     ### Books
@@ -4993,8 +4993,8 @@ PS > $markdown | mdgrep Books -t
 ```powershell
 # change section level to grep
 
-PS > $markdown | mdgrep fuga -Level 3 -o
-PS > $markdown | mdgrep fuga -l 3 -o
+PS > $markdown | mdgrep fuga -Level 3 -e
+PS > $markdown | mdgrep fuga -l 3 -e
     ### Books
     fuga1
     ### Books
@@ -5004,8 +5004,8 @@ PS > $markdown | mdgrep fuga -l 3 -o
 ```powershell
 # Output parent sections
 
-PS > $markdown | mdgrep fuga -Level 3 -OutputParentSection -o
-PS > $markdown | mdgrep fuga -l 3 -p -o
+PS > $markdown | mdgrep fuga -Level 3 -OutputParentSection -e
+PS > $markdown | mdgrep fuga -l 3 -p -e
     # My favorite links
     ## HACCP
     ### Books
@@ -5017,7 +5017,7 @@ PS > $markdown | mdgrep fuga -l 3 -p -o
 
 # Note that the "-p|OutputParentSection" option
 #   outputs the titles regardless of matches.
-PS > $markdown | mdgrep fuga2 -Level 3 -p -o
+PS > $markdown | mdgrep fuga2 -Level 3 -p -e
     # My favorite links
     ## HACCP
     ## Computer
