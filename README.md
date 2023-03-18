@@ -258,7 +258,7 @@ PS > ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute -DoNotCreateBackup 
 ```
 
 
-#### [grep] - Searches for regex patterns
+#### [grep] - Single-line oriented searcher for regex patterns
 
 [grep]: src/grep_function.ps1
 
@@ -398,14 +398,14 @@ ccc
 grep 'tab' -H '*.md' -r [-FileNameOnly|-FileNameAndLineNumber]
 
 Table: caption
-:::{.table2col}
+{.table2col}
 | table |
 
 # The following commands are also approximately equivalent
 ls *.md -Recurse | grep "table"
 
 table2col.md:10:Table: caption
-table2col.md:12::::{.table2col}
+table2col.md:12:{.table2col}
 table2col.md:66:| table |
 ```
 
@@ -2581,7 +2581,7 @@ Example:
 [percentile]と[summary]はどちらも「ヘッダありスペース区切りデータの縦一列ぶんの要約統計量を算出する」点は同じ。
 [percentile]はCategory列を指定するとCategoryごとに要約統計量を計算できる。
 
-Calculate and ranking with percentile and quartiles on space-delimited data without headers.
+Calculate and ranking with percentile and quartiles on space-delimited data with/without headers.
 
 
 - Usage
@@ -2722,7 +2722,7 @@ F1 F2 percentile label
  a  5     0.8333     A
  c  5     0.9167     A
  d  5     1.0000     A
- ```
+```
 
 Another example:
 
@@ -4809,6 +4809,8 @@ before.jpg を after.png に形式変換し、かつ、
 ```
 
 ### Writing
+
+
 
 #### [tex2pdf] - Compile tex to pdf
 
