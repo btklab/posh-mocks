@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 Inspired by:
 
@@ -4810,6 +4810,185 @@ before.jpg を after.png に形式変換し、かつ、
 
 ### Writing
 
+#### [mdgrep] - Multi-line oriented searcher for markdown-heading style text file
+
+[mdgrep]: src/mdgrep_function.ps1
+
+
+- Usage
+    - `man2 mdgrep`
+    - `mdgrep [[-Grep] <String>] [-l|-Level <Int32>] [-t|-MatchOnlyTitle] [-o|-VerboseOutput] [-p|-OutputParentSection] [-v|-NotMatch]`
+    - `cat file | mdgrep "<regex>"`
+- Inspired by Unix/Linux Commands
+    - Command: `grep`
+
+Examples:
+
+mdgrep this [README.md] file.
+
+[README.md]: README.md
+
+```powershell
+# grep level 3 header and its contents
+cat README.md | mdgrep seq2pu -Level 3
+    ### Plot chart and graph
+    #### [dot2gviz] - Wrapper for Graphviz:dot command
+    #### [pu2java] - Wrapper for plantuml.jar command
+    #### [gantt2pu] - Visualizatoin tool of DANDORI-chart (setup-chart) for PlantUML.
+    #### [mind2dot] - Generate graphviz script to draw a mind map from list data in markdown format
+    #### [mind2pu] - Generate plantuml script to draw a mind map from list data in markdown format
+    #### [logi2dot] - Generate data for graphviz with simple format
+    #### [logi2pu] - Generate data for PlantUML (usecase diagram) with simple format
+    #### [seq2pu] - Generate sequence-diagram from markdown-like list format
+    #### [flow2pu] - Generate activity-diagram (flowchart) from markdown-like list format
+
+# grep level 4 header and its contents
+cat README.md | mdgrep seq2pu -Level 4
+    #### [seq2pu] - Generate sequence-diagram from markdown-like list format
+
+# get title and contents of "seq2pu function"
+cat README.md | mdgrep seq2pu -Level 4 -o
+    # output contents in "#### seq2pu section"
+```
+
+Another examples:
+
+Input data
+
+```powershell
+# input markdown data
+$markdown = @(
+    "# My favorite links",
+    "abstract",
+    "## HACCP",
+    "hoge1",
+    "### Books",
+    "fuga1",
+    "### Articles",
+    "piyo1",
+    "## Computer",
+    "hoge2",
+    "### Books",
+    "fuga2",
+    "### Articles",
+    "piyo2"
+)
+```
+
+Outputs
+
+```powershell
+# Search sectoin title and contens,
+# and output matched section titles.
+# Sections below heading level 2 are
+# searched by default
+
+PS > $markdown | mdgrep .
+    ## HACCP
+    ### Books
+    ### Articles
+    ## Computer
+    ### Books
+    ### Articles
+
+PS > $markdown | mdgrep . -VerboseOutput
+PS > $markdown | mdgrep . -o
+    ## HACCP
+    hoge1
+    ### Books
+    fuga1
+    ### Articles
+    piyo1
+    ## Computer
+    hoge2
+    ### Books
+    fuga2
+    ### Articles
+    piyo2
+```
+
+```powershell
+# grep section title and paragraph
+
+PS > $markdown | mdgrep hoge1 -o
+    ## HACCP
+    hoge1
+    ### Books
+    fuga1
+    ### Articles
+    piyo1
+
+
+PS > $markdown | mdgrep hoge1 -NotMatch -o
+PS > $markdown | mdgrep hoge1 -v -o
+    ## Computer
+    hoge2
+    ### Books
+    fuga2
+    ### Articles
+    piyo2
+
+
+PS > $markdown | mdgrep haccp -MatchOnlyTitle -o
+PS > $markdown | mdgrep haccp -t -o
+    ## HACCP
+    hoge1
+    ### Books
+    fuga1
+    ### Articles
+    piyo1
+```
+
+```powershell
+# invert match
+    PS > $markdown | mdgrep haccp -MatchOnlyTitle -NotMatch -o
+    PS > $markdown | mdgrep haccp -t -v -o
+    ## Computer
+    hoge2
+    ### Books
+    fuga2
+    ### Articles
+    piyo2
+
+PS > $markdown | mdgrep Books -MatchOnlyTitle
+PS > $markdown | mdgrep Books -t
+    # not match because of grep only level2 section
+```
+
+```powershell
+# change section level to grep
+
+PS > $markdown | mdgrep fuga -Level 3 -o
+PS > $markdown | mdgrep fuga -l 3 -o
+    ### Books
+    fuga1
+    ### Books
+    fuga2
+```
+
+```powershell
+# Output parent sections
+
+PS > $markdown | mdgrep fuga -Level 3 -OutputParentSection -o
+PS > $markdown | mdgrep fuga -l 3 -p -o
+    # My favorite links
+    ## HACCP
+    ### Books
+    fuga1
+    ## Computer
+    ### Books
+    fuga2
+
+
+# Note that the "-p|OutputParentSection" option
+#   outputs the titles regardless of matches.
+PS > $markdown | mdgrep fuga2 -Level 3 -p -o
+    # My favorite links
+    ## HACCP
+    ## Computer
+    ### Books
+    fuga2
+```
 
 
 #### [tex2pdf] - Compile tex to pdf
