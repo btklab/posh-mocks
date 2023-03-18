@@ -6343,7 +6343,23 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 - Examples
     - `clip2img -d ~/Documents`
     - `clip2img -n a.png`
-    - `clip2img -MSPaint -Clip -DirView -Directory ~/Pictures/ -Name 2023-02-18-hoge`
+    - `clip2img -MSPaint -Clip -Directory ~/Pictures -DirView -AutoPrefix -Name "hoge"`
+- Options:
+    - `-AutoPrefix` means:
+        - Add prefix `(Get-Date).ToString($AutoPrefixFormat) + $AutoPrefixDelimiter`
+        - default prefix: `(Get-Date).ToString('yyyy-MM-dd') + "___"`
+
+Example:
+
+```powershell
+clip2img -MSPaint -Clip -Directory ~/Pictures -DirView -AutoPrefix -Name "hoge"
+
+    Mode        LastWriteTime   Length Name
+    ----        -------------   ------ ----
+    -a--- 2023/03/18    22:32   171680 2023-03-18___hoge.png
+```
+
+
 
 #### [clipwatch] - A clipboard watcher using Compare-Object
 

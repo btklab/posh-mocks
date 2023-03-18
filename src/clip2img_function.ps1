@@ -2,6 +2,11 @@
 .SYNOPSIS
     clip2img -- Save clip board image as an image file
 
+        clip2img -MSPaint -Clip -Directory ~/Pictures -DirView -AutoPrefix -Name "hoge"
+            Mode        LastWriteTime   Length Name
+            ----        -------------   ------ ----
+            -a--- 2023/03/18    22:32   171680 2023-03-18___hoge.png
+
     clip2img [directory] [-DirView] [-MSPaint] [-View]
     clip2img -d ~/Documents
     clip2img -n a.png
@@ -31,31 +36,42 @@
 .PARAMETER Prefix
     Specify filename prefix.
 
+.PARAMETER AutoPrefix
+    Add prefix (Get-Date).ToString($AutoPrefixFormat) +
+        $AutoPrefixDelimiter
+
 .PARAMETER DirView
     Open the folder using explorer
     where the image file is saved.
 
 .EXAMPLE
-clip2img
-
-====
-Save image file as "clip-yyyy-MM-dd-HHmmssfff.png"
-to the current directory.
-
-
-PS > clip2img -d ~/Picture
-
-====
-Save image file as "clip-yyyy-MM-dd-HHmmssfff.png"
-to "~/Pictures" directory.
+    clip2img
+    
+    ====
+    Save image file as "clip-yyyy-MM-dd-HHmmssfff.png"
+    to the current directory.
+    
+    
+    PS > clip2img -d ~/Picture
+    
+    ====
+    Save image file as "clip-yyyy-MM-dd-HHmmssfff.png"
+    to "~/Pictures" directory.
 
 
 .EXAMPLE
-clip2img -n a.png
+    clip2img -n a.png
 
-====
-Save image file as "a.png" in
-the current directory.
+    ====
+    Save image file as "a.png" in
+    the current directory.
+
+.EXAMPLE
+    clip2img -MSPaint -Clip -Directory ~/Pictures -DirView -AutoPrefix -Name "hoge"
+        Mode        LastWriteTime   Length Name
+        ----        -------------   ------ ----
+        -a--- 2023/03/18    22:32   171680 2023-03-18___hoge.png
+
 
 #>
 function clip2img {
@@ -69,6 +85,15 @@ function clip2img {
 
         [Parameter(Mandatory=$False)]
         [string] $Prefix = '',
+
+        [Parameter(Mandatory=$False)]
+        [switch] $AutoPrefix,
+
+        [Parameter(Mandatory=$False)]
+        [string] $AutoPrefixFormat = 'yyyy-MM-dd',
+
+        [Parameter(Mandatory=$False)]
+        [string] $AutoPrefixDelimiter = '___',
 
         [Parameter(Mandatory=$False)]
         [Alias('p')] [switch] $MSPaint,
@@ -87,7 +112,7 @@ function clip2img {
     $clipImage = [Windows.Forms.Clipboard]::GetImage()
     if ($clipImage -ne $null) {
         ## set save file path
-        if ($Name){
+        if ( $Name ){
             ## manual set filename
             $saveFileName = $Name
             if ($saveFileName -notmatch '\.png$'){
@@ -98,6 +123,10 @@ function clip2img {
             [string]$prefStr = 'clip'
             [string]$yyyymmdd = Get-Date -Format "yyyy-MM-dd-HHmmssfff"
             [string]$saveFileName = "$prefStr-$yyyymmdd.png"
+        }
+        if ( $AutoPrefix ){
+            [string] $aPref = (Get-Date).Tostring($AutoPrefixFormat)
+            $Prefix = $Prefix + $aPref + $AutoPrefixDelimiter
         }
         [string]$saveFileName = "$Prefix" + "$saveFileName"
         ## set output dir path
