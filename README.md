@@ -6480,3 +6480,61 @@ Windows環境用ティータイマー。時間がきたら通知トレイから�
 - Usage
     - `man2 teatimer`
     - `teatimer [[-Minutes] <Int32>] [[-Hours] <Int32>] [[-Seconds] <Int32>] [[-At] <DateTime>] [[-Title] <String>] [[-Text] <String>] [[-Timeout] <Int32>] [[-EventTimeout] <Int32>] [-ShowPastTime] [-Quiet] [[-IconType]`
+
+
+### Ended up not being used functions
+
+よかれと思って作ったけれど、結局使わなかった関数たち。
+
+#### [Get-AppShortcut] - List up app-shortcuts
+
+[Get-AppShortcut]: src/Get-AppShortcut_function.ps1
+
+
+日本語Windows環境では、キーボードのミスタッチ等により、望まずして「IMEの全角英数字入力モード」になることがある。
+この事象はたまにしか発生しないので、もとに戻す方法を調べてもすぐに忘れてしまうため、関数で記述して覚えておくことにした。
+ついでに、（筆者の）実務でたまに使うけれど覚えていられないショートカット、たとえばエクセルやワードの全画面表示なども記述した。
+
+結局のところ、上のような状況がまれに発生しても、**このような関数を作ったこと自体を忘れている**ので、使われることはなかった。
+
+
+- Usage
+    - `man2 Get-AppShortcut`
+
+Examples:
+
+```powershell
+Get-AppShortcut  | ft
+
+App                  Act                       Key                      Fn Esc     Ano
+---                  ---                       ---                      -- ---     ---
+IME                  Zenkaku alphanumeric mode Shift <Mu-Henkan>
+Windows Terminal     Split pane                Alt Shift +|-
+Windows Terminal     Switch pane               Alt Arrow
+Windows Terminal     Resize pane               Alt Shift Arrow
+Windows Terminal     Close pane                Ctrl Shift W
+Windows Terminal     Scroll by row             Ctrl Shift Arrow-Up|Down
+Windows Terminal     Scroll by screen          Ctrl Shift PgUp|PgDn
+Microsoft Excel      Full screen               Alt V U                     Esc     Ctrl Shift…
+Microsoft Powerpoint Full screen               Alt W D                  F5 Esc
+Microsoft Word       Full screen               Alt V U                     Esc
+Windows OS           Magnifying glass          Win +                       Win Esc
+```
+
+```powershell
+Get-AppShortcut | Select-Object App,Act,Key
+
+App                  Act                       Key
+---                  ---                       ---
+IME                  Zenkaku alphanumeric mode Shift <Mu-Henkan>
+Windows Terminal     Split pane                Alt Shift +|-
+Windows Terminal     Switch pane               Alt Arrow
+Windows Terminal     Resize pane               Alt Shift Arrow
+Windows Terminal     Close pane                Ctrl Shift W
+Windows Terminal     Scroll by row             Ctrl Shift Arrow-Up|Down
+Windows Terminal     Scroll by screen          Ctrl Shift PgUp|PgDn
+Microsoft Excel      Full screen               Alt V U
+Microsoft Powerpoint Full screen               Alt W D
+Microsoft Word       Full screen               Alt V U
+Windows OS           Magnifying glass          Win +
+```
