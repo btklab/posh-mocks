@@ -3,14 +3,14 @@
     percentile - Ranking with percentile and quartile
 
     Calculate and ranking with percentile and quartiles on space-delimited
-    data without headers. 
+    data with/without headers. 
 
     Usage:
         cat data.txt | percentile [[-Val] <Int32[]>] [[-Key] <Int32[]>] [-Rank|-Level5] [-NoHeader] [-Cast <String>]
 
     Empty records are skipped.
     Input expects space-separated data with headers.
-    Headers should be string, not double
+    Headers should be string, not double.
     
     Options:
         -NoHeader: No header data

@@ -97,6 +97,7 @@ if ($IsWindows){
 
 
 ## writing
+. $pwshSrcDir/mdgrep_function.ps1
 . $pwshSrcDir/tex2pdf_function.ps1
 . $pwshSrcDir/jl_function.ps1
 . $pwshSrcDir/kinsoku_function.ps1
@@ -148,4 +149,5 @@ Set-Alias -name ml -value Get-OGP
 . $pwshSrcDir/i_function.ps1
 . $pwshSrcDir/tenki_function.ps1
 . $pwshSrcDir/sleepy_function.ps1
+. $pwshSrcDir/Get-AppShortcut_function.ps1
 

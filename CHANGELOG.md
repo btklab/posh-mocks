@@ -10,11 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updated: [README.md]
+- Updated [README.md]
+- Fixed [percentile] synopsis
 
 ### Added
 
-- None
+- Added [mdgrep] function
+- Added [Get-AppShortcut] function
+
 
 ## [3.0.1] - 2023-03-17 Fri
 
@@ -230,6 +233,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [ysort]: src/ysort_function.ps1
 [ycalc]: src/ycalc_function.ps1
 [fval]: src/fval_function.ps1
+
+[Get-AppShortcut]: src/Get-AppShortcut_function.ps1
+[mdgrep]: src/mdgrep_function.ps1
 
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/3.0.1..HEAD
