@@ -11,7 +11,7 @@
     with number signs (#) in front of a word or phrase.
 
     By default, output only the section titles that matches PATTERN.
-    To utput both title and body, adding `-o|-VerboseOutput` option.
+    To output both title and body, adding `-e|-Expand` option.
 
     Case insensitive.
 
@@ -39,7 +39,7 @@
     PS > cat README.md | mdgrep seq2pu -Level 4
         #### [seq2pu] - Generate sequence-diagram from markdown-like list format
 
-    PS > cat README.md | mdgrep seq2pu -Level 4 -o
+    PS > cat README.md | mdgrep seq2pu -Level 4 -e
         # output contents in "#### seq2pu section"
 
 .LINK
@@ -77,8 +77,8 @@
         ### Books
         ### Articles
 
-    $markdown | mdgrep . -VerboseOutput
-    $markdown | mdgrep . -o
+    $markdown | mdgrep . -Expand
+    $markdown | mdgrep . -e
         ## HACCP
         hoge1
         ### Books
@@ -94,7 +94,7 @@
 
 .EXAMPLE
     # grep section title and paragraph
-    PS > $markdown | mdgrep hoge1 -o
+    PS > $markdown | mdgrep hoge1 -e
         ## HACCP
         hoge1
         ### Books
@@ -103,8 +103,8 @@
         piyo1
 
 
-    PS > $markdown | mdgrep hoge1 -NotMatch -o
-    PS > $markdown | mdgrep hoge1 -v -o
+    PS > $markdown | mdgrep hoge1 -NotMatch -e
+    PS > $markdown | mdgrep hoge1 -v -e
         ## Computer
         hoge2
         ### Books
@@ -113,8 +113,8 @@
         piyo2
 
 
-    PS > $markdown | mdgrep haccp -MatchOnlyTitle -o
-    PS > $markdown | mdgrep haccp -t -o
+    PS > $markdown | mdgrep haccp -MatchOnlyTitle -e
+    PS > $markdown | mdgrep haccp -t -e
         ## HACCP
         hoge1
         ### Books
@@ -124,8 +124,8 @@
 
 .EXAMPLE
     # invert match
-        PS > $markdown | mdgrep haccp -MatchOnlyTitle -NotMatch -o
-        PS > $markdown | mdgrep haccp -t -v -o
+        PS > $markdown | mdgrep haccp -MatchOnlyTitle -NotMatch -e
+        PS > $markdown | mdgrep haccp -t -v -e
         ## Computer
         hoge2
         ### Books
@@ -139,8 +139,8 @@
 
 .EXAMPLE
     # change section level to grep
-    PS > $markdown | mdgrep fuga -Level 3 -o
-    PS > $markdown | mdgrep fuga -l 3 -o
+    PS > $markdown | mdgrep fuga -Level 3 -e
+    PS > $markdown | mdgrep fuga -l 3 -e
         ### Books
         fuga1
         ### Books
@@ -148,8 +148,8 @@
 
 .EXAMPLE
     # Output parent sections
-    PS > $markdown | mdgrep fuga -Level 3 -OutputParentSection -o
-    PS > $markdown | mdgrep fuga -l 3 -p -o
+    PS > $markdown | mdgrep fuga -Level 3 -OutputParentSection -e
+    PS > $markdown | mdgrep fuga -l 3 -p -e
         # My favorite links
         ## HACCP
         ### Books
@@ -161,7 +161,7 @@
 
     # Note that the "-p|OutputParentSection" option
     #   outputs the titles regardless of matches.
-    PS > $markdown | mdgrep fuga2 -Level 3 -p -o
+    PS > $markdown | mdgrep fuga2 -Level 3 -p -e
         # My favorite links
         ## HACCP
         ## Computer
@@ -186,7 +186,7 @@
     PS > cat README.md | mdgrep seq2pu -Level 4
     #### [seq2pu] - Generate sequence-diagram from markdown-like list format
 
-    PS > cat README.md | mdgrep seq2pu -Level 4 -o
+    PS > cat README.md | mdgrep seq2pu -Level 4 -e
     # output contents in "#### seq2pu section"
 
 #>
@@ -207,8 +207,8 @@ function mdgrep {
         [switch] $MatchOnlyTitle,
         
         [Parameter( Mandatory=$False )]
-        [Alias('o')]
-        [switch] $VerboseOutput,
+        [Alias('e')]
+        [switch] $Expand,
         
         [Parameter( Mandatory=$False )]
         [Alias('p')]
@@ -419,7 +419,7 @@ function mdgrep {
                 if (-not $MatchOnlyTitle ){
                     if ( $readLine -match "$Grep" ){ $matchFlag = $True }
                 }
-                if ( $VerboseOutput ){
+                if ( $Expand ){
                     $tempAryList.Add( $readLine )
                 }
             } else {

@@ -4814,10 +4814,45 @@ before.jpg を after.png に形式変換し、かつ、
 
 [mdgrep]: src/mdgrep_function.ps1
 
+Markdowonファイルの処理に特化した行指向ならぬブロック指向の正規表現パターンマッチングツール。
+指定した正規表現パターンにマッチしたMarkdown形式の第2レベル見出しとそのコンテンツを返す。
+
+たとえばこの[README.MD]ファイルにはたくさんの関数が紹介されているが、ここから[man2]ファンクションについて書かれたセクションだけを抜き出すという仕事をする。
+
+```powershell
+# 当README.mdから「man2」ファンクションのセクションのみ抜き出す
+PS > cat READMD.md | mdgrep man2 -Level 4 -MatchOnlyTitle -Expand
+PS > cat READMD.md | mdgrep man2 -l 4 -t -e
+
+#### [man2] - Enumerate the function names
+
+[man2]: src/man2_function.ps1
+
+`src`配下の関数（ファイル）名を列挙する。
+筆者は作った関数をすぐに忘れてしまうため。
+
+- Usage
+    - `man2`
+    - `man2 [func-name] [-p|-paging]`
+    - `man2 [[-FunctionName] <String>] [-c|-Column <Int32>] [-Exclude <String>] [-p|-Paging] [-Include <String>] [-Examples] [-l|-Line]`
+- 挙動
+    - `man2`関数ファイルと同階層にある`*_function.ps1`ファイルのファイル名から`_function.ps1`を除去して列挙する
+- 依存
+    - [flat], [tateyoko], [keta]
+- Examples
+    - `man2`
+    - `man2 man2`
+    - `man2 man2 -p`
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `man2`
+```
+
+マークダウンファイルに特化しているというより、マークダウンスタイルで記述された見出し行（`#`）を含むテキストファイルならばなんでも適用できる。
 
 - Usage
     - `man2 mdgrep`
-    - `mdgrep [[-Grep] <String>] [-l|-Level <Int32>] [-t|-MatchOnlyTitle] [-o|-VerboseOutput] [-p|-OutputParentSection] [-v|-NotMatch]`
+    - `mdgrep [[-Grep] <String>] [-l|-Level <Int32>] [-t|-MatchOnlyTitle] [-e|-Expand] [-p|-OutputParentSection] [-v|-NotMatch]`
     - `cat file | mdgrep "<regex>"`
 - Inspired by Unix/Linux Commands
     - Command: `grep`
@@ -4846,8 +4881,8 @@ cat README.md | mdgrep seq2pu -Level 3
 cat README.md | mdgrep seq2pu -Level 4
     #### [seq2pu] - Generate sequence-diagram from markdown-like list format
 
-# get title and contents of "seq2pu function"
-cat README.md | mdgrep seq2pu -Level 4 -o
+# get(expand) title and contents of "seq2pu function"
+cat README.md | mdgrep seq2pu -Level 4 -e
     # output contents in "#### seq2pu section"
 ```
 
@@ -4891,8 +4926,8 @@ PS > $markdown | mdgrep .
     ### Books
     ### Articles
 
-PS > $markdown | mdgrep . -VerboseOutput
-PS > $markdown | mdgrep . -o
+PS > $markdown | mdgrep . -Expand
+PS > $markdown | mdgrep . -e
     ## HACCP
     hoge1
     ### Books
@@ -4910,7 +4945,7 @@ PS > $markdown | mdgrep . -o
 ```powershell
 # grep section title and paragraph
 
-PS > $markdown | mdgrep hoge1 -o
+PS > $markdown | mdgrep hoge1 -e
     ## HACCP
     hoge1
     ### Books
@@ -4919,8 +4954,8 @@ PS > $markdown | mdgrep hoge1 -o
     piyo1
 
 
-PS > $markdown | mdgrep hoge1 -NotMatch -o
-PS > $markdown | mdgrep hoge1 -v -o
+PS > $markdown | mdgrep hoge1 -NotMatch -e
+PS > $markdown | mdgrep hoge1 -v -e
     ## Computer
     hoge2
     ### Books
@@ -4929,8 +4964,8 @@ PS > $markdown | mdgrep hoge1 -v -o
     piyo2
 
 
-PS > $markdown | mdgrep haccp -MatchOnlyTitle -o
-PS > $markdown | mdgrep haccp -t -o
+PS > $markdown | mdgrep haccp -MatchOnlyTitle -e
+PS > $markdown | mdgrep haccp -t -e
     ## HACCP
     hoge1
     ### Books
@@ -4941,8 +4976,8 @@ PS > $markdown | mdgrep haccp -t -o
 
 ```powershell
 # invert match
-    PS > $markdown | mdgrep haccp -MatchOnlyTitle -NotMatch -o
-    PS > $markdown | mdgrep haccp -t -v -o
+    PS > $markdown | mdgrep haccp -MatchOnlyTitle -NotMatch -e
+    PS > $markdown | mdgrep haccp -t -v -e
     ## Computer
     hoge2
     ### Books
@@ -4958,8 +4993,8 @@ PS > $markdown | mdgrep Books -t
 ```powershell
 # change section level to grep
 
-PS > $markdown | mdgrep fuga -Level 3 -o
-PS > $markdown | mdgrep fuga -l 3 -o
+PS > $markdown | mdgrep fuga -Level 3 -e
+PS > $markdown | mdgrep fuga -l 3 -e
     ### Books
     fuga1
     ### Books
@@ -4969,8 +5004,8 @@ PS > $markdown | mdgrep fuga -l 3 -o
 ```powershell
 # Output parent sections
 
-PS > $markdown | mdgrep fuga -Level 3 -OutputParentSection -o
-PS > $markdown | mdgrep fuga -l 3 -p -o
+PS > $markdown | mdgrep fuga -Level 3 -OutputParentSection -e
+PS > $markdown | mdgrep fuga -l 3 -p -e
     # My favorite links
     ## HACCP
     ### Books
@@ -4982,7 +5017,7 @@ PS > $markdown | mdgrep fuga -l 3 -p -o
 
 # Note that the "-p|OutputParentSection" option
 #   outputs the titles regardless of matches.
-PS > $markdown | mdgrep fuga2 -Level 3 -p -o
+PS > $markdown | mdgrep fuga2 -Level 3 -p -e
     # My favorite links
     ## HACCP
     ## Computer
@@ -6308,7 +6343,23 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 - Examples
     - `clip2img -d ~/Documents`
     - `clip2img -n a.png`
-    - `clip2img -MSPaint -Clip -DirView -Directory ~/Pictures/ -Name 2023-02-18-hoge`
+    - `clip2img -MSPaint -Clip -Directory ~/Pictures -DirView -AutoPrefix -Name "hoge"`
+- Options:
+    - `-AutoPrefix` means:
+        - Add prefix `(Get-Date).ToString($AutoPrefixFormat) + $AutoPrefixDelimiter`
+        - default prefix: `(Get-Date).ToString('yyyy-MM-dd') + "___"`
+
+Example:
+
+```powershell
+clip2img -MSPaint -Clip -Directory ~/Pictures -DirView -AutoPrefix -Name "hoge"
+
+    Mode        LastWriteTime   Length Name
+    ----        -------------   ------ ----
+    -a--- 2023/03/18    22:32   171680 2023-03-18___hoge.png
+```
+
+
 
 #### [clipwatch] - A clipboard watcher using Compare-Object
 
