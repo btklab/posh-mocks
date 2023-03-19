@@ -5134,32 +5134,32 @@ PS > $markdown | mdgrep fuga2 -Level 3 -p -e
 
 ```powershell
 cat a.ps1
+    ## plus
+    1+1
 
-## plus
-1+1
+    ## sub
+    2-3
 
-## sub
-2-3
+    ## mul
+    4*5
 
-## mul
-4*5
-
-## div
-6/7
+    ## div
+    6/7
 ```
 
 ```powershell
 cat a.ps1 | mdgrep
-## plus
-## sub
-## mul
-## div
+    ## plus
+    ## sub
+    ## mul
+    ## div
 ```
 
 ```powershell
 cat a.ps1 | mdgrep div -MatchOnlyTitle -Expand
-## div
-6/7
+cat a.ps1 | mdgrep div -t -e
+    ## div
+    6/7
 
 ```
 
@@ -5168,59 +5168,103 @@ PowerShellスクリプトファイルはコメントが`#`なので、コメン�
 
 ```powershell
 cat a.ps1
-
-# private functions
-## isFileExists - is file exists?
-function isFileExists ([string]$f){
-    if(-not (Test-Path -LiteralPath "$f")){
-       return $True
-    } else {
-        return $False
+    # private functions
+    ## isFileExists - is file exists?
+    function isFileExists ([string]$f){
+        if(-not (Test-Path -LiteralPath "$f")){
+           return $True
+        } else {
+            return $False
+        }
     }
-}
-## isCommandExist - is command exists?
-function isCommandExist ([string]$cmd) {
-    try { Get-Command $cmd -ErrorAction Stop > $Null
-        return $True
-    } catch {
-        return $False
+    ## isCommandExist - is command exists?
+    function isCommandExist ([string]$cmd) {
+        ### test command
+        try { Get-Command $cmd -ErrorAction Stop > $Null
+            return $True
+        } catch {
+            return $False
+        }
     }
-}
-## Celsius2Fahrenheit - convert Celsius to Fahrenheit
-function Celsius2Fahrenheit ( [float] $C ){
-    return $($C * 1.8 + 32)
-}
-## Fahrenheit2Celsius - convert Fahrenheit to Celsius
-function Fahrenheit2Celsius ( [float] $F ){
-    return $(( $F - 32 ) / 1.8)
-}
-## Get-UIBufferSize - get terminal width
-function Get-UIBufferSize {
-    return (Get-Host).UI.RawUI.BufferSize
-}
-# main
-...
-
+    ## Celsius2Fahrenheit - convert Celsius to Fahrenheit
+    function Celsius2Fahrenheit ( [float] $C ){
+        ### calc
+        return $($C * 1.8 + 32)
+    }
+    ## Fahrenheit2Celsius - convert Fahrenheit to Celsius
+    function Fahrenheit2Celsius ( [float] $F ){
+        ### calc
+        return $(( $F - 32 ) / 1.8)
+    }
+    ## Get-UIBufferSize - get terminal width
+    function Get-UIBufferSize {
+        ### calc
+        return (Get-Host).UI.RawUI.BufferSize
+    }
+    # main
+    ...
 ```
 
 この`a.ps1`から関数`Celsius2Fahrenheit`を抜き出してみる:
 
 ```powershell
 cat a.ps1 | mdgrep
-## isFileExists - is file exists?
-## isCommandExist - is command exists?
-## Celsius2Fahrenheit - convert Celsius to Fahrenheit
-## Fahrenheit2Celsius - convert Fahrenheit to Celsius
-## Get-UIBufferSize - get terminal width
+    ## isFileExists - is file exists?
+    ## isCommandExist - is command exists?
+    ## Celsius2Fahrenheit - convert Celsius to Fahrenheit
+    ## Fahrenheit2Celsius - convert Fahrenheit to Celsius
+    ## Get-UIBufferSize - get terminal width
 ```
 
 ```powershell
 cat a.ps1 | mdgrep celsius2 -Expand -MatchOnlyTitle
-## Celsius2Fahrenheit - convert Celsius to Fahrenheit
-function Celsius2Fahrenheit ( [float] $C ){
-    return $($C * 1.8 + 32)
+cat a.ps1 | mdgrep celsius2 -e -t
+    ## Celsius2Fahrenheit - convert Celsius to Fahrenheit
+    function Celsius2Fahrenheit ( [float] $C ){
+        ### calc
+        return $($C * 1.8 + 32)
+    }
+```
+
+スクリプトファイルでコメントを使用するときはしばしばインデントするので、コメント行の行頭には空白が入る。
+たとえば上の例では関数の中のコメントは`^spaces + ### comment`とある。
+`[-i|-IgnoreLeadingSpaces]`スイッチを指定すると、行頭の空白を無視し、これを[mdgrep]でマークダウン見出しとして解釈させられる。
+
+```powershell
+# IgnoreLeadingSpaces option treat '^space' + '## ...' as header
+PS > cat a.ps1 | mdgrep -IgnoreLeadingSpaces
+PS > cat a.ps1 | mdgrep -i
+    ## isCommandExist - is command exists?
+        ### test command
+    ## Celsius2Fahrenheit - convert Celsius to Fahrenheit
+        ### calc
+    ## Fahrenheit2Celsius - convert Fahrenheit to Celsius
+        ### calc
+    ## Get-UIBufferSize - get terminal width
+        ### calc
+
+PS > cat a.ps1 | mdgrep -Level 3 -IgnoreLeadingSpaces
+PS > cat a.ps1 | mdgrep -l 3 -i
+    ### test command
+    ### calc
+    ### calc
+    ### calc
+
+PS > cat a.ps1 | mdgrep -Level 3 -IgnoreLeadingSpaces test
+PS > cat a.ps1 | mdgrep -l 3 -i test
+    ### test command
+
+PS > cat a.ps1 | mdgrep -Level 3 -IgnoreLeadingSpaces test -Expand
+PS > cat a.ps1 | mdgrep -l 3 -i test -e
+    ### test command
+    try { Get-Command $cmd -ErrorAction Stop > $Null
+        return $True
+    } catch {
+        return $False
+    }
 }
 ```
+
 
 
 #### [tex2pdf] - Compile tex to pdf

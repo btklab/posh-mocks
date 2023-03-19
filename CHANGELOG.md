@@ -10,14 +10,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updated [README.md]
+- None
 
+### Added
+
+- None
+
+## [3.2.0]
+
+### Changed
+
+- Updated [README.md]
 
 ### Added
 
 - Added [man2] `-Independent` option and fix
 - Added [pwmake] `-DeleteCommentEndOfCommandLine` option
-
+- Added [mdgrep] `-IgnoreLeadingSpaces` option
 
 ## [3.1.0] - 2023-03-18 Sat
 
@@ -253,7 +262,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [mdsort]: src/mdsort_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.1.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.2.0..HEAD
+[3.2.0]: https://github.com/btklab/posh-mocks/releases/tag/3.2.0
 [3.1.0]: https://github.com/btklab/posh-mocks/releases/tag/3.1.0
 [3.0.1]: https://github.com/btklab/posh-mocks/releases/tag/3.0.1
 [3.0.0]: https://github.com/btklab/posh-mocks/releases/tag/3.0.0
