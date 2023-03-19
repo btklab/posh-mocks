@@ -101,7 +101,7 @@ if ($IsWindows){
 
 ### Show functions
 
-#### [man2] - Enumerate the function names
+#### [man2] - Formats filelist as a wide table and gets manual
 
 [man2]: src/man2_function.ps1
 
@@ -111,18 +111,89 @@ if ($IsWindows){
 - Usage
     - `man2`
     - `man2 [func-name] [-p|-paging]`
-    - `man2 [[-FunctionName] <String>] [-c|-Column <Int32>] [-Exclude <String>] [-p|-Paging] [-Include <String>] [-Examples] [-l|-Line]`
+    - `man2 [[-f|-FunctionName] <String>] [-c|-Column <Int32>] [-e|-Exclude <String>] [-p|-Paging] [-i|-Include <String>] [-Examples] [-Independent] [-l|-Line]`
 - 挙動
     - `man2`関数ファイルと同階層にある`*_function.ps1`ファイルのファイル名から`_function.ps1`を除去して列挙する
 - 依存
     - [flat], [tateyoko], [keta]
+        - `-Independent`スイッチで依存ファイルを用いず[Format-Wide]だけでテーブル化する
 - Examples
-    - `man2`
-    - `man2 man2`
-    - `man2 man2 -p`
+    - Get command list as table
+        - `man2`
+        - `man2 -c 5`
+    - Get help `man2 <command>`
+        - `man2 man2`
+        - `man2 man2 -p`
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: `man2`
+- Inspired by
+    - [Format-Wide (Microsoft.PowerShell.Utility) - PowerShell][Format-Wide]
+    - [Select-Object (Microsoft.PowerShell.Utility) - PowerShell][Select-Object]
+
+[Select-Object]: https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-object
+[Format-Wide]: https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/format-wide
+
+Examples:
+
+Do the same using the [Format-Wide] commandlet instead of the [man2] command.
+However, the order of the files is slightly different from [man2].
+Lexicographically sorted from **left to right**.
+
+```powershell
+ls *.ps1 -File `
+  | select @{L="Name";E={$_.Name.Replace('_function.ps1','')}} `
+  | Format-Wide -Column 5
+
+Add-CrLf      Add-CrLf-End… addb         addl         addr
+addt          cat2          catcsv       chead        clip2img
+clipwatch     conv          ConvImage    count        csv2sqlite
+csv2txt       ctail         ctail2       decil        delf
+dot2gviz      filehame      fillretu     flat         flow2pu
+fpath         fval          fwatch       gantt2pu     gdate
+Get-AppShort… Get-OGP       getfirst     getlast      grep
+gyo           han           head         i            image2md
+jl            json2txt      juni         keta         kinsoku
+lcalc         linkcheck     linkextract  logi2dot     logi2pu
+man2          map2          mdgrep       mind2dot     mind2pu
+movw          Override-Yaml pawk         percentile   pu2java
+pwmake        retu          rev          rev2         say
+sed           sed-i         self         seq2pu       sleepy
+sm2           summary       table2md     tac          tail
+tarr          tateyoko      teatimer_ex… teatimer     tenki
+tex2pdf       toml2psobject uniq         vbStrConv    watercss
+wrap          yarr          ycalc        ysort        zen
+```
+
+[man2] version.
+Unlike before, they are sorted lexicographically from **top to bottom**.
+This behavior is similar to linux `ls` command.
+The reason for depending on [flat], [tateyoko] and [keta] is to obtain this output.
+
+```powershell
+man2 -Column 5
+man2 -c 5
+
+Add-CrLf           decil           han         mind2pu       table2md
+Add-CrLf-EndOfFile delf            head        movw          tac
+addb               dot2gviz        i           Override-Yaml tail
+addl               filehame        image2md    pawk          tarr
+addr               fillretu        jl          percentile    tateyoko
+addt               flat            json2txt    pu2java       teatimer
+cat2               flow2pu         juni        pwmake        tenki
+catcsv             fpath           keta        retu          tex2pdf
+chead              fval            kinsoku     rev           toml2psobject
+clip2img           fwatch          lcalc       rev2          uniq
+clipwatch          gantt2pu        linkcheck   say           vbStrConv
+conv               gdate           linkextract sed           watercss
+ConvImage          Get-AppShortcut logi2dot    sed-i         wrap
+count              Get-OGP         logi2pu     self          yarr
+csv2sqlite         getfirst        man2        seq2pu        ycalc
+csv2txt            getlast         map2        sleepy        ysort
+ctail              grep            mdgrep      sm2           zen
+ctail2             gyo             mind2dot    summary
+```
+
 
 ### Unix-like text filters
 
