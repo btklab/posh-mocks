@@ -110,7 +110,7 @@ if ($IsWindows){
 
 - Usage
     - `man2`
-    - `man2 [func-name] [-p|-paging]`
+    - `man2 <function-name> [-p|-Paging]`
     - `man2 [[-f|-FunctionName] <String>] [-c|-Column <Int32>] [-e|-Exclude <String>] [-p|-Paging] [-i|-Include <String>] [-Examples] [-Independent] [-l|-Line]`
 - 挙動
     - `man2`関数ファイルと同階層にある`*_function.ps1`ファイルのファイル名から`_function.ps1`を除去して列挙する
@@ -194,6 +194,41 @@ ctail              grep            mdgrep      sm2           zen
 ctail2             gyo             mind2dot    summary
 ```
 
+[map2]を使わず、[flat], [tateyoko], [keta]のコンビネーションで[man2]の出力（上から下に辞書順）を得るワンライナーを以下に示す。
+`flat <n>`の値を変えると列数が変わる。
+
+```powershell
+ls src/*.ps1 -File -Name `
+    | %{ $_.Replace('_function.ps1','') } `
+    | flat 24 `
+    | tateyoko `
+    | keta -l
+
+Add-CrLf           flow2pu         logi2dot      table2md
+Add-CrLf-EndOfFile fpath           logi2pu       tac
+addb               fval            man2          tail
+addl               fwatch          map2          tarr
+addr               gantt2pu        mdgrep        tateyoko
+addt               gdate           mind2dot      teatimer_exec.ps1
+cat2               Get-AppShortcut mind2pu       teatimer
+catcsv             Get-OGP         movw          tenki
+chead              getfirst        Override-Yaml tex2pdf
+clip2img           getlast         pawk          toml2psobject
+clipwatch          grep            percentile    uniq
+conv               gyo             pu2java       vbStrConv
+ConvImage          han             pwmake        watercss
+count              head            retu          wrap
+csv2sqlite         i               rev           yarr
+csv2txt            image2md        rev2          ycalc
+ctail              jl              say           ysort
+ctail2             json2txt        sed           zen
+decil              juni            sed-i
+delf               keta            self
+dot2gviz           kinsoku         seq2pu
+filehame           lcalc           sleepy
+fillretu           linkcheck       sm2
+flat               linkextract     summary
+```
 
 ### Unix-like text filters
 
@@ -4888,7 +4923,7 @@ before.jpg を after.png に形式変換し、かつ、
 Markdowonファイルの処理に特化した行指向ならぬブロック指向の正規表現パターンマッチングツール。
 指定した正規表現パターンにマッチしたMarkdown形式の第2レベル見出しとそのコンテンツを返す。
 
-たとえばこの[README.MD]ファイルにはたくさんの関数が紹介されているが、ここから[man2]ファンクションについて書かれたセクションだけを抜き出すという仕事をする。
+たとえばこの[README.md]ファイルにはたくさんの関数が紹介されているが、ここから[man2]ファンクションについて書かれたセクションだけを抜き出すという仕事をする。
 
 ```powershell
 # 当README.mdから「man2」ファンクションのセクションのみ抜き出す
@@ -4899,27 +4934,26 @@ PS > cat READMD.md | mdgrep man2 -l 4 -t -e
 
 [man2]: src/man2_function.ps1
 
-`src`配下の関数（ファイル）名を列挙する。
+src配下の関数（ファイル）名を列挙する。
 筆者は作った関数をすぐに忘れてしまうため。
 
 - Usage
-    - `man2`
-    - `man2 [func-name] [-p|-paging]`
-    - `man2 [[-FunctionName] <String>] [-c|-Column <Int32>] [-Exclude <String>] [-p|-Paging] [-Include <String>] [-Examples] [-l|-Line]`
+    - man2
+    - man2 [func-name] [-p|-paging]
+    - man2 [[-FunctionName] <String>] [-c|-Column <Int32>] [-Exclude <String>] [-p|-Paging] [-Include <String>] [-Examples] [-l|-Line]
 - 挙動
-    - `man2`関数ファイルと同階層にある`*_function.ps1`ファイルのファイル名から`_function.ps1`を除去して列挙する
+    - man2関数ファイルと同階層にある*_function.ps1ファイルのファイル名から_function.ps1を除去して列挙する
 - 依存
     - [flat], [tateyoko], [keta]
 - Examples
-    - `man2`
-    - `man2 man2`
-    - `man2 man2 -p`
+    - man2
+    - man2 man2
+    - man2 man2 -p
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
-    - Command: `man2`
+    - Command: man2
 ```
 
-マークダウンファイルに特化しているというより、マークダウンスタイルで記述された見出し行（`#`）を含むテキストファイルならばなんでも適用できる。
 
 - Usage
     - `man2 mdgrep`
@@ -4927,6 +4961,7 @@ PS > cat READMD.md | mdgrep man2 -l 4 -t -e
     - `cat file | mdgrep "<regex>"`
 - Inspired by Unix/Linux Commands
     - Command: `grep`
+
 
 Examples:
 
@@ -4984,10 +5019,8 @@ $markdown = @(
 Outputs
 
 ```powershell
-# Search sectoin title and contens,
-# and output matched section titles.
-# Sections below heading level 2 are
-# searched by default
+# Search section title and contens, and output matched section titles.
+# Sections below heading level 2 are searched by default
 
 PS > $markdown | mdgrep .
     ## HACCP
@@ -5047,8 +5080,8 @@ PS > $markdown | mdgrep haccp -t -e
 
 ```powershell
 # invert match
-    PS > $markdown | mdgrep haccp -MatchOnlyTitle -NotMatch -e
-    PS > $markdown | mdgrep haccp -t -v -e
+PS > $markdown | mdgrep haccp -MatchOnlyTitle -NotMatch -e
+PS > $markdown | mdgrep haccp -t -v -e
     ## Computer
     hoge2
     ### Books
@@ -5094,6 +5127,99 @@ PS > $markdown | mdgrep fuga2 -Level 3 -p -e
     ## Computer
     ### Books
     fuga2
+```
+
+マークダウンファイルだけではなく、マークダウンスタイルで記述された見出し行（`#`）を含むテキストファイルならばなんでも適用できる。
+たとえば、スクリプトのコメント記号が（`#`）であれば、`#`の数をマークダウンの見出しスタイルに合わせるとよい：
+
+```powershell
+cat a.ps1
+
+## plus
+1+1
+
+## sub
+2-3
+
+## mul
+4*5
+
+## div
+6/7
+```
+
+```powershell
+cat a.ps1 | mdgrep
+## plus
+## sub
+## mul
+## div
+```
+
+```powershell
+cat a.ps1 | mdgrep div -MatchOnlyTitle -Expand
+## div
+6/7
+
+```
+
+PowerShellスクリプトファイルはコメントが`#`なので、コメントをマークダウンライクな見出し記法で記述しておくと、
+スクリプトファイル内に記述されたprivateなfunctionを、function名grepにて抜き出すことができる。
+
+```powershell
+cat a.ps1
+
+# private functions
+## isFileExists - is file exists?
+function isFileExists ([string]$f){
+    if(-not (Test-Path -LiteralPath "$f")){
+       return $True
+    } else {
+        return $False
+    }
+}
+## isCommandExist - is command exists?
+function isCommandExist ([string]$cmd) {
+    try { Get-Command $cmd -ErrorAction Stop > $Null
+        return $True
+    } catch {
+        return $False
+    }
+}
+## Celsius2Fahrenheit - convert Celsius to Fahrenheit
+function Celsius2Fahrenheit ( [float] $C ){
+    return $($C * 1.8 + 32)
+}
+## Fahrenheit2Celsius - convert Fahrenheit to Celsius
+function Fahrenheit2Celsius ( [float] $F ){
+    return $(( $F - 32 ) / 1.8)
+}
+## Get-UIBufferSize - get terminal width
+function Get-UIBufferSize {
+    return (Get-Host).UI.RawUI.BufferSize
+}
+# main
+...
+
+```
+
+この`a.ps1`から関数`Celsius2Fahrenheit`を抜き出してみる:
+
+```powershell
+cat a.ps1 | mdgrep
+## isFileExists - is file exists?
+## isCommandExist - is command exists?
+## Celsius2Fahrenheit - convert Celsius to Fahrenheit
+## Fahrenheit2Celsius - convert Fahrenheit to Celsius
+## Get-UIBufferSize - get terminal width
+```
+
+```powershell
+cat a.ps1 | mdgrep celsius2 -Expand -MatchOnlyTitle
+## Celsius2Fahrenheit - convert Celsius to Fahrenheit
+function Celsius2Fahrenheit ( [float] $C ){
+    return $($C * 1.8 + 32)
+}
 ```
 
 
@@ -6410,7 +6536,7 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 
 - Usage
     - `man2 clip2img`
-    - `clip2img [directory] [-DirView] [-MSPaint] [-View]`
+    - `clip2img [[-d|-Directory] <String>] [-n|-Name <String>] [-Prefix <String>] [-AutoPrefix] [-AutoPrefixFormat <String>] [-AutoPrefixDelimiter <String>] [-p|-MSPaint] [-c|-Clip] [-i|-DirView] [-v|-View]`
 - Examples
     - `clip2img -d ~/Documents`
     - `clip2img -n a.png`
@@ -6476,7 +6602,11 @@ clip2img -MSPaint -Clip -Directory ~/Pictures -DirView -AutoPrefix -Name "hoge"
 
 PowerShell版make-like command。劣化コピー。
 カレントディレクトリにあるMakefileを読み実行する。
-ただし、GNU make用のMakefileとの互換性はあまりない。
+
+ただし、GNU make用のMakefileとの互換性は、シンプルな書き方をすれば保たれることもあるが、基本的にうすい。
+詳しい違いは後述するが、たとえば、宣言した変数を用いるときは`${ver}`とする点。
+`$(ver)`を用いてもよいがPowerShellの`Subexpression演算子`とみなされ展開される、など。
+
 
 特徴は、実行コマンドにPowerShellコマンドを使用できる点、およびタスクランナーとしてカレントプロセスで動作する点。
 たとえば、カレントプロセスのPowerShellにドットソースで読み込んだ関数も、Makefileに記述して走らせることができる。
@@ -6512,9 +6642,27 @@ PowerShell版make-like command。劣化コピー。
         - `DATE  = ${(Get-Date).ToString('yyyy-MM-dd')}`は、右辺を展開**せず**代入
             - 注：最初の例以外は、**変数は実行時に展開される**点に注意する
     - Makefileの各target列末尾に「` ## コメント`」としておくと、`pwmake -Help`で、targetごとのヘルプを取得
+    - コメントの扱い
+        - `#`から始まる行はコメントとみなす
+        - 行末コメントは、変数宣言行とターゲットラインのみ（行頭が空白でない行のみ）可能
+            - コマンドラインの行末コメントは不可。ただし`-DeleteCommentEndOfCommandLine`スイッチを指定すれば、コマンドライン行でも強制的に`#`以降をコメントとみなす。（行頭から右にみて最初の`#`から行末までの最長一致）
+            - このオプションを指定した場合、コマンド自体に'#'を含むと誤動作するので注意
 - Inspired by Unix/Linux Commands
     - Command: `make`
 
+Comment out example:
+
+```Makefile
+# comment out example
+home := $($HOME) ## comment
+
+target: deps ## comment
+    command \
+        | sed 's;^#;;' \
+        #| grep -v 'hoge'  <-- available comment out
+        | grep -v 'hoge' ## notice!  <-- unavailable comment (use -DeleteCommentEndOfCommandLine)
+        > a.md
+```
 
 Examples:
 
@@ -6623,6 +6771,46 @@ pwmake: The term 'uplatex' is not recognized as a name of a cmdlet, function, sc
 Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
 ```
 
+別のMakefileの例。
+
+このリポジトリ（[GitHub - btklab/posh-mocks](https://github.com/btklab/posh-mocks)）は別の大元となるリポジトリの部分的な複製である。編集は大元のリポジトリ(`posh-source`)で行い、以下のような`Makefile`を用いて（`posh-mocks`に）複製している。このような構成にした理由は、両リポジトリに共通する関数を編集するとき、一度ですませたいため。（副作用として、大元の`posh-source`のファイルを何度か更新して、`posh-mocks`に最後の変更の複製を忘れた（`pwmake`し忘れた）ままコミットする、ということがしばしば発生している）
+
+ちなみに、文末に「`space`」+「`\` or `` ` `` or `|`」とすると、次の行を連結してワンライナーにできる。
+この点を利用してターゲット関数のリストを多少読みやすく・追加削除しやすくしている（つもり）。
+
+
+
+```makefile
+home := $($HOME)
+
+pwshdir  := ${home}\cms\bin\posh-source
+poshmock := ${home}\cms\bin\posh-mocks
+
+.PHONY: all
+all: pwsh ## update all
+
+.PHONY: pwsh
+pwsh: ${pwshdir} ${poshmock} ## update pwsh scripts
+	@Push-Location -LiteralPath "${pwshdir}\"
+	Copy-Item -LiteralPath \
+		./CHANGELOG.md, \
+		./README.md \
+		-Destination "${poshmock}\"
+	Set-Location -LiteralPath "src"
+	Copy-Item -LiteralPath \
+		./self_function.ps1, \
+		./delf_function.ps1, \
+		./sm2_function.ps1, \
+		./man2_function.ps1 \
+		-Destination "${poshmock}\src\"
+	@Pop-Location
+	@if ( -not (Test-Path -LiteralPath "${pwshdir}\img\") ) { Write-Error "src is not exists: ""${pwshdir}\img\""" -ErrorAction Stop }
+	@if ( -not (Test-Path -LiteralPath "${poshmock}\img\") ) { Write-Error "dst is not exists: ""${poshmock}\img\""" -ErrorAction Stop }
+	Robocopy "${pwshdir}\img\" "${poshmock}\img\" /MIR /XA:SH /R:0 /W:1 /COPY:DAT /DCOPY:DT /UNILOG:NUL /TEE
+	Robocopy "${pwshdir}\.github\" "${poshmock}\.github\" /MIR /XA:SH /R:0 /W:1 /COPY:DAT /DCOPY:DT /UNILOG:NUL /TEE
+	Robocopy "${pwshdir}\tests\" "${poshmock}\tests\" /MIR /XA:SH /R:0 /W:1 /COPY:DAT /DCOPY:DT /UNILOG:NUL /TEE
+```
+
 
 #### [i] - Invoke-Links - Read and execute links written in a text file
 
@@ -6630,7 +6818,7 @@ Check the spelling of the name, or if a path was included, verify that the path 
 
 テキストファイルに記述されたリンクを任意のアプリで実行する。Windowsにおけるショートカットに対して`Invoke-Item(Alias:ii)`するのと似た挙動だが、リンクの実行に任意のアプリを用いたり、「ファイルの場所」をエクスプローラで開いたりできる。
 
-リンクとしてファイルを開きたいが、たまにエクスプローラで「ファイルの場所」を開きたいときがある場合に一つのファイルで済む。（ファイルとディレクトリ2つのショートカットを作りたくない人向け）
+ふだんはショートカットとしてリンク先のファイルを開きたいが、たまに「リンク先ファイルの場所」をエクスプローラで開きたいとき、これを一つのリンクファイルで済ませられる。（ファイルオープン用とディレクトリオープン用の**2つのショートカット**を作りたくない人向け）
 
 - Usage
     - `man2 i`

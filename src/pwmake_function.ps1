@@ -40,7 +40,12 @@
         - [-n|-DryRun] switch available.
             - [-toposort] switch show Makefile dependencies.
         - Comment with "#"
-            - only the target line can be commented at the end of theline.
+            - only the target line and Variable declaration line(a line
+              that does not start with a blank space)) can be commented
+              at the end of the line.
+                - comment at the end of command line is unavailable, but
+                  using the "-DeleteCommentEndOfCommandLine" switch forces
+                  delete comment from the "#"" sign to the end of the line.
             - end-of-line commnent not allowed in command line.
             - do not comment out if the rightmost character of the comment
               line is double-quote or single-quote. for example, following
@@ -58,10 +63,14 @@
                   is the Makefile path.
             
         Commentout example:
-            target: deps  #comment
+            
+            home := $($HOME) ## comment
+
+            target: deps  ## comment
                 command \
                     | sed 's;^#;;' \
-                    #| grep -v 'hoge'  <-- comment
+                    #| grep -v 'hoge'  <-- allowed comment out
+                    | grep -v 'hoge' ## notice!!  <-- not allowed (use -DeleteCommentEndOfCommandLine)
                     > a.md
         
     Tips:
@@ -335,6 +344,36 @@
     pwmake: The term 'uplatex' is not recognized as a name of a cmdlet, function, script file, or executable program.
     Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
 
+.EXAMPLE
+    # clone posh-source to posh-mocks
+    home := $($HOME)
+    pwshdir  := ${home}\cms\bin\posh-source
+    poshmock := ${home}\cms\bin\posh-mocks
+
+    .PHONY: all
+    all: pwsh ## update all
+
+    .PHONY: pwsh
+    pwsh: ${pwshdir} ${poshmock} ## update pwsh scripts
+        @Push-Location -LiteralPath "${pwshdir}\"
+        Copy-Item -LiteralPath \
+            ./CHANGELOG.md, \
+            ./README.md \
+            -Destination "${poshmock}\"
+        Set-Location -LiteralPath "src"
+        Copy-Item -LiteralPath \
+            ./self_function.ps1, \
+            ./delf_function.ps1, \
+            ./sm2_function.ps1, \
+            ./man2_function.ps1 \ ## Note ! do not use comma
+            -Destination "${poshmock}\src\"
+        @Pop-Location
+        @if ( -not (Test-Path -LiteralPath "${pwshdir}\img\") ) { Write-Error "src is not exists: ""${pwshdir}\img\""" -ErrorAction Stop }
+        @if ( -not (Test-Path -LiteralPath "${poshmock}\img\") ) { Write-Error "dst is not exists: ""${poshmock}\img\""" -ErrorAction Stop }
+        Robocopy "${pwshdir}\img\" "${poshmock}\img\" /MIR /XA:SH /R:0 /W:1 /COPY:DAT /DCOPY:DT /UNILOG:NUL /TEE
+        Robocopy "${pwshdir}\.github\" "${poshmock}\.github\" /MIR /XA:SH /R:0 /W:1 /COPY:DAT /DCOPY:DT /UNILOG:NUL /TEE
+        Robocopy "${pwshdir}\tests\" "${poshmock}\tests\" /MIR /XA:SH /R:0 /W:1 /COPY:DAT /DCOPY:DT /UNILOG:NUL /TEE
+
 #>
 function pwmake {
     Param(
@@ -364,6 +403,9 @@ function pwmake {
 
         [Parameter(Mandatory=$False)]
         [switch] $Help,
+
+        [Parameter(Mandatory=$False)]
+        [switch] $DeleteCommentEndOfCommandLine,
 
         [Parameter(Mandatory=$False)]
         [Alias('n')]
@@ -522,7 +564,15 @@ function pwmake {
                 #$line = $line -replace "$reg",''
                 if($line -match '^\s+'){
                     ## command line
-                    #pass
+                    if ( $DeleteCommentEndOfCommandLine ){
+                        if ( $line -notmatch '#' ){
+                            # do not contains "#"
+                            # pass
+                        } else {
+                            # delete comment like: command # comment
+                            $line = $line -replace '#.*$', ''
+                        }
+                    }
                 }else{
                     ## target: dep line
                     $line = $line -replace '#.*[^"'']$', ''
