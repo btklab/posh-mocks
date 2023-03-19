@@ -374,6 +374,51 @@
         Robocopy "${pwshdir}\.github\" "${poshmock}\.github\" /MIR /XA:SH /R:0 /W:1 /COPY:DAT /DCOPY:DT /UNILOG:NUL /TEE
         Robocopy "${pwshdir}\tests\" "${poshmock}\tests\" /MIR /XA:SH /R:0 /W:1 /COPY:DAT /DCOPY:DT /UNILOG:NUL /TEE
 
+.EXAMPLE
+    pwmake -f ~/Documents/Makefile -Help
+
+    target synopsis
+    ------ --------
+    all    Add ".txt" to the extension of the script file and Zip archive
+    clean  Remove "*.txt" items in Documents directory
+
+
+    cat ~/Documents/Makefile
+    documentdir := ~/Documents
+
+    .PHONY: all
+    all: ## Add ".txt" to the extension of the script file and Zip archive
+        ls -Path \
+            ${documentdir}/*.ps1 \
+            , ${documentdir}/*.py \
+            , ${documentdir}/*.R \
+            , ${documentdir}/*.yaml \
+            , ${documentdir}/*.Makefile \
+            , ${documentdir}/*.md \
+            , ${documentdir}/*.Rmd \
+            , ${documentdir}/*.qmd \
+            , ${documentdir}/*.bat \
+            , ${documentdir}/*.cmd \
+            , ${documentdir}/*.vbs \
+            , ${documentdir}/*.js \
+            , ${documentdir}/*.vimrc \
+            , ${documentdir}/*.gvimrc \
+            | ForEach-Object { \
+                Write-Host "Rename: $($_.Name) -> $($_.Name).txt"; \
+                $_ | Rename-Item -NewName {$_.Name -replace '$', '.txt' } \
+            }
+        Compress-Archive \
+            -Path ${documentdir}/*.txt \
+            -DestinationPath ${documentdir}/a.zip -Update
+
+    .PHONY: clean
+    clean: ## Remove "*.txt" items in Documents directory
+        ls -Path "${documentdir}/*.txt" \
+            | ForEach-Object { \
+                Write-Host "Remove: $($_.Name)"; \
+                Remove-Item -LiteralPath $_.FullName \
+            }
+
 #>
 function pwmake {
     Param(
@@ -434,9 +479,9 @@ function pwmake {
                 if($varDict){
                     foreach ($k in $varDict.Keys){
                         ## replace variables
-                        [string]$bef = '${' + $k + '}'
-                        [string]$aft = $varDict[$k]
-                        $val = $val.Replace($bef, $aft)
+                        [string]$targetVar = '${' + $k + '}'
+                        [string]$replaceVar = $varDict[$k]
+                        $val = $val.Replace($targetVar, $replaceVar)
                     }
                 }
                 $varDict.Add($key, $val)

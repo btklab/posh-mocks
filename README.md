@@ -4959,6 +4959,15 @@ src配下の関数（ファイル）名を列挙する。
     - `man2 mdgrep`
     - `mdgrep [[-Grep] <String>] [-l|-Level <Int32>] [-t|-MatchOnlyTitle] [-e|-Expand] [-p|-OutputParentSection] [-v|-NotMatch]`
     - `cat file | mdgrep "<regex>"`
+- Note
+    - The number signs (`#`) written in the following block is ignored
+        - Yaml Block
+        - Code Block
+        - Fence Block
+        - Quote Block
+        - CustomCommentBlock:
+            - The language-specific comment block symbol can be specified with `-CustomCommentBlock "begin","end"` option.
+                - e.g. Ignore PowerShell comment blocks: `-CustomCommentBlock "<#","#>"`
 - Inspired by Unix/Linux Commands
     - Command: `grep`
 
@@ -5264,6 +5273,10 @@ PS > cat a.ps1 | mdgrep -l 3 -i test -e
     }
 }
 ```
+
+`-CustomCommentBlock "begin-sympl","end-symbol"`で、言語特有の複数行コメント内の`#`記号を無視できる。
+上のPowerShellスクリプトのパース事例では、`-CustomCommentBlock "<#","#>"`を追加しておくと、
+スクリプトのSynopsisにある`#`記号がマッチしなくなるのでより安全。
 
 
 
@@ -6817,11 +6830,12 @@ Check the spelling of the name, or if a path was included, verify that the path 
 
 別のMakefileの例。
 
-このリポジトリ（[GitHub - btklab/posh-mocks](https://github.com/btklab/posh-mocks)）は別の大元となるリポジトリの部分的な複製である。編集は大元のリポジトリ(`posh-source`)で行い、以下のような`Makefile`を用いて（`posh-mocks`に）複製している。このような構成にした理由は、両リポジトリに共通する関数を編集するとき、一度ですませたいため。（副作用として、大元の`posh-source`のファイルを何度か更新して、`posh-mocks`に最後の変更の複製を忘れた（`pwmake`し忘れた）ままコミットする、ということがしばしば発生している）
+このリポジトリ（[GitHub - btklab/posh-mocks](https://github.com/btklab/posh-mocks)）は別の大元となるリポジトリの部分的な複製である。編集は大元のリポジトリ(`posh-source`)で行い、以下のような`Makefile`を用いて（`posh-mocks`に）複製している。このような構成にした理由は、両リポジトリに共通する関数を編集するとき、一度ですませたいため。（副作用として、大元の`posh-source`のファイルを何度か更新して、`posh-mocks`に最後の変更の複製を忘れた（`pwmake`し忘れた）ままコミットする、ということがしばしば発生している）（要するに`posh-source`リポジトリのコードは、この`posh-mocks`よりもスバゲッティで不安定なため、とても公開できる代物ではない、ということ）
 
-ちなみに、文末に「`space`」+「`\` or `` ` `` or `|`」とすると、次の行を連結してワンライナーにできる。
+ちなみに、文末に「`space`」+「`\` or `` ` `` or `|`」（正規表現でかくと`\s\\$` or ``\s`$`` or `\s\|$`）とすると、次の行を連結してワンライナーにできる。
 この点を利用してターゲット関数のリストを多少読みやすく・追加削除しやすくしている（つもり）。
 
+この事例はコピーファイル数が少なく、個々のコマンド行の実行時間が短く、またファイルの依存関係もないので、`Makefile`を記述して`make`する必要はとくになく、ふつうの`.ps1`スクリプトでこと足りる。あえて`make`する理由は、せっかく作ったのだから使おうという気持ちと、`Makefile`を書くことで本家`GNU make`の使い方の練習にもなるかもしれない、という気持ちのみ。
 
 
 ```makefile
@@ -6853,6 +6867,62 @@ pwsh: ${pwshdir} ${poshmock} ## update pwsh scripts
 	Robocopy "${pwshdir}\img\" "${poshmock}\img\" /MIR /XA:SH /R:0 /W:1 /COPY:DAT /DCOPY:DT /UNILOG:NUL /TEE
 	Robocopy "${pwshdir}\.github\" "${poshmock}\.github\" /MIR /XA:SH /R:0 /W:1 /COPY:DAT /DCOPY:DT /UNILOG:NUL /TEE
 	Robocopy "${pwshdir}\tests\" "${poshmock}\tests\" /MIR /XA:SH /R:0 /W:1 /COPY:DAT /DCOPY:DT /UNILOG:NUL /TEE
+```
+
+もうひとつの`Makefile`事例。
+
+`~/Documents`フォルダ直下にある各種スクリプトファイルに拡張子`.txt`を付与した上でZipアーカイブする`Makefile`。
+
+[pwmake]の特徴のひとつは**よくも悪くも**カレントプロセスで動作すること。このケースではファイルパスの書き方に注意する。`Makefile`に記述する場合はできるだけ**フルパス**で書くと事故が起こりにくい。
+
+ファイルを相対パスで書いた場合は`pwmake`の実行ディレクトリからの相対パスになる点に注意する。都度`Makefile`がおいてあるディレクトリに`cd`してから`pwmake`を実行する場合は相対パスでもよいが、`cd`せずにカレントディレクトリ外の`Makefile`を`pwmake -f <Makefile>`で呼び出すときは要注意。そういうケースではファイルは絶対パスで表現するのが事故予防によい。
+
+以下の`Makefile`も、`cd`せずに`pwmake -f ~/Documents/Makefile`で呼び出すことを想定してファイルを絶対パスで表現したもの。
+
+```powreshell
+pwmake -f ~/Documents/Makefile -Help
+
+target synopsis
+------ --------
+all    Add ".txt" to the extension of the script file and Zip archive
+clean  Remove "*.txt" items in Documents directory
+```
+
+```makefile
+documentdir := ~/Documents
+
+.PHONY: all
+all: ## Add ".txt" to the extension of the script file and Zip archive
+    ls -Path \
+        ${documentdir}/*.ps1 \
+        , ${documentdir}/*.py \
+        , ${documentdir}/*.R \
+        , ${documentdir}/*.yaml \
+        , ${documentdir}/*.Makefile \
+        , ${documentdir}/*.md \
+        , ${documentdir}/*.Rmd \
+        , ${documentdir}/*.qmd \
+        , ${documentdir}/*.bat \
+        , ${documentdir}/*.cmd \
+        , ${documentdir}/*.vbs \
+        , ${documentdir}/*.js \
+        , ${documentdir}/*.vimrc \
+        , ${documentdir}/*.gvimrc \
+        | ForEach-Object { \
+            Write-Host "Rename: $($_.Name) -> $($_.Name).txt"; \
+            $_ | Rename-Item -NewName {$_.Name -replace '$', '.txt' } \
+        }
+    Compress-Archive \
+        -Path ${documentdir}/*.txt \
+        -DestinationPath ${documentdir}/a.zip -Update
+
+.PHONY: clean
+clean: ## Remove "*.txt" items in Documents directory
+    ls -Path "${documentdir}/*.txt" \
+        | ForEach-Object { \
+            Write-Host "Remove: $($_.Name)"; \
+            Remove-Item -LiteralPath $_.FullName \
+        }
 ```
 
 

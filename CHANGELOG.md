@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [Unreleased]
+## [unreleased]
 
 ### Changed
 
@@ -15,6 +15,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - None
+
+
+## [3.3.1]
+
+### Changed
+
+- Fixed [pwmake] overwrite optimized variable error
+
+### Added
+
+- Added [pwmake] example
+
+
+## [3.3.0]
+
+### Changed
+
+- Updated [README.md]
+
+### Added
+
+- Added [mdgrep] `-CustomCommentBlock` enable the language-specific comment block symbol
 
 ## [3.2.0]
 
@@ -37,7 +59,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added [mdsort] function
 - Added [mdgrep] function
 - Added [Get-AppShortcut] function
 - Added [clip2img] examples
@@ -259,10 +280,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Get-AppShortcut]: src/Get-AppShortcut_function.ps1
 [mdgrep]: src/mdgrep_function.ps1
-[mdsort]: src/mdsort_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.2.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.3.1..HEAD
+[3.3.1]: https://github.com/btklab/posh-mocks/releases/tag/3.3.1
+[3.3.0]: https://github.com/btklab/posh-mocks/releases/tag/3.3.0
 [3.2.0]: https://github.com/btklab/posh-mocks/releases/tag/3.2.0
 [3.1.0]: https://github.com/btklab/posh-mocks/releases/tag/3.1.0
 [3.0.1]: https://github.com/btklab/posh-mocks/releases/tag/3.0.1
