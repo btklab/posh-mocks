@@ -10,11 +10,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- None
+
+### Added
+
+- None
+
+## [3.2.0]
+
+### Changed
+
+- Updated [README.md]
+
+### Added
+
+- Added [man2] `-Independent` option and fix
+- Added [pwmake] `-DeleteCommentEndOfCommandLine` option
+- Added [mdgrep] `-IgnoreLeadingSpaces` option
+
+## [3.1.0] - 2023-03-18 Sat
+
+### Changed
+
 - Updated [README.md]
 - Fixed [percentile] synopsis
 
 ### Added
 
+- Added [mdsort] function
 - Added [mdgrep] function
 - Added [Get-AppShortcut] function
 - Added [clip2img] examples
@@ -236,9 +259,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Get-AppShortcut]: src/Get-AppShortcut_function.ps1
 [mdgrep]: src/mdgrep_function.ps1
+[mdsort]: src/mdsort_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.0.1..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.2.0..HEAD
+[3.2.0]: https://github.com/btklab/posh-mocks/releases/tag/3.2.0
+[3.1.0]: https://github.com/btklab/posh-mocks/releases/tag/3.1.0
 [3.0.1]: https://github.com/btklab/posh-mocks/releases/tag/3.0.1
 [3.0.0]: https://github.com/btklab/posh-mocks/releases/tag/3.0.0
 [2.1.3]: https://github.com/btklab/posh-mocks/releases/tag/2.1.3

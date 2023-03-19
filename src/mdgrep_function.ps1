@@ -184,10 +184,90 @@
         #### [flow2pu] - Generate activity-diagram (flowchart) from markdown-like list format
 
     PS > cat README.md | mdgrep seq2pu -Level 4
-    #### [seq2pu] - Generate sequence-diagram from markdown-like list format
+        #### [seq2pu] - Generate sequence-diagram from markdown-like list format
 
     PS > cat README.md | mdgrep seq2pu -Level 4 -e
-    # output contents in "#### seq2pu section"
+        # output contents in "#### seq2pu section"
+
+.EXAMPLE
+    # get function from markdown-heading like ps1 scriptfile
+    PS > cat a.ps1
+        ## isCommandExist - is command exists?
+        function isCommandExist ([string]$cmd) {
+            ### test command
+            try { Get-Command $cmd -ErrorAction Stop > $Null
+                return $True
+            } catch {
+                return $False
+            }
+        }
+        ## Celsius2Fahrenheit - convert Celsius to Fahrenheit
+        function Celsius2Fahrenheit ( [float] $C ){
+            ### calc
+            return $($C * 1.8 + 32)
+        }
+        ## Fahrenheit2Celsius - convert Fahrenheit to Celsius
+        function Fahrenheit2Celsius ( [float] $F ){
+            ### calc
+            return $(( $F - 32 ) / 1.8)
+        }
+        ## Get-UIBufferSize - get terminal width
+        function Get-UIBufferSize {
+            ### calc
+            return (Get-Host).UI.RawUI.BufferSize
+        }
+        # main
+        ...
+
+
+    PS > cat a.ps1 | mdgrep
+        ## isFileExists - is file exists?
+        ## isCommandExist - is command exists?
+        ## Celsius2Fahrenheit - convert Celsius to Fahrenheit
+        ## Fahrenheit2Celsius - convert Fahrenheit to Celsius
+        ## Get-UIBufferSize - get terminal width
+
+
+    PS > cat a.ps1 | mdgrep celsius2 -MatchOnlyTitle -Expand
+    PS > cat a.ps1 | mdgrep celsius2 -t -e
+        ## Celsius2Fahrenheit - convert Celsius to Fahrenheit
+        function Celsius2Fahrenheit ( [float] $C ){
+            return $($C * 1.8 + 32)
+        }
+
+
+    # IgnoreLeadingSpaces option treat '^space' + '## ...' as header
+    PS > cat a.ps1 | mdgrep -IgnoreLeadingSpaces
+    PS > cat a.ps1 | mdgrep -i
+        ## isCommandExist - is command exists?
+            ### test command
+        ## Celsius2Fahrenheit - convert Celsius to Fahrenheit
+            ### calc
+        ## Fahrenheit2Celsius - convert Fahrenheit to Celsius
+            ### calc
+        ## Get-UIBufferSize - get terminal width
+            ### calc
+
+    PS > cat a.ps1 | mdgrep -Level 3 -IgnoreLeadingSpaces
+    PS > cat a.ps1 | mdgrep -l 3 -i
+        ### test command
+        ### calc
+        ### calc
+        ### calc
+    
+    PS > cat a.ps1 | mdgrep -Level 3 -IgnoreLeadingSpaces test
+    PS > cat a.ps1 | mdgrep -l 3 -i test
+        ### test command
+    
+    PS > cat a.ps1 | mdgrep -Level 3 -IgnoreLeadingSpaces test -Expand
+    PS > cat a.ps1 | mdgrep -l 3 -i test -e
+        ### test command
+        try { Get-Command $cmd -ErrorAction Stop > $Null
+            return $True
+        } catch {
+            return $False
+        }
+    }
 
 #>
 function mdgrep {
@@ -218,6 +298,10 @@ function mdgrep {
         [Alias('v')]
         [switch] $NotMatch,
         
+        [Parameter( Mandatory=$False )]
+        [Alias('i')]
+        [switch] $IgnoreLeadingSpaces,
+        
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
         [string[]] $InputText
     )
@@ -241,12 +325,12 @@ function mdgrep {
 
         # private function
         function replaceSecToNum ( [string] $section ){
-            if ( $section -match '^#{1} ') { return 1 }
-            if ( $section -match '^#{2} ') { return 2 }
-            if ( $section -match '^#{3} ') { return 3 }
-            if ( $section -match '^#{4} ') { return 4 }
-            if ( $section -match '^#{5} ') { return 5 }
-            if ( $section -match '^#{6} ') { return 6 }
+            if ( $section.Trim() -match '^#{1} ') { return 1 }
+            if ( $section.Trim() -match '^#{2} ') { return 2 }
+            if ( $section.Trim() -match '^#{3} ') { return 3 }
+            if ( $section.Trim() -match '^#{4} ') { return 4 }
+            if ( $section.Trim() -match '^#{5} ') { return 5 }
+            if ( $section.Trim() -match '^#{6} ') { return 6 }
         }
     }
 
@@ -326,9 +410,16 @@ function mdgrep {
         -and (-not $inFenceBlock) `
         -and (-not $inQuoteBlock) `
         -and (-not $inYamlBlock) ){
-            if ( $readLine -match '^#'){
-                [bool] $isSection = $True
-                [int] $secLevel = replaceSecToNum $readLine
+            if ( $IgnoreLeadingSpaces ){
+                if ( $readLine -match '^\s*#'){
+                    [bool] $isSection = $True
+                    [int] $secLevel = replaceSecToNum $readLine
+                }
+            } else {
+                if ( $readLine -match '^#'){
+                    [bool] $isSection = $True
+                    [int] $secLevel = replaceSecToNum $readLine
+                }
             }
         }
         #Write-Debug "$inCodeBlock, $inFenceBlock, $inQuoteBlock, $inYamlBlock, $readLine"

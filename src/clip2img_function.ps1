@@ -2,7 +2,10 @@
 .SYNOPSIS
     clip2img -- Save clip board image as an image file
 
+    clip2img [[-d|-Directory] <String>] [-n|-Name <String>] [-Prefix <String>] [-AutoPrefix] [-AutoPrefixFormat <String>] [-AutoPrefixDelimiter <String>] [-p|-MSPaint] [-c|-Clip] [-i|-DirView] [-v|-View]
+
         clip2img -MSPaint -Clip -Directory ~/Pictures -DirView -AutoPrefix -Name "hoge"
+        
             Mode        LastWriteTime   Length Name
             ----        -------------   ------ ----
             -a--- 2023/03/18    22:32   171680 2023-03-18___hoge.png
