@@ -23,6 +23,9 @@
         Code Block  '``' and '````'
         Fence Block ':::' and '::::'
         Quote Block
+        CustomCommentBlock:
+            The language-specific comment block symbol can be
+            specified with -CustomCommentBlock "begin", "end" option.
 
     PS > cat README.md | mdgrep seq2pu -Level 3
         ### Plot chart and graph
@@ -302,6 +305,9 @@ function mdgrep {
         [Alias('i')]
         [switch] $IgnoreLeadingSpaces,
         
+        [Parameter( Mandatory=$False )]
+        [string[]] $CustomCommentBlock,
+        
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
         [string[]] $InputText
     )
@@ -311,16 +317,26 @@ function mdgrep {
         [int] $rowCounter = 0
         [int] $secLevel   = 0
         [string] $stat = 'init'
-        [bool] $inYamlBlock   = $False
-        [bool] $inCodeBlock   = $False
-        [bool] $inCodeBlock3  = $False
-        [bool] $inCodeBlock4  = $False
-        [bool] $inFenceBlock  = $False
-        [bool] $inFenceBlock3 = $False
-        [bool] $inFenceBlock4 = $False
-        [bool] $inQuoteBlock  = $False
-        [bool] $isSection     = $False
-        [bool] $matchFlag     = $False
+        [bool] $inYamlBlock           = $False
+        [bool] $inCodeBlock           = $False
+        [bool] $inCodeBlock3          = $False
+        [bool] $inCodeBlock4          = $False
+        [bool] $inFenceBlock          = $False
+        [bool] $inFenceBlock3         = $False
+        [bool] $inFenceBlock4         = $False
+        [bool] $inQuoteBlock          = $False
+        [bool] $isSection             = $False
+        [bool] $matchFlag             = $False
+        if ( $CustomCommentBlock ){
+            if ( $CustomCommentBlock.Count -ne 2 ){
+                Write-Error "-CustomCommmentBlock option requires 2 specifications, a begin symbol and an end symbol" -ErrorAction Stop
+            }
+            [bool] $inCustomCommentBlock  = $False
+            [string] $cunstomCommentBlockBegin = '^\s*' + $CustomCommentBlock[0] + '$'
+            [string] $cunstomCommentBlockEnd   = '^\s*' + $CustomCommentBlock[1] + '$'
+        } else {
+            [bool] $inCustomCommentBlock  = $False
+        }
         $tempAryList = New-Object 'System.Collections.Generic.List[System.String]'
 
         # private function
@@ -371,7 +387,7 @@ function mdgrep {
                     [bool] $inFenceBlock4 = $False
                 } else {
                     [bool] $inFenceBlock4 = $True
-                }   
+                }
             } else {
                 # fence block level 3
                 if ( $inFenceBlock3 ){
@@ -379,13 +395,37 @@ function mdgrep {
                     [bool] $inFenceBlock3 = $False
                 } else {
                     [bool] $inFenceBlock3 = $True
-                }   
+                }
             }
         }
         if ( ( -not $inFenceBlock3) -and ( -not $inFenceBlock4) ) {
             [bool] $inFenceBlock = $False
         } else {
             [bool] $inFenceBlock = $True
+        }
+        # is Custom comment block?
+        if ( $CustomCommentBlock ){
+            if ( $readLine -match $cunstomCommentBlockBegin ){
+                if ( ( -not $inCodeBlock ) -and ( -not $inFenceBlock ) ) {
+                    # fence block level 3
+                    if ( $inCustomCommentBlock ){
+                        # out of comment block
+                        [bool] $inCustomCommentBlock = $False
+                    } else {
+                        [bool] $inCustomCommentBlock = $True
+                    }
+                }
+            }
+            if ( $readLine -match $cunstomCommentBlockEnd ){
+                if ( ( -not $inCodeBlock ) -and ( -not $inFenceBlock ) ) {
+                    # fence block level 3
+                    if ( -not $inCustomCommentBlock ){
+                        Write-Warning "Could not find comment block beginning symbol: $($CustomCommentBlock[0])" -ErrorAction Stop
+                    }
+                    # out of comment block
+                    [bool] $inCustomCommentBlock = $False
+                }
+            }
         }
         # is Yaml block?
         if ( $rowCounter -eq 1 -and $readLine -match '^\-\-\-$') {
@@ -406,17 +446,18 @@ function mdgrep {
         }
         # get section level as int
         [bool] $isSection = $False
-        if ( (-not $inCodeBlock) `
-        -and (-not $inFenceBlock) `
-        -and (-not $inQuoteBlock) `
-        -and (-not $inYamlBlock) ){
+        if ( ( -not $inCodeBlock ) `
+        -and ( -not $inFenceBlock ) `
+        -and ( -not $inQuoteBlock ) `
+        -and ( -not $inCustomCommentBlock ) `
+        -and ( -not $inYamlBlock ) ){
             if ( $IgnoreLeadingSpaces ){
-                if ( $readLine -match '^\s*#'){
+                if ( $readLine -match '^\s*#{1,6} [^ ]+'){
                     [bool] $isSection = $True
                     [int] $secLevel = replaceSecToNum $readLine
                 }
             } else {
-                if ( $readLine -match '^#'){
+                if ( $readLine -match '^#{1,6} [^ ]+'){
                     [bool] $isSection = $True
                     [int] $secLevel = replaceSecToNum $readLine
                 }
