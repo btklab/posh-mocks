@@ -82,6 +82,19 @@ $sJson = @"
         ]
     },
     {
+        "App": "IME",
+        "Act": "Switch input language",
+        "Key": "Left-Alt Shift",
+        "Fn": "",
+        "Esc": "",
+        "Ano": "",
+        "Uri": "",
+        "Note": "",
+        "tag": [
+            "ime"
+        ]
+    },
+    {
         "App": "Windows Terminal",
         "Act": "Split pane",
         "Key": "Alt Shift +|-",

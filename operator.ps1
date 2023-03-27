@@ -38,6 +38,7 @@ if ($IsWindows){
 ### pwsh implementation of gnu make command
 . $pwshSrcDir/pwmake_function.ps1
 #Set-Alias -name make -value pwmake
+. $pwshSrcDir/pwsync_function.ps1
 
 ## text filter
 . $pwshSrcDir/keta_function.ps1

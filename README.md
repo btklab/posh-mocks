@@ -6994,6 +6994,194 @@ i ./link/rmarkdown_site.txt code
 i ./link/rmarkdown_site.txt -l
 ```
 
+#### [pwsync] - Invoke Robocopy.exe
+
+[pwsync]: src/pwsync_function.ps1
+
+`Robocopy.exe`のラッパースクリプト。フォルダ間で**多量のファイルを安定して同期できる**`Robocopy`は毎日なにかと活躍する。たとえばバックアップ・サーバへのファイルアップロード・データのサルベージなど。
+
+筆者は`Robocopy`を毎日手動で使っているので、`robocopy src dst *.* /MIR /COPY:DAT /DCOPY:DAT /R:5 /W:5 /L`などは手が覚えている。したがって[pwsync]コマンドはとくに必要ないのだが、メモがわりにスクリプトにした。
+
+UTF-8環境下のPowerShell7での使用を想定している。
+
+- Usage
+    - `man2 pwsync`
+    - `pwsync <source> <destination> [-MIR] [options] [-Exec|-Echo|-DryRun|-Quit]`
+- Options
+    - `[-f|-Source]`
+    - `[-t|-Destination]`
+    - `[-Files = '*.*']`
+    - `[-MIR|-Mirror] or [-d|-Delete]`
+    - `[-Compress]`
+    - `[-R|-Retry = 5]`
+    - `[-W|-WaitTime = 5]`
+    - `[-Mot]`
+    - `[-Mon]`
+    - `[-LEV|-Level]`
+    - `[-E|-Empty]`
+    - `[-S|-ExcludeEmpty]`
+    - `[-Log]`
+    - `[-XF|-ExcludeFiles]`
+    - `[-XD|-ExcludeDirs]`
+    - `[-Init] or [-Create]`
+    - `[-IncludeSystemFileAndHiddenFile]`
+    - `[-ExcludeSystemFileAndHiddenFile]`
+    - `[-AttribFullBackup]`
+    - `[-A|-AttribDifferencialBackup]`
+    - `[-M|-AttribIncrementalBackup]`
+    - `[-DeleteSystemAndHiddenAttribFromDest] avoide destination becomes hidden`
+    - `[-MAXAGE|-ExcludeLastWriteDateOlderEqal <n> or YYYYMMDD]`
+    - `[-MINAGE|-ExcludeLastWriteDateNewerEqal <n> or YYYYMMDD]`
+    - `[-MAXLAD|-ExcludeLastAccessDateOlderEqal <n> or YYYYMMDD]`
+    - `[-MINLAD|-ExcludeLastAccessDateNewerEqal <n> or YYYYMMDD]`
+    - `[-Quit]`
+    - `[-L|-DryRun]`
+    - `[-Echo|-EchoCommand]`
+    - `[-exec|-Execute]`
+    - `[-h|-Help]`
+- Note
+    - `source`と`destination`の指定順序を間違えると`source`が消えてしまう事故になるので注意する
+        - 最初に（左に）`source`、次に（右に）`destination`が正解
+        - 覚え方：話し言葉のように「`source`から`destination`にファイルを同期する」
+    - `Robocopy`はデフォルトで実行してしまうが、[pwsync]は明示的に`-Execute`スイッチを指定しない限りは実行しない
+        - `-Execute`, `-Echo`, `-L|-DryRun`スイッチをなにも指定しなかった場合、デフォルトで`-Quit`スイッチが指定される
+    - [pwsync]は以下の手順で用いると安全である:
+        1. `pwsync src dst -MIR [-Quit]`
+            - (test option: equivalent to `robocopy src dst /MIR /QUIT`)
+        2. `pwsync src dst -MIR -DryRun (or -L)`
+            - (dry run, not execute)
+        3. `pwsync src dst -MIR -Execute`
+            - (execute robocopy!)
+- Thanks
+    - Robosync
+        - <https://n-archives.net/software/robosync/>
+    - robocopy - learn.microsoft.com
+        - <https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/robocopy>
+    - attrib - learn.microsoft.com
+        - <https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/attrib>
+
+
+Examples:
+
+```powershell
+# 1. init (Creates a directory tree and zero-length files only)
+#  eq: robocpy "src" "dst" /MIR /DCOPY:DAT /CREATE
+
+    pwsync src dst -Create [-Quit]
+    pwsync src dst -Create -DryRun
+    pwsync src dst -Create -Execute
+
+# 2-1. copy
+#  eq: robocopy "src" "dst" *.* /COPY:DAT /DCOPY:DAT /R:5 /W:5 /UNILOG:NUL /TEE
+
+    pwsync src dst [-Quit]
+    pwsync src dst -DryRun
+    pwsync src dst -Exec
+
+# 2-2. mirror
+#  eq: robocopy "src" "dst" *.* /COPY:DAT /DCOPY:DAT /R:5 /W:5 /UNILOG:NUL /TEE
+#  eq: rsync -av --delete (using Linux rsync command)
+
+    pwsync src dst -MIR [-Quit]
+    pwsync src dst -MIR -DryRun
+    pwsync src dst -MIR -Exec
+```
+
+```powershell
+# Copy only directories (/QUIT)
+
+    pwsync src dst -MIR -E -XF *.*
+    robocopy "src" "dst" *.* /L /MIR /COPY:DAT /DCOPY:DAT /R:5 /W:5 /UNILOG:NUL /TEE /XF *.* /E /QUIT
+```
+
+```powershell
+# Monitors the source and runs again in m minutes if changes are detected.
+
+    pwsync src dst -MIR -Mot 1
+    robocopy "src" "dst" *.* /L /MIR /MOT:1 /COPY:DAT /DCOPY:DAT /R:5 /W:5 /UNILOG:NUL /TEE /QUIT
+
+# Monitors the source and runs again in m minutes if changes are detected
+# or Monitors the source and runs again when more than n changes are detected.
+
+    pwsync src dst -MIR -Mot 1 -Mon 5
+    robocopy "src" "dst" *.* /L /MIR /MOT:1 /MON:5 /COPY:DAT /DCOPY:DAT /R:5 /W:5 /UNILOG:NUL /TEE /QUIT
+```
+
+```powershell
+# Incremental backup
+
+## !! Keep the destination directory separate from the full backup directory
+
+## full backup: -AttribFullBackup (backup and clear attrib)
+
+    pwsync src dst -AttribFullBackup
+    robocopy "src" "dst" *.* /L /COPY:DAT /DCOPY:DAT /R:5 /W:5 /UNILOG:NUL /TEE /E /QUIT
+    attrib -a "src\*.*" /s
+
+## incremental backup: -AttribIncrementalBackup (robocopy /M: copy and clear attrib)
+
+    pwsync src gen -AttribIncrementalBackup
+    robocopy "src" "gen" *.* /L /COPY:DAT /DCOPY:DAT /R:5 /W:5 /UNILOG:NUL /TEE /M /QUIT
+```
+
+```powershell
+# Differencial backup
+
+## !! Keep the destination directory separate from the full backup directory
+
+## full backup: -AttribFullBackup (backup and clear attrib)
+
+    pwsync src dst -AttribFullBackup -Echo
+    robocopy "src" "dst" *.* /L /COPY:DAT /DCOPY:DAT /R:5 /W:5 /UNILOG:NUL /TEE /E /QUIT
+    attrib -a "src\*.*" /s
+
+## differencial backup: -AttribDifferencialBackup (robocopy /A: copy but not clear attrib)
+    pwsync src gen -AttribDifferencialBackup -Echo
+    robocopy "src" "gen" *.* /L /COPY:DAT /DCOPY:DAT /R:5 /W:5 /UNILOG:NUL /TEE /A /QUIT
+
+# thanks
+# https://n-archives.net/software/robosync/articles/incremental-differential-backup/
+```
+
+```powershell
+# Exclude files
+# note that "n days ago" means the same hour, minute, and second
+# n days before the date and time at the time of execution.
+# On the other hand, "YYYYMMDD" means 00:00:00 on the specified date.
+
+# Exclude LastWriteDate older equal 3 days ago or 2023-03-24
+    pwsync src dst -MAXAGE 3
+    pwsync src dst -ExcludeLastWriteDateOlderEqal 3
+
+    pwsync src dst -MAXAGE 20230324
+    pwsync src dst -ExcludeLastWriteDateOlderEqal 20230324
+
+
+# Exclude LastWriteDate newer equal 3 days ago or 2023-03-24
+    pwsync src dst -MINAGE 3
+    pwsync src dst -ExcludeLastWriteDateNewerEqal 3
+
+    pwsync src dst -MINAGE 20230324
+    pwsync src dst -ExcludeLastWriteDateNewerEqal 20230324
+
+    
+# Exclude LastAccessDate older equal 3 days ago or 2023-03-24
+    pwsync src dst -MAXLAD 3
+    pwsync src dst -ExcludeLastAccessDateOlderEqal 3
+
+    pwsync src dst -MAXLAD 20230324
+    pwsync src dst -ExcludeLastAccessDateOlderEqal 20230324
+
+
+# Exclude LastAccessDate newer equal 3 days ago or 2023-03-24
+    pwsync src dst -MINLAD 3
+    pwsync src dst -ExcludeLastAccessDateNewerEqal 3
+
+    pwsync src dst -MINLAD 20230324
+    pwsync src dst -ExcludeLastAccessDateNewerEqal 20230324
+```
+
+
 
 #### [tenki] - Open tenki.jp or jma.go.jp in browser
 
