@@ -14,7 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- None
+- Added [pwsync] function.
+- Added [Get-AppShortcut] shortcut: IME switch input language.
 
 
 ## [3.3.1]
@@ -280,6 +281,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Get-AppShortcut]: src/Get-AppShortcut_function.ps1
 [mdgrep]: src/mdgrep_function.ps1
+
+[pwsync]: src/pwsync_function.ps1
 
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/3.3.1..HEAD
