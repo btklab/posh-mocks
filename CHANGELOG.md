@@ -10,11 +10,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Changed [Rename-Normalize] examples that better explain what the function does.
+- None
 
 ### Added
 
 - None
+
+
+## [3.6.0]
+
+### Changed
+
+- Changed [Rename-Normalize] examples that better explain what the function does.
+
+### Added
+
+- Added [clip2normalize] function.
 
 
 ## [3.5.0]
@@ -303,8 +314,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [pwsync]: src/pwsync_function.ps1
 [clip2file]: src/clip2file_function.ps1
 [Rename-Normalize]: src/Rename-Normalize_function.ps1
+[clip2normalize]: src/clip2normalize_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.5.0..HEAD
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.6.0..HEAD
+[3.6.0]: https://github.com/btklab/posh-mocks/releases/tag/3.6.0
 [3.5.0]: https://github.com/btklab/posh-mocks/releases/tag/3.5.0
 [3.4.0]: https://github.com/btklab/posh-mocks/releases/tag/3.4.0
 [3.3.1]: https://github.com/btklab/posh-mocks/releases/tag/3.3.1
