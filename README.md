@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2img], [clip2normalize], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 
 Inspired by:
@@ -6783,6 +6783,47 @@ clip2img -MSPaint -Clip -Directory ~/Pictures -DirView -AutoPrefix -Name "hoge"
     -a--- 2023/03/18    22:32   171680 2023-03-18___hoge.png
 ```
 
+#### [clip2normalize] - Text normalizer for japanese on windows
+
+[clip2normalize]: src/clip2normalize_function.ps1
+
+半角カナや全角英数字交じりのテキストをできるだけきれいにする。Make half-width kana and full-width alphanumeric mixed text as clean as possible. For japanese environment on windows.
+
+- Usage
+    - `man2 clip2normalize`
+- Examples
+    - get text from clipboard
+        1. `(copy text to the clipboard and ...)`
+        1. `clip2normalize`
+    - read from pipeline (text-object)
+        1. `cat paths.txt | clip2normalize`
+- Notes
+    - Default replacement rules
+        - leading full-width bullet to hyphen + space
+        - leading number + (dot) + spaces to numper + dot + space
+        - trim trailing white-spaces
+    - Optional replacement rules
+        - `[-max|-MaxLineBreaks <int>]` ...Maximum number of consecutive blank lines (default=1)
+        - `[a|-JoinAll]` ...Join all line into one line
+        - `[-j|-Join <string>]` ...Join line with any string
+        - `[-t|-Trim]` ...Trim leading and trailing white-spaces
+
+Examples
+
+```powershell
+cat a.txt
+■　ｽﾏﾎ等から確認する場合
+１　あいうえお
+２　かきくけこ
+３　ａｂｃｄｅ
+
+("copy text to clipboard and..."")
+clip2normalize
+■ スマホ等から確認する場合
+1. あいうえお
+2. かきくけこ
+3. abcde
+```
 
 
 #### [clipwatch] - A clipboard watcher using Compare-Object
