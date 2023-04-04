@@ -143,12 +143,12 @@ function clip2file {
             if ( $Relative ){
                 [string] $f = Resolve-Path -LiteralPath $f -Relative
             }
-            if ( $Name ){
-                [string] $f = (Get-Item -LiteralPath $f).Name
-                if ( $ReplaceDirectory ){ [string] $f = Join-Path $Directory $f }
-            }
             if ( $FullName ){
                 [string] $f = (Get-Item -LiteralPath $f).FullName
+                if ( $ReplaceDirectory ){ [string] $f = Join-Path $Directory $f }
+            }
+            if ( $Name ){
+                [string] $f = (Get-Item -LiteralPath $f).Name
                 if ( $ReplaceDirectory ){ [string] $f = Join-Path $Directory $f }
             }
             if ( $LinuxPath ){ [string] $f = "$f".Replace('\', '/') }
