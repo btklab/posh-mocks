@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [pwsync], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 
 Inspired by:
@@ -6579,6 +6579,93 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 ```
 
 
+### file and directory manipuration
+
+#### [fwatch] - A filewatcher using LastWriteTime and FileHash
+
+[fwatch]: src/fwatch_function.ps1
+
+ファイル監視。実行したディレクトリ配下のファイルの変更を、
+更新時刻またはハッシュ値の比較で検知する。
+`-Action {scriptblock}`を指定すると、変化を検知した際にアクションを実行する。
+
+ユースケースとしては、筆者の場合LaTeXやMarkdownで文章を書きながら
+ソースファイルの変更を監視し、上書き保存ごとにコンパイルする、というふうに用いている。
+
+- Usage
+    - `man2 fwatch`
+    - `fwatch [-Path] <String> [[-Action] <ScriptBlock>] [-Interval <String>] [-Log <String>] [-Message <String>] [-Recurse] [-Hash] [-OutOnlyLog] [-Quiet]`
+- Examples
+    - `fwatch -Path index.md -Action {cat index.md | md2html > a.html; ii a.html}`
+    - `fwatch -Path . -Action {cat a.md | md2html > a.html; ii a.html} -Recurse`
+
+
+#### [Rename-Normalize] - File name normalizer for Japanese on windows
+
+[Rename-Normalize]: src/Rename-Normalize_function.ps1
+
+標準入力からのファイルオブジェクトを読み、ファイル名を以下のルールで正規化する。for Japanese environment on windows.
+
+- 半角 → 全角変換: カナ
+- 全角 → 半角変換: 英数字記号
+- スペース → アンダースコア
+
+デフォルトで実行せずに変換結果のみを表示する。
+
+- `-Execute`スイッチを指定した場合のみリネームを実行する。
+- `-AddDate`スイッチで、正規化＋ファイル名先頭に`yyyy-MM-dd-`を追加。
+
+カナなどの日本語を変換するため、`han`、`zen`コマンドに依存。
+
+- Usage
+    - `man2 Rename-Normalize`
+    - `Rename-Normalize`
+        - `[-e|-Execute]`
+        - `[-a|-AddDate]`
+        - `[[-f|-DateFormat] = "yyyy-MM-dd"]`
+        - `[[-d|-Delimiter] = "-"]`
+- Examples
+    - `ls | Rename-Normalize`
+    - `ls | Rename-Normalize -Execute`
+- Dependencies
+    - `han`, `zen`
+
+Examples:
+
+```powershell
+## shows what would happen if the command runs.The command is not run.
+ls | Rename-Normalize
+
+    clip2file_function.ps1 => clip2file_function.ps1
+    clip2img_function.ps1  => clip2img_function.ps1
+    clip2txt_function.ps1  => clip2txt_function.ps1
+    clipwatch_function.ps1 => clipwatch_function.ps1
+
+## execute rename if "-Execute" specified
+ls | Rename-Normalize -Execute
+```
+
+```powershell
+## Add date prefix in "yyyy-MM-dd" format
+ls | Rename-Normalize -AddDate
+
+    clip2file_function.ps1 => 2023-04-04-clip2file_function.ps1
+    clip2img_function.ps1  => 2023-04-04-clip2img_function.ps1
+    clip2txt_function.ps1  => 2023-04-04-clip2txt_function.ps1
+    clipwatch_function.ps1 => 2023-04-04-clipwatch_function.ps1
+```
+
+```powershell
+## combination with clip2file function
+("copy files to clipboard and...")
+clip2file | Rename-Normalize
+
+    clip2file_function.ps1 => clip2file_function.ps1
+    clip2img_function.ps1  => clip2img_function.ps1
+    clip2txt_function.ps1  => clip2txt_function.ps1
+    clipwatch_function.ps1 => clipwatch_function.ps1
+```
+
 
 ### Clipboard operation
 
@@ -6592,13 +6679,13 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 
 - Usage
     - `man2 clip2file`
-        - `clip2file`
-            - `[-r|-Relative]`
-            - `[-n|-Name]`
-            - `[-f|-FullName]`
-            - `[-d|-ReplaceDirectory <String>]`
-            - `[-t|-AsText]`
-            - `[-l|-LinuxPath] (replace '\', '/')`
+    - `clip2file`
+        - `[-r|-Relative]`
+        - `[-n|-Name]`
+        - `[-f|-FullName]`
+        - `[-d|-ReplaceDirectory <String>]`
+        - `[-t|-AsText]`
+        - `[-l|-LinuxPath] (replace '\', '/')`
 - Examples
     - `clip2file` ...get files as objects from clipboard
     - `cat paths.txt | clip2file` ...read from text-paths
@@ -6615,7 +6702,7 @@ Usage details:
     - `clip2file | Rename-Item -NewName { $_.Name -replace '^', (Get-Date).ToString('yyyy-MM-dd-') } -WhatIf`
 
 
-Example:
+Examples
 
 ```powershell
 clip2file
@@ -6650,6 +6737,17 @@ clip2file -Name -ReplaceDirectory "/img/2023/" -l
     /img/2023/clipwatch_function.ps1
     /img/2023/clip2file_function.ps1
     /img/2023/clip2img_function.ps1
+```
+
+```powershell
+## combination with clip2file function
+("copy files to clipboard and...")
+clip2file | Rename-Normalize
+
+    clip2file_function.ps1 => clip2file_function.ps1
+    clip2img_function.ps1  => clip2img_function.ps1
+    clip2txt_function.ps1  => clip2txt_function.ps1
+    clipwatch_function.ps1 => clipwatch_function.ps1
 ```
 
 
@@ -6700,27 +6798,6 @@ clip2img -MSPaint -Clip -Directory ~/Pictures -DirView -AutoPrefix -Name "hoge"
     - `clipwatch -Action {Get-ClipBoard | say}`
         - 文字列をクリップボードにコピーするたび`say`コマンド（後述）を実行する
     - `clipwatch -Action {Get-Clipboard | say -EN -Speed 2}`
-
-### file watcher
-
-#### [fwatch] - A filewatcher using LastWriteTime and FileHash
-
-[fwatch]: src/fwatch_function.ps1
-
-ファイル監視。実行したディレクトリ配下のファイルの変更を、
-更新時刻またはハッシュ値の比較で検知する。
-`-Action {scriptblock}`を指定すると、変化を検知した際にアクションを実行する。
-
-ユースケースとしては、筆者の場合LaTeXやMarkdownで文章を書きながら
-ソースファイルの変更を監視し、上書き保存ごとにコンパイルする、というふうに用いている。
-
-- Usage
-    - `man2 fwatch`
-    - `fwatch [-Path] <String> [[-Action] <ScriptBlock>] [-Interval <String>] [-Log <String>] [-Message <String>] [-Recurse] [-Hash] [-OutOnlyLog] [-Quiet]`
-- Examples
-    - `fwatch -Path index.md -Action {cat index.md | md2html > a.html; ii a.html}`
-    - `fwatch -Path . -Action {cat a.md | md2html > a.html; ii a.html} -Recurse`
-
 
 
 ### misc

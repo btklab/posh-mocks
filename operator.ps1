@@ -26,6 +26,9 @@ if ($IsWindows){
     . $pwshSrcDir/tac_function.ps1
     . $pwshSrcDir/rev_function.ps1
 
+    ## file and directory manipuration
+    . $pwshSrcDir/Rename-Normalize_function.ps1
+
     ## misc
     . $pwshSrcDir/say_function.ps1
     . $pwshSrcDir/teatimer_function.ps1

@@ -14,8 +14,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added [clip2file] function.
+- None
 
+
+## [3.5.0]
+
+### Changed
+
+- None
+
+### Added
+
+- Added [clip2file] function.
+- Added [Rename-Normalize] function.
 
 ## [3.4.0]
 
@@ -291,9 +302,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [pwsync]: src/pwsync_function.ps1
 [clip2file]: src/clip2file_function.ps1
+[Rename-Normalize]: src/Rename-Normalize_function.ps1
 
-
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.4.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.5.0..HEAD
+[3.5.0]: https://github.com/btklab/posh-mocks/releases/tag/3.5.0
 [3.4.0]: https://github.com/btklab/posh-mocks/releases/tag/3.4.0
 [3.3.1]: https://github.com/btklab/posh-mocks/releases/tag/3.3.1
 [3.3.0]: https://github.com/btklab/posh-mocks/releases/tag/3.3.0
