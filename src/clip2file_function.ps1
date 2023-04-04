@@ -115,7 +115,7 @@ function clip2file {
     if ( $LinuxPath ){ $outputTextFlag = $True }
     ## init filepath array
     [string[]] $readLineAry = @()
-    if ( $input.Count -gt 1 ){
+    if ( $input.Count -gt 0 ){
         ## get file path from pipeline text
         [string[]] $readLineAry = $input
         [string[]] $readLineAry = ForEach ($r in $readLineAry ){
