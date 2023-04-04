@@ -10,14 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- None
+- Changed [clip2file] swap the order of -Name and -Full switch
 
 ### Added
 
 - None
 
 
-## [3.6.0]
+## [3.6.0] - 2023-04-04
 
 ### Changed
 

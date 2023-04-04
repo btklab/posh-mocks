@@ -17,7 +17,7 @@
         clip2normalize
 
         # read from pipeline (text-object)
-        cat paths.txt | clip2normalize
+        cat a.txt | clip2normalize
 
     Default replacement rules:
         leading full-width bullet to hyphen + space
