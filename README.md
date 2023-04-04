@@ -6796,7 +6796,7 @@ clip2img -MSPaint -Clip -Directory ~/Pictures -DirView -AutoPrefix -Name "hoge"
         1. `(copy text to the clipboard and ...)`
         1. `clip2normalize`
     - read from pipeline (text-object)
-        1. `cat paths.txt | clip2normalize`
+        1. `cat a.txt | clip2normalize`
 - Notes
     - Default replacement rules
         - leading full-width bullet to hyphen + space
