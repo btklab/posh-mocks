@@ -20,7 +20,8 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [pwsync], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+
 
 Inspired by:
 
@@ -6580,6 +6581,77 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 
 
 ### Clipboard operation
+
+#### [clip2file] - Get files copied to the clipboard as an objects
+
+[clip2file]: src/clip2file_function.ps1
+
+エクスプローラからクリップボードにコピーしたファイルをオブジェクトとして取得し、
+そのままパイプラインで`Copy-Item`、`Move-Item`、`Rename-Item`コマンドレットと連携させられる。
+カレントディレクトリを移動したり、ファイルのフルパスを指定せずとも、別のディレクトリにあるファイルの操作ができる。
+
+- Usage
+    - `man2 clip2file`
+        - `clip2file`
+            - `[-r|-Relative]`
+            - `[-n|-Name]`
+            - `[-f|-FullName]`
+            - `[-d|-ReplaceDirectory <String>]`
+            - `[-t|-AsText]`
+            - `[-l|-LinuxPath] (replace '\', '/')`
+- Examples
+    - `clip2file` ...get files as objects from clipboard
+    - `cat paths.txt | clip2file` ...read from text-paths
+    - `ls | clip2file` ...read from file objects (this is probably useless)
+
+Usage details:
+
+1. Copy files to clipboard<br />![](img/clip2file_1.png)
+2. execte `clip2file`
+3. get files as objects
+4. can be combined with other commands using pipeline
+    - `clip2file | mv -Destination ~/hoge/ [-Force]`
+    - `clip2file | cp -Destination ~/hoge/`
+    - `clip2file | Rename-Item -NewName { $_.Name -replace '^', (Get-Date).ToString('yyyy-MM-dd-') } -WhatIf`
+
+
+Example:
+
+```powershell
+clip2file
+
+    Mode         LastWriteTime  Length Name
+    ----         -------------  ------ ----
+    -a---  2023/01/22    15:32    2198 clipwatch_function.ps1
+    -a---  2023/04/03     0:25    2604 clip2file_function.ps1
+    -a---  2023/04/02    23:09    4990 clip2img_function.ps1
+    -a---  2023/04/03     0:11    2114 clip2txt_function.ps1
+```
+
+```powershell
+# move/copy/rename clipped files
+clip2file | Move-Item -Destination ./hoge/ [-Force]
+clip2file | Copy-Item -Destination ./hoge/
+clip2file | Rename-Item -NewName { $_.Name -replace '^', (Get-Date).ToString('yyyy-MM-dd-') } -WhatIf
+```
+
+```powershell
+clip2file -Name
+clip2file -Name | Set-Clipboard
+
+    clip2txt_function.ps1
+    clipwatch_function.ps1
+    clip2file_function.ps1
+    clip2img_function.ps1
+
+clip2file -Name -ReplaceDirectory "/img/2023/" -l
+
+    /img/2023/clip2txt_function.ps1
+    /img/2023/clipwatch_function.ps1
+    /img/2023/clip2file_function.ps1
+    /img/2023/clip2img_function.ps1
+```
+
 
 #### [clip2img] - Save clip board image as an image file
 

@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- None
+- Added [clip2file] function.
 
 
 ## [3.4.0]
@@ -290,6 +290,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [mdgrep]: src/mdgrep_function.ps1
 
 [pwsync]: src/pwsync_function.ps1
+[clip2file]: src/clip2file_function.ps1
 
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/3.4.0..HEAD
