@@ -1,6 +1,6 @@
 <# 
 .SYNOPSIS
-    clip2img -- Save clip board image as an image file
+    clip2img - Save clipboard image as an image file
 
     clip2img [[-d|-Directory] <String>] [-n|-Name <String>] [-Prefix <String>] [-AutoPrefix] [-AutoPrefixFormat <String>] [-AutoPrefixDelimiter <String>] [-p|-MSPaint] [-c|-Clip] [-i|-DirView] [-v|-View]
 
@@ -20,6 +20,9 @@
 
     Note that if output file already exists,
     it will be overwritten
+
+.LINK
+    clip2file, clip2img, clip2txt
 
 .PARAMETER Name
     Specify the output file name.

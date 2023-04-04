@@ -126,6 +126,7 @@ Set-Alias -name ml -value Get-OGP
 
 ## clipboard
 . $pwshSrcDir/clip2img_function.ps1
+. $pwshSrcDir/clip2file_function.ps1
 . $pwshSrcDir/clipwatch_function.ps1
 
 ## file watcher
