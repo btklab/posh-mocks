@@ -6636,10 +6636,10 @@ Examples:
 ## shows what would happen if the command runs.The command is not run.
 ls | Rename-Normalize
 
-    clip2file_function.ps1 => clip2file_function.ps1
-    clip2img_function.ps1  => clip2img_function.ps1
-    clip2txt_function.ps1  => clip2txt_function.ps1
-    clipwatch_function.ps1 => clipwatch_function.ps1
+    clip2file　function.ps1       => clip2file_function.ps1
+    clip2img　ｱｲｳｴｵ　function.ps1 => clip2img_アイウエオ_function.ps1
+    clipwatch   -    function.ps1 => clipwatch-function.ps1
+    ｃｌｉｐ２ｉｍｇ.ps1          => clip2img.ps1
 
 ## execute rename if "-Execute" specified
 ls | Rename-Normalize -Execute
@@ -6649,10 +6649,10 @@ ls | Rename-Normalize -Execute
 ## Add date prefix in "yyyy-MM-dd" format
 ls | Rename-Normalize -AddDate
 
-    clip2file_function.ps1 => 2023-04-04-clip2file_function.ps1
-    clip2img_function.ps1  => 2023-04-04-clip2img_function.ps1
-    clip2txt_function.ps1  => 2023-04-04-clip2txt_function.ps1
-    clipwatch_function.ps1 => 2023-04-04-clipwatch_function.ps1
+    clip2file　function.ps1       => 2023-04-04-clip2file_function.ps1
+    clip2img　ｱｲｳｴｵ　function.ps1 => 2023-04-04-clip2img_アイウエオ_function.ps1
+    clipwatch   -    function.ps1 => 2023-04-04-clipwatch-function.ps1
+    ｃｌｉｐ２ｉｍｇ.ps1          => 2023-04-04-clip2img.ps1
 ```
 
 ```powershell
@@ -6660,10 +6660,10 @@ ls | Rename-Normalize -AddDate
 ("copy files to clipboard and...")
 clip2file | Rename-Normalize
 
-    clip2file_function.ps1 => clip2file_function.ps1
-    clip2img_function.ps1  => clip2img_function.ps1
-    clip2txt_function.ps1  => clip2txt_function.ps1
-    clipwatch_function.ps1 => clipwatch_function.ps1
+    clip2file　function.ps1       => clip2file_function.ps1
+    clip2img　ｱｲｳｴｵ　function.ps1 => clip2img_アイウエオ_function.ps1
+    clipwatch   -    function.ps1 => clipwatch-function.ps1
+    ｃｌｉｐ２ｉｍｇ.ps1          => clip2img.ps1
 ```
 
 
