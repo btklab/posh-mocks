@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed [clip2file] swap the order of -Name and -Full switch
+- Updated [README.md] fix typo
 
 ### Added
 

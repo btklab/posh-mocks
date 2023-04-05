@@ -3631,7 +3631,7 @@ Japanese "DANDORI" means "make arrangement", "take steps", "plan".
     - `-Today` ... 今日の日付をカラーリング
     - `-StartDate yyyy-m-d` ... プロジェクト開始日を指定
     - `-EndDate yyyy-m-d` ... プロジェクト終了日を指定
-- Dependencies
+- Relation
     - [pu2java] from posh-mocks (this repository)
 
 Input:
@@ -3731,8 +3731,9 @@ markdown形式のリストデータからマインドマップを描画する`gr
         - 全角文字幅は2、半角文字幅は1として折り返し文字幅を指定する
     - `-TopToBottom`スイッチで、レイアウトを左→右ではなく上→下に変更する
 - Dependencies
-    - [dot2gviz] from posh-mocks (this repository)
     - [kinsoku] from posh-mocks (this repository) if `-Kinsoku <int>` option used
+- Relation
+    - [dot2gviz] from posh-mocks (this repository)
 - Credits
     - Solarized color palette from:
         - <https://github.com/altercation/solarized>
@@ -3937,8 +3938,9 @@ markdown形式のリストデータからマインドマップを描画する`pl
     - `-Kinsoku <int>`で日本語文書に禁則処理を適用して任意の文字幅で折り返し
         - 全角文字幅は2、半角文字幅は1として折り返し文字幅を指定する
 - Dependencies
-    - [pu2java] from posh-mocks (this repository)
     - [kinsoku] from posh-mocks (this repository) if `-Kinsoku <int>` option used
+- Relation
+    - [pu2java] from posh-mocks (this repository)
 - Credit
     - [mindmap-diagram - plantuml](https://plantuml.com/en/mindmap-diagram)
 
@@ -4139,8 +4141,9 @@ C task-C [A,B]
     - `-TopToBottom`スイッチで、レイアウトを左→右ではなく上→下に変更する
     - `-Grep pattern`で`regex-pattern`にマッチするラベルのノードの背景色や形を変える
 - Dependencies
-    - [dot2gviz] from posh-mocks (this repository)
     - [kinsoku] from posh-mocks (this repository) if `-Kinsoku <int>` option used
+- Relation
+    - [dot2gviz] from posh-mocks (this repository)
 
 Input:
 
@@ -4381,8 +4384,9 @@ C task-C [A,B]
     - `-TopToBottom`スイッチで、レイアウトを左→右ではなく上→下に変更する
     - `-Grep pattern`で`regex-pattern`にマッチするラベルのノードの背景色や形を変える
 - Dependencies
-    - [pu2java] from posh-mocks (this repository)
     - [kinsoku] from posh-mocks (this repository) if `-Kinsoku <int>` option used
+- Relation
+    - [pu2java] from posh-mocks (this repository)
 
 Input:
 
@@ -4563,8 +4567,9 @@ Easy and quick sequence-diagram creator from lists written in markdown-like form
     - `-KinsokuNote <int>`はnote block文字列の折り返し幅
         - `seq2pu`では、インデントされたリストは（keyword以外で始まるもの以外は）note blockとして解釈される
 - Dependencies
-    - [pu2java] from posh-mocks (this repository)
     - [kinsoku] from posh-mocks (this repository) if `-Kinsoku <int>` option used
+- Relation
+    - [pu2java] from posh-mocks (this repository)
 - Credit
     - [Sequence Diagram syntax and features - plantuml](https://plantuml.com/sequence-diagram)
 
@@ -4701,8 +4706,9 @@ Easy and quick flow chart creator from lists written in markdown format.
     - `-KinsokuNote <int>`はnote block文字列の折り返し幅
         - `flow2pu`では、インデントされたリストはすべてnote blockとして解釈される
 - Dependencies
-    - [pu2java] from posh-mocks (this repository)
     - [kinsoku] from posh-mocks (this repository) if `-Kinsoku <int>` option used
+- Relation
+    - [pu2java] from posh-mocks (this repository)
 - Credit
     - [activity-diagram-beta - plantuml](https://plantuml.com/en/activity-diagram-beta)
 
@@ -4921,7 +4927,7 @@ before.jpg を after.png に形式変換し、かつ、
 
 [mdgrep]: src/mdgrep_function.ps1
 
-Markdowonファイルの処理に特化した行指向ならぬブロック指向の正規表現パターンマッチングツール。
+Markdownファイルの処理に特化した行指向ならぬブロック指向の正規表現パターンマッチングツール。
 指定した正規表現パターンにマッチしたMarkdown形式の第2レベル見出しとそのコンテンツを返す。
 
 たとえばこの[README.md]ファイルにはたくさんの関数が紹介されているが、ここから[man2]ファンクションについて書かれたセクションだけを抜き出すという仕事をする。
@@ -6693,8 +6699,8 @@ clip2file | Rename-Normalize
 
 Usage details:
 
-1. Copy files to clipboard<br />![](img/clip2file_1.png)
-2. execte `clip2file`
+1. copy files to clipboard<br />![](img/clip2file_1.png)
+2. execute `clip2file`
 3. get files as objects
 4. can be combined with other commands using pipeline
     - `clip2file | mv -Destination ~/hoge/ [-Force]`
@@ -6847,10 +6853,9 @@ clip2normalize
 
 [pwmake]: src/pwmake_function.ps1
 
-PowerShell版make-like command。劣化コピー。
+PowerShell版make-like command。GNU makeの劣化コピー。
 カレントディレクトリにあるMakefileを読み実行する。
-
-ただし、GNU make用のMakefileとの互換性は、シンプルな書き方をすれば保たれることもあるが、基本的にうすい。
+GNU make用のMakefileとの互換性は、シンプルな書き方をすれば保たれることもあるが、基本的にうすい。
 詳しい違いは後述するが、たとえば、宣言した変数を用いるときは`${ver}`とする点。
 `$(ver)`を用いてもよいがPowerShellの`Subexpression演算子`とみなされ展開される、など。
 
@@ -6858,7 +6863,7 @@ PowerShell版make-like command。劣化コピー。
 特徴は、実行コマンドにPowerShellコマンドを使用できる点、およびタスクランナーとしてカレントプロセスで動作する点。
 たとえば、カレントプロセスのPowerShellにドットソースで読み込んだ関数も、Makefileに記述して走らせることができる。
 
-筆者のユースケースとしては、たまにしか使わない自作コマンドのメモ（覚え書き）として用いている。
+筆者のユースケースとしては、たまにしか使わない自作コマンドのメモ（覚え書き）として、それから、よく使うけれど長ったらしいワンライナーを実行するために用いている。
 
 - Usage
     - `man2 pwmake`
