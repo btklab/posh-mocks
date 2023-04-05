@@ -10,15 +10,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updated [i] synopsis
-- Updated [README.md] synopsis
+- None
 
 ### Added
 
 - None
 
+## [3.6.2] - 2023-04-06
 
-## [3.6.1]
+### Changed
+
+- Updated [i] synopsis
+- Updated [README.md] synopsis
+- Changed [mind2dot] legend table color
+
+
+
+## [3.6.1] - 2023-04-06
 
 ### Changed
 
@@ -327,7 +335,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [clip2normalize]: src/clip2normalize_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.6.1..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.6.2..HEAD
+[3.6.2]: https://github.com/btklab/posh-mocks/releases/tag/3.6.2
 [3.6.1]: https://github.com/btklab/posh-mocks/releases/tag/3.6.1
 [3.6.0]: https://github.com/btklab/posh-mocks/releases/tag/3.6.0
 [3.5.0]: https://github.com/btklab/posh-mocks/releases/tag/3.5.0
