@@ -925,8 +925,16 @@ function mind2dot {
             $readLineAry += "       BORDER=""1"""
             $readLineAry += "       CELLBORDER=""0"""
             #$readLineAry += "       CELLSPACING=""6"""
-            $readLineAry += "       COLOR=""gray15"""
-            $readLineAry += "       BGCOLOR=""grey95"""
+            if ( $SolarizedDark ){
+                $readLineAry += "       COLOR=""$colGray"""
+                $readLineAry += "       BGCOLOR=""$colDarkGrayBlue"""
+            } elseif ( $SolarizedLight ) {
+                $readLineAry += "       COLOR=""gray15"""
+                $readLineAry += "       BGCOLOR=""$colSolWhite"""
+            } else {
+                $readLineAry += "       COLOR=""gray15"""
+                $readLineAry += "       BGCOLOR=""grey25"""
+            }
             $readLineAry += "   >"
             function parseTableStr ([string]$lin){
                 $ret = $lin
@@ -941,7 +949,13 @@ function mind2dot {
                 if($lin -eq ''){
                     $legLine = "   <TR><TD></TD></TR>"
                 }else{
-                    $legLine = "   <TR><TD ALIGN=""LEFT""><FONT COLOR=""gray15"" POINT-SIZE=""$LegendFontSize"">"
+                    if ( $SolarizedDark ){
+                        $legLine = "   <TR><TD ALIGN=""LEFT""><FONT COLOR=""$colSolWhite"" POINT-SIZE=""$LegendFontSize"">"
+                    } elseif ( $SolarizedLight ){
+                        $legLine = "   <TR><TD ALIGN=""LEFT""><FONT COLOR=""$colSolBlack"" POINT-SIZE=""$LegendFontSize"">"
+                    } else {
+                        $legLine = "   <TR><TD ALIGN=""LEFT""><FONT COLOR=""gray15"" POINT-SIZE=""$LegendFontSize"">"
+                    }
                     $legLine += parseTableStr "$lin"
                     $legLine += "</FONT></TD></TR>"
                 }
