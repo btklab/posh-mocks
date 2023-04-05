@@ -10,12 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Changed [clip2file] swap the order of -Name and -Full switch
-- Updated [README.md] fix typo
+- None
 
 ### Added
 
 - None
+
+## [3.6.1]
+
+### Changed
+
+- Changed [Rename-Normalize] make the replacement process a filter and set-alias "ren2norm"
+- Changed [clip2file] swap the order of -Name and -Full switch
+- Updated [README.md] fix typo
 
 
 ## [3.6.0] - 2023-04-04
@@ -318,7 +325,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [clip2normalize]: src/clip2normalize_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.6.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.6.1..HEAD
+[3.6.1]: https://github.com/btklab/posh-mocks/releases/tag/3.6.1
 [3.6.0]: https://github.com/btklab/posh-mocks/releases/tag/3.6.0
 [3.5.0]: https://github.com/btklab/posh-mocks/releases/tag/3.5.0
 [3.4.0]: https://github.com/btklab/posh-mocks/releases/tag/3.4.0

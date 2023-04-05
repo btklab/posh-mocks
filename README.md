@@ -856,7 +856,7 @@ Write-Output "01 02 03" | rev2 -e
 ```
 
 
-### text filters for space-separated input
+### Text filters for space-separated input
 
 #### [tateyoko] - Transpose columns and rows
 
@@ -6585,7 +6585,7 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 ```
 
 
-### file and directory manipuration
+### File and directory manipuration
 
 #### [fwatch] - A filewatcher using LastWriteTime and FileHash
 
@@ -6633,6 +6633,20 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 - Examples
     - `ls | Rename-Normalize`
     - `ls | Rename-Normalize -Execute`
+- Replace rules
+    - replace kana half-width to full-width
+    - replace alpanumeric characters full to half-width
+    - remove whitespaces around dot
+    - remove whitespaces around hyphen
+    - remove whitespaces around underscore
+    - replace consecutive spaces to single space
+    - replace whitespace to underscore
+    - remove symbols around dot
+- Note
+    - Do not execute rename if the file name is the same before and after renaming
+    - Consecutive spaces are replaced with a single space
+    - A hyphen surrounded by spaces or underscores is replaced by a hyphen excluding surrounds
+    - if the name after renaming is duplicated, show error message, skip the renaming process for that file, and continue processing other files
 - Dependencies
     - `han`, `zen`
 
@@ -6640,36 +6654,64 @@ Examples:
 
 ```powershell
 ## shows what would happen if the command runs.The command is not run.
+
 ls | Rename-Normalize
 
-    clip2file　function.ps1       => clip2file_function.ps1
-    clip2img　ｱｲｳｴｵ　function.ps1 => clip2img_アイウエオ_function.ps1
-    clipwatch   -    function.ps1 => clipwatch-function.ps1
-    ｃｌｉｐ２ｉｍｇ.ps1          => clip2img.ps1
+    clip2file_ function.ps1       => clip2file_function.ps1
+    clip2img -. ps1               => clip2img.ps1
+    ｃｌｉｐ２ｉｍｇ　.ps1        => clip2img.ps1
+    clip2img_ｱｶｻﾀﾅ_function.ps1   => clip2img_アカサタナ_function.ps1
+    clipwatch-function - Copy.ps1 => clipwatch-function-Copy.ps1
+    clipwatch-function.ps1        => clipwatch-function.ps1
+```
 
-## execute rename if "-Execute" specified
+```powershell
+## execute rename if "-Execute" specified. if the name after
+## renaming is duplicated, show error message, skip the
+## renaming process for that file, and continue processing
+## other files.
+
 ls | Rename-Normalize -Execute
+
+    clip2file_ function.ps1       => clip2file_function.ps1
+    clip2img -. ps1               => clip2img.ps1
+    ｃｌｉｐ２ｉｍｇ　.ps1        => clip2img.ps1
+    Rename-Item: path\to\the\Rename-Normalize_function.ps1:182
+    Line |
+        182 |                  $f | Rename-Item -NewName { $newName }
+            |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            | Cannot create a file when that file already exists.
+    clip2img_ｱｶｻﾀﾅ_function.ps1   => clip2img_アカサタナ_function.ps1
+    clipwatch-function - Copy.ps1 => clipwatch-function-Copy.ps1
+    clipwatch-function.ps1        => clipwatch-function.ps1
 ```
 
 ```powershell
 ## Add date prefix in "yyyy-MM-dd" format
+
 ls | Rename-Normalize -AddDate
 
-    clip2file　function.ps1       => 2023-04-04-clip2file_function.ps1
-    clip2img　ｱｲｳｴｵ　function.ps1 => 2023-04-04-clip2img_アイウエオ_function.ps1
-    clipwatch   -    function.ps1 => 2023-04-04-clipwatch-function.ps1
-    ｃｌｉｐ２ｉｍｇ.ps1          => 2023-04-04-clip2img.ps1
+    clip2file_ function.ps1       => 2023-04-06-clip2file_function.ps1
+    clip2img -. ps1               => 2023-04-06-clip2img.ps1
+    ｃｌｉｐ２ｉｍｇ　.ps1        => 2023-04-06-clip2img.ps1
+    clip2img_ｱｶｻﾀﾅ_function.ps1   => 2023-04-06-clip2img_アカサタナ_function.ps1
+    clipwatch-function - Copy.ps1 => 2023-04-06-clipwatch-function-Copy.ps1
+    clipwatch-function.ps1        => 2023-04-06-clipwatch-function.ps1
 ```
 
 ```powershell
 ## combination with clip2file function
+
 ("copy files to clipboard and...")
+
 clip2file | Rename-Normalize
 
-    clip2file　function.ps1       => clip2file_function.ps1
-    clip2img　ｱｲｳｴｵ　function.ps1 => clip2img_アイウエオ_function.ps1
-    clipwatch   -    function.ps1 => clipwatch-function.ps1
-    ｃｌｉｐ２ｉｍｇ.ps1          => clip2img.ps1
+    clip2file_ function.ps1       => clip2file_function.ps1
+    clip2img -. ps1               => clip2img.ps1
+    ｃｌｉｐ２ｉｍｇ　.ps1        => clip2img.ps1
+    clip2img_ｱｶｻﾀﾅ_function.ps1   => clip2img_アカサタナ_function.ps1
+    clipwatch-function - Copy.ps1 => clipwatch-function-Copy.ps1
+    clipwatch-function.ps1        => clipwatch-function.ps1
 ```
 
 
@@ -6847,7 +6889,7 @@ clip2normalize
     - `clipwatch -Action {Get-Clipboard | say -EN -Speed 2}`
 
 
-### misc
+### Miscellaneous
 
 #### [pwmake] - Pwsh implementation of GNU make command
 

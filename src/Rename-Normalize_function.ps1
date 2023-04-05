@@ -29,33 +29,69 @@
         A hyphen surrounded by spaces or underscores is
         replaced by a hyphen excluding surrounds.
 
+        if the name after renaming is duplicated, show error
+        message, skip the renaming process for that file, and
+        continue processing other files.
+
+
 .EXAMPLE
     ## shows what would happen if the command runs.The command is not run.
-    ls | Rename-Normalize
-        clip2file　function.ps1       => clip2file_function.ps1
-        clip2img　ｱｲｳｴｵ　function.ps1 => clip2img_アイウエオ_function.ps1
-        clipwatch   -    function.ps1 => clipwatch-function.ps1
-        ｃｌｉｐ２ｉｍｇ.ps1          => clip2img.ps1
 
-    ## execute rename if "-Execute" specified
+    ls | Rename-Normalize
+
+        clip2file_ function.ps1       => clip2file_function.ps1
+        clip2img -. ps1               => clip2img.ps1
+        ｃｌｉｐ２ｉｍｇ　.ps1        => clip2img.ps1
+        clip2img_ｱｶｻﾀﾅ_function.ps1   => clip2img_アカサタナ_function.ps1
+        clipwatch-function - Copy.ps1 => clipwatch-function-Copy.ps1
+        clipwatch-function.ps1        => clipwatch-function.ps1
+
+    ## execute rename if "-Execute" specified.
+    ## if the name after renaming is duplicated,
+    ## show error message, skip the renaming process
+    ## for that file, and continue processing
+    ## other files.
+
     ls | Rename-Normalize -Execute
+
+        clip2file_ function.ps1       => clip2file_function.ps1
+        clip2img -. ps1               => clip2img.ps1
+        ｃｌｉｐ２ｉｍｇ　.ps1        => clip2img.ps1
+        Rename-Item: path\to\the\Rename-Normalize_function.ps1:182
+        Line |
+         182 |                  $f | Rename-Item -NewName { $newName }
+             |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+             | Cannot create a file when that file already exists.
+        clip2img_ｱｶｻﾀﾅ_function.ps1   => clip2img_アカサタナ_function.ps1
+        clipwatch-function - Copy.ps1 => clipwatch-function-Copy.ps1
+        clipwatch-function.ps1        => clipwatch-function.ps1
+
 
 .EXAMPLE
     ## Add date prefix in "yyyy-MM-dd" format
+
     ls | Rename-Normalize -AddDate
-        clip2file　function.ps1       => 2023-04-04-clip2file_function.ps1
-        clip2img　ｱｲｳｴｵ　function.ps1 => 2023-04-04-clip2img_アイウエオ_function.ps1
-        clipwatch   -    function.ps1 => 2023-04-04-clipwatch-function.ps1
-        ｃｌｉｐ２ｉｍｇ.ps1          => 2023-04-04-clip2img.ps1
+
+        clip2file_ function.ps1       => 2023-04-06-clip2file_function.ps1
+        clip2img -. ps1               => 2023-04-06-clip2img.ps1
+        ｃｌｉｐ２ｉｍｇ　.ps1        => 2023-04-06-clip2img.ps1
+        clip2img_ｱｶｻﾀﾅ_function.ps1   => 2023-04-06-clip2img_アカサタナ_function.ps1
+        clipwatch-function - Copy.ps1 => 2023-04-06-clipwatch-function-Copy.ps1
+        clipwatch-function.ps1        => 2023-04-06-clipwatch-function.ps1
 
 .EXAMPLE
     ## combination with clip2file function
+
     ("copy files to clipboard and..."")
+
     clip2file | Rename-Normalize
-        clip2file　function.ps1       => clip2file_function.ps1
-        clip2img　ｱｲｳｴｵ　function.ps1 => clip2img_アイウエオ_function.ps1
-        clipwatch   -    function.ps1 => clipwatch-function.ps1
-        ｃｌｉｐ２ｉｍｇ.ps1          => clip2img.ps1
+
+        clip2file_ function.ps1       => clip2file_function.ps1
+        clip2img -. ps1               => clip2img.ps1
+        ｃｌｉｐ２ｉｍｇ　.ps1        => clip2img.ps1
+        clip2img_ｱｶｻﾀﾅ_function.ps1   => clip2img_アカサタナ_function.ps1
+        clipwatch-function - Copy.ps1 => clipwatch-function-Copy.ps1
+        clipwatch-function.ps1        => clipwatch-function.ps1
 
 .LINK
     clip2file, han, zen, Rename-Item
@@ -92,11 +128,36 @@ function Rename-Normalize {
             return $False
         }
     }
+    ## test command
     if ( -not (isCommandExist "han" ) ){
         Write-Error "could not found ""han"" command." -ErrorAction Stop
     }
     if ( -not (isCommandExist "zen" ) ){
         Write-Error "could not found ""zen"" command." -ErrorAction Stop
+    }
+    ## remove / replace filters
+    filter remove-whitespaces-around-dot {
+        $_ -replace '\s*\.\s*', '.'
+    }
+    filter remove-whitespaces-around-hyphen {
+        $_ -replace '\s*\-\s*', '-'
+    }
+    filter remove-whitespaces-around-underscore {
+        $_ -replace '\s*_\s*', '_'
+    }
+    filter replace-consecutive-spaces-to-single-space {
+        $_ -replace '  *', ' '
+    }
+    filter replace-whitespace-to-underscore {
+        "$_".Replace(' ', '_')
+    }
+    filter remove-symbols-around-dot{
+        $_ -replace '(\-|_)*\.(\-|_)*', '.'
+    }
+    filter remove-underscore-around-hyphen {
+        "$_".Replace('_-_', '-')
+        #"$_".Replace('_-',  '-')
+        #"$_".Replace('-_',  '-')
     }
     ## test input
     if ( $input.Count -lt 1 ){
@@ -110,14 +171,19 @@ function Rename-Normalize {
         } `
         | Sort-Object -Descending `
         | Select-Object -First 1
-    
+    ## replace / remove symbols
     foreach ( $f in $fObj ){
         [string] $oldName = $f.Name
+        ### replace kana half-width to full-width
+        ###   and replace alpanumeric characters full to half-width
         [string] $newName = $f.Name | han | zen -k
-        [string] $newName = $newName.Replace('  ', ' ')
-        [string] $newName = $newName.Replace('  ', ' ')
-        [string] $newName = $newName.Replace(' ', '_')
-        [string] $newName = $newName.Replace('_-_', '-')
+        [string] $newName = $newName | remove-whitespaces-around-dot
+        [string] $newName = $newName | remove-whitespaces-around-hyphen
+        [string] $newName = $newName | remove-whitespaces-around-underscore
+        [string] $newName = $newName | replace-consecutive-spaces-to-single-space
+        [string] $newName = $newName | replace-whitespace-to-underscore
+        [string] $newName = $newName | remove-symbols-around-dot
+        #[string] $newName = $newName | remove-underscore-around-hyphen
         if ( $AddDate ){
             ### add ymd-prefix
             if ( $newName -notmatch '^[0-9]{4}\-[0-9]{2}\-[0-9]{2}' ){
