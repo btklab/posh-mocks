@@ -5490,7 +5490,7 @@ cat contents.md | pandoc -f markdown -t html5 | filehame -l TEXTBODY template.ht
 ```
 
 
-#### [Get-OGP] (Alias:ml) - Make Link with markdown format
+#### [Get-OGP] (Alias: ml) - Make Link with markdown format
 
 [Get-OGP]: src/Get-OGP_function.ps1
 
@@ -6606,7 +6606,7 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
     - `fwatch -Path . -Action {cat a.md | md2html > a.html; ii a.html} -Recurse`
 
 
-#### [Rename-Normalize] - File name normalizer for Japanese on windows
+#### [Rename-Normalize] (Alias: ren2norm) - File name normalizer for Japanese on windows
 
 [Rename-Normalize]: src/Rename-Normalize_function.ps1
 
