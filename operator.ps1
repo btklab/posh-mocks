@@ -28,6 +28,7 @@ if ($IsWindows){
 
     ## file and directory manipuration
     . $pwshSrcDir/Rename-Normalize_function.ps1
+    Set-Alias -name ren2norm -value Rename-Normalize
 
     ## misc
     . $pwshSrcDir/say_function.ps1
