@@ -10,11 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- None
+- Updated [i] synopsis
+- Updated [README.md] synopsis
 
 ### Added
 
 - None
+
 
 ## [3.6.1]
 
