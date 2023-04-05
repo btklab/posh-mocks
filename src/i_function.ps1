@@ -55,7 +55,7 @@
 
 .EXAMPLE
     cat ./link/rmarkdown_site.txt
-    "C:\Users\btklab\cms\repos\rmarkdown-skeleton\docs\index.html"
+    "C:\Users\path\to\the\index.html"
 
     # Get-ChildItem <dir>
     i ./link/
@@ -70,7 +70,7 @@
     # dry run
     PS > i ./link/rmarkdown_site.txt -q
     .\link\rmarkdown.txt
-    Invoke-Item 'C:\Users\btklab\cms\repos\rmarkdown-skeleton\docs\index.html'
+    Invoke-Item "C:\Users\path\to\the\index.html"
 
 
     # open index.html in default browser
