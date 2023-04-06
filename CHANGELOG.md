@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Fixed [fwatch] synopsis
-- Changed [operator.ps1] path delimiter "\" to "/"
+- Changed [operator.ps1] path delimiter `\` to `/`
 
 ### Added
 
