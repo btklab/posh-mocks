@@ -1,4 +1,5 @@
-$pwshSrcDir = Join-Path $PSScriptRoot "src"
+[string] $pwshSrcDir = Join-Path $PSScriptRoot "src"
+[string] $pwshSrcDir = $pwshSrcDir.Replace('\', '/')
 
 # for windows only
 if ($IsWindows){
@@ -19,6 +20,7 @@ if ($IsWindows){
 
     . $pwshSrcDir/head_function.ps1
     . $pwshSrcDir/tail_function.ps1
+    . $pwshSrcDir/tail-f_function.ps1
     . $pwshSrcDir/chead_function.ps1
     . $pwshSrcDir/ctail_function.ps1
 

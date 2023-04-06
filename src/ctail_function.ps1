@@ -11,7 +11,7 @@
     read from pipeline input.
 
 .LINK
-    head, tail, chead, ctail
+    head, tail, chead, ctail, tail-f
 
 .EXAMPLE
     # read from stdin

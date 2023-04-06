@@ -8,7 +8,7 @@
     Specifying file is faster than read from stdin.
 
 .LINK
-    head, tail, chead, ctail, ctail2
+    head, tail, chead, ctail, tail-f
 
 .EXAMPLE
     1..20 | tail
@@ -36,7 +36,7 @@
     PS > tail -n 5 *.txt
 
 #>
-function tail{
+function tail {
 
   begin{
     [int] $readRowCounter = 0

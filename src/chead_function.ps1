@@ -9,7 +9,7 @@
     Cut 1 row by default.
 
 .LINK
-    head, tail, chead, chead
+    head, tail, chead, ctail, tail-f
 
 .EXAMPLE
     # read from stdin

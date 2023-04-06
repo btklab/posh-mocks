@@ -16,6 +16,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - None
 
+
+## [3.7.0] - 2023-04-07
+
+### Changed
+
+- Fixed [fwatch] synopsis
+- Changed [operator.ps1] path delimiter "\" to "/"
+
+### Added
+
+- Added [tail-f] function
+
+
 ## [3.6.2] - 2023-04-06
 
 ### Changed
@@ -334,8 +347,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Rename-Normalize]: src/Rename-Normalize_function.ps1
 [clip2normalize]: src/clip2normalize_function.ps1
 
+[tail-f]: src/tail-f_function.ps1
+[operator.ps1]: operator.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.6.2..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.7.0..HEAD
+[3.7.0]: https://github.com/btklab/posh-mocks/releases/tag/3.7.0
 [3.6.2]: https://github.com/btklab/posh-mocks/releases/tag/3.6.2
 [3.6.1]: https://github.com/btklab/posh-mocks/releases/tag/3.6.1
 [3.6.0]: https://github.com/btklab/posh-mocks/releases/tag/3.6.0

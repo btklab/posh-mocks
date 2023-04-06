@@ -16,7 +16,7 @@
     number of lines along with the file name.
 
 .LINK
-    head, tail, chead, ctail, ctail2
+    head, tail, chead, ctail, tail-f
 
 .EXAMPLE
 1..20 | head
