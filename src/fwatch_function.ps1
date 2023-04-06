@@ -21,7 +21,7 @@
     Use FileHash for detect changed
 
 .PARAMETER Quiet
-    Do not status info
+    Do not show status info
 
 .PARAMETER Log
     Output Log
