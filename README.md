@@ -4988,6 +4988,7 @@ src配下の関数（ファイル）名を列挙する。
 - Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
     - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
     - Command: man2
+...
 ```
 
 
@@ -5313,6 +5314,54 @@ PS > cat a.ps1 | mdgrep -l 3 -i test -e
 `-CustomCommentBlock "begin-sympl","end-symbol"`で、言語特有の複数行コメント内の`#`記号を無視できる。
 上のPowerShellスクリプトのパース事例では、`-CustomCommentBlock "<#","#>"`を追加しておくと、
 スクリプトのSynopsisにある`#`記号がマッチしなくなるのでより安全。
+
+
+##### changelogのgrep
+
+markdownの見出し形式で書かれたchangelogの検索例
+
+
+`changelog.txt`
+
+```markdown
+# changelog
+
+## 2023-04-07 hoge
+
+- hoge1
+- hoge2
+- hoge3
+
+
+## 2023-04-08 fuga
+
+- fuga1
+- fuga2
+- fuga3
+
+# changelog2
+
+## 2023-04-09 piyo
+
+- piyo1
+- piyo2
+- piyo3
+```
+
+タイトルまたは本文に`fuga`を含むブロックを抽出する
+
+
+```powershell
+PS > cat changelog.txt | mdgrep fuga
+## 2023-04-08 fuga
+
+PS > cat changelog.txt | mdgrep fuga -Expand
+## 2023-04-08 fuga
+
+- fuga1
+- fuga2
+- fuga3
+```
 
 
 
