@@ -116,6 +116,9 @@ function Rename-Normalize {
         [Alias('d')]
         [string] $Delimiter = '-',
         
+        [parameter( Mandatory=$False )]
+        [string] $ReplaceChar = ' ',
+        
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
         [object[]] $InputFiles
     )
@@ -139,6 +142,19 @@ function Rename-Normalize {
     filter remove-whitespaces-around-dot {
         $_ -replace '\s*\.\s*', '.'
     }
+    filter replace-characters-to-avoid-in-filename {
+        [string] $tmpLine = $_
+        $tmpLine = $tmpLine.Replace('\', "$ReplaceChar")
+        $tmpLine = $tmpLine.Replace('/', "$ReplaceChar")
+        $tmpLine = $tmpLine.Replace(':', "$ReplaceChar")
+        $tmpLine = $tmpLine.Replace('*', "$ReplaceChar")
+        $tmpLine = $tmpLine.Replace('?', "$ReplaceChar")
+        $tmpLine = $tmpLine.Replace('"', "$ReplaceChar")
+        $tmpLine = $tmpLine.Replace('<', "$ReplaceChar")
+        $tmpLine = $tmpLine.Replace('>', "$ReplaceChar")
+        $tmpLine = $tmpLine.Replace('|', "$ReplaceChar")
+        Write-Output $tmpLine
+    }
     filter remove-whitespaces-around-hyphen {
         $_ -replace '\s*\-\s*', '-'
     }
@@ -156,8 +172,6 @@ function Rename-Normalize {
     }
     filter remove-underscore-around-hyphen {
         "$_".Replace('_-_', '-')
-        #"$_".Replace('_-',  '-')
-        #"$_".Replace('-_',  '-')
     }
     ## test input
     if ( $input.Count -lt 1 ){
@@ -177,6 +191,7 @@ function Rename-Normalize {
         ### replace kana half-width to full-width
         ###   and replace alpanumeric characters full to half-width
         [string] $newName = $f.Name | han | zen -k
+        [string] $newName = $newName | replace-characters-to-avoid-in-filename
         [string] $newName = $newName | remove-whitespaces-around-dot
         [string] $newName = $newName | remove-whitespaces-around-hyphen
         [string] $newName = $newName | remove-whitespaces-around-underscore
