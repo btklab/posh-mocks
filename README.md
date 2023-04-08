@@ -4177,7 +4177,7 @@ C task-C [A,B]
 Input:
 
 ```powershell
-cat input.txt
+PS > cat input.txt
 # how to cook curry
 
 -- rice --
@@ -4198,12 +4198,20 @@ B --> C : at least\n30 minutes
 
 //-- dot --
 {rank=same; A, E, D};
+
+legend right
+this is
+legend!
+end legend
 ```
 
 Output:
 
+```powershell
+PS >  cat input.txt | logi2dot -Kinsoku 10 -BottomToTopDirection > a.dot ; dot2gviz a.dot png | ii
+```
+
 ```dot
-cat input.txt | logi2dot > a.dot; dot2gviz a.dot png | ii
 strict digraph logictree {
 
  graph [
@@ -4211,7 +4219,8 @@ strict digraph logictree {
   compound = true;
   fontname = "MS Gothic";
   label = "how to cook curry";
-  rankdir = "TB";
+  labelloc = "t";
+  rankdir = "BT";
   newrank = true;
  ];
 
@@ -4226,6 +4235,11 @@ strict digraph logictree {
   dir = forward;
  ];
 
+ // legend subgraph
+ subgraph cluster_legend {
+   //peripheries=0;
+
+
  // Node settings
 
  subgraph cluster_G1 {
@@ -4236,9 +4250,9 @@ strict digraph logictree {
   labelloc = "t";
   labeljust = "l";
   //-- rice --
-  "A" [label="A\lwash rice", shape="rectangle" ];
-  "B" [label="B\lsoak rice in fresh water", shape="rectangle" ];
-  "C" [label="C\lcook rice", shape="rectangle" ];
+  "A" [label="A\lwash rice\l", shape="rectangle" ];
+  "B" [label="B\lsoak rice \lin fresh water\l", shape="rectangle" ];
+  "C" [label="C\lcook rice\l", shape="rectangle" ];
  };
 
  subgraph cluster_G2 {
@@ -4249,14 +4263,14 @@ strict digraph logictree {
   labelloc = "t";
   labeljust = "l";
   //-- curry roux --
-  "D" [label="D\lcut vegetables", shape="rectangle" ];
-  "E" [label="E\lcut meat into cubes", shape="rectangle" ];
-  "F" [label="F\lstew vegetables and meat", shape="rectangle" ];
-  "G" [label="G\ladd curry roux and simmer", shape="rectangle" ];
+  "D" [label="D\lcut vegetables\l", shape="rectangle" ];
+  "E" [label="E\lcut meat into \lcubes\l", shape="rectangle" ];
+  "F" [label="F\lstew vegetables \land meat\l", shape="rectangle" ];
+  "G" [label="G\ladd curry \lroux and simmer\l", shape="rectangle" ];
  };
 
- "H" [label="H\lserve on plate", shape="rectangle" ];
- "I" [label="I\lcomplete!", shape="rectangle" ];
+ "H" [label="H\lserve on plate\l", shape="rectangle" ];
+ "I" [label="I\lcomplete!\l", shape="rectangle" ];
 
 
  // Edge settings
@@ -4276,6 +4290,26 @@ strict digraph logictree {
  // Dot settings
  //-- dot --
  {rank=same; A, E, D};
+
+
+ // legend block
+ graph [
+   labelloc="t";
+   labeljust="r";
+   color="white";
+   label=<
+   <TABLE
+       BORDER="1"
+       CELLBORDER="0"
+       COLOR="gray15"
+       BGCOLOR="gray95"
+   >
+   <TR><TD ALIGN="LEFT"><FONT COLOR="gray15" POINT-SIZE="11">this is</FONT></TD></TR>
+   <TR><TD ALIGN="LEFT"><FONT COLOR="gray15" POINT-SIZE="11">legend!</FONT></TD></TR>
+   </TABLE>>;
+ ];
+
+};
 
 }
 ```
@@ -4306,8 +4340,11 @@ ActA <-> ActB: conflict！
 
 Output2:
 
-```dot
+```powershell
 cat input.txt | logi2dot -BottomToTopDirection -Kinsoku 10 > a.dot; dot2gviz a.dot png | ii
+```
+
+```dot
 strict digraph logictree {
 
  graph [
