@@ -13,6 +13,11 @@
         A task-A [-]
         B task-B [A]
         C task-C [A,B]
+
+        legend right
+        this is
+        reference
+        end legend
     
     Format:
         - id task [prectask1, prectask2,...]
@@ -35,6 +40,11 @@
               - https://www.opensecurityarchitecture.org/cms/library/icon-library
               - https://network.yamaha.com/support/download/tool
               - https://knowledge.sakura.ad.jp/4724/
+        - legend block
+            - "legend (right|left)"
+            - "contents"
+            - "contents"
+            - "end legend"
     
     Input:
         # how to cook curry
@@ -57,82 +67,113 @@
 
         //-- dot --
         {rank=same; A, E, D};
+
+        legend right
+        this is
+        legend!
+        end legend
     
     Output:
-        strict digraph logictree {
-        
-         graph [
-          charset = "UTF-8";
-          compound = true;
-          fontname = "MS Gothic";
-          label = "how to cook curry";
-          rankdir = "TB";
-          newrank = true;
-         ];
+strict digraph logictree {
 
-         node [
-          fontname = "MS Gothic";
-          shape = "rectangle";
-          style = "rounded,solid";
-         ];
+ graph [
+  charset = "UTF-8";
+  compound = true;
+  fontname = "MS Gothic";
+  label = "how to cook curry";
+  labelloc = "t";
+  rankdir = "TB";
+  newrank = true;
+ ];
 
-         edge [
-          fontname = "MS Gothic";
-          dir = forward;
-         ];
+ node [
+  fontname = "MS Gothic";
+  shape = "rectangle";
+  style = "rounded,solid";
+ ];
 
-         // Node settings
+ edge [
+  fontname = "MS Gothic";
+  dir = forward;
+ ];
 
-         subgraph cluster_G1 {
-          label = "rice";
-          shape = "rectangle";
-          style = "dotted";
-          //fontsize = 11;
-          labelloc = "t";
-          labeljust = "l";
-          //-- rice --
-          "A" [label="A\lwash rice", shape="rectangle" ];
-          "B" [label="B\lsoak rice in fresh water", shape="rectangle" ];
-          "C" [label="C\lcook rice", shape="rectangle" ];
-         };
-
-         subgraph cluster_G2 {
-          label = "curry roux";
-          shape = "rectangle";
-          style = "dotted";
-          //fontsize = 11;
-          labelloc = "t";
-          labeljust = "l";
-          //-- curry roux --
-          "D" [label="D\lcut vegetables", shape="rectangle" ];
-          "E" [label="E\lcut meat into cubes", shape="rectangle" ];
-          "F" [label="F\lstew vegetables and meat", shape="rectangle" ];
-          "G" [label="G\ladd curry roux and simmer", shape="rectangle" ];
-         };
-
-         "H" [label="H\lserve on plate", shape="rectangle" ];
-         "I" [label="I\lcomplete!", shape="rectangle" ];
+ // legend subgraph
+ subgraph cluster_legend {
+   //peripheries=0;
 
 
-         // Edge settings
-         "A" -> "B" [style=solid];
-         "B" -> "C" [style=solid];
-         "D" -> "F" [style=solid];
-         "E" -> "F" [style=solid];
-         "F" -> "G" [style=solid];
-         "C" -> "H" [style=solid];
-         "G" -> "H" [style=solid];
-         "H" -> "I" [style=solid];
+ // Node settings
 
-         // Edge optional settings
-         "B" -> "C" [label="at least\n30 minutes", style="solid", dir=forward];
+ subgraph cluster_G1 {
+  label = "rice";
+  shape = "rectangle";
+  style = "dotted";
+  //fontsize = 11;
+  labelloc = "t";
+  labeljust = "l";
+  //-- rice --
+  "A" [label="A\lwash rice", shape="rectangle" ];
+  "B" [label="B\lsoak rice in fresh water", shape="rectangle" ];
+  "C" [label="C\lcook rice", shape="rectangle" ];
+ };
+
+ subgraph cluster_G2 {
+  label = "curry roux";
+  shape = "rectangle";
+  style = "dotted";
+  //fontsize = 11;
+  labelloc = "t";
+  labeljust = "l";
+  //-- curry roux --
+  "D" [label="D\lcut vegetables", shape="rectangle" ];
+  "E" [label="E\lcut meat into cubes", shape="rectangle" ];
+  "F" [label="F\lstew vegetables and meat", shape="rectangle" ];
+  "G" [label="G\ladd curry roux and simmer", shape="rectangle" ];
+ };
+
+ "H" [label="H\lserve on plate", shape="rectangle" ];
+ "I" [label="I\lcomplete!", shape="rectangle" ];
 
 
-         // Dot settings
-         //-- dot --
-         {rank=same; A, E, D};
+ // Edge settings
+ "A" -> "B" [style=solid];
+ "B" -> "C" [style=solid];
+ "D" -> "F" [style=solid];
+ "E" -> "F" [style=solid];
+ "F" -> "G" [style=solid];
+ "C" -> "H" [style=solid];
+ "G" -> "H" [style=solid];
+ "H" -> "I" [style=solid];
 
-        }
+ // Edge optional settings
+ "B" -> "C" [label="at least\n30 minutes", style="solid", dir=forward];
+
+
+ // Dot settings
+ //-- dot --
+ {rank=same; A, E, D};
+
+
+ // legend block
+ graph [
+   labelloc="b";
+   labeljust="r";
+   color="white";
+   label=<
+   <TABLE
+       BORDER="1"
+       CELLBORDER="0"
+       COLOR="gray15"
+       BGCOLOR="gray95"
+   >
+   <TR><TD ALIGN="LEFT"><FONT COLOR="gray15" POINT-SIZE="11">this is</FONT></TD></TR>
+   <TR><TD ALIGN="LEFT"><FONT COLOR="gray15" POINT-SIZE="11">legend!</FONT></TD></TR>
+   </TABLE>>;
+ ];
+
+};
+
+}
 
 .LINK
     pu2java, dot2gviz, pert, pert2dot, pert2gantt2pu, mind2dot, mind2pu, gantt2pu, logi2dot, logi2dot2, logi2dot3, logi2pu, logi2pu2, flow2pu, seq2pu
@@ -250,6 +291,37 @@
 
     PS > cat input.txt | logi2dot -Kinsoku 10 -BottomToTopDirection > a.dot; dot2gviz a.dot svg
 
+.EXAMPLE
+    cat curry.txt
+    # how to cook curry
+
+    -- rice --
+    A wash rice [-]
+    B soak rice in fresh water [A]
+    C cook rice [B]
+
+    -- curry roux --
+    D cut vegetables [-]
+    E cut meat into cubes [-]
+    F stew vegetables and meat [D,E]
+    G add curry roux and simmer [F]
+
+    H serve on plate [C,G]
+    I complete! [H]
+
+    B --> C : at least\n30 minutes
+
+    //-- dot --
+    {rank=same; A, E, D};
+
+    legend right
+    this is
+    legend!
+    end legend
+
+
+    PS > cat curry.txt | logi2dot -Kinsoku 10 -BottomToTopDirection > a.dot ; dot2gviz a.dot svg | ii
+
 #>
 function logi2dot {
     Param(
@@ -281,7 +353,7 @@ function logi2dot {
 
         [Parameter(Mandatory=$False)]
         [ValidateSet("t", "b", "l", "r")]
-        [string]$TitleLoc,
+        [string]$TitleLoc = "t",
 
         [Parameter(Mandatory=$False)]
         [ValidateSet("l", "r", "c")]
@@ -430,6 +502,9 @@ function logi2dot {
         [Parameter(Mandatory=$False)]
         [string]$AddEdgeLabelFontsize,
 
+        [Parameter( Mandatory=$False)]
+        [int]$LegendFontSize = 11,
+
         [Parameter(Mandatory=$False,
             ValueFromPipeline=$True)]
         [string[]]$Text
@@ -460,11 +535,14 @@ function logi2dot {
         $readLineAryDot += " // Dot settings"
         $wspace = ' '
         ## flags
-        [bool] $isFirstRowEqTitle = $False
-        [bool] $NodeBlockFlag     = $True  # Loading node
-        [bool] $NodeGroupFlag     = $False # Loading node group
-        [bool] $EdgeBlockFlag     = $False # Loading edge block
-        [bool] $DotBlockFlag      = $False # Loading dot source
+        [bool] $isFirstRowEqTitle  = $False
+        [bool] $NodeBlockFlag      = $True  # Loading node
+        [bool] $NodeGroupFlag      = $False # Loading node group
+        [bool] $EdgeBlockFlag      = $False # Loading edge block
+        [bool] $DotBlockFlag       = $False # Loading dot source
+        [bool] $LegendBlockFlag    = $False # Parse legend block
+        [bool] $LegendBlockEndFlag = $False # Parse legend block
+        [bool] $LegendBlockFirstLine = $False # Parse legend block
         ## private function
         # is command exist?
         function isCommandExist ([string]$cmd) {
@@ -677,7 +755,7 @@ function logi2dot {
             ## if "//-- Dot --" appears,
             ## following lines are output as-is (without processing)
             if ($rdLine -match '^//\-\-\s*[Dd][Oo][tT]'){
-                [bool] $DotBlockFlag = $True
+                [bool] $DotBlockFlag  = $True
                 [bool] $NodeBlockFlag = $False
                 [bool] $EdgeBlockFlag = $False
             }
@@ -693,6 +771,60 @@ function logi2dot {
                     [bool] $NodeGroupFlag = $False
                 }
             }
+            ## if "legend" appears, begin legend block
+            if ($rdLine -eq "legend right" -or $rdLine -eq "legend left"){
+                [bool] $DotBlockFlag   = $False
+                [bool] $NodeBlockFlag  = $False
+                [bool] $EdgeBlockFlag  = $False
+                [bool] $LegendBlockFlag = $True
+                [bool] $LegendBlockFirstLine = $True
+                if ($rdLine -eq "legend left"){
+                    [string] $lloc = "l"
+                } else {
+                    [string] $lloc = "r"
+                }
+                #if ( $RightToLeftDirection ){
+                #    [string] $lloc = "l"
+                #} else {
+                #    [string] $lloc = "r"
+                #}
+                ## close group if not closed
+                if ($NodeGroupFlag){
+                    $readLineAryNode += ' };'
+                    [bool] $NodeGroupFlag = $False
+                }
+                ## init var
+                [string[]] $readLineAryLegend = @()
+                $readLineAryLegend += ""
+                $readLineAryLegend += " // legend block"
+                $readLineAryLegend += " graph ["
+                if ( $BottomToTopDirection ){
+                    $readLineAryLegend += "   labelloc=""t"";"
+                } else {
+                    $readLineAryLegend += "   labelloc=""b"";"
+                }
+                $readLineAryLegend += "   labeljust=""$lloc"";"
+                $readLineAryLegend += "   color=""white"";"
+                $readLineAryLegend += "   label=<"
+                $readLineAryLegend += "   <TABLE"
+                $readLineAryLegend += "       BORDER=""1"""
+                $readLineAryLegend += "       CELLBORDER=""0"""
+                #$readLineAryLegend += "       CELLSPACING=""6"""
+                $readLineAryLegend += "       COLOR=""gray15"""
+                $readLineAryLegend += "       BGCOLOR=""gray95"""
+                $readLineAryLegend += "   >"
+                ## private function
+                function parseTableStr ([string]$lin){
+                    $ret = $lin
+                    $ret = $ret -replace '\*\*\*([^\*]+)\*\*\*', '<I><B>$1</B></I>'
+                    $ret = $ret -replace   '\*\*([^\*]+)\*\*',      '<B>$1</B>'
+                    $ret = $ret -replace     '\*([^\*]+)\*',        '<I>$1</I>'
+                    $ret = $ret -replace     '\~([^\~]+)\~',      '<SUB>$1</SUB>'
+                    $ret = $ret -replace     '\^([^\^]+)\^',      '<SUP>$1</SUP>'
+                    return $ret
+                }
+            }
+            
             ## Node grouping mode = ON
             ## from "-- GroupName --" to the next blank line.
             if (($rdLine -match '^\-\- ') -and (!$DotBlockFlag)) {
@@ -778,6 +910,7 @@ function logi2dot {
                         }
                     }
                 }
+                return
             }
             ## Edge block reading mode
             ##   e.g. A --> B : label
@@ -824,6 +957,7 @@ function logi2dot {
                 } else {
                     Write-Error "parse error: invalid edge specification: $rdLine" -ErrorAction Stop
                 }
+                return
             }
             ## Dot block reading mode
             ## as-is output
@@ -833,10 +967,40 @@ function logi2dot {
                 } else {
                     $readLineAryDot += $wspace + $rdLine
                 }
+                return
+            }
+            ## Legend block reading mode
+            ## as-is output
+            if ($LegendBlockFlag){
+                if ( $LegendBlockFirstLine ){
+                    #pass
+                    $LegendBlockFirstLine = $False
+                } elseif ($rdLine.Trim() -eq "end legend"){
+                    [bool] $LegendBlockEndFlag = $True
+                    $readLineAryLegend += "   </TABLE>>;"
+                    $readLineAryLegend += " ];"
+                    $readLineAryLegend += ""
+                    $readLineAryLegend += "};"
+                    $readLineAryLegend += ""
+                } elseif ($rdLine -eq ''){
+                    $readLineAryLegend += "   <TR><TD></TD></TR>"
+                } else {
+                    [string] $legLine = "   <TR><TD ALIGN=""LEFT""><FONT COLOR=""gray15"" POINT-SIZE=""$LegendFontSize"">"
+                    [string] $legLine += parseTableStr $rdLine
+                    [string] $legLine += "</FONT></TD></TR>"
+                    $readLineAryLegend += $legLine
+                }
+                return
             }
         }
     }
     end {
+        ## test
+        if ( $LegendBlockFlag){
+            if ( -not $LegendBlockEndFlag ){
+                Write-Error "legend block is not closed. write ""legend end"" end of block." -ErrorAction Stop
+            }
+        }
         ##
         ## Header
         ##
@@ -960,6 +1124,13 @@ function logi2dot {
         foreach ($lin in $readLineAryHeader){
             $readLineAry += $lin
         }
+        if ( $LegendBlockFlag ){
+            $readLineAry += ""
+            $readLineAry += " // legend subgraph"
+            $readLineAry += " subgraph cluster_legend {"
+            $readLineAry += "   //peripheries=0;"
+            $readLineAry += ""
+        }
         foreach ($lin in $readLineAryNode){
             $readLineAry += $lin
         }
@@ -971,6 +1142,11 @@ function logi2dot {
         }
         foreach ($lin in $readLineAryDot){
             $readLineAry += $lin
+        }
+        if ( $LegendBlockFlag ){
+            foreach ($lin in $readLineAryLegend){
+                $readLineAry += $lin
+            }
         }
         foreach ($lin in $readLineAryFooter){
             $readLineAry += $lin

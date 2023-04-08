@@ -272,6 +272,46 @@
         }
     }
 
+
+.EXAMPLE
+    # grep changelog example
+    
+    PS > cat changelog.txt
+    # changelog
+    
+    ## 2023-04-07 hoge
+    
+    - hoge1
+    - hoge2
+    - hoge3
+    
+    
+    ## 2023-04-08 fuga
+    
+    - fuga1
+    - fuga2
+    - fuga3
+    
+    # changelog2
+    
+    ## 2023-04-09 piyo
+    
+    - piyo1
+    - piyo2
+    - piyo3
+    
+    
+    PS > cat changelog.txt | mdgrep fuga
+    ## 2023-04-08 fuga
+    
+    PS > cat changelog.txt | mdgrep fuga -Expand
+    ## 2023-04-08 fuga
+    
+    - fuga1
+    - fuga2
+    - fuga3
+    
+
 #>
 function mdgrep {
 
