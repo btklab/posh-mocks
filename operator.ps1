@@ -31,6 +31,7 @@ if ($IsWindows){
     ## file and directory manipuration
     . $pwshSrcDir/Rename-Normalize_function.ps1
     Set-Alias -name ren2norm -value Rename-Normalize
+    . $pwshSrcDir/push2loc_function.ps1
 
     ## misc
     . $pwshSrcDir/say_function.ps1
@@ -134,6 +135,7 @@ Set-Alias -name ml -value Get-OGP
 . $pwshSrcDir/clip2img_function.ps1
 . $pwshSrcDir/clip2file_function.ps1
 . $pwshSrcDir/clip2normalize_function.ps1
+. $pwshSrcDir/clip2push_function.ps1
 . $pwshSrcDir/clipwatch_function.ps1
 
 ## file watcher
