@@ -6750,7 +6750,7 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
     - `ls | Rename-Normalize -Execute`
 - Replace rules
     - replace kana half-width to full-width
-    - replace alpanumeric characters full to half-width
+    - replace alphanumeric characters full to half-width
     - remove whitespaces around dot
     - remove whitespaces around hyphen
     - remove whitespaces around underscore

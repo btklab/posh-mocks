@@ -189,7 +189,7 @@ function Rename-Normalize {
     foreach ( $f in $fObj ){
         [string] $oldName = $f.Name
         ### replace kana half-width to full-width
-        ###   and replace alpanumeric characters full to half-width
+        ###   and replace alphanumeric characters full to half-width
         [string] $newName = $f.Name | han | zen -k
         [string] $newName = $newName | replace-characters-to-avoid-in-filename
         [string] $newName = $newName | remove-whitespaces-around-dot
