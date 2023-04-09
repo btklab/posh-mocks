@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2img], [clip2normalize], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2img], [clip2normalize], [clip2push], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 
 Inspired by:
@@ -6750,7 +6750,7 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
     - `ls | Rename-Normalize -Execute`
 - Replace rules
     - replace kana half-width to full-width
-    - replace alpanumeric characters full to half-width
+    - replace alphanumeric characters full to half-width
     - remove whitespaces around dot
     - remove whitespaces around hyphen
     - remove whitespaces around underscore
@@ -6827,6 +6827,155 @@ clip2file | Rename-Normalize
     clip2img_ｱｶｻﾀﾅ_function.ps1   => clip2img_アカサタナ_function.ps1
     clipwatch-function - Copy.ps1 => clipwatch-function-Copy.ps1
     clipwatch-function.ps1        => clipwatch-function.ps1
+```
+
+#### [push2loc] - Push-Location and execute commands to clipped files
+
+[push2loc]: src/push2loc_function.ps1
+
+エクスプローラからクリップボードにコピーしたファイルまたはディレクトリの場所に`Push-Location`する。
+[clip2file]と組み合わせて使う。
+カレントディレクトリから遠い場所にあるファイルを操作したいとき、それから、複数のディレクトリ内のファイルに対して同じ操作を適用するときに便利。
+
+- Usage
+    - `man2 push2loc`
+    - `clip2file | push2loc [-a|-Action {script}] [-p|-Pop] [-e|-Execute] [-q|-Quiet]`
+- Option
+    - `-a|-Action {scriptblock}`: the commands want to run
+    - `-p|-Pop` Pop-Location after running Push-Location (and execute -Action script)
+    - `-e|-Execute`: execute push (and command specified with -Action)
+- Note
+    - Does not run command unless `-Execute` switch is specified
+    - If error is caught during -Action script execution, execute Pop-Location before exit function
+- References
+    - [Push-Location (Microsoft.PowerShell.Management)](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/push-location)
+    - [Split-Path (Microsoft.PowerShell.Management)](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/split-path)
+    - [about Try Catch Finally - PowerShell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_try_catch_finally)
+    - [about Script Blocks - PowerShell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_script_blocks)
+- Relation
+    - [clip2push]
+
+Usage details:
+
+1. copy files to clipboard<br />![](img/clip2file_1.png)
+2. test location: `clip2file | push2loc`
+3. phushd: `clip2file | push2loc -Execute`
+
+Examples
+
+```powershell
+# Simple usage: Combination with "clip2file" case to only pushd to clipped file location
+
+("copy file to the clipboard on explorer and ...")
+
+in ~/cms/drafts
+PS > clip2file
+
+        Directory: C:/path/to/the/location
+
+    Mode                 LastWriteTime         Length Name
+    ----                 -------------         ------ ----
+    -a---          2023/02/17    23:45           8079 index.qmd
+
+
+in ~/cms/drafts
+PS > clip2file | push2loc
+    Push-Location -LiteralPath "C:/path/to/the/location"
+
+in ~/cms/drafts
+PS > clip2file | push2loc -Execute
+
+in C:/path/to/the/location
+PS > # pushd to clipped file location
+```
+
+
+```powershell
+("copy file to the clipboard and ..."), ("do not run")
+clip2file | push2loc -Action { cat a.md } -Pop
+    Push-Location -LiteralPath "C:/path/to/the/location"
+    cat a.md
+    Pop-Location
+
+## execute command by using "-e|-Execute" switch
+clip2file | push2loc -Action { cat a.md } -Pop -Execute
+```
+
+```powershell
+# Combination with "clip2file" case to pushd and execute command and popd
+
+("copy file to the clipboard and ...")
+
+in ~/cms/drafts
+PS > clip2file
+
+        Directory: C:/path/to/the/location
+
+    Mode                 LastWriteTime         Length Name
+    ----                 -------------         ------ ----
+    -a---          2023/02/17    23:45           8079 index.qmd
+
+
+PS >  clip2file | push2loc
+    Push-Location -LiteralPath "C:/path/to/the/location"
+
+PS > clip2file | push2loc -Action { quarto render index.qmd --to html } -Pop
+    Push-Location -LiteralPath "C:/path/to/the/location"
+    quarto render index.qmd --to html
+    Pop-Location
+
+PS >  clip2file | push2loc -Action { quarto render index.qmd --to html } -Pop  -Execute
+    ("execute quarto command and popd")
+```
+
+```powershell
+# Combination with "clip2file" case to git status for each clipped git directory
+
+("copy file to the clipboard and ...")
+
+in ~/cms/drafts
+PS > clip2file
+
+        Directory: C:/path/to/the/git/repository
+
+    Mode                 LastWriteTime         Length Name
+    ----                 -------------         ------ ----
+    d-r--          2023/03/21    14:06                rlang-mocks
+    d-r--          2023/03/21    14:06                posh-mocks
+    d-r--          2023/03/21    14:06                py-mocks
+
+
+in ~/cms/drafts
+PS > clip2file | push2loc -Action { git status } -Pop
+    Push-Location -LiteralPath "C:/path/to/the/git/repository/rlang-mocks"
+    git status
+    Pop-Location
+    Push-Location -LiteralPath "C:/path/to/the/git/repository/posh-mocks"
+    git status
+    Pop-Location
+    Push-Location -LiteralPath "C:/path/to/the/git/repository/py-mocks"
+    git status
+    Pop-Location
+
+
+# execute command (git status foreach git repository)
+in ~/cms/drafts
+PS > clip2file | push2loc -Action { git status } -Pop -Execute
+    in rlang-mocks
+    On branch develop
+    Your branch is up to date with 'origin/develop'.
+
+    nothing to commit, working tree clean
+    in posh-mocks
+    On branch develop
+    Your branch is up to date with 'origin/develop'.
+
+    nothing to commit, working tree clean
+    in py-mocks
+    On branch develop
+    Your branch is up to date with 'origin/develop'.
+
+    nothing to commit, working tree clean
 ```
 
 
@@ -6914,6 +7063,99 @@ clip2file | Rename-Normalize
 ```
 
 
+#### [clip2push] - Push-Location and execute commands to clipped files
+
+[clip2push]: src/clip2push_function.ps1
+
+エクスプローラからクリップボードにコピーしたファイルまたはディレクトリの場所に`Push-Location`する。
+カレントディレクトリから遠い場所にあるファイルを操作したいとき、それから、複数のディレクトリ内のファイルに対して同じ操作を適用したいときに便利。
+
+- Usage
+    - `man2 clip2push`
+    - `clip2push [-a|-Action {script}] [-p|-Pop] [-e|-Execute] [-q|-Quiet]`
+- Option
+    - `-a|-Action {scriptblock}`: the commands want to run
+    - `-p|-Pop` Pop-Location after running Push-Location (and execute -Action script)
+    - `-e|-Execute`: execute push (and command specified with -Action)
+- Note
+    - Does not run command unless `-Execute` switch is specified
+    - If error is caught during -Action script execution, execute Pop-Location before exit function
+- References
+    - [Push-Location (Microsoft.PowerShell.Management)](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/push-location)
+    - [Split-Path (Microsoft.PowerShell.Management)](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/split-path)
+    - [about Try Catch Finally - PowerShell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_try_catch_finally)
+    - [about Script Blocks - PowerShell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_script_blocks)
+- Relation
+    - [push2loc]
+
+
+Usage details:
+
+1. copy files to clipboard<br />![](img/clip2file_1.png)
+2. test location: `clip2push`
+3. phushd: `clip2push -Execute`
+
+Examples
+
+```powershell
+# Push-Location to clipped file's parent directory (do not execute)
+
+("copy file to the clipboard and ...")
+
+PS > clip2push
+Push-Location -LiteralPath "C:/path/to/the/git/repository/posh-mocks"
+```
+
+```powershell
+# Push-Location to clipped file's parent directory  (do not execute)
+# and Pop-Location (return to the first directory)  (do not execute)
+
+("copy file to the clipboard and ...")
+
+PS > clip2push -Pop
+Push-Location -LiteralPath "C:/path/to/the/git/repository/posh-mocks"
+Pop-Location
+```
+
+```powershell
+# Combination with "clip2file" case to git status for each clipped git directory
+
+("copy file to the clipboard and ...")
+
+in ~/cms/drafts
+PS > clip2push -Action { git status } -Pop
+    Push-Location -LiteralPath "C:/path/to/the/git/repository/rlang-mocks"
+    git status
+    Pop-Location
+    Push-Location -LiteralPath "C:/path/to/the/git/repository/posh-mocks"
+    git status
+    Pop-Location
+    Push-Location -LiteralPath "C:/path/to/the/git/repository/py-mocks"
+    git status
+    Pop-Location
+
+
+# execute command (git status foreach git repository)
+in ~/cms/drafts
+PS > clip2push -Action { git status } -Pop -Execute
+    in rlang-mocks
+    On branch develop
+    Your branch is up to date with 'origin/develop'.
+
+    nothing to commit, working tree clean
+    in posh-mocks
+    On branch develop
+    Your branch is up to date with 'origin/develop'.
+
+    nothing to commit, working tree clean
+    in py-mocks
+    On branch develop
+    Your branch is up to date with 'origin/develop'.
+
+    nothing to commit, working tree clean
+```
+
+
 #### [clip2img] - Save clip board image as an image file
 
 [clip2img]: src/clip2img_function.ps1
@@ -6974,14 +7216,14 @@ clip2img -MSPaint -Clip -Directory ~/Pictures -DirView -AutoPrefix -Name "hoge"
 Examples
 
 ```powershell
-cat a.txt
+PS > cat a.txt
 ■　ｽﾏﾎ等から確認する場合
 １　あいうえお
 ２　かきくけこ
 ３　ａｂｃｄｅ
 
 ("copy text to clipboard and..."")
-clip2normalize
+PS > clip2normalize
 ■ スマホ等から確認する場合
 1. あいうえお
 2. かきくけこ

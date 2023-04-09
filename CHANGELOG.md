@@ -14,8 +14,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- None
+
+
+## [3.8.0] - 2023-04-09
+
+### Changed
+
+- Fixed [README.md] typo
+
+### Added
+
 - Added [logi2dot] enable legend block.
 - Added [mdgrep] grep changelog example.
+- Added [push2loc] function.
+- Added [clip2push] function.
+- Added [Rename-Normalize] filter "replace-characters-to-avoid-in-filename".
 
 
 ## [3.7.0] - 2023-04-07
@@ -351,7 +365,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [tail-f]: src/tail-f_function.ps1
 [operator.ps1]: operator.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.7.0..HEAD
+[push2loc]: src/push2loc_function.ps1
+[clip2push]: src/clip2push_function.ps1
+
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.8.0..HEAD
+[3.8.0]: https://github.com/btklab/posh-mocks/releases/tag/3.8.0
 [3.7.0]: https://github.com/btklab/posh-mocks/releases/tag/3.7.0
 [3.6.2]: https://github.com/btklab/posh-mocks/releases/tag/3.6.2
 [3.6.1]: https://github.com/btklab/posh-mocks/releases/tag/3.6.1

@@ -44,7 +44,7 @@
         ２　かきくけこ
         ３　ａｂｃｄｅ
 
-    ("copy text to clipboard and..."")
+    ("copy text to clipboard and...")
     clip2normalize
         ■ スマホ等から確認する場合
         1. あいうえお
