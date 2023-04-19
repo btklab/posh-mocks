@@ -43,7 +43,7 @@
         PS > clip2file | Rename-Item -NewName { $_.Name -replace '^', (Get-Date).ToString('yyyy-MM-dd-') } -WhatIf
 
 .LINK
-    clip2file, clip2img, clip2txt
+    clip2file, clip2push, clip2shortcut, clip2img, clip2txt, clip2normalize
 
 .EXAMPLE
     clip2file

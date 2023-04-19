@@ -22,7 +22,7 @@
     it will be overwritten
 
 .LINK
-    clip2file, clip2img, clip2txt
+    clip2file, clip2push, clip2shortcut, clip2img, clip2txt, clip2normalize
 
 .PARAMETER Name
     Specify the output file name.

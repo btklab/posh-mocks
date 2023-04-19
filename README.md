@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2img], [clip2normalize], [clip2push], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 
 Inspired by:
@@ -7223,6 +7223,67 @@ PS > clip2normalize
 1. あいうえお
 2. かきくけこ
 3. abcde
+```
+
+#### [clip2shortcut] - Create relative-path shortcuts from clipped files.
+
+[clip2shortcut]: src/clip2shortcut_function.ps1
+
+クリップボードにコピーされたファイルのショートカットを相対パスでカレントディレクトリに作成する。
+相対パスなので、ドライブレター不定のUSB上のファイルのショートカット（リンク）ができる。
+Only for windows.
+
+具体的には以下のTargetPathをショートカットにセットする：
+
+- TargetPath: `%windir%\explorer.exe "relpath/to/the/source/file"`
+
+リンク先と元でドライブレターが異なる場合は絶対パスでショートカットを作成する。
+存在しないファイルを指定するとエラーをレイズし処理を中断する。
+
+- Usage
+    - `man2 clip2shortcut`
+- Options
+    - `[-loc|-Location]` ...Specify directory in which to create shortcuts. default: current directory.
+    - `[-home|-ReplaceHome]` ...Represent home directory with tilde
+    - `[-f|-FullName]` ...Create shortcuts with absolute paths instead of relative paths
+    - `[-lv|-Level]` ...Specify relative path depth. Join `"..\"` for the specified number
+- Reference
+    - [How to create a shortcut to a folder with PowerShell and Intune - learn microsoft](https://learn.microsoft.com/en-us/answers/questions/1163030/how-to-create-a-shortcut-to-a-folder-with-powershe)
+
+```powershell
+$shell = New-Object -comObject WScript.Shell
+$shortcut = $shell.CreateShortcut("[Target location of shortcut\shortcut name.lnk]")
+#$shortcut.TargetPath = "%windir%\explorer.exe"
+$shortcut.Arguments = """\\machine\share\folder"""
+$shortcut.Save()
+```
+
+Example:
+
+```powershell
+## Push-Location to the directory where you want to put shortcut
+PS > pushd 'where/you/want/to/put/shortcut'
+    or
+(clip 'where/you/want/to/put/shortcut')
+PS > clip2push -Execute
+PS > clip2file | push2loc -Execute
+
+## Clip files what you want to create shortcuts
+## (able to multiple copies)
+
+## Create shortcuts
+PS > clip2shortcut
+    index.html.lnk    => ..\index.html
+    index.ltjruby.lnk => ..\index.ltjruby
+    index.pdf.lnk     => ..\index.pdf
+
+## Pop-Location
+PS > popd
+
+## Created shortcut property example
+    Target Type: Application
+    Target Location: %windir%
+    Target: %windir%\explorer.exe "..\index.html"
 ```
 
 
