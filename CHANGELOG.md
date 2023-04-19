@@ -13,24 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.9.0] - 2023-04-20
 
-### Changed
-
 - Updated [README.md]
 - Fixed [toml2psobject] QuoteValue function: enable null option
-
-### Added
-
 - Added [clip2shortcut] function
 
 
 ## [3.8.0] - 2023-04-09
 
-### Changed
-
 - Fixed [README.md] typo
-
-### Added
-
 - Added [logi2dot] enable legend block.
 - Added [mdgrep] grep changelog example.
 - Added [push2loc] function.
@@ -40,29 +30,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.7.0] - 2023-04-07
 
-### Changed
-
 - Fixed [fwatch] synopsis
 - Changed [operator.ps1] path delimiter `\` to `/`
-
-### Added
-
 - Added [tail-f] function
 
 
 ## [3.6.2] - 2023-04-06
 
-### Changed
-
 - Updated [i] synopsis
 - Updated [README.md] synopsis
 - Changed [mind2dot] legend table color
 
-
-
 ## [3.6.1] - 2023-04-06
-
-### Changed
 
 - Changed [Rename-Normalize] make the replacement process a filter and set-alias "ren2norm"
 - Changed [clip2file] swap the order of -Name and -Full switch
@@ -71,29 +50,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.6.0] - 2023-04-04
 
-### Changed
-
 - Changed [Rename-Normalize] examples that better explain what the function does.
-
-### Added
-
 - Added [clip2normalize] function.
 
 
 ## [3.5.0]
 
-### Changed
-
-- None
-
-### Added
-
 - Added [clip2file] function.
 - Added [Rename-Normalize] function.
 
 ## [3.4.0]
-
-### Added
 
 - Added [pwsync] function.
 - Added [Get-AppShortcut] shortcut: IME switch input language.
@@ -101,53 +67,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.3.1]
 
-### Changed
-
 - Fixed [pwmake] overwrite optimized variable error
-
-### Added
-
 - Added [pwmake] example
 
 
 ## [3.3.0]
 
-### Changed
-
 - Updated [README.md]
-
-### Added
-
 - Added [mdgrep] `-CustomCommentBlock` enable the language-specific comment block symbol
 
 ## [3.2.0]
 
-### Changed
-
 - Updated [README.md]
-
-### Added
-
 - Added [man2] `-Independent` option and fix
 - Added [pwmake] `-DeleteCommentEndOfCommandLine` option
 - Added [mdgrep] `-IgnoreLeadingSpaces` option
 
 ## [3.1.0] - 2023-03-18 Sat
 
-### Changed
-
 - Updated [README.md]
 - Fixed [percentile] synopsis
-
-### Added
-
 - Added [mdgrep] function
 - Added [Get-AppShortcut] function
 - Added [clip2img] examples
 
 ## [3.0.1] - 2023-03-17 Fri
-
-### Added
 
 - Added [kinsoku] left parenthesis and fullstop symbols
 - Added `tests` for Pester-Test
@@ -158,20 +102,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.0.0]
 
-### Changed
-
 - Breaking change: `-split` operator to `.Split()` method
 
-
 ## [2.1.3]
-
-### Changed
 
 - Fix [image2md] parse imagefile regardless of extension.
 
 ## [2.1.2]
-
-### Changed
 
 - Enable [grep] `-AllMatches` when `-Path` specified.
 - Fix [image2md] parse imagefile regardless of extension.
@@ -179,22 +116,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.1.1]
 
-### Changed
-
 - Changed [i] behavior when non-existent file is specified.
 - Fixed [README.md] examples.
 
 
 ## [2.1.0]
 
-### Changed
-
 - Breaking Change [ycalc], [percentile] change `-SkipHeader` option to `NoHeader` option. Input expects space-separated data with headers.
 - Fixed [README.md], [logi2dot], [logi2pu], [percentile] typo.
 - Fixed [addb], [addl], [addr], [movw], [tarr] replace tab to 4-spaces.
-
-### Added
-
 - Added [ysort], [ycalc], [fval] functions.
 - Added [wrap] function.
 - Added [percentile] supports multiple value fields. Missing/Empty value detection/removal/replacement.
@@ -203,35 +133,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0]
 
-### Changed
-
 - Breaking Change [chead], [ctail] refactored.
 - Fixed [i] error handling when file does not exist.
 
 
 ## [1.1.0]
 
-### Changed
-
 - Fixed [gantt2pu], [logi2pu], [mind2pu] Wrap title string in double quotes
 - Changed [watercss] Synopsis
 - Fixed [README.md]
-
-### Added
-
 - Added [flow2pu] function
 - Added [seq2pu] function
 
 
 ## [1.0.0] - 2023-02-23
 
-### Changed
-
 - Added [README.md] hyperlinks to related file in section titles
 - Enabled [map2] change upper-left-mark using `-UpperLeftMark` option
-
-### Added
-
 - Added [movw] function
 - Added [decil] function
 - Added [summary] function
@@ -241,24 +159,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.0] - 2023-02-22
 
-### Changed
-
 - Changed [csv2sqlite] update examples
 - Changed [CHANGELOG.md] test tagging and write CHANGELOG.md
-
-### Added
-
 - Added [percentile] function
 
 
 ## [0.1.0] - 2023-02-19
 
-### Changed
-
 - Changed Translate japanese to english
-
-### Added 
-
 - Added [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], ctail2, [delf], [dot2gviz], [filehame], [fillretu], [flat], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [nextyear], [Override-Yaml], [pawk], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [sleepy], [sm2], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [yarr], [zen]
 
 
