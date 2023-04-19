@@ -406,8 +406,8 @@ function toml2psobject {
 
     function QuoteValue {
         Param(
-            [parameter(Mandatory=$True)]
-            [string] $vStr
+            [parameter(Mandatory=$False)]
+            [string] $vStr = ''
         )
         #return $vStr
         $v = $vStr.Trim()
