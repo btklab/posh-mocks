@@ -23,7 +23,7 @@
           execute Pop-Location before exit function.
 
 .LINK
-    clip2file, clip2img, clip2txt, clip2push, push2loc
+    clip2file, clip2push, clip2shortcut, clip2img, clip2txt, clip2normalize, push2loc
 
 .NOTES
     Push-Location (Microsoft.PowerShell.Management)

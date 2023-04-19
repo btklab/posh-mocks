@@ -35,7 +35,7 @@
         han, zen
         
 .LINK
-    clip2file, clip2normalize, clip2img, clip2txt
+    clip2file, clip2push, clip2shortcut, clip2img, clip2txt, clip2normalize
 
 .EXAMPLE
     cat a.txt

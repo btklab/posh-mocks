@@ -8,13 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- None
+
+
+## [3.9.0] - 2023-04-20
+
 ### Changed
 
-- None
+- Updated [README.md]
+- Fixed [toml2psobject] QuoteValue function: enable null option
 
 ### Added
 
-- None
+- Added [clip2shortcut] function
 
 
 ## [3.8.0] - 2023-04-09
@@ -367,9 +373,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [push2loc]: src/push2loc_function.ps1
 [clip2push]: src/clip2push_function.ps1
+[clip2shortcut]: src/clip2shortcut_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.8.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.9.0..HEAD
+[3.9.0]: https://github.com/btklab/posh-mocks/releases/tag/3.9.0
 [3.8.0]: https://github.com/btklab/posh-mocks/releases/tag/3.8.0
 [3.7.0]: https://github.com/btklab/posh-mocks/releases/tag/3.7.0
 [3.6.2]: https://github.com/btklab/posh-mocks/releases/tag/3.6.2

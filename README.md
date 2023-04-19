@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2img], [clip2normalize], [clip2push], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 
 Inspired by:
@@ -238,7 +238,7 @@ flat               linkextract     summary
 [sed]: src/sed_function.ps1
 
 文字列を置換する。Windows用。
-Linux環境で使う`sed`のような使用感で文字列を置換するが、劣化コピーである。
+Linux環境で使う`sed`のような使用感で文字列を置換するが、劣化コピーであるため機能は限定的。
 `"string" | ForEach-Object{ $_ -replace 'reg','str' }`と同じ効果を得る。
 `sed`は（筆者が毎日）よく使うコマンドなので、Bash・PowerShellとも同じ使用感・より短い文字数で利用できるようにした。
 
@@ -370,7 +370,7 @@ PS > ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute -DoNotCreateBackup 
 [grep]: src/grep_function.ps1
 
 文字列の検索とヒット行の出力。Windows用。
-Linux環境で使う`grep`のような使用感で文字列を検索するが、劣化コピーである。
+Linux環境で使う`grep`のような使用感で文字列を検索するが、劣化コピーのため機能は限定的。
 `Select-String -Pattern <reg>`と同じ効果を得る。
 `grep`は（筆者が毎日）よく使うコマンドなので、Bash・PowerShellとも同じ使用感・より短い文字数で利用できるようにした。
 
@@ -586,28 +586,23 @@ PowerShell
 
 ```powershell
 # パイプラインをつなげているときに
-# カッコ()を追加するのは手戻りがあって面倒で楽しくない
+# カッコ()を追加するのは手戻りがあって面倒
 (cat "$PSHOME\en-US\*.txt" | sls "PowerShell" -AllMatches).Matches.Value
 
 PowerShell
 …(以下略)
 ```
 
-筆者は、パイプでコマンドをつないでいるときに`()`を書きたくない。
-パイプで右に右にとコマンドをつないでいくのは楽しいが、
-手戻りして`()`を追加するのは面倒で楽しくない。
-
-`grep`で`Select-String`の（速度の遅い劣化版）ラッパーを作った理由もこのあたりにある。
 単に`grep 'regex'`する場合は、`sls 'regex'`とした方が速い。
 しかし、ちょっと複雑な（だが筆者的にはよく使う）オプション、
 たとえば`grep 'regex' -o`や`grep 'regex' -H <files> -FileNameOnly`などは、
-余計なカッコ`()`や長いパイプを書かずに済むので良い。
+余計なカッコ`()`や長いパイプを書かずにすむ。
 
 
 ```powershell
 # このように書けばカッコ()は書かなくてよいが、
 # grep -oと書けばすむところ、2つも多くパイプを
-# つなげることになるのであまり楽しくない
+# つなげることになるので面倒。
 cat "$PSHOME\en-US\*.txt" `
     | sls "PowerShell" -AllMatches `
     | select -ExpandProperty Matches `
@@ -2634,7 +2629,7 @@ Input
 [gdate]: src/gdate_function.ps1
 
 シンプルな日付の入力（e.g. 1/23）に年を付与して出力。
-筆者は「年数」をしばしばミスタイプしてしまうため。
+筆者は「年数」をしばしばミスタイプしてしまうためその予防として作成。
 
 Add this/next/last year to month/day input.
 To prevent mistyping the number of year.
@@ -7230,6 +7225,67 @@ PS > clip2normalize
 3. abcde
 ```
 
+#### [clip2shortcut] - Create relative-path shortcuts from clipped files.
+
+[clip2shortcut]: src/clip2shortcut_function.ps1
+
+クリップボードにコピーされたファイルのショートカットを相対パスでカレントディレクトリに作成する。
+相対パスなので、ドライブレター不定のUSB上のファイルのショートカット（リンク）ができる。
+Only for windows.
+
+具体的には以下のTargetPathをショートカットにセットする：
+
+- TargetPath: `%windir%\explorer.exe "relpath/to/the/source/file"`
+
+リンク先と元でドライブレターが異なる場合は絶対パスでショートカットを作成する。
+存在しないファイルを指定するとエラーをレイズし処理を中断する。
+
+- Usage
+    - `man2 clip2shortcut`
+- Options
+    - `[-loc|-Location]` ...Specify directory in which to create shortcuts. default: current directory.
+    - `[-home|-ReplaceHome]` ...Represent home directory with tilde
+    - `[-f|-FullName]` ...Create shortcuts with absolute paths instead of relative paths
+    - `[-lv|-Level]` ...Specify relative path depth. Join `"..\"` for the specified number
+- Reference
+    - [How to create a shortcut to a folder with PowerShell and Intune - learn microsoft](https://learn.microsoft.com/en-us/answers/questions/1163030/how-to-create-a-shortcut-to-a-folder-with-powershe)
+
+```powershell
+$shell = New-Object -comObject WScript.Shell
+$shortcut = $shell.CreateShortcut("[Target location of shortcut\shortcut name.lnk]")
+#$shortcut.TargetPath = "%windir%\explorer.exe"
+$shortcut.Arguments = """\\machine\share\folder"""
+$shortcut.Save()
+```
+
+Example:
+
+```powershell
+## Push-Location to the directory where you want to put shortcut
+PS > pushd 'where/you/want/to/put/shortcut'
+    or
+(clip 'where/you/want/to/put/shortcut')
+PS > clip2push -Execute
+PS > clip2file | push2loc -Execute
+
+## Clip files what you want to create shortcuts
+## (able to multiple copies)
+
+## Create shortcuts
+PS > clip2shortcut
+    index.html.lnk    => ..\index.html
+    index.ltjruby.lnk => ..\index.ltjruby
+    index.pdf.lnk     => ..\index.pdf
+
+## Pop-Location
+PS > popd
+
+## Created shortcut property example
+    Target Type: Application
+    Target Location: %windir%
+    Target: %windir%\explorer.exe "..\index.html"
+```
+
 
 #### [clipwatch] - A clipboard watcher using Compare-Object
 
@@ -7868,10 +7924,6 @@ Windows環境用ティータイマー。時間がきたら通知トレイから�
     - `man2 teatimer`
     - `teatimer [[-Minutes] <Int32>] [[-Hours] <Int32>] [[-Seconds] <Int32>] [[-At] <DateTime>] [[-Title] <String>] [[-Text] <String>] [[-Timeout] <Int32>] [[-EventTimeout] <Int32>] [-ShowPastTime] [-Quiet] [[-IconType]`
 
-
-### Ended up not being used functions
-
-よかれと思って作ったけれど、結局使わなかった関数たち。
 
 #### [Get-AppShortcut] - List up app-shortcuts
 
