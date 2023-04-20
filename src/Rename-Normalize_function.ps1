@@ -210,9 +210,9 @@ function Rename-Normalize {
         ### display item
         [int] $curCharLength = [System.Text.Encoding]::GetEncoding("Shift_Jis").GetByteCount($oldName)
         [int] $padding = $maxCharLength - $curCharLength
-        Write-Host -NoNewline -Message $oldName -ForegroundColor "White"
-        Write-Host -NoNewline -Message "$(" {0}=> " -f ( " " * $padding ))"
-        Write-Host -Message $newName -ForegroundColor "Cyan"
+        Write-Host -NoNewline $oldName -ForegroundColor "White"
+        Write-Host -NoNewline "$(" {0}=> " -f ( " " * $padding ))"
+        Write-Host $newName -ForegroundColor "Cyan"
         if ( $oldName -ne $newName ){
             if ( $Execute ){
                 ### execute rename-item

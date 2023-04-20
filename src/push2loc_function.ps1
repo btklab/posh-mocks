@@ -206,7 +206,7 @@ function push2loc {
         if ( $True ) {
             if ( -not $Quiet ){
                 [string] $dispName =  (Get-Item -LiteralPath $pushdir).Name
-                Write-Host -Message "in $dispName" -ForegroundColor Green
+                Write-Host "in $dispName" -ForegroundColor Green
             }
             Push-Location -LiteralPath "$pushDir"
             if ( $Pop -And $Action ){
