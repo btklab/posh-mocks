@@ -7230,7 +7230,7 @@ PS > clip2normalize
 [clip2shortcut]: src/clip2shortcut_function.ps1
 
 クリップボードにコピーされたファイルのショートカットを相対パスでカレントディレクトリに作成する。
-相対パスなので、ドライブレター不定のUSB上のファイルのショートカット（リンク）ができる。
+相対パスなので、ドライブレター不定のUSB上のファイルのショートカット（リンク）を作成できる。
 Only for windows.
 
 具体的には以下のTargetPathをショートカットにセットする：
@@ -7253,7 +7253,7 @@ Only for windows.
 ```powershell
 $shell = New-Object -comObject WScript.Shell
 $shortcut = $shell.CreateShortcut("[Target location of shortcut\shortcut name.lnk]")
-#$shortcut.TargetPath = "%windir%\explorer.exe"
+$shortcut.TargetPath = "%windir%\explorer.exe"
 $shortcut.Arguments = """\\machine\share\folder"""
 $shortcut.Save()
 ```

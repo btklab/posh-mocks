@@ -209,10 +209,10 @@ function clip2shortcut {
         #Get-Item -LiteralPath "$sLoc" 
         [int] $curCharLength = [System.Text.Encoding]::GetEncoding("Shift_Jis").GetByteCount($sName)
         [int] $padding = $maxCharLength - $curCharLength
-        Write-Host -NoNewline -Message $sName -ForegroundColor "White"
-        Write-Host -NoNewline -Message "$(" {0}=> " -f ( " " * $padding ))"
-        #Write-Host -NoNewline -Message " => "
-        Write-Host -Message $sPath -ForegroundColor "Cyan"
+        Write-Host -NoNewline $sName -ForegroundColor "White"
+        Write-Host -NoNewline "$(" {0}=> " -f ( " " * $padding ))"
+        #Write-Host -NoNewline " => "
+        Write-Host $sPath -ForegroundColor "Cyan"
     }
     return
 }
