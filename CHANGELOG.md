@@ -8,7 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [3.10.0] - 2023-05-19
+
 - Fixed [Rename-Normalize], [clip2push], [clip2shortcut], [push2loc] do not use `Write-Host -Message` argument
+- Fixed [clip2file] sorted by filename
+- Added [sleepy] `-FirstBell` option
+- Added [clip2hyperlink] function
 
 
 
@@ -284,8 +291,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [clip2push]: src/clip2push_function.ps1
 [clip2shortcut]: src/clip2shortcut_function.ps1
 
+[clip2hyperlinkl]: src/clip2hyperlink_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.9.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.10.0..HEAD
+[3.10.0]: https://github.com/btklab/posh-mocks/releases/tag/3.10.0
 [3.9.0]: https://github.com/btklab/posh-mocks/releases/tag/3.9.0
 [3.8.0]: https://github.com/btklab/posh-mocks/releases/tag/3.8.0
 [3.7.0]: https://github.com/btklab/posh-mocks/releases/tag/3.7.0

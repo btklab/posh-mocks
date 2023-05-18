@@ -19,6 +19,10 @@
 .PARAMETER Past
     Display elapsed time since the specified time.
 
+.PARAMETER FirstBell
+    Set firstbell (preliminary bell)
+    Specify minutes in advance should the bell ring?
+
 .EXAMPLE
     # examples
 
@@ -61,6 +65,10 @@ function sleepy {
         [Parameter(Mandatory=$False)]
         [Alias('c')]
         [switch] $Clock,
+
+        [Parameter(Mandatory=$False)]
+        [Alias('f')]
+        [int] $FirstBell,
 
         [Parameter(Mandatory=$False)]
         [switch] $Message,
@@ -135,6 +143,7 @@ function sleepy {
             Write-Progress @splatting
             Start-Sleep -Milliseconds 300
         }
+        return
     }
     if ($Clock){
         while ($True){
@@ -151,10 +160,18 @@ function sleepy {
             Write-Progress @splatting
             Start-Sleep -Milliseconds 300
         }
+        return
     }
     # main loop
     if ($Message){
         Write-Host "st: $((Get-Date).ToString('M/d HH:mm:ss')) ($($dStr))" -ForegroundColor Green
+    }
+    if ($FirstBell){
+        if (-not (isCommandExist "teatimer")){
+            Write-Error "command: ""teatimer"" is not available." -ErrorAction Stop
+        }
+        [int] $fBell = -1 *  $FirstBell
+        teatimer -Text "last $FirstBell minutes" -Title "First bell" -At $eDateTime.AddMinutes($fBell).ToString('yyyy-MM-dd HH:mm:ss') -Quiet
     }
     while ($nDateTime -le $eDateTime) {
         [datetime] $nDateTime = Get-Date
@@ -188,7 +205,7 @@ function sleepy {
         if (-not (isCommandExist "teatimer")){
             Write-Error "command: ""teatimer"" is not available." -ErrorAction Stop
         }
-        teatimer -At (Get-Date).AddSeconds(5).ToString('yyyy-MM-dd HH:mm:ss') -Quiet
+        teatimer -At (Get-Date).AddSeconds(2).ToString('yyyy-MM-dd HH:mm:ss') -Quiet
     }
 
     # past timer

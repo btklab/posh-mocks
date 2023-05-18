@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 
 Inspired by:
@@ -7148,6 +7148,66 @@ PS > clip2push -Action { git status } -Pop -Execute
     Your branch is up to date with 'origin/develop'.
 
     nothing to commit, working tree clean
+```
+
+#### [clip2hyperlink] - Create hyperlink-formula for excel from clipped files.
+
+[clip2hyperlink]: src/clip2hyperlink_function.ps1
+
+クリップボードにコピーされたファイルパスからエクセル用ハイパーリンク関数を生成する。
+
+- Usage
+    - `man2 clip2hyperlink`
+    - `clip2hyperlink`
+        - `[-r|-Relative]`
+        - `[-n|-Name]`
+        - `[-f|-FullName]`
+        - `[-m|-Mark] <String>`
+        - `[-d|-ReplaceDirectory <String>]`
+        - `[-l|-LinuxPath] (replace '\', '/')`
+        - `[-e|-EscapeSharp]`
+
+Usage details
+
+1. Copy files to clipboard<br />![](img/clip2file_1.png)
+2. Execute `clip2hyperlink`
+3. Get hyperlink formula for excel
+
+
+Examples
+
+```powershell
+# Basic usage
+("copy files to the clipboard and ...")
+
+PS> clip2hyperlink
+    =HYPERLINK("C:\path\to\the\file")
+ 
+PS> clip2hyperlink -Mark "@"
+    =HYPERLINK("C:\path\to\the\file","@")
+ 
+PS> clip2hyperlink -Mark "@" -EscapeSharp
+    =HYPERLINK("file:///"&SUBSTITUTE("C:\path\to\the\file","#","%23"),"@")
+```
+
+```powershell
+# Collection of file reading patterns
+("copy files to the clipboard and ...")
+
+PS> clip2hyperlink
+    =HYPERLINK("C:\path\to\the\file")
+
+PS> clip2hyperlink -Relative
+    =HYPERLINK(".\file")
+
+PS> clip2hyperlink -Name
+    =HYPERLINK("file")
+
+PS> clip2hyperlink -Name -Mark "@"
+    =HYPERLINK("file","@")
+
+PS> clip2hyperlink -Name -Mark "@" -EscapeSharp
+    =HYPERLINK("file:///"&SUBSTITUTE("file","#","%23"),"@")
 ```
 
 
