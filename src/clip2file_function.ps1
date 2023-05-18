@@ -134,22 +134,24 @@ function clip2file {
                 ForEach-Object { if ($_ -ne '' ) { $_.Replace('"', '')} }
         }
     }
+    ## test
     if ( -not $readLineAry ){
         Write-Error "no input file." -ErrorAction Stop
     }
+    ## sort file paths
+    [string[]] $sortedReadLineAry = $readLineAry | Sort-Object
     ## output text with prefix
-    [object[]] $obj = foreach ( $f in $readLineAry ){
+    [object[]] $obj = foreach ( $f in $sortedReadLineAry ){
         if ( $outputTextFlag ){
             if ( $Relative ){
                 [string] $f = Resolve-Path -LiteralPath $f -Relative
             }
             if ( $FullName ){
                 [string] $f = (Get-Item -LiteralPath $f).FullName
-                if ( $ReplaceDirectory ){ [string] $f = Join-Path $Directory $f }
             }
-            if ( $Name ){
+            if ( $Name -or $ReplaceDirectory ){
                 [string] $f = (Get-Item -LiteralPath $f).Name
-                if ( $ReplaceDirectory ){ [string] $f = Join-Path $Directory $f }
+                if ( $ReplaceDirectory ){ [string] $f = Join-Path $ReplaceDirectory $f }
             }
             if ( $LinuxPath ){ [string] $f = "$f".Replace('\', '/') }
             [string] $writeLine = $f
