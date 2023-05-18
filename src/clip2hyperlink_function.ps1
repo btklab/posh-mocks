@@ -29,38 +29,11 @@
         [-l|-LinuxPath] (replace '\', '/')
         [-e|-EscapeSharp]
 
-    Notes:
-        # get files as objects from clipboard
-        (copy files to the clipboard and ...)
-        clip2hyperlink
-
-        # read from file-path list (text)
-        cat paths.txt | clip2hyperlink
-
-        # read from file objects (this is probably useless)
-        ls | clip2hyperlink
-
-        # combination with clip2file function
-        clip2file | clip2hyperlink
-
 .LINK
     clip2file, clip2hyperlink, clip2push, clip2shortcut, clip2img, clip2txt, clip2normalize
 
 .EXAMPLE
     # Basic usage
-    (copy files to the clipboard and ...)
-
-    PS> clip2hyperlink
-        =HYPERLINK("C:\path\to\the\file")
- 
-    PS> clip2hyperlink -Mark "@"
-        =HYPERLINK("C:\path\to\the\file","@")
- 
-    PS> clip2hyperlink -Mark "@" -EscapeSharp
-        =HYPERLINK("file:///"&SUBSTITUTE("C:\path\to\the\file","#","%23"),"@")
-
-.EXAMPLE
-    # Collection of file reading patterns
     (copy files to the clipboard and ...)
 
     PS> clip2hyperlink
@@ -77,6 +50,19 @@
 
     PS> clip2hyperlink -Name -Mark "@" -EscapeSharp
         =HYPERLINK("file:///"&SUBSTITUTE("file","#","%23"),"@")
+
+.EXAMPLE
+    # Collection of file reading patterns
+    (copy files to the clipboard and ...)
+
+    # read from file-path list (text)
+    PS> cat paths.txt | clip2hyperlink
+
+    # read from file objects (this is probably useless)
+    PS> ls | clip2hyperlink
+
+    # combination with clip2file function
+    PS> clip2file | clip2hyperlink
 
 #>
 function clip2hyperlink {

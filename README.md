@@ -6839,7 +6839,7 @@ clip2file | Rename-Normalize
     - `-a|-Action {scriptblock}`: the commands want to run
     - `-p|-Pop` Pop-Location after running Push-Location (and execute -Action script)
     - `-e|-Execute`: execute push (and command specified with -Action)
-- Note
+- Notes
     - Does not run command unless `-Execute` switch is specified
     - If error is caught during -Action script execution, execute Pop-Location before exit function
 - References
@@ -6986,13 +6986,13 @@ PS > clip2file | push2loc -Action { git status } -Pop -Execute
 
 - Usage
     - `man2 clip2file`
-    - `clip2file`
-        - `[-r|-Relative]`
-        - `[-n|-Name]`
-        - `[-f|-FullName]`
-        - `[-d|-ReplaceDirectory <String>]`
-        - `[-t|-AsText]`
-        - `[-l|-LinuxPath] (replace '\', '/')`
+- Options
+    - `[-r|-Relative]`
+    - `[-n|-Name]`
+    - `[-f|-FullName]`
+    - `[-d|-ReplaceDirectory <String>]`
+    - `[-t|-AsText]`
+    - `[-l|-LinuxPath] (replace '\', '/')`
 - Examples
     - `clip2file` ...get files as objects from clipboard
     - `cat paths.txt | clip2file` ...read from text-paths
@@ -7150,7 +7150,7 @@ PS > clip2push -Action { git status } -Pop -Execute
     nothing to commit, working tree clean
 ```
 
-#### [clip2hyperlink] - Create hyperlink-formula for excel from clipped files.
+#### [clip2hyperlink] - Create hyperlink formula for excel from clipped files.
 
 [clip2hyperlink]: src/clip2hyperlink_function.ps1
 
@@ -7158,14 +7158,14 @@ PS > clip2push -Action { git status } -Pop -Execute
 
 - Usage
     - `man2 clip2hyperlink`
-    - `clip2hyperlink`
-        - `[-r|-Relative]`
-        - `[-n|-Name]`
-        - `[-f|-FullName]`
-        - `[-m|-Mark] <String>`
-        - `[-d|-ReplaceDirectory <String>]`
-        - `[-l|-LinuxPath] (replace '\', '/')`
-        - `[-e|-EscapeSharp]`
+- Options
+    - `[-r|-Relative]`
+    - `[-n|-Name]`
+    - `[-f|-FullName]`
+    - `[-m|-Mark] <String>`
+    - `[-d|-ReplaceDirectory <String>]`
+    - `[-l|-LinuxPath] (replace '\', '/')`
+    - `[-e|-EscapeSharp]`
 
 Usage details
 
@@ -7182,20 +7182,6 @@ Examples
 
 PS> clip2hyperlink
     =HYPERLINK("C:\path\to\the\file")
- 
-PS> clip2hyperlink -Mark "@"
-    =HYPERLINK("C:\path\to\the\file","@")
- 
-PS> clip2hyperlink -Mark "@" -EscapeSharp
-    =HYPERLINK("file:///"&SUBSTITUTE("C:\path\to\the\file","#","%23"),"@")
-```
-
-```powershell
-# Collection of file reading patterns
-("copy files to the clipboard and ...")
-
-PS> clip2hyperlink
-    =HYPERLINK("C:\path\to\the\file")
 
 PS> clip2hyperlink -Relative
     =HYPERLINK(".\file")
@@ -7208,6 +7194,20 @@ PS> clip2hyperlink -Name -Mark "@"
 
 PS> clip2hyperlink -Name -Mark "@" -EscapeSharp
     =HYPERLINK("file:///"&SUBSTITUTE("file","#","%23"),"@")
+```
+
+```powershell
+# Collection of file reading patterns
+("copy files to the clipboard and ...")
+
+# read from file-path list (text)
+PS> cat paths.txt | clip2hyperlink
+
+# read from file objects (this is probably useless)
+PS> ls | clip2hyperlink
+
+# combination with clip2file function
+PS> clip2file | clip2hyperlink
 ```
 
 

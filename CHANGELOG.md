@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - NA
 
+## [3.10.1] - 2023-05-19
+
+- Fixed [clip2file], [README.md] Synopsis
+
 ## [3.10.0] - 2023-05-19
 
 - Fixed [Rename-Normalize], [clip2push], [clip2shortcut], [push2loc] do not use `Write-Host -Message` argument
@@ -293,7 +297,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [clip2hyperlinkl]: src/clip2hyperlink_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.10.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.10.1..HEAD
+[3.10.1]: https://github.com/btklab/posh-mocks/releases/tag/3.10.1
 [3.10.0]: https://github.com/btklab/posh-mocks/releases/tag/3.10.0
 [3.9.0]: https://github.com/btklab/posh-mocks/releases/tag/3.9.0
 [3.8.0]: https://github.com/btklab/posh-mocks/releases/tag/3.8.0
