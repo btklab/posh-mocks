@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- Added [clipwatch] `-Repeat` option
+- Deleted [clipwatch] `-Repeat` option
 
 
 ## [3.10.1] - 2023-05-19
