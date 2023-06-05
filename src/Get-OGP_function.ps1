@@ -47,6 +47,9 @@
     Return links in markdown format
     like: [title](uri)
 
+.PARAMETER Cite
+    Wrap Markdown and Html output in "<cite>" tag
+
 .PARAMETER Id
     Returns a separate line link when used in
     conjunction with the -Markdown switch
@@ -258,6 +261,9 @@ function Get-OGP {
 
         [Parameter(Mandatory=$False)]
         [switch] $Canonical,
+
+        [Parameter(Mandatory=$False)]
+        [switch] $Cite,
 
         [Parameter(Mandatory=$False)]
         [switch] $NoShrink
@@ -519,10 +525,18 @@ function Get-OGP {
         }elseif($Markdown){
             # markdown href output
             if($Id -eq '@not@set@'){
-                [string]$oMarkdown = "[$innerTitle]($innerUri)"
+                if ( $Cite ){
+                    [string] $oMarkdown = "<cite>[$innerTitle]($innerUri)</cite>"
+                } else {
+                    [string] $oMarkdown = "[$innerTitle]($innerUri)"
+                }
             } else {
                 [string[]] $oMarkdown = @()
-                $oMarkdown += "[$innerTitle][$Id]"
+                if ( $Cite ){
+                    $oMarkdown += "<cite>[$innerTitle][$Id]</cite"
+                } else {
+                    $oMarkdown += "[$innerTitle][$Id]"
+                }
                 if ($Id -eq ''){
                     $oMarkdown += "[$innerTitle]: <$innerUri>"
                 } else {
@@ -536,7 +550,11 @@ function Get-OGP {
                 return $oMarkdown
             }
         }elseif($Html){
-            [string] $oHref = "<a href=""$innerUri"">$innerTitle</a>"
+            if ( $Cite ){
+                [string] $oHref = "<cite><a href=""$innerUri"">$innerTitle</a></cite>"
+            } else {
+                [string] $oHref = "<a href=""$innerUri"">$innerTitle</a>"
+            }
             if ($Clip){
                 $oHref | Set-ClipBoard
                 return
@@ -567,3 +585,4 @@ function Get-OGP {
         #$stream.Close()
     }
 }
+

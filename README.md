@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 
 Inspired by:
@@ -7347,20 +7347,6 @@ PS > popd
 ```
 
 
-#### [clipwatch] - A clipboard watcher using Compare-Object
-
-[clipwatch]: src/clipwatch_function.ps1
-
-`Compare-Object`を用いたクリップボードウォッチャー。
-クリップボードの変化を検知すると`-Action {scriptblock}`に指定したアクションを実行する。
-
-- Usage
-    - `man2 clipwatch`
-- Examples
-    - `clipwatch -Action {Get-ClipBoard | say}`
-        - 文字列をクリップボードにコピーするたび`say`コマンド（後述）を実行する
-    - `clipwatch -Action {Get-Clipboard | say -EN -Speed 2}`
-
 
 ### Miscellaneous
 
@@ -7936,7 +7922,6 @@ Open Hyogo/Japan weather reports in browser (on windows).
     - `man2 say`
 - Examples
     - `Get-Clipboard | say -JA`
-    - `clipwatch -Action {Get-Clipboard | say -EN -Speed 2}`
 
 
 #### [sleepy] - A pomodoro timer using progress bar

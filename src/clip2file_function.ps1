@@ -9,6 +9,9 @@
     As a feature, you can operate files in other directories while
     staying in the current directory by copying files to the clipboard.
 
+    If "-UrlDecode" switch is specified or the path starts with "file:///",
+    the path will be Urldecoded before begin retrieved.
+
     Usage:
         clip2file
             [-r|-Relative]
@@ -17,6 +20,7 @@
             [-d|-ReplaceDirectory <String>]
             [-t|-AsText]
             [-l|-LinuxPath] (replace '\', '/')
+            [-u|-UrlDecode]
 
         # get files as objects from clipboard
         (copy files to the clipboard and ...)
@@ -103,6 +107,10 @@ function clip2file {
         [switch] $AsText,
         
         [Parameter( Mandatory=$False )]
+        [Alias("u")]
+        [switch] $UrlDecode,
+        
+        [Parameter( Mandatory=$False )]
         [Alias("l")]
         [switch] $LinuxPath
     )
@@ -142,6 +150,9 @@ function clip2file {
     [string[]] $sortedReadLineAry = $readLineAry | Sort-Object
     ## output text with prefix
     [object[]] $obj = foreach ( $f in $sortedReadLineAry ){
+        if ( ( $f -match '^file:///' ) -or ( $UrlDecode ) ){
+            [string] $f = [uri]::UnEscapeDataString( $($f -replace '^file:///', '') )
+        }
         if ( $outputTextFlag ){
             if ( $Relative ){
                 [string] $f = Resolve-Path -LiteralPath $f -Relative
