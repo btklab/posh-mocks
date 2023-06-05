@@ -8,7 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [3.11.0]
+
 - Deleted [clipwatch] `-Repeat` option
+- Added [clip2file] `-UrlDecode` option
+- Added [Get-OGP] `-cite` option
 
 
 ## [3.10.1] - 2023-05-19
@@ -298,7 +304,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [clip2hyperlinkl]: src/clip2hyperlink_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.10.1..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.11.0..HEAD
+[3.11.0]: https://github.com/btklab/posh-mocks/releases/tag/3.11.0
 [3.10.1]: https://github.com/btklab/posh-mocks/releases/tag/3.10.1
 [3.10.0]: https://github.com/btklab/posh-mocks/releases/tag/3.10.0
 [3.9.0]: https://github.com/btklab/posh-mocks/releases/tag/3.9.0
