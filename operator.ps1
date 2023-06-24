@@ -137,7 +137,6 @@ Set-Alias -name ml -value Get-OGP
 . $pwshSrcDir/clip2normalize_function.ps1
 . $pwshSrcDir/clip2push_function.ps1
 . $pwshSrcDir/clip2hyperlink_function.ps1
-. $pwshSrcDir/clipwatch_function.ps1
 if ( $IsWindows ){
 . $pwshSrcDir/clip2shortcut_function.ps1
 }
