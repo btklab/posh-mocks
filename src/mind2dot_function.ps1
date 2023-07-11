@@ -610,7 +610,7 @@ function mind2dot {
             return $psStackTop, $ret
         }
         function psStackGetVal {
-            # return the element at the top positoin without
+            # return the element at the top position without
             # increasing or decreasing top
             return $psStackAry[$psStackTop-1]
         }
@@ -688,7 +688,7 @@ function mind2dot {
                     ## move one level deeper: push
                     $readLineAryNode += setNodeStr $newNodeId $contents $plainTextFlag $colorNum
                     $parentId = $oldNodeId
-                    $psStackTop, $psStackAry = psStackPush $parentId ## スタックに親IDをpush
+                    $psStackTop, $psStackAry = psStackPush $parentId ## push parent ID to stack
                     $readLineAryEdge += setEdgeStr $parentId $newNodeId $colorNum
 
                 } elseif ($newItemLevel -gt $oldItemLevel + 1){

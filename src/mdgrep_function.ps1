@@ -346,6 +346,9 @@ function mdgrep {
         [switch] $IgnoreLeadingSpaces,
         
         [Parameter( Mandatory=$False )]
+        [switch] $Bar,
+        
+        [Parameter( Mandatory=$False )]
         [string[]] $CustomCommentBlock,
         
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
@@ -501,6 +504,9 @@ function mdgrep {
                     [bool] $isSection = $True
                     [int] $secLevel = replaceSecToNum $readLine
                 }
+            }
+            if ( $Bar ){
+                $readLine = $readLine -replace '# ','| ' -replace '#','    '
             }
         }
         #Write-Debug "$inCodeBlock, $inFenceBlock, $inQuoteBlock, $inYamlBlock, $readLine"

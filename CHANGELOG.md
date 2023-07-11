@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - NA
 
+## [3.12.0]
+
+- Added [list2table] function
+
 ## [3.11.0]
 
 - Deleted [clipwatch] `-Repeat` option
@@ -303,8 +307,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [clip2shortcut]: src/clip2shortcut_function.ps1
 
 [clip2hyperlinkl]: src/clip2hyperlink_function.ps1
+[list2table]: src/list2table_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.11.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.12.0..HEAD
+[3.12.0]: https://github.com/btklab/posh-mocks/releases/tag/3.12.0
 [3.11.0]: https://github.com/btklab/posh-mocks/releases/tag/3.11.0
 [3.10.1]: https://github.com/btklab/posh-mocks/releases/tag/3.10.1
 [3.10.0]: https://github.com/btklab/posh-mocks/releases/tag/3.10.0
