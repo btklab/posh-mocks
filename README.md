@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 
 Inspired by:
@@ -5881,6 +5881,126 @@ cat iris.csv | table2md -d "," -Units "CFU","kg" | head -n 7
 # Some columns with units are also right aligned. Units can be
 # specified with -Units "unit1", "unit2",....
 # (Default -Units " kg"," ml", " CFU", "RLU", etc...)
+```
+
+#### [list2table] - Convert markdown list format to long type data
+
+[list2table]: src/list2table_function.ps1
+
+
+This filter formats Markdown-style headings and lists into a data structure suitable for processing with PivotTable of spreadsheet.
+
+![Processing with PivotTable](img/list2table-pivot-with-spreadsheet.png)
+
+Tab delimited output by default.
+
+
+- Usage
+    - `man2 list2table`
+- Examples
+    - `cat a.md | list2table`
+    - `cat a.md | list2table -MarkdownLv1`
+    - `cat a.md | list2table -MarkdownLv1 -AutoHeader`
+
+Examples:
+
+Input:
+
+```powershell
+# markdown list format
+PS> cat a.md
+- aaa
+- bbb
+    - bbb-2
+        - bbb-3
+    - bbb-2
+- ccc
+    - ccc-2
+    - ccc-2
+```
+
+Output:
+
+```powershell
+PS> cat a.md | list2table
+aaa
+bbb	bbb-2	bbb-3
+bbb	bbb-2
+ccc	ccc-2
+ccc	ccc-2
+```
+
+Markdown headers
+
+Input:
+
+```powershell
+PS> cat a.md
+# title
+## Lv.1
+### Lv.1.1
+### Lv.1.2
+## Lv.2
+### Lv.2.1
+#### Lv.2.1.1
+### Lv.2.2
+## Lv.3
+```
+
+Output:
+
+```powershell
+PS> cat a.md | list2table -MarkdownLv1
+title	Lv.1	Lv.1.1
+title	Lv.1	Lv.1.2
+title	Lv.2	Lv.2.1	Lv.2.1.1
+title	Lv.2	Lv.2.2
+title	Lv.3
+```
+
+With `-AutoHeader` option
+
+```powershell
+PS> cat a.md | list2table -MarkdownLv1 -AutoHeader
+F1      F2      F3      F4
+title   Lv.1    Lv.1.1
+title   Lv.1    Lv.1.2
+title   Lv.2    Lv.2.1  Lv.2.1.1
+title   Lv.2    Lv.2.2
+title   Lv.3
+```
+
+With `ConvertTo-Json` command
+
+```powershell
+PS> cat a.md | list2table -MarkdownLv1 | ConvertFrom-Csv -Delimiter "`t" -Header @("Lv1","lv2","lv3") | ConvertTo-Json
+    [
+      {
+        "Lv1": "title",
+        "lv2": "Lv.1",
+        "lv3": "Lv.1.1"
+      },
+      {
+        "Lv1": "title",
+        "lv2": "Lv.1",
+        "lv3": "Lv.1.2"
+      },
+      {
+        "Lv1": "title",
+        "lv2": "Lv.2",
+        "lv3": "Lv.2.1"
+      },
+      {
+        "Lv1": "title",
+        "lv2": "Lv.2",
+        "lv3": "Lv.2.2"
+      },
+      {
+        "Lv1": "title",
+        "lv2": "Lv.3",
+        "lv3": null
+      }
+    ]
 ```
 
 #### [linkextract] - Extract links from html

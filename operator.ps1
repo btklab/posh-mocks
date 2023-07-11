@@ -113,6 +113,7 @@ if ($IsWindows){
 . $pwshSrcDir/table2md_function.ps1
 . $pwshSrcDir/image2md_function.ps1
 . $pwshSrcDir/Override-Yaml_function.ps1
+. $pwshSrcDir/list2table_function.ps1
 
 ## web
 . $pwshSrcDir/linkcheck_function.ps1
