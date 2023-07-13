@@ -8,7 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NaN
+
+## [3.13.0] - 2023-07-13
+
 - Enabled [list2table] Supports list symbols `+`, `*`, `1.` in addition to the symbol `-`
+- Enabled [mdgrep] Supports list symbols `-`, `+`, `*`, `1.` in addition to the symbol `#`
 - Fixed [mdgrep] Typo
 - Fixed [mind2dot] Typo
 
@@ -311,7 +316,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [clip2hyperlinkl]: src/clip2hyperlink_function.ps1
 [list2table]: src/list2table_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.12.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.13.0..HEAD
+[3.13.0]: https://github.com/btklab/posh-mocks/releases/tag/3.13.0
 [3.12.0]: https://github.com/btklab/posh-mocks/releases/tag/3.12.0
 [3.11.0]: https://github.com/btklab/posh-mocks/releases/tag/3.11.0
 [3.10.1]: https://github.com/btklab/posh-mocks/releases/tag/3.10.1

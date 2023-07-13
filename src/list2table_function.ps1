@@ -136,11 +136,22 @@ function list2table {
         [string[]] $writeAry    = @()
         [string[]] $keyAry = 1..$MaxDepth | ForEach-Object { $NA }
         [object] $readLineList = New-Object 'System.Collections.Generic.List[System.String]'
+        
+        [int] $rowCounter = 0
+        [bool] $inYamlBlock           = $False
+        [bool] $inCodeBlock           = $False
+        [bool] $inCodeBlock3          = $False
+        [bool] $inCodeBlock4          = $False
+        [bool] $inFenceBlock          = $False
+        [bool] $inFenceBlock3         = $False
+        [bool] $inFenceBlock4         = $False
+        [bool] $inQuoteBlock          = $False
+        
         ## define private functions
         function getItemLevel ([string]$rdLine){
-            $whiteSpaces = $rdLine -replace '^(\s*)[-*]','$1'
-            $whiteSpaceLength = $whiteSpace.Length
-            $itemLevel = [math]::Floor($whiteSpaceLength / $Space)
+            [string] $whiteSpaces = $rdLine -replace '^(\s*)\- .*$','$1'
+            [int] $whiteSpaceLength = $whiteSpaces.Length
+            [int] $itemLevel = [math]::Floor($whiteSpaceLength / $Space)
             return $itemLevel
         }
         function replaceMarkdownHeaderToList ([string] $line) {
@@ -171,21 +182,97 @@ function list2table {
         }
     }
     process{
+        $rowCounter++
         [string] $rdLine = [string] $_
-        if ( $MarkdownLv1 -or $MarkdownLv2 ){
-            if ( $rdLine -match '^#' ) {
-                ## target line is beginning with "#"
-                [string] $rdLine = replaceMarkdownHeaderToList $rdLine
-                $readLineList.Add($rdLine)
-            }
-        } else {
-            if ( $rdLine -match '^\s*[-*+] |^\s*[0-9]+\. ' ) {
-                ## target line is beginning with a hyphen or asterisk
-                [string] $rdLine = replaceOrderedListToList $rdLine
-                $readLineList.Add($rdLine)
+        
+        # is Code block?
+        if ( $rdLine -match '^```') {
+            if ( $rdLine -match '^````') {
+                # code chunk level 4
+                if ( $inCodeBlock4 ){ 
+                    # out of codeblock
+                    [bool] $inCodeBlock4 = $False
+                } else {
+                    [bool] $inCodeBlock4 = $True
+                }
+            } else {
+                # code chunk level 3
+                if ( $inCodeBlock3 ){
+                    # out of codeblock
+                    [bool] $inCodeBlock3 = $False
+                } else {
+                    [bool] $inCodeBlock3 = $True
+                }
             }
         }
-        Write-Debug $rdLine
+        if ( ( -not $inCodeBlock3) -and ( -not $inCodeBlock4) ) {
+            [bool] $inCodeBlock = $False
+        } else {
+            [bool] $inCodeBlock = $True
+        }
+        # is Fence block?
+        if ( $rdLine -match '^:::' -and ( -not $inCodeBlock) ) {
+            if ( $rdLine -match '^::::') {
+                # fence block level 4
+                if ( $inFenceBlock4 ){
+                    # out of fenceblock
+                    [bool] $inFenceBlock4 = $False
+                } else {
+                    [bool] $inFenceBlock4 = $True
+                }
+            } else {
+                # fence block level 3
+                if ( $inFenceBlock3 ){
+                    # out of fenceblock
+                    [bool] $inFenceBlock3 = $False
+                } else {
+                    [bool] $inFenceBlock3 = $True
+                }
+            }
+        }
+        if ( ( -not $inFenceBlock3) -and ( -not $inFenceBlock4) ) {
+            [bool] $inFenceBlock = $False
+        } else {
+            [bool] $inFenceBlock = $True
+        }
+        # is Yaml block?
+        if ( $rowCounter -eq 1 -and $rdLine -match '^\-\-\-$') {
+            # beginning of yaml block
+            [bool] $inYamlBlock = $True
+            return
+        }
+        if ( $inYamlBlock -and $rdLine -match '^\-\-\-$') {
+            # end of yaml block
+            [bool] $inYamlBlock = $False
+            return
+        }
+        # is Quote block?
+        if ( $rdLine -match '^>') {
+            $inQuoteBlock = $True
+        } elseif ( $inQuoteBlock ) {
+            $inQuoteBlock = $False
+        }
+        # read line
+        if ( ( -not $inCodeBlock  ) `
+        -and ( -not $inFenceBlock ) `
+        -and ( -not $inQuoteBlock ) `
+        -and ( -not $inYamlBlock  ) ){
+            if ( $MarkdownLv1 -or $MarkdownLv2 ){
+                if ( $rdLine -match '^#' ) {
+                    ## target line is beginning with "#"
+                    [string] $rdLine = replaceMarkdownHeaderToList $rdLine
+                    $readLineList.Add($rdLine)
+                    Write-Debug $rdLine
+                }
+            } else {
+                if ( $rdLine -match '^\s*[-*+] |^\s*[0-9]+\. ' ) {
+                    ## target line is beginning with a hyphen or asterisk
+                    [string] $rdLine = replaceOrderedListToList $rdLine
+                    $readLineList.Add($rdLine)
+                    Write-Debug $rdLine
+                }
+            }
+        }
     }
     end {
         [string[]] $readLineAry = $readLineList.ToArray()
@@ -225,7 +312,7 @@ function list2table {
                     $keyAry[$newItemLevel] = $contents
 
                 } else {
-                    Write-Error "error: Unknown error. Unable to detect hierarchy: $rdLine" -ErrorAction Stop
+                    Write-Error "Unknown error: Unable to detect hierarchy: $rdLine" -ErrorAction Stop
                 }
             }
             $oldItemLevel = $newItemLevel
