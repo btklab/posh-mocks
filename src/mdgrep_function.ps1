@@ -27,23 +27,53 @@
             The language-specific comment block symbol can be
             specified with -CustomCommentBlock "begin", "end" option.
 
-    PS > cat README.md | mdgrep seq2pu -Level 3
-        ### Plot chart and graph
-        #### [dot2gviz] - Wrapper for Graphviz:dot command
-        #### [pu2java] - Wrapper for plantuml.jar command
-        #### [gantt2pu] - Visualizatoin tool of DANDORI-chart (setup-chart) for PlantUML.
-        #### [mind2dot] - Generate graphviz script to draw a mind map from list data in markdown format
-        #### [mind2pu] - Generate plantuml script to draw a mind map from list data in markdown format
-        #### [logi2dot] - Generate data for graphviz with simple format
-        #### [logi2pu] - Generate data for PlantUML (usecase diagram) with simple format
-        #### [seq2pu] - Generate sequence-diagram from markdown-like list format
-        #### [flow2pu] - Generate activity-diagram (flowchart) from markdown-like list format
+        PS > cat README.md | mdgrep seq2pu -Level 3
+            ### Plot chart and graph
+            #### [dot2gviz] - Wrapper for Graphviz:dot command
+            #### [pu2java] - Wrapper for plantuml.jar command
+            #### [gantt2pu] - Visualizatoin tool of DANDORI-chart (setup-chart) for PlantUML.
+            #### [mind2dot] - Generate graphviz script to draw a mind map from list data in markdown format
+            #### [mind2pu] - Generate plantuml script to draw a mind map from list data in markdown format
+            #### [logi2dot] - Generate data for graphviz with simple format
+            #### [logi2pu] - Generate data for PlantUML (usecase diagram) with simple format
+            #### [seq2pu] - Generate sequence-diagram from markdown-like list format
+            #### [flow2pu] - Generate activity-diagram (flowchart) from markdown-like list format
 
-    PS > cat README.md | mdgrep seq2pu -Level 4
-        #### [seq2pu] - Generate sequence-diagram from markdown-like list format
+        PS > cat README.md | mdgrep seq2pu -Level 4
+            #### [seq2pu] - Generate sequence-diagram from markdown-like list format
 
-    PS > cat README.md | mdgrep seq2pu -Level 4 -e
-        # output contents in "#### seq2pu section"
+        PS > cat README.md | mdgrep seq2pu -Level 4 -e
+            # output contents in "#### seq2pu section"
+    
+
+    The "-List" switch parses the list structure instead of
+    the header structure. An example, this is used to focus on
+    a specific block in a list-structured outliner.
+
+    Input:
+        PS> cat a.md
+        - title
+            - Lv.1
+                - Lv.1.1
+                - Lv.1.2
+            - Lv.2
+                - Lv.2.1
+                    - Lv.2.1.1
+                - Lv.2.2
+            - Lv.3
+    
+    Output:
+        PS> cat a.md | mdgrep -List .
+             - Lv.1
+                 - Lv.1.1
+                 - Lv.1.2
+             - Lv.2
+                 - Lv.2.1
+                     - Lv.2.1.1
+                 - Lv.2.2
+             - Lv.3
+
+
 
 .LINK
     mdgrep, mdgrep2, mdsort, mdsort2, mdparag, list2table
@@ -349,6 +379,15 @@ function mdgrep {
         [switch] $Bar,
         
         [Parameter( Mandatory=$False )]
+        [switch] $List,
+        
+        [Parameter( Mandatory=$False)]
+        [switch] $OffOrderedNumber,
+        
+        [Parameter( Mandatory=$False)]
+        [int] $Space = 4,
+        
+        [Parameter( Mandatory=$False )]
         [string[]] $CustomCommentBlock,
         
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
@@ -390,6 +429,22 @@ function mdgrep {
             if ( $section.Trim() -match '^#{4} ') { return 4 }
             if ( $section.Trim() -match '^#{5} ') { return 5 }
             if ( $section.Trim() -match '^#{6} ') { return 6 }
+        }
+        function replaceOrderedListToList ( [string] $line ){
+            [string] $line = $line -replace '^(\s*)[-*+] ', '$1 - '
+            if ( $OffOrderedNumber ){
+                [string] $line = $line -replace '^(\s*)([0-9]+\.) ','$1 - '
+            } else {
+                [string] $line = $line -replace '^(\s*)([0-9]+\.) ','$1 - $2 '
+            }
+            return $line
+        }
+        function getItemLevel ([string]$rdLine){
+            [string] $whiteSpaces = $rdLine -replace '^(\s*)\- .*$','$1'
+            [int] $whiteSpaceLength = $whiteSpaces.Length
+            [int] $itemLevel = [math]::Floor($whiteSpaceLength / $Space)
+            $itemLevel++
+            return $itemLevel
         }
     }
 
@@ -494,23 +549,34 @@ function mdgrep {
         -and ( -not $inQuoteBlock ) `
         -and ( -not $inCustomCommentBlock ) `
         -and ( -not $inYamlBlock ) ){
-            if ( $IgnoreLeadingSpaces ){
-                if ( $readLine -match '^\s*#{1,6} [^ ]+'){
+            if ( $List ){
+                ## grep markdown lists
+                [string] $readLine = replaceOrderedListToList $readLine
+                if ( $readLine -match '^\s*\- '){
                     [bool] $isSection = $True
-                    [int] $secLevel = replaceSecToNum $readLine
+                    [int] $secLevel = getItemLevel $readLine
                 }
             } else {
-                if ( $readLine -match '^#{1,6} [^ ]+'){
-                    [bool] $isSection = $True
-                    [int] $secLevel = replaceSecToNum $readLine
+                ## grep markdown headers
+                if ( $IgnoreLeadingSpaces ){
+                    if ( $readLine -match '^\s*#{1,6} [^ ]+'){
+                        [bool] $isSection = $True
+                        [int] $secLevel = replaceSecToNum $readLine
+                    }
+                } else {
+                    if ( $readLine -match '^#{1,6} [^ ]+'){
+                        [bool] $isSection = $True
+                        [int] $secLevel = replaceSecToNum $readLine
+                    }
+                }
+                if ( $Bar ){
+                    $readLine = $readLine -replace '# ','| ' -replace '#','    '
                 }
             }
-            if ( $Bar ){
-                $readLine = $readLine -replace '# ','| ' -replace '#','    '
-            }
+            Write-Debug "$secLevel $readLine"
         }
         #Write-Debug "$inCodeBlock, $inFenceBlock, $inQuoteBlock, $inYamlBlock, $readLine"
-        Write-Debug "$isSection, $secLevel, $Level, $stat, $matchFlag, ,$inCodeBlock, $readLine"
+        #Write-Debug "$isSection, $secLevel, $Level, $stat, $matchFlag, $inCodeBlock, $readLine"
         # if section
         if ( $isSection ){
             [bool] $isSection = $False

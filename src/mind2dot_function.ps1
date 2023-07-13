@@ -485,7 +485,7 @@ function mind2dot {
         }
         function getItemLevel ([string]$rdLine){
             $whiteSpaces = $rdLine -replace '^(\s*)[-*]','$1'
-            $whiteSpaceLength = $whiteSpace.Length
+            $whiteSpaceLength = $whiteSpaces.Length
             $itemLevel = [math]::Floor($whiteSpaceLength / $Space)
             return $itemLevel
         }
