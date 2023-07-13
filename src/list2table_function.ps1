@@ -10,7 +10,7 @@
 
 
 .LINK
-    list2table
+    list2table, mdgrep
 
 .EXAMPLE
     cat a.md
@@ -113,6 +113,9 @@ function list2table {
         [switch] $AutoHeader,
         
         [Parameter( Mandatory=$False)]
+        [switch] $OffOrderedNumber,
+        
+        [Parameter( Mandatory=$False)]
         [int] $MaxDepth = 20,
         
         [Parameter( Mandatory=$False)]
@@ -125,21 +128,15 @@ function list2table {
 
     begin{
         ## init var
-        [int] $depthOfList = 0
-        [int] $idCounter = 0
+        [int] $depthOfList  = 0
+        [int] $idCounter    = 0
         [int] $newItemLevel = 0
         [int] $oldItemLevel = -1
-        [string[]] $keyAry = 1..$MaxDepth | ForEach-Object { $NA }
         [string[]] $readLineAry = @()
-        [string[]] $writeAry = @()
+        [string[]] $writeAry    = @()
+        [string[]] $keyAry = 1..$MaxDepth | ForEach-Object { $NA }
+        [object] $readLineList = New-Object 'System.Collections.Generic.List[System.String]'
         ## define private functions
-        function isCommandExist ([string]$cmd) {
-            try { Get-Command $cmd -ErrorAction Stop > $Null
-                return $True
-            } catch {
-                return $False
-            }
-        }
         function getItemLevel ([string]$rdLine){
             $whiteSpaces = $rdLine -replace '^(\s*)[-*]','$1'
             $whiteSpaceLength = $whiteSpace.Length
@@ -163,6 +160,15 @@ function list2table {
             }
             return $line
         }
+        function replaceOrderedListToList ( [string] $line ){
+            [string] $line = $line -replace '^(\s*)[-*+] ', '$1 - '
+            if ( $OffOrderedNumber ){
+                [string] $line = $line -replace '^(\s*)([0-9]+\.) ','$1 - '
+            } else {
+                [string] $line = $line -replace '^(\s*)([0-9]+\.) ','$1 - $2 '
+            }
+            return $line
+        }
     }
     process{
         [string] $rdLine = [string] $_
@@ -170,21 +176,27 @@ function list2table {
             if ( $rdLine -match '^#' ) {
                 ## target line is beginning with "#"
                 [string] $rdLine = replaceMarkdownHeaderToList $rdLine
-                $readLineAry += $rdLine
+                $readLineList.Add($rdLine)
             }
         } else {
-            if ( $line -match '^\s*\-|^\s*\*' ) {
+            if ( $rdLine -match '^\s*[-*+] |^\s*[0-9]+\. ' ) {
                 ## target line is beginning with a hyphen or asterisk
-                $readLineAry += $rdLine
+                [string] $rdLine = replaceOrderedListToList $rdLine
+                $readLineList.Add($rdLine)
             }
         }
+        Write-Debug $rdLine
     }
     end {
+        [string[]] $readLineAry = $readLineList.ToArray()
+        if ( $readLineAry.Length -eq 0 ){
+            Write-Error "Error: No match line." -ErrorAction Stop
+        }
         ForEach ( $line in $readLineAry ){
             $idCounter++
             ## set str
-            [string] $whiteSpace = $line -replace '^(\s*)[-*].*$','$1'
-            [string] $contents   = $line -replace '^\s*[-*]\s*(.*)$','$1'
+            [string] $whiteSpace = $line -replace '^(\s*)\- (.*)$','$1'
+            [string] $contents   = $line -replace '^(\s*)\- (.*)$','$2'
             [int] $newItemLevel  = getItemLevel "$rdLine"
             if ( $newItemLevel -gt $depthOfList){
                 [int] $depthOfList = $newItemLevel
@@ -213,7 +225,7 @@ function list2table {
                     $keyAry[$newItemLevel] = $contents
 
                 } else {
-                    Write-Error "error: Ubknown error. Unable to detect hierarchy: $rdLine" -ErrorAction Stop
+                    Write-Error "error: Unknown error. Unable to detect hierarchy: $rdLine" -ErrorAction Stop
                 }
             }
             $oldItemLevel = $newItemLevel

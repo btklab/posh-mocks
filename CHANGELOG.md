@@ -8,9 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- NA
+- Enabled [list2table] Supports list symbols `+`, `*`, `1.` in addition to the symbol `-`
+- Fixed [mdgrep] Typo
+- Fixed [mind2dot] Typo
 
-## [3.12.0]
+## [3.12.0] - 2023-07-12
 
 - Added [list2table] function
 

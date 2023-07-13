@@ -46,7 +46,7 @@
         # output contents in "#### seq2pu section"
 
 .LINK
-    mdgrep, mdgrep2, mdsort, mdsort2, mdparag
+    mdgrep, mdgrep2, mdsort, mdsort2, mdparag, list2table
 
 
 .EXAMPLE

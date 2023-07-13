@@ -710,7 +710,7 @@ function mind2dot {
                     }
 
                 } else {
-                    Write-Error "error: Ubknown error. Unable to detect hierarchy: $rdLine" -ErrorAction Stop
+                    Write-Error "error: Unknown error. Unable to detect hierarchy: $rdLine" -ErrorAction Stop
                 }
             }
             $oldItemLevel = $newItemLevel
