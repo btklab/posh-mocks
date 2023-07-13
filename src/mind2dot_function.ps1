@@ -485,7 +485,7 @@ function mind2dot {
         }
         function getItemLevel ([string]$rdLine){
             $whiteSpaces = $rdLine -replace '^(\s*)[-*]','$1'
-            $whiteSpaceLength = $whiteSpace.Length
+            $whiteSpaceLength = $whiteSpaces.Length
             $itemLevel = [math]::Floor($whiteSpaceLength / $Space)
             return $itemLevel
         }
@@ -710,7 +710,7 @@ function mind2dot {
                     }
 
                 } else {
-                    Write-Error "error: Ubknown error. Unable to detect hierarchy: $rdLine" -ErrorAction Stop
+                    Write-Error "error: Unknown error. Unable to detect hierarchy: $rdLine" -ErrorAction Stop
                 }
             }
             $oldItemLevel = $newItemLevel

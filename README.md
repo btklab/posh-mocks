@@ -5026,7 +5026,7 @@ src配下の関数（ファイル）名を列挙する。
 
 - Usage
     - `man2 mdgrep`
-    - `mdgrep [[-Grep] <String>] [-l|-Level <Int32>] [-t|-MatchOnlyTitle] [-e|-Expand] [-p|-OutputParentSection] [-v|-NotMatch]`
+    - `mdgrep [[-Grep] <String>] [-l|-Level <Int32>] [-t|-MatchOnlyTitle] [-e|-Expand] [-p|-OutputParentSection] [-v|-NotMatch] [-List]`
     - `cat file | mdgrep "<regex>"`
 - Note
     - The number signs (`#`) written in the following block is ignored
@@ -5346,6 +5346,37 @@ PS > cat a.ps1 | mdgrep -l 3 -i test -e
 `-CustomCommentBlock "begin-sympl","end-symbol"`で、言語特有の複数行コメント内の`#`記号を無視できる。
 上のPowerShellスクリプトのパース事例では、`-CustomCommentBlock "<#","#>"`を追加しておくと、
 スクリプトのSynopsisにある`#`記号がマッチしなくなるのでより安全。
+
+The `-List` switch parses the list structure instead of the header structure. An example, this is used to focus on a specific block in a list-structured outliner.
+
+Input:
+
+```powershell
+PS> cat a.md
+- title
+    - Lv.1
+        - Lv.1.1
+        - Lv.1.2
+    - Lv.2
+        - Lv.2.1
+            - Lv.2.1.1
+        - Lv.2.2
+    - Lv.3
+```
+
+Output:
+
+```powershell
+PS> cat a.md | mdgrep -List .
+     - Lv.1
+         - Lv.1.1
+         - Lv.1.2
+     - Lv.2
+         - Lv.2.1
+             - Lv.2.1.1
+         - Lv.2.2
+     - Lv.3
+```
 
 
 ##### changelogのgrep
