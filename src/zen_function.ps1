@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    zen - Convert half-width kana to full-width kana using Microsoft.VisualBasic.VbStrConv.Wide
+    zen - Convert half-width kana to full-width kana using Microsoft.VisualBasic.VbStrConv
 
     全角文字を半角に変換する
     [-k|-Kana]スイッチで半角カタカナのみ全角カタカナに変換

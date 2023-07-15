@@ -2396,7 +2396,7 @@ Write-Output "にわにはにわにわとりがいる" | conv -fs '' 2
 がい
 いる
 
-# output -n (NumOfRecord), and -f (NumOfFiild)
+# output -n (NumOfRecord), and -f (NumOfField)
 Write-Output "にわにはにわにわとりがいる" | conv -fs '' 2 -r -f
 1 1 にわ
 1 2 わに
@@ -2488,7 +2488,7 @@ gyo *.*
 2 uri-list.txt
 ```
 
-#### [han] - Convert full-width kana to half-width kana using Microsoft.VisualBasic.VbStrConv.Wide
+#### [han] - Convert full-width kana to half-width kana using Microsoft.VisualBasic.VbStrConv
 
 [han]: src/han_function.ps1
 
@@ -2542,7 +2542,7 @@ Examples:
 パピプペポ0123456789=A
 ```
 
-#### [zen] - Convert half-width kana to full-width kana using Microsoft.VisualBasic.VbStrConv.Wide
+#### [zen] - Convert half-width kana to full-width kana using Microsoft.VisualBasic.VbStrConv
 
 [zen]: src/zen_function.ps1
 
@@ -5097,7 +5097,7 @@ $markdown = @(
 Outputs
 
 ```powershell
-# Search section title and contens, and output matched section titles.
+# Search section title and contents, and output matched section titles.
 # Sections below heading level 2 are searched by default
 
 PS > $markdown | mdgrep .
@@ -5343,7 +5343,7 @@ PS > cat a.ps1 | mdgrep -l 3 -i test -e
 }
 ```
 
-`-CustomCommentBlock "begin-sympl","end-symbol"`で、言語特有の複数行コメント内の`#`記号を無視できる。
+`-CustomCommentBlock "begin-symbol","end-symbol"`で、言語特有の複数行コメント内の`#`記号を無視できる。
 上のPowerShellスクリプトのパース事例では、`-CustomCommentBlock "<#","#>"`を追加しておくと、
 スクリプトのSynopsisにある`#`記号がマッチしなくなるのでより安全。
 
@@ -7005,7 +7005,7 @@ Usage details:
 
 1. copy files to clipboard<br />![](img/clip2file_1.png)
 2. test location: `clip2file | push2loc`
-3. phushd: `clip2file | push2loc -Execute`
+3. pushd: `clip2file | push2loc -Execute`
 
 Examples
 
@@ -7239,7 +7239,7 @@ Usage details:
 
 1. copy files to clipboard<br />![](img/clip2file_1.png)
 2. test location: `clip2push`
-3. phushd: `clip2push -Execute`
+3. pushd: `clip2push -Execute`
 
 Examples
 
@@ -7682,7 +7682,7 @@ Check the spelling of the name, or if a path was included, verify that the path 
 ちなみに、文末に「`space`」+「`\` or `` ` `` or `|`」（正規表現でかくと`\s\\$` or ``\s`$`` or `\s\|$`）とすると、次の行を連結してワンライナーにできる。
 この点を利用してターゲット関数のリストを多少読みやすく・追加削除しやすくしている（つもり）。
 
-この事例はコピーファイル数が少なく、個々のコマンド行の実行時間が短く、またファイルの依存関係もないので、`Makefile`を記述して`make`する必要はとくになく、ふつうの`.ps1`スクリプトでこと足りる。あえて`make`する理由は、せっかく作ったのだから使おうという気持ちと、`Makefile`を書くことで本家`GNU make`の使い方の練習にもなるかもしれない、という気持ちのみ。
+この事例はコピーファイル数が少なく、個々のコマンド行の実行時間が短く、またファイルの依存関係もないので、`Makefile`を記述して`make`する必要はとくにない。ふつうの`.ps1`スクリプトでこと足りる。
 
 
 ```makefile

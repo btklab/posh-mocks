@@ -98,7 +98,7 @@
         "piyo2"
     )
 
-    # Search sectoin title and contens,
+    # Search sectoin title and contents,
     # and output matched section titles.
     # Sections below heading level 2 are
     # searched by default

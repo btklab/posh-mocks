@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    han - Convert full-width kana to half-width kana using Microsoft.VisualBasic.VbStrConv.Wide
+    han - Convert full-width kana to half-width kana using Microsoft.VisualBasic.VbStrConv
 
     全角文字を半角に変換
     [-k|-Kana]スイッチで全角カタカナはに変換しない
