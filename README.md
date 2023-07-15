@@ -22,7 +22,6 @@ cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Se
 
 - [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
-
 Inspired by:
 
 - Article
@@ -4984,7 +4983,7 @@ before.jpg を after.png に形式変換し、かつ、
 
 ### Writing
 
-#### [mdgrep] - Multi-line oriented searcher for markdown-heading style text file
+#### [mdgrep] - Multi-line oriented searcher for markdown-heading style
 
 [mdgrep]: src/mdgrep_function.ps1
 
@@ -5379,7 +5378,7 @@ PS> cat a.md | mdgrep -List .
 ```
 
 
-##### changelogのgrep
+##### grep changelog
 
 markdownの見出し形式で書かれたchangelogの検索例
 
@@ -5426,7 +5425,67 @@ PS > cat changelog.txt | mdgrep fuga -Expand
 - fuga3
 ```
 
+#### [mdfocus] - Multi-line oriented searcher for markdown-list style
 
+[mdfocus]: src/mdfocus_function.ps1
+
+Markdownのリストブロックに対するパターンマッチング。
+リストレベル2以下の要素を検索、マッチした場合にマッチ行だけでなくその行が所属するレベル2ブロックをまるごと返す.
+
+[mdgrep]のラッパー。`mdgrep -List`オプションがデフォルトセット。
+
+
+- Usage
+    - `man2 mdfocus`
+    - `mdfocus [[-Grep] <String>] [-l|-Level <Int32>] [-t|-MatchOnlyTitle] [-e|-Expand] [-p|-OutputParentSection] [-v|-NotMatch]`
+    - `cat file | mdfocus "<regex>"`
+- Note
+    - The lists written in the following block are ignored
+        - Yaml Block
+        - Code Block
+        - Fence Block
+        - Quote Block
+        - CustomCommentBlock:
+            - The language-specific comment block symbol can be specified with `-CustomCommentBlock "begin","end"` option.
+                - e.g. Ignore PowerShell comment blocks: `-CustomCommentBlock "<#","#>"`
+- Inspired by Unix/Linux Commands
+    - Command: `grep`
+
+
+Examples:
+
+Input:
+```markdown
+# a.md
+- title
+    - Lv.1
+        - Lv.1.1
+        - Lv.1.2
+    - Lv.2
+        - Lv.2.1
+            - Lv.2.1.1
+        - Lv.2.2
+    - Lv.3
+```
+
+Output:
+
+```powershell
+PS> cat a.md | mdfocus 'Lv\.2'
+    - Lv.2
+        - Lv.2.1
+            - Lv.2.1.1
+        - Lv.2.2
+```
+
+with [list2table] function
+
+
+```powershell
+PS> cat a.md | mdfocus 'Lv\.2' | list2table
+-       Lv.2    Lv.2.1  Lv.2.1.1
+-       Lv.2    Lv.2.2
+```
 
 #### [tex2pdf] - Compile tex to pdf
 

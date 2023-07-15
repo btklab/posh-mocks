@@ -76,7 +76,7 @@
 
 
 .LINK
-    mdgrep, mdgrep2, mdsort, mdsort2, mdparag, list2table
+    mdgrep, mdgrep2, mdsort, mdsort2, mdparag, list2table, mdfocus
 
 
 .EXAMPLE

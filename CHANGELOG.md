@@ -8,7 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- NaN
+- NA
+
+## [3.14.0] - 2023-07-15
+
+- Added [mdfocus] function
+
+## [3.13.1] - 2023-07-15
+
+- Fixed [list2table] Typo in variable name (critical)
+- Fixed Typo
 
 ## [3.13.0] - 2023-07-13
 
@@ -315,8 +324,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [clip2hyperlinkl]: src/clip2hyperlink_function.ps1
 [list2table]: src/list2table_function.ps1
+[mdfocus]: src/mdfocus_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.13.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.14.0..HEAD
+[3.14.0]: https://github.com/btklab/posh-mocks/releases/tag/3.14.0
+[3.13.1]: https://github.com/btklab/posh-mocks/releases/tag/3.13.1
 [3.13.0]: https://github.com/btklab/posh-mocks/releases/tag/3.13.0
 [3.12.0]: https://github.com/btklab/posh-mocks/releases/tag/3.12.0
 [3.11.0]: https://github.com/btklab/posh-mocks/releases/tag/3.11.0
