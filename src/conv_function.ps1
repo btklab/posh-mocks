@@ -89,7 +89,7 @@
     がい
     いる
 
-    # output -n (NumOfRecord), and -f (NumOfFiild)
+    # output -n (NumOfRecord), and -f (NumOfField)
     Write-Output "にわにはにわにわとりがいる" | conv -fs '' 2 -r -f
     1 1 にわ
     1 2 わに

@@ -10,7 +10,7 @@
 
 
 .LINK
-    list2table, mdgrep
+    list2table, mdgrep, mdfocus
 
 .EXAMPLE
     cat a.md
@@ -284,7 +284,8 @@ function list2table {
             ## set str
             [string] $whiteSpace = $line -replace '^(\s*)\- (.*)$','$1'
             [string] $contents   = $line -replace '^(\s*)\- (.*)$','$2'
-            [int] $newItemLevel  = getItemLevel "$rdLine"
+            [int] $newItemLevel  = getItemLevel "$line"
+            Write-Debug $newItemLevel
             if ( $newItemLevel -gt $depthOfList){
                 [int] $depthOfList = $newItemLevel
             }
@@ -304,7 +305,7 @@ function list2table {
                     $keyAry[$newItemLevel] = $contents
 
                 } elseif ($newItemLevel -gt $oldItemLevel + 1){
-                    Write-Error "error: Two or more hierarchical levels deep at once!: $rdLine" -ErrorAction Stop
+                    Write-Error "Two or more hierarchical levels deep at once!: $line" -ErrorAction Stop
 
                 } elseif ($newItemLevel -lt $oldItemLevel){
                     ## The hierarchy has become shallower: pop
@@ -312,7 +313,7 @@ function list2table {
                     $keyAry[$newItemLevel] = $contents
 
                 } else {
-                    Write-Error "Unknown error: Unable to detect hierarchy: $rdLine" -ErrorAction Stop
+                    Write-Error "Unable to detect hierarchy: $line" -ErrorAction Stop
                 }
             }
             $oldItemLevel = $newItemLevel

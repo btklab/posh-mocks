@@ -22,7 +22,6 @@ cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Se
 
 - [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
-
 Inspired by:
 
 - Article
@@ -2396,7 +2395,7 @@ Write-Output "にわにはにわにわとりがいる" | conv -fs '' 2
 がい
 いる
 
-# output -n (NumOfRecord), and -f (NumOfFiild)
+# output -n (NumOfRecord), and -f (NumOfField)
 Write-Output "にわにはにわにわとりがいる" | conv -fs '' 2 -r -f
 1 1 にわ
 1 2 わに
@@ -2488,7 +2487,7 @@ gyo *.*
 2 uri-list.txt
 ```
 
-#### [han] - Convert full-width kana to half-width kana using Microsoft.VisualBasic.VbStrConv.Wide
+#### [han] - Convert full-width kana to half-width kana using Microsoft.VisualBasic.VbStrConv
 
 [han]: src/han_function.ps1
 
@@ -2542,7 +2541,7 @@ Examples:
 パピプペポ0123456789=A
 ```
 
-#### [zen] - Convert half-width kana to full-width kana using Microsoft.VisualBasic.VbStrConv.Wide
+#### [zen] - Convert half-width kana to full-width kana using Microsoft.VisualBasic.VbStrConv
 
 [zen]: src/zen_function.ps1
 
@@ -4984,7 +4983,7 @@ before.jpg を after.png に形式変換し、かつ、
 
 ### Writing
 
-#### [mdgrep] - Multi-line oriented searcher for markdown-heading style text file
+#### [mdgrep] - Multi-line oriented searcher for markdown-heading style
 
 [mdgrep]: src/mdgrep_function.ps1
 
@@ -5097,7 +5096,7 @@ $markdown = @(
 Outputs
 
 ```powershell
-# Search section title and contens, and output matched section titles.
+# Search section title and contents, and output matched section titles.
 # Sections below heading level 2 are searched by default
 
 PS > $markdown | mdgrep .
@@ -5343,7 +5342,7 @@ PS > cat a.ps1 | mdgrep -l 3 -i test -e
 }
 ```
 
-`-CustomCommentBlock "begin-sympl","end-symbol"`で、言語特有の複数行コメント内の`#`記号を無視できる。
+`-CustomCommentBlock "begin-symbol","end-symbol"`で、言語特有の複数行コメント内の`#`記号を無視できる。
 上のPowerShellスクリプトのパース事例では、`-CustomCommentBlock "<#","#>"`を追加しておくと、
 スクリプトのSynopsisにある`#`記号がマッチしなくなるのでより安全。
 
@@ -5379,7 +5378,7 @@ PS> cat a.md | mdgrep -List .
 ```
 
 
-##### changelogのgrep
+##### grep changelog
 
 markdownの見出し形式で書かれたchangelogの検索例
 
@@ -5426,7 +5425,67 @@ PS > cat changelog.txt | mdgrep fuga -Expand
 - fuga3
 ```
 
+#### [mdfocus] - Multi-line oriented searcher for markdown-list style
 
+[mdfocus]: src/mdfocus_function.ps1
+
+Markdownのリストブロックに対するパターンマッチング。
+リストレベル2以下の要素を検索、マッチした場合にマッチ行だけでなくその行が所属するレベル2ブロックをまるごと返す.
+
+[mdgrep]のラッパー。`mdgrep -List`オプションがデフォルトセット。
+
+
+- Usage
+    - `man2 mdfocus`
+    - `mdfocus [[-Grep] <String>] [-l|-Level <Int32>] [-t|-MatchOnlyTitle] [-e|-Expand] [-p|-OutputParentSection] [-v|-NotMatch]`
+    - `cat file | mdfocus "<regex>"`
+- Note
+    - The lists written in the following block are ignored
+        - Yaml Block
+        - Code Block
+        - Fence Block
+        - Quote Block
+        - CustomCommentBlock:
+            - The language-specific comment block symbol can be specified with `-CustomCommentBlock "begin","end"` option.
+                - e.g. Ignore PowerShell comment blocks: `-CustomCommentBlock "<#","#>"`
+- Inspired by Unix/Linux Commands
+    - Command: `grep`
+
+
+Examples:
+
+Input:
+```markdown
+# a.md
+- title
+    - Lv.1
+        - Lv.1.1
+        - Lv.1.2
+    - Lv.2
+        - Lv.2.1
+            - Lv.2.1.1
+        - Lv.2.2
+    - Lv.3
+```
+
+Output:
+
+```powershell
+PS> cat a.md | mdfocus 'Lv\.2'
+    - Lv.2
+        - Lv.2.1
+            - Lv.2.1.1
+        - Lv.2.2
+```
+
+with [list2table] function
+
+
+```powershell
+PS> cat a.md | mdfocus 'Lv\.2' | list2table
+-       Lv.2    Lv.2.1  Lv.2.1.1
+-       Lv.2    Lv.2.2
+```
 
 #### [tex2pdf] - Compile tex to pdf
 
@@ -7005,7 +7064,7 @@ Usage details:
 
 1. copy files to clipboard<br />![](img/clip2file_1.png)
 2. test location: `clip2file | push2loc`
-3. phushd: `clip2file | push2loc -Execute`
+3. pushd: `clip2file | push2loc -Execute`
 
 Examples
 
@@ -7239,7 +7298,7 @@ Usage details:
 
 1. copy files to clipboard<br />![](img/clip2file_1.png)
 2. test location: `clip2push`
-3. phushd: `clip2push -Execute`
+3. pushd: `clip2push -Execute`
 
 Examples
 
@@ -7682,7 +7741,7 @@ Check the spelling of the name, or if a path was included, verify that the path 
 ちなみに、文末に「`space`」+「`\` or `` ` `` or `|`」（正規表現でかくと`\s\\$` or ``\s`$`` or `\s\|$`）とすると、次の行を連結してワンライナーにできる。
 この点を利用してターゲット関数のリストを多少読みやすく・追加削除しやすくしている（つもり）。
 
-この事例はコピーファイル数が少なく、個々のコマンド行の実行時間が短く、またファイルの依存関係もないので、`Makefile`を記述して`make`する必要はとくになく、ふつうの`.ps1`スクリプトでこと足りる。あえて`make`する理由は、せっかく作ったのだから使おうという気持ちと、`Makefile`を書くことで本家`GNU make`の使い方の練習にもなるかもしれない、という気持ちのみ。
+この事例はコピーファイル数が少なく、個々のコマンド行の実行時間が短く、またファイルの依存関係もないので、`Makefile`を記述して`make`する必要はとくにない。ふつうの`.ps1`スクリプトでこと足りる。
 
 
 ```makefile
