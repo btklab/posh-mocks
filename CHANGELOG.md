@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - NA
 
+## [4.0.0] - 2023-07-16
+
+- Changed [list2table] to output in object format by default
+- Changed [head], [tail] display path to relative path when using wildcard
+
+## [3.14.2] - 2023-07-16
+
+- Fixed [list2table], [mdgrep], [mdfocus] synopsis
+
 ## [3.14.1] - 2023-07-16
 
 - Fixed [sed] bug fix for print/delete option
@@ -330,7 +339,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [list2table]: src/list2table_function.ps1
 [mdfocus]: src/mdfocus_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.14.1..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/4.0.0..HEAD
+[4.0.0]: https://github.com/btklab/posh-mocks/releases/tag/4.0.0
+[3.14.3]: https://github.com/btklab/posh-mocks/releases/tag/3.14.3
+[3.14.2]: https://github.com/btklab/posh-mocks/releases/tag/3.14.2
 [3.14.1]: https://github.com/btklab/posh-mocks/releases/tag/3.14.1
 [3.14.0]: https://github.com/btklab/posh-mocks/releases/tag/3.14.0
 [3.13.1]: https://github.com/btklab/posh-mocks/releases/tag/3.13.1

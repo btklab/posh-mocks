@@ -19,46 +19,46 @@
     head, tail, chead, ctail, tail-f
 
 .EXAMPLE
-1..20 | head
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-
-PS > 1..20 | head -n 5
-1
-2
-3
-4
-5
+    1..20 | head
+    1
+    2
+    3
+    4
+    5
+    6
+    7
+    8
+    9
+    10
+    
+    PS > 1..20 | head -n 5
+    1
+    2
+    3
+    4
+    5
 
 .EXAMPLE
-head head*.ps1
-==> C:\Users\btklab\cms\bin\pwsh\src\head_function.ps1 <==
-<#
-    head - Output the first part of files
-
-    Output only the specified number of lines
-    from the beginning of lines.
-
-    Defaults to 10 lines of output.
-
-    head [-n num] [file]...
-
-
-PS > head -n 5 head*.ps1
-==> C:\Users\btklab\cms\bin\pwsh\src\head_function.ps1 <==
-<#
-    head - Output the first part of files
-
-    Output only the specified number of lines
-
+    head head*.ps1
+    ==> .\head_function.ps1 <==
+    <#
+        head - Output the first part of files
+    
+        Output only the specified number of lines
+        from the beginning of lines.
+    
+        Defaults to 10 lines of output.
+    
+        head [-n num] [file]...
+    
+    
+    PS> head -n 5 head*.ps1
+    ==> .\head_function.ps1 <==
+    <#
+        head - Output the first part of files
+    
+        Output only the specified number of lines
+    
 #>
 function head {
 
@@ -126,7 +126,7 @@ function head {
         $fileList = (Get-ChildItem -Path $args[$i] | ForEach-Object { $_.FullName } )
         foreach($f in $fileList){
           # output file name
-          $dispFileName = "$f"
+          [string] $dispFileName = Resolve-Path $f -Relative
           Write-Output ('==> ' + "$dispFileName" + ' <==')
           # output lines according to PowerShell version
           if($oldVersionFlag){

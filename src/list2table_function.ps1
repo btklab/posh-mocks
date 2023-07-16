@@ -3,10 +3,18 @@
     list2table - Convert markdown list format to long type data
 
     This filter formats Markdown-style headings and lists
-    into a data structure suitable for processing with
-    PivotTable of spreadsheet.
+    into PSObject.
+    
+    PSObject output by default.
+    With the "-table" option specified, output as tab-separated text
+    (appropriate as a data table to be copied and pasted into Excel)
 
-    Tab delimited output by default.
+    Lists within the following markdown constructs are ignored.
+
+        Yaml Block
+        Code Block  '```' and '````'
+        Fence Block ':::' and '::::'
+        Quote Block
 
 
 .LINK
@@ -14,79 +22,113 @@
 
 .EXAMPLE
     cat a.md
-    - aaa
-    - bbb
-        - bbb-2
-            - bbb-3
-        - bbb-2
-    - ccc
-        - ccc-2
-        - ccc-2
+        ---
+        title: title
+        author: btklab
+        date: 2023-07-16
+        link: "https://github.com/btklab"
+        ---
+        
+        - aaa
+        - bbb
+            - bbb-2
+                - bbb-3
+            - bbb-2
+        - ccc
+            - ccc-2
+            - ccc-2
+
 
     PS> cat a.md | list2table
-    aaa
-    bbb	bbb-2	bbb-3
-    bbb	bbb-2
-    ccc	ccc-2
-    ccc	ccc-2
+        F1  F2    F3
+        --  --    --
+        aaa
+        bbb bbb-2 bbb-3
+        bbb bbb-2
+        ccc ccc-2
+        ccc ccc-2
+
+
+    PS> cat a.md | list2table -Table
+        aaa
+        bbb	bbb-2	bbb-3
+        bbb	bbb-2
+        ccc	ccc-2
+        ccc	ccc-2
 
 
 .EXAMPLE
     cat a.md
-    # title
-    ## Lv.1
-    ### Lv.1.1
-    ### Lv.1.2
-    ## Lv.2
-    ### Lv.2.1
-    #### Lv.2.1.1
-    ### Lv.2.2
-    ## Lv.3
+        # title
+        ## Lv.1
+        ### Lv.1.1
+        ### Lv.1.2
+        ## Lv.2
+        ### Lv.2.1
+        #### Lv.2.1.1
+        ### Lv.2.2
+        ## Lv.3
 
 
-    PS> cat a.md | list2table -MarkdownLv1
-    title	Lv.1	Lv.1.1
-    title	Lv.1	Lv.1.2
-    title	Lv.2	Lv.2.1	Lv.2.1.1
-    title	Lv.2	Lv.2.2
-    title	Lv.3
+    PS> cat a.md | | list2table -MarkdownLv1
+        F1    F2   F3     F4
+        --    --   --     --
+        title Lv.1 Lv.1.1
+        title Lv.1 Lv.1.2
+        title Lv.2 Lv.2.1 Lv.2.1.1
+        title Lv.2 Lv.2.2
+        title Lv.3
 
 
-    PS> cat a.md | list2table -MarkdownLv1 -AutoHeader
-    F1      F2      F3      F4
-    title   Lv.1    Lv.1.1
-    title   Lv.1    Lv.1.2
-    title   Lv.2    Lv.2.1  Lv.2.1.1
-    title   Lv.2    Lv.2.2
-    title   Lv.3
+    PS> cat a.md | list2table -MarkdownLv1 -Table
+        title	Lv.1	Lv.1.1
+        title	Lv.1	Lv.1.2
+        title	Lv.2	Lv.2.1	Lv.2.1.1
+        title	Lv.2	Lv.2.2
+        title	Lv.3
 
 
-    PS> cat a.md | list2table -MarkdownLv1 | ConvertFrom-Csv -Delimiter "`t" -Header @("Lv1","lv2","lv3") | ConvertTo-Json
+    PS> cat a.md | list2table -MarkdownLv1 -Table -AutoHeader
+        F1      F2      F3      F4
+        title   Lv.1    Lv.1.1
+        title   Lv.1    Lv.1.2
+        title   Lv.2    Lv.2.1  Lv.2.1.1
+        title   Lv.2    Lv.2.2
+        title   Lv.3
+
+
+.EXAMPLE
+    PS> cat a.md | list2table -MarkdownLv1 | ConvertTo-Json
     [
       {
-        "Lv1": "title",
-        "lv2": "Lv.1",
-        "lv3": "Lv.1.1"
+        "F1": "title",
+        "F2": "Lv.1",
+        "F3": "Lv.1.1",
+        "F4": null
       },
       {
-        "Lv1": "title",
-        "lv2": "Lv.1",
-        "lv3": "Lv.1.2"
+        "F1": "title",
+        "F2": "Lv.1",
+        "F3": "Lv.1.2",
+        "F4": null
       },
       {
-        "Lv1": "title",
-        "lv2": "Lv.2",
-        "lv3": "Lv.2.1"
+        "F1": "title",
+        "F2": "Lv.2",
+        "F3": "Lv.2.1",
+        "F4": "Lv.2.1.1"
       },
       {
-        "Lv1": "title",
-        "lv2": "Lv.2",
-        "lv3": "Lv.2.2"
+        "F1": "title",
+        "F2": "Lv.2",
+        "F3": "Lv.2.2",
+        "F4": null
       },
       {
-        "Lv1": "title",
-        "lv2": "Lv.3",
-        "lv3": null
+        "F1": "title",
+        "F2": "Lv.3",
+        "F3": null,
+        "F4": null
       }
     ]
 
@@ -116,6 +158,9 @@ function list2table {
         [switch] $OffOrderedNumber,
         
         [Parameter( Mandatory=$False)]
+        [switch] $Table,
+        
+        [Parameter( Mandatory=$False)]
         [int] $MaxDepth = 20,
         
         [Parameter( Mandatory=$False)]
@@ -134,7 +179,7 @@ function list2table {
         [int] $oldItemLevel = -1
         [string[]] $readLineAry = @()
         [string[]] $writeAry    = @()
-        [string[]] $keyAry = 1..$MaxDepth | ForEach-Object { $NA }
+        [string[]] $keyAry = 1..$MaxDepth | ForEach-Object { $Null }
         [object] $readLineList = New-Object 'System.Collections.Generic.List[System.String]'
         
         [int] $rowCounter = 0
@@ -257,8 +302,15 @@ function list2table {
         -and ( -not $inFenceBlock ) `
         -and ( -not $inQuoteBlock ) `
         -and ( -not $inYamlBlock  ) ){
-            if ( $MarkdownLv1 -or $MarkdownLv2 ){
+            if ( $MarkdownLv1 ){
                 if ( $rdLine -match '^#' ) {
+                    ## target line is beginning with "#"
+                    [string] $rdLine = replaceMarkdownHeaderToList $rdLine
+                    $readLineList.Add($rdLine)
+                    Write-Debug $rdLine
+                }
+            } elseif ( $MarkdownLv2){
+                if ( $rdLine -match '^##' ) {
                     ## target line is beginning with "#"
                     [string] $rdLine = replaceMarkdownHeaderToList $rdLine
                     $readLineList.Add($rdLine)
@@ -320,15 +372,27 @@ function list2table {
             $oldNodeId = $newNodeId
         }
         $writeAry += $keyAry[0..$oldItemLevel] -join $Delimiter
-        if ( $AutoHeader ){
-            $depthOfList++
-            [string[]] $headers = 1..$depthOfList | ForEach-Object {
-                Write-Output "F$_"
-            }
-            $headers -join $Delimiter
+        ## output
+        [string[]] $oAry = @()
+        $depthOfList++
+        [string[]] $headers = 1..$depthOfList | ForEach-Object {
+            Write-Output "F$_"
         }
+        $oAry += $headers -join $Delimiter
         foreach ($wline in $writeAry){
-            Write-Output $wline
+            $oAry += $wline
+        }
+        if ( $Table -and $AutoHeader ){
+            $oAry | ForEach-Object {
+                Write-Output $_
+            }
+        } elseif ( $Table ){
+            for ($i=1; $i -lt $oAry.Count; $i++){
+                Write-Output $oAry[$i]
+            }
+        } else {
+            ## Object Output
+            $oAry | ConvertFrom-Csv -Delimiter $Delimiter
         }
     }
 }

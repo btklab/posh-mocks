@@ -20,7 +20,7 @@
     Fence blocks only support 3 and 4 colon characters.
 
         Yaml Block
-        Code Block  '``' and '````'
+        Code Block  '```' and '````'
         Fence Block ':::' and '::::'
         Quote Block
         CustomCommentBlock:
@@ -348,7 +348,7 @@ function mdgrep {
     param (
         [Parameter( Mandatory=$False, Position=0 )]
         [Alias('g')]
-        [string] $Grep,
+        [string] $Grep = ".",
         
         [Parameter( Mandatory=$False )]
         [ValidateRange(1,6)]
