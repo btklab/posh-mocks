@@ -20,7 +20,7 @@
     Fence blocks only support 3 and 4 colon characters.
 
         Yaml Block
-        Code Block  '``' and '````'
+        Code Block  '```' and '````'
         Fence Block ':::' and '::::'
         Quote Block
         CustomCommentBlock:

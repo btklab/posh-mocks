@@ -5456,7 +5456,13 @@ Examples:
 
 Input:
 ```markdown
-# a.md
+---
+title: title
+author: btklab
+date: 2023-07-16
+link: "https://github.com/btklab"
+---
+
 - title
     - Lv.1
         - Lv.1.1
@@ -5999,6 +6005,13 @@ Input:
 ```powershell
 # markdown list format
 PS> cat a.md
+---
+title: title
+author: btklab
+date: 2023-07-16
+link: "https://github.com/btklab"
+---
+
 - aaa
 - bbb
     - bbb-2
@@ -6026,6 +6039,13 @@ Input:
 
 ```powershell
 PS> cat a.md
+---
+title: title
+author: btklab
+date: 2023-07-16
+link: "https://github.com/btklab"
+---
+
 # title
 ## Lv.1
 ### Lv.1.1

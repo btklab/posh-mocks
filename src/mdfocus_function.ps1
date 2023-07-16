@@ -7,32 +7,46 @@
 
     By default, search for elements at list level 2 and below
     and return the entire level 2 block if matches.
+
+    Lists within the following markdown constructs are ignored.
+
+        Yaml Block
+        Code Block  '```' and '````'
+        Fence Block ':::' and '::::'
+        Quote Block
     
 .LINK
     mdgrep, mdgrep2, mdsort, mdsort2, mdparag, list2table, mdfocus
 
 .EXAMPLE
-cat a.md
-- title
-    - Lv.1
-        - Lv.1.1
-        - Lv.1.2
-    - Lv.2
-        - Lv.2.1
-            - Lv.2.1.1
-        - Lv.2.2
-    - Lv.3
+    cat a.md
+        ---
+        title: title
+        author: btklab
+        date: 2023-07-16
+        link: "https://github.com/btklab"
+        ---
 
-PS> cat a.md | mdfocus 'Lv\.2'
-     - Lv.2
-         - Lv.2.1
-             - Lv.2.1.1
-         - Lv.2.2
+        - title
+            - Lv.1
+                - Lv.1.1
+                - Lv.1.2
+            - Lv.2
+                - Lv.2.1
+                    - Lv.2.1.1
+                - Lv.2.2
+            - Lv.3
+
+    PS> cat a.md | mdfocus 'Lv\.2'
+        - Lv.2
+            - Lv.2.1
+                - Lv.2.1.1
+            - Lv.2.2
 
 
-PS> cat a.md | mdfocus 'Lv\.2' | list2table
--       Lv.2    Lv.2.1  Lv.2.1.1
--       Lv.2    Lv.2.2
+    PS> cat a.md | mdfocus 'Lv\.2' | list2table
+        -       Lv.2    Lv.2.1  Lv.2.1.1
+        -       Lv.2    Lv.2.2
 
 #>
 function mdfocus {

@@ -8,27 +8,42 @@
 
     Tab delimited output by default.
 
+    Lists within the following markdown constructs are ignored.
+
+        Yaml Block
+        Code Block  '```' and '````'
+        Fence Block ':::' and '::::'
+        Quote Block
+
 
 .LINK
     list2table, mdgrep, mdfocus
 
 .EXAMPLE
     cat a.md
-    - aaa
-    - bbb
-        - bbb-2
-            - bbb-3
-        - bbb-2
-    - ccc
-        - ccc-2
-        - ccc-2
+        ---
+        title: title
+        author: btklab
+        date: 2023-07-16
+        link: "https://github.com/btklab"
+        ---
+        
+        - aaa
+        - bbb
+            - bbb-2
+                - bbb-3
+            - bbb-2
+        - ccc
+            - ccc-2
+            - ccc-2
 
     PS> cat a.md | list2table
-    aaa
-    bbb	bbb-2	bbb-3
-    bbb	bbb-2
-    ccc	ccc-2
-    ccc	ccc-2
+        aaa
+        bbb	bbb-2	bbb-3
+        bbb	bbb-2
+        ccc	ccc-2
+        ccc	ccc-2
+
 
 
 .EXAMPLE
