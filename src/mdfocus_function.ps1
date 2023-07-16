@@ -52,9 +52,9 @@
 function mdfocus {
 
     param (
-        [Parameter( Mandatory=$True, Position=0 )]
+        [Parameter( Mandatory=$False, Position=0 )]
         [Alias('g')]
-        [string] $Grep,
+        [string] $Grep = ".",
         
         [Parameter( Mandatory=$False )]
         [ValidateRange(1,6)]
