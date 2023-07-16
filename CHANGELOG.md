@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - NA
 
+## [3.14.1] - 2023-07-16
+
+- Fixed [sed] bug fix for print/delete option
+
 ## [3.14.0] - 2023-07-15
 
 - Added [mdfocus] function
@@ -326,7 +330,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [list2table]: src/list2table_function.ps1
 [mdfocus]: src/mdfocus_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/3.14.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/3.14.1..HEAD
+[3.14.1]: https://github.com/btklab/posh-mocks/releases/tag/3.14.1
 [3.14.0]: https://github.com/btklab/posh-mocks/releases/tag/3.14.0
 [3.13.1]: https://github.com/btklab/posh-mocks/releases/tag/3.13.1
 [3.13.0]: https://github.com/btklab/posh-mocks/releases/tag/3.13.0

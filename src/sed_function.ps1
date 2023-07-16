@@ -26,7 +26,7 @@
             sed 's_hello_world_g'
     
     Print mode:
-        sed 'p;pattern for start-of-output;pattern for start-of-output;'
+        sed 'p;pattern for start-of-output;pattern for end-of-output;'
 
         Output only the lines from the output start-pattern to the
         output end-pattern. Specifying different patterns for the
@@ -85,7 +85,7 @@
     eee
 
     # Delete between "bbb" and "ddd"
-    $dat | sed 'p;^bbb;^ddd;'
+    $dat | sed 'd;^bbb;^ddd;'
     aaa
     eee
 #>
@@ -97,6 +97,7 @@ function sed {
         [bool] $pflag     = $False
         [bool] $dflag     = $False
         [bool] $pReadFlag = $False
+        [bool] $justFlagged = $False
         
         ## test args
         if($args.Count -ne 1){
@@ -158,15 +159,38 @@ function sed {
         }elseif($pflag){
             # p flag : print only matched line
             [string] $line = [string]$_
-            if($line -match "$srcptn" ){$pReadFlag = $True}
-            if($pReadFlag){Write-Output $line}
-            if($line -match "$repptn" ){$pReadFlag = $False}
+            if ( -not $pReadFlag ){
+                if($line -match "$srcptn" ){
+                    Write-Output $line
+                    $pReadFlag = $True
+                    [bool] $justFlagged = $True
+                }
+            }
+            if ( $pReadFlag -and ( -not $justFlagged ) ){
+                if($line -match "$repptn" ){
+                    $pReadFlag = $False
+                }
+                Write-Output $line
+            }
+            [bool] $justFlagged = $False
         }elseif($dflag){
             # d flag : delete mode
             [string] $line = [string] $_
-            if($line -match "$srcptn" ){$pReadFlag = $False}
-            if($pReadFlag){Write-Output $line}
-            if($line -match "$repptn" ){$pReadFlag = $True}
+            if ( $pReadFlag ){
+                if($line -match "$srcptn" ){
+                    $pReadFlag = $False
+                    [bool] $justFlagged = $True
+                } else {
+                    Write-Output $line
+                }
+            }
+            if ( ( -not $pReadFlag ) -and ( -not $justFlagged ) ){
+                if($line -match "$repptn" ){
+                    $pReadFlag = $True
+                }
+            }
+            [bool] $justFlagged = $False
         }
     }
 }
+
