@@ -5984,17 +5984,19 @@ cat iris.csv | table2md -d "," -Units "CFU","kg" | head -n 7
 [list2table]: src/list2table_function.ps1
 
 
-This filter formats Markdown-style headings and lists into a data structure suitable for processing with PivotTable of spreadsheet.
+This filter formats Markdown-style headings and lists into PSObject.
+
+PSObject output by default.
+With the "-table" option specified, output as tab-separated text
+(appropriate as a data table to be copied and pasted into Excel)
 
 ![Processing with PivotTable](img/list2table-pivot-with-spreadsheet.png)
-
-Tab delimited output by default.
-
 
 - Usage
     - `man2 list2table`
 - Examples
     - `cat a.md | list2table`
+    - `cat a.md | list2table -Table`
     - `cat a.md | list2table -MarkdownLv1`
     - `cat a.md | list2table -MarkdownLv1 -AutoHeader`
 
@@ -6023,6 +6025,17 @@ link: "https://github.com/btklab"
 ```
 
 Output:
+
+```powershell
+PS> cat a.md | list2table
+F1  F2    F3
+--  --    --
+aaa
+bbb bbb-2 bbb-3
+bbb bbb-2
+ccc ccc-2
+ccc ccc-2
+```
 
 ```powershell
 PS> cat a.md | list2table
@@ -6061,6 +6074,17 @@ Output:
 
 ```powershell
 PS> cat a.md | list2table -MarkdownLv1
+F1    F2   F3     F4
+--    --   --     --
+title Lv.1 Lv.1.1
+title Lv.1 Lv.1.2
+title Lv.2 Lv.2.1 Lv.2.1.1
+title Lv.2 Lv.2.2
+title Lv.3
+```
+
+```powershell
+PS> cat a.md | list2table -Table -MarkdownLv1
 title	Lv.1	Lv.1.1
 title	Lv.1	Lv.1.2
 title	Lv.2	Lv.2.1	Lv.2.1.1
@@ -6071,7 +6095,7 @@ title	Lv.3
 With `-AutoHeader` option
 
 ```powershell
-PS> cat a.md | list2table -MarkdownLv1 -AutoHeader
+PS> cat a.md | list2table -Table -MarkdownLv1 -AutoHeader
 F1      F2      F3      F4
 title   Lv.1    Lv.1.1
 title   Lv.1    Lv.1.2
@@ -6083,34 +6107,39 @@ title   Lv.3
 With `ConvertTo-Json` command
 
 ```powershell
-PS> cat a.md | list2table -MarkdownLv1 | ConvertFrom-Csv -Delimiter "`t" -Header @("Lv1","lv2","lv3") | ConvertTo-Json
-    [
-      {
-        "Lv1": "title",
-        "lv2": "Lv.1",
-        "lv3": "Lv.1.1"
-      },
-      {
-        "Lv1": "title",
-        "lv2": "Lv.1",
-        "lv3": "Lv.1.2"
-      },
-      {
-        "Lv1": "title",
-        "lv2": "Lv.2",
-        "lv3": "Lv.2.1"
-      },
-      {
-        "Lv1": "title",
-        "lv2": "Lv.2",
-        "lv3": "Lv.2.2"
-      },
-      {
-        "Lv1": "title",
-        "lv2": "Lv.3",
-        "lv3": null
-      }
-    ]
+PS> cat a.md | list2table -MarkdownLv1 | ConvertTo-Json
+[
+  {
+    "F1": "title",
+    "F2": "Lv.1",
+    "F3": "Lv.1.1",
+    "F4": null
+  },
+  {
+    "F1": "title",
+    "F2": "Lv.1",
+    "F3": "Lv.1.2",
+    "F4": null
+  },
+  {
+    "F1": "title",
+    "F2": "Lv.2",
+    "F3": "Lv.2.1",
+    "F4": "Lv.2.1.1"
+  },
+  {
+    "F1": "title",
+    "F2": "Lv.2",
+    "F3": "Lv.2.2",
+    "F4": null
+  },
+  {
+    "F1": "title",
+    "F2": "Lv.3",
+    "F3": null,
+    "F4": null
+  }
+]
 ```
 
 #### [linkextract] - Extract links from html
@@ -7507,7 +7536,7 @@ PS > cat a.txt
 ２　かきくけこ
 ３　ａｂｃｄｅ
 
-("copy text to clipboard and..."")
+("copy text to clipboard and...")
 PS > clip2normalize
 ■ スマホ等から確認する場合
 1. あいうえお
