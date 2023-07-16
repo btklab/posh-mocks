@@ -130,7 +130,7 @@ function tail {
         foreach($f in $fileList){
           # Output filename
           #$dispFileName = (Split-Path -Leaf "$files")
-          [string] $dispFileName = "$f"
+          [string] $dispFileName = Resolve-Path $f -Relative
           Write-Output ('==> ' + "$dispFileName" + ' <==')
           # Output specified number of lines
           # depending on PowerShell version
