@@ -1149,7 +1149,9 @@ function gantt2pu {
                 Get-Content -Path $cCal -Encoding UTF8 `
                     | ForEach-Object {
                         $cDate = $_.trim()
-                        if ($cDate -match 'to'){
+                        if ( ($cDate -eq '') -or ($cDate -match '^#') ){
+                              #pass
+                        } elseif ($cDate -match 'to'){
                             $cDateAry   = $cDate -split '\s*to\s*'
                             $cDateStart = (Get-Date $cDateAry[0]).ToString('yyyy-MM-dd')
                             $cDateEnd   = (Get-Date $cDateAry[1]).ToString('yyyy-MM-dd')
@@ -1184,7 +1186,9 @@ function gantt2pu {
                 Get-Content -Path $oCal -Encoding UTF8 `
                     | ForEach-Object {
                         $oDate = $_.trim()
-                        if ($oDate -match 'to'){
+                        if ( ($oDate -eq '') -or ($oDate -match '^#') ){
+                            #pass
+                        } elseif ($oDate -match 'to'){
                             $oDateAry   = $oDate -split '\s*to\s*'
                             $oDateStart = (Get-Date $oDateAry[0]).ToString('yyyy-MM-dd')
                             $oDateEnd   = (Get-Date $oDateAry[1]).ToString('yyyy-MM-dd')
@@ -1201,14 +1205,14 @@ function gantt2pu {
         if($Unit -eq 'weeks'){ [int]$wDays = $StartDateFix * 7
         }else{ [int]$wDays = $StartDateFix }
         if ($StartDate){
-                [string]$dateYMD = (Get-Date $StartDate).AddDays($wDays).ToString('yyyy-MM-dd')
+            [string]$dateYMD = (Get-Date $StartDate).AddDays($wDays).ToString('yyyy-MM-dd')
         } else {
             [string]$dateYMD = $oldestDateList | Sort-Object | Select-Object -First 1
             [string]$dateYMD = (Get-Date $dateYMD).AddDays($wDays).ToString('yyyy-MM-dd')
         }
-            Write-Output ""
-            Write-Output "project starts $dateYMD"
-            Write-Output ""
+        Write-Output ""
+        Write-Output "project starts $dateYMD"
+        Write-Output ""
 
         ## body
         $readLineAry = $readLineList.ToArray()
