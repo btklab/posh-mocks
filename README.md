@@ -302,7 +302,7 @@ ddd
 eee
 
 # Delete between "bbb" and "ddd"
-$dat | sed 'p;^bbb;^ddd;'
+$dat | sed 'd;^bbb;^ddd;'
 aaa
 eee
 ```
@@ -7519,7 +7519,7 @@ clip2img -MSPaint -Clip -Directory ~/Pictures -DirView -AutoPrefix -Name "hoge"
 - Notes
     - Default replacement rules
         - leading full-width bullet to hyphen + space
-        - leading number + (dot) + spaces to numper + dot + space
+        - leading number + (dot) + spaces to number + dot + space
         - trim trailing white-spaces
     - Optional replacement rules
         - `[-max|-MaxLineBreaks <int>]` ...Maximum number of consecutive blank lines (default=1)
