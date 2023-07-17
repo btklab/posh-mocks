@@ -21,7 +21,7 @@
 
     Default replacement rules:
         leading full-width bullet to hyphen + space
-        leading number + (dot) + spaces to numper + dot + space
+        leading number + (dot) + spaces to number + dot + space
         trim trailing white-spaces
 
     Optional replacement rules:
