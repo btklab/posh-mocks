@@ -158,6 +158,7 @@ function list2table {
         [switch] $OffOrderedNumber,
         
         [Parameter( Mandatory=$False)]
+        [Alias('t')]
         [switch] $Table,
         
         [Parameter( Mandatory=$False)]
