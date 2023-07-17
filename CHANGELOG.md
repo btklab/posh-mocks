@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - NA
 
+## [4.1.0] - 2023-07-17
+
+- Allowed [gantt2pu] blank lines and comment out in external files
+- Updated [README.md]
+- Added [clip2hyperlink] option `-Leaf`, `-Parent`
+
 ## [4.0.0] - 2023-07-16
 
 - Changed [list2table] to output in object format by default
@@ -339,7 +345,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [list2table]: src/list2table_function.ps1
 [mdfocus]: src/mdfocus_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/4.0.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/4.1.0..HEAD
+[4.1.0]: https://github.com/btklab/posh-mocks/releases/tag/4.1.0
 [4.0.0]: https://github.com/btklab/posh-mocks/releases/tag/4.0.0
 [3.14.3]: https://github.com/btklab/posh-mocks/releases/tag/3.14.3
 [3.14.2]: https://github.com/btklab/posh-mocks/releases/tag/3.14.2

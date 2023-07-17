@@ -8,6 +8,12 @@
         PS> clip2hyperlink
             =HYPERLINK("C:\path\to\the\file")
     
+        PS> clip2hyperlink -Leaf
+            =HYPERLINK("C:\path\to\the\file","file")
+    
+        PS> clip2hyperlink -Parent
+            =HYPERLINK("C:\path\to\the\file","the")
+    
         PS> clip2hyperlink -Relative
             =HYPERLINK(".\file")
     
@@ -28,6 +34,8 @@
         [-d|-ReplaceDirectory <String>]
         [-l|-LinuxPath] (replace '\', '/')
         [-e|-EscapeSharp]
+        [-Leaf]
+        [-Parent]
 
 .LINK
     clip2file, clip2hyperlink, clip2push, clip2shortcut, clip2img, clip2txt, clip2normalize
@@ -38,6 +46,12 @@
 
     PS> clip2hyperlink
         =HYPERLINK("C:\path\to\the\file")
+
+    PS> clip2hyperlink -Leaf
+        =HYPERLINK("C:\path\to\the\file","file")
+
+    PS> clip2hyperlink -Parent
+        =HYPERLINK("C:\path\to\the\file","the")
 
     PS> clip2hyperlink -Relative
         =HYPERLINK(".\file")
@@ -93,6 +107,12 @@ function clip2hyperlink {
         [Parameter( Mandatory=$False )]
         [Alias("e")]
         [switch] $EscapeSharp,
+        
+        [Parameter( Mandatory=$False )]
+        [switch] $Leaf,
+        
+        [Parameter( Mandatory=$False )]
+        [switch] $Parent,
         
         [Parameter( Mandatory=$False )]
         [Alias("l")]
@@ -154,7 +174,15 @@ function clip2hyperlink {
             if ( $ReplaceDirectory ){ [string] $f = Join-Path $ReplaceDirectory $f }
         }
         if ( $LinuxPath ){ [string] $f = "$f".Replace('\', '/') }
-        [string] $writeLine = $excelFormulaPrefix + """$f""" + $excelFormulaSuffix
+        if ( $Leaf -and ( -not $Mark ) ){
+            $lpath = Get-Item -LiteralPath $f | Split-Path -Leaf
+            [string] $writeLine = $excelFormulaPrefix + """$f""" + ",""$lpath""" + $excelFormulaSuffix
+        } elseif ( $Parent -and ( -not $Mark ) ){
+            $lpath = Get-Item -LiteralPath $f | Split-Path -Parent | Split-Path -Leaf
+            [string] $writeLine = $excelFormulaPrefix + """$f""" + ",""$lpath""" + $excelFormulaSuffix
+        } else {
+            [string] $writeLine = $excelFormulaPrefix + """$f""" + $excelFormulaSuffix
+        }
         Write-Output $writeLine
         continue
     }
