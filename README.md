@@ -5988,7 +5988,7 @@ This filter formats Markdown-style headings and lists into PSObject.
 In other words, make it greppable!
 
 PSObject output by default.
-With the "-table" option specified, output as tab-separated text
+With the "-Table" option specified, output as tab-separated text
 (appropriate as a data table to be copied and pasted into Excel)
 
 ![Processing with PivotTable](img/list2table-pivot-with-spreadsheet.png)
@@ -6043,7 +6043,7 @@ ccc ccc-2
 ```
 
 ```powershell
-PS> cat a.md | list2table
+PS> cat a.md | list2table -Table
 aaa
 bbb	bbb-2	bbb-3
 bbb	bbb-2
