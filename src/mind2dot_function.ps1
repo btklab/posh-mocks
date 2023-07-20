@@ -483,10 +483,9 @@ function mind2dot {
                 return $False
             }
         }
-        function getItemLevel ([string]$rdLine){
-            $whiteSpaces = $rdLine -replace '^(\s*)[-*]','$1'
-            $whiteSpaceLength = $whiteSpaces.Length
-            $itemLevel = [math]::Floor($whiteSpaceLength / $Space)
+        function getItemLevel ([string]$wSpace){
+            [int] $whiteSpaceLength = $wSpace.Length
+            [int] $itemLevel = [math]::Floor($whiteSpaceLength / $Space)
             return $itemLevel
         }
         function setNodeStr ([string]$nodeId, [string]$nodeLabel, [bool]$plainTextFlag, [int]$scColNum){
@@ -658,7 +657,7 @@ function mind2dot {
                 $contents = execKinsoku $contents
             }
             ## stack node IDs as hierarchy changes (push & pop)
-            $newItemLevel = getItemLevel "$rdLine"
+            $newItemLevel = getItemLevel "$whiteSpace"
             ## set color scheme
             if ($schemeFlag){
                 if ($newItemLevel -eq 0){
