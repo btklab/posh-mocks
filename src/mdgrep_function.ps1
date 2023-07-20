@@ -431,11 +431,11 @@ function mdgrep {
             if ( $section.Trim() -match '^#{6} ') { return 6 }
         }
         function replaceOrderedListToList ( [string] $line ){
-            [string] $line = $line -replace '^(\s*)[-*+] ', '$1 - '
+            [string] $line = $line -replace '^(\s*)[-*+] ', '$1- '
             if ( $OffOrderedNumber ){
-                [string] $line = $line -replace '^(\s*)([0-9]+\.) ','$1 - '
+                [string] $line = $line -replace '^(\s*)([0-9]+\.) ','$1- '
             } else {
-                [string] $line = $line -replace '^(\s*)([0-9]+\.) ','$1 - $2 '
+                [string] $line = $line -replace '^(\s*)([0-9]+\.) ','$1- $2 '
             }
             return $line
         }

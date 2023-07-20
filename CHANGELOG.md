@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - NA
 
+## [4.2.1] - 2023-07-21
+
+- Fixed [mdgrep] bug: remove extra white space at beginning of each list
+- Fixed [README.md]
+
 ## [4.2.0] - 2023-07-20
 
 - Added [list2table] `-Tag`, `-TagOff` switch
@@ -354,7 +359,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [mdfocus]: src/mdfocus_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/4.2.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/4.2.1..HEAD
+[4.2.1]: https://github.com/btklab/posh-mocks/releases/tag/4.2.1
 [4.2.0]: https://github.com/btklab/posh-mocks/releases/tag/4.2.0
 [4.1.1]: https://github.com/btklab/posh-mocks/releases/tag/4.1.1
 [4.1.0]: https://github.com/btklab/posh-mocks/releases/tag/4.1.0
