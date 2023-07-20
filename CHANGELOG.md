@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - NA
 
+## [4.2.0] - 2023-07-20
+
+- Added [list2table] `-Tag`, `-TagOff` switch
+
 ## [4.1.1] - 2023-07-20
 
 - Fix [mdgrep], [list2table], [mind2dot] getItemLevel function
@@ -350,8 +354,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [mdfocus]: src/mdfocus_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/4.1.1..HEAD
-[4.1.0]: https://github.com/btklab/posh-mocks/releases/tag/4.1.1
+[unreleased]: https://github.com/btklab/posh-mocks/compare/4.2.0..HEAD
+[4.2.0]: https://github.com/btklab/posh-mocks/releases/tag/4.2.0
+[4.1.1]: https://github.com/btklab/posh-mocks/releases/tag/4.1.1
 [4.1.0]: https://github.com/btklab/posh-mocks/releases/tag/4.1.0
 [4.0.0]: https://github.com/btklab/posh-mocks/releases/tag/4.0.0
 [3.14.3]: https://github.com/btklab/posh-mocks/releases/tag/3.14.3

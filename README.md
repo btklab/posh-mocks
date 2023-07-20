@@ -5979,12 +5979,13 @@ cat iris.csv | table2md -d "," -Units "CFU","kg" | head -n 7
 # (Default -Units " kg"," ml", " CFU", "RLU", etc...)
 ```
 
-#### [list2table] - Convert markdown list format to long type data
+#### [list2table] - Convert markdown list format to long type data (make it greppable!)
 
 [list2table]: src/list2table_function.ps1
 
 
 This filter formats Markdown-style headings and lists into PSObject.
+In other words, make it greppable!
 
 PSObject output by default.
 With the "-table" option specified, output as tab-separated text
@@ -5996,7 +5997,11 @@ With the "-table" option specified, output as tab-separated text
     - `man2 list2table`
 - Examples
     - `cat a.md | list2table`
+    - `cat a.md | list2table -Tag`
+    - `cat a.md | list2table -TagOff`
     - `cat a.md | list2table -Table`
+    - `cat a.md | list2table -Table -Tag`
+    - `cat a.md | list2table -Table -TagOff`
     - `cat a.md | list2table -MarkdownLv1`
     - `cat a.md | list2table -MarkdownLv1 -AutoHeader`
 
@@ -6141,6 +6146,47 @@ PS> cat a.md | list2table -MarkdownLv1 | ConvertTo-Json
   }
 ]
 ```
+
+With the `-Tag` switch recognizes the strings inside the brackets at the end of the sentence as a tag.
+
+- `list-with-tag.md`
+
+```markdown
+- title
+    - Lv.1
+        - Lv.1.1 [#hashtag]
+        - Lv.1.2 [2023-07-20]
+    - Lv.2
+        - Lv.2.1
+            - Lv.2.1.1
+        - Lv.2.2 [#life, #idea]
+    - Lv.3
+```
+
+```powershell
+PS> cat list-with-tag.md | list2table -Tag | ft
+    Tag          F1    F2   F3     F4
+    ---          --    --   --     --
+    #hashtag     title Lv.1 Lv.1.1
+    2023-07-20   title Lv.1 Lv.1.2
+                    title Lv.2 Lv.2.1 Lv.2.1.1
+    #life, #idea title Lv.2 Lv.2.2
+                    title Lv.3
+```
+
+With the `-TagOff` switch to treat the string inside the brackets at the end of the sentence as a tag and hide it.
+
+```powershell
+PS> cat list-with-tag.md | list2table -TagOff | ft
+    F1    F2   F3     F4
+    --    --   --     --
+    title Lv.1 Lv.1.1
+    title Lv.1 Lv.1.2
+    title Lv.2 Lv.2.1 Lv.2.1.1
+    title Lv.2 Lv.2.2
+    title Lv.3
+```
+
 
 #### [linkextract] - Extract links from html
 
