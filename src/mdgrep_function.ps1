@@ -439,9 +439,8 @@ function mdgrep {
             }
             return $line
         }
-        function getItemLevel ([string]$rdLine){
-            [string] $whiteSpaces = $rdLine -replace '^(\s*)\- .*$','$1'
-            [int] $whiteSpaceLength = $whiteSpaces.Length
+        function getItemLevel ([string]$wSpace){
+            [int] $whiteSpaceLength = $wSpace.Length
             [int] $itemLevel = [math]::Floor($whiteSpaceLength / $Space)
             $itemLevel++
             return $itemLevel
@@ -554,7 +553,8 @@ function mdgrep {
                 [string] $readLine = replaceOrderedListToList $readLine
                 if ( $readLine -match '^\s*\- '){
                     [bool] $isSection = $True
-                    [int] $secLevel = getItemLevel $readLine
+                    [string] $whiteSpace = $readLine -replace '^(\s*)\- (.*)$','$1'
+                    [int] $secLevel = getItemLevel $whiteSpace
                 }
             } else {
                 ## grep markdown headers

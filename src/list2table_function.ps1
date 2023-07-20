@@ -194,9 +194,8 @@ function list2table {
         [bool] $inQuoteBlock          = $False
         
         ## define private functions
-        function getItemLevel ([string]$rdLine){
-            [string] $whiteSpaces = $rdLine -replace '^(\s*)\- .*$','$1'
-            [int] $whiteSpaceLength = $whiteSpaces.Length
+        function getItemLevel ([string]$wSpace){
+            [int] $whiteSpaceLength = $wSpace.Length
             [int] $itemLevel = [math]::Floor($whiteSpaceLength / $Space)
             return $itemLevel
         }
@@ -337,7 +336,7 @@ function list2table {
             ## set str
             [string] $whiteSpace = $line -replace '^(\s*)\- (.*)$','$1'
             [string] $contents   = $line -replace '^(\s*)\- (.*)$','$2'
-            [int] $newItemLevel  = getItemLevel "$line"
+            [int] $newItemLevel  = getItemLevel "$whiteSpace"
             Write-Debug $newItemLevel
             if ( $newItemLevel -gt $depthOfList){
                 [int] $depthOfList = $newItemLevel
