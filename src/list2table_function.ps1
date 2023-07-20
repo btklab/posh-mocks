@@ -1,12 +1,12 @@
 <#
 .SYNOPSIS
-    list2table - Convert markdown list format to long type data
+    list2table - Convert markdown list format to long type data (make it greppable!)
 
-    This filter formats Markdown-style headings and lists
-    into PSObject.
+    This filter formats Markdown-style headings and lists into PSObject.
+    In other words, make it greppable!
     
     PSObject output by default.
-    With the "-table" option specified, output as tab-separated text
+    With the "-Table" switch specified, output as tab-separated text
     (appropriate as a data table to be copied and pasted into Excel)
 
     Lists within the following markdown constructs are ignored.
@@ -15,8 +15,42 @@
         Code Block  '```' and '````'
         Fence Block ':::' and '::::'
         Quote Block
+    
+    With the "-Tag" switch recognizes the strings inside the brackets
+    at the end of the sentence as a tag.
 
+        PS> cat list-with-tag.md
+            - title
+                - Lv.1
+                    - Lv.1.1 [#hashtag]
+                    - Lv.1.2 [2023-07-20]
+                - Lv.2
+                    - Lv.2.1
+                        - Lv.2.1.1
+                    - Lv.2.2 [#life, #idea]
+                - Lv.3
 
+        PS> cat list-with-tag.md | list2table -Tag | ft
+            Tag          F1    F2   F3     F4
+            ---          --    --   --     --
+            #hashtag     title Lv.1 Lv.1.1
+            2023-07-20   title Lv.1 Lv.1.2
+                         title Lv.2 Lv.2.1 Lv.2.1.1
+            #life, #idea title Lv.2 Lv.2.2
+                         title Lv.3
+
+    With the "-TagOff" switch to treat the string inside the brackets
+    at the end of the sentence as a tag and hide it.
+
+        PS> cat list-with-tag.md | list2table -TagOff | ft
+            F1    F2   F3     F4
+            --    --   --     --
+            title Lv.1 Lv.1.1
+            title Lv.1 Lv.1.2
+            title Lv.2 Lv.2.1 Lv.2.1.1
+            title Lv.2 Lv.2.2
+            title Lv.3.LINK
+    
 .LINK
     list2table, mdgrep, mdfocus
 
@@ -132,6 +166,43 @@
       }
     ]
 
+.EXAMPLE
+    # With the "-Tag" switch recognizes the strings inside the brackets
+    # at the end of the sentence as a tag.
+
+        PS> cat list-with-tag.md
+            - title
+                - Lv.1
+                    - Lv.1.1 [#hashtag]
+                    - Lv.1.2 [2023-07-20]
+                - Lv.2
+                    - Lv.2.1
+                        - Lv.2.1.1
+                    - Lv.2.2 [#life, #idea]
+                - Lv.3
+
+        PS> cat list-with-tag.md | list2table -Tag | ft
+            Tag          F1    F2   F3     F4
+            ---          --    --   --     --
+            #hashtag     title Lv.1 Lv.1.1
+            2023-07-20   title Lv.1 Lv.1.2
+                         title Lv.2 Lv.2.1 Lv.2.1.1
+            #life, #idea title Lv.2 Lv.2.2
+                         title Lv.3
+
+.EXAMPLE
+    # With the "-TagOff" switch to treat the string inside the brackets
+    # at the end of the sentence as a tag and hide it.
+
+    PS> cat list-with-tag.md | list2table -TagOff | ft
+        F1    F2   F3     F4
+        --    --   --     --
+        title Lv.1 Lv.1.1
+        title Lv.1 Lv.1.2
+        title Lv.2 Lv.2.1 Lv.2.1.1
+        title Lv.2 Lv.2.2
+        title Lv.3
+
 #>
 function list2table {
     Param(
@@ -160,6 +231,12 @@ function list2table {
         [Parameter( Mandatory=$False)]
         [Alias('t')]
         [switch] $Table,
+        
+        [Parameter( Mandatory=$False)]
+        [switch] $Tag,
+        
+        [Parameter( Mandatory=$False)]
+        [switch] $TagOff,
         
         [Parameter( Mandatory=$False)]
         [int] $MaxDepth = 20,
@@ -343,8 +420,14 @@ function list2table {
             }
             if ($idCounter -eq 1){
                 ## data on first line
+                if ( -not $Table ) {
+                    if ( $contents -match '^#' ){
+                        # Quote Input starting with "#"
+                        # for ConvertFrom-CSV output
+                        [string] $contents = """$contents"""
+                    }
+                }
                 $keyAry[$newItemLevel] = $contents
-
             } else {
                 ## data after the second line
                 if ($newItemLevel -eq $oldItemLevel){
@@ -375,12 +458,59 @@ function list2table {
         ## output
         [string[]] $oAry = @()
         $depthOfList++
-        [string[]] $headers = 1..$depthOfList | ForEach-Object {
-            Write-Output "F$_"
+        if ( $Tag ){
+            ## Tag output
+            [string[]] $headers = @()
+            [string[]] $headers += "Tag"
+            [string[]] $headers += 1..$depthOfList | ForEach-Object {
+                Write-Output "F$_"
+            }
+        } else {
+            [string[]] $headers = 1..$depthOfList | ForEach-Object {
+                Write-Output "F$_"
+            }
         }
         $oAry += $headers -join $Delimiter
+        function splitTagAndLine ( [string] $wline ){
+            if ( $wline -match '\]$'){
+                [string] $tmpLin = $wline -replace '^(.*)\s*\[([^\[]+)\]$', '$1'
+                [string] $tmpTag = $wline -replace '^(.*)\s*\[([^\[]+)\]$', '$2'
+                [string] $tmpLin = $tmpLin.Trim()
+                [string] $tmpTag = $tmpTag.Trim()
+                if ( -not $Table ){
+                    if ( $tmpTag -match '^#' ){
+                        [string] $tmpTag = """$tmpTag"""
+                    }
+                }
+                [string] $res = $tmpTag + $Delimiter + $tmpLin
+            } else {
+                [string] $res = $Delimiter + $wline
+            }
+            return $res
+        }
+        function deleteTagFromLine ( [string] $wline ){
+            if ( $wline -match '\]$'){
+                [string] $tmpLin = $wline -replace '^(.*)\s*\[([^\[]+)\]$', '$1'
+                [string] $tmpTag = $wline -replace '^(.*)\s*\[([^\[]+)\]$', '$2'
+                [string] $tmpLin = $tmpLin.Trim()
+                [string] $tmpTag = $tmpTag.Trim()
+                [string] $res = $tmpLin
+            } else {
+                [string] $res = $wline
+            }
+            return $res
+        }
         foreach ($wline in $writeAry){
-            $oAry += $wline
+            if ( $Tag ){
+                [string] $writeLine = splitTagAndLine $wline
+                $oAry += $writeLine
+            } elseif ( $TagOff) {
+                [string] $writeLine = deleteTagFromLine $wline
+                $oAry += $writeLine
+            } else {
+                [string] $writeLine = $wline
+                $oAry += $writeLine
+            }
         }
         if ( $Table -and $AutoHeader ){
             $oAry | ForEach-Object {
@@ -392,7 +522,9 @@ function list2table {
             }
         } else {
             ## Object Output
-            $oAry | ConvertFrom-Csv -Delimiter $Delimiter
+            $oAry | ForEach-Object {
+                Write-Output $_
+            } | ConvertFrom-Csv -Delimiter $Delimiter
         }
     }
 }
