@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - NA
 
+## [4.2.2] - 2023-07-22
+
+- Enabled [mdgrep], [list2table] Support for tab list
+
 ## [4.2.1] - 2023-07-21
 
 - Fixed [mdgrep] bug: remove extra white space at beginning of each list
@@ -359,7 +363,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [mdfocus]: src/mdfocus_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/4.2.1..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/4.2.2..HEAD
+[4.2.2]: https://github.com/btklab/posh-mocks/releases/tag/4.2.2
 [4.2.1]: https://github.com/btklab/posh-mocks/releases/tag/4.2.1
 [4.2.0]: https://github.com/btklab/posh-mocks/releases/tag/4.2.0
 [4.1.1]: https://github.com/btklab/posh-mocks/releases/tag/4.1.1

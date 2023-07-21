@@ -548,6 +548,10 @@ function mdgrep {
         -and ( -not $inQuoteBlock ) `
         -and ( -not $inCustomCommentBlock ) `
         -and ( -not $inYamlBlock ) ){
+            ## replace tab to space
+            if ( $readLine -match "^`t+" ){
+                $readLine = $readLine -replace "`t", $(" " * $Space)
+            }
             if ( $List ){
                 ## grep markdown lists
                 [string] $readLine = replaceOrderedListToList $readLine

@@ -294,11 +294,11 @@ function list2table {
             return $line
         }
         function replaceOrderedListToList ( [string] $line ){
-            [string] $line = $line -replace '^(\s*)[-*+] ', '$1 - '
+            [string] $line = $line -replace '^(\s*)[-*+] ', '$1- '
             if ( $OffOrderedNumber ){
-                [string] $line = $line -replace '^(\s*)([0-9]+\.) ','$1 - '
+                [string] $line = $line -replace '^(\s*)([0-9]+\.) ','$1- '
             } else {
-                [string] $line = $line -replace '^(\s*)([0-9]+\.) ','$1 - $2 '
+                [string] $line = $line -replace '^(\s*)([0-9]+\.) ','$1- $2 '
             }
             return $line
         }
@@ -379,6 +379,10 @@ function list2table {
         -and ( -not $inFenceBlock ) `
         -and ( -not $inQuoteBlock ) `
         -and ( -not $inYamlBlock  ) ){
+            ## replace tab to space
+            if ( $rdLine -match "^`t+" ){
+                $rdLine = $rdLine -replace "`t", $(" " * $Space)
+            }
             if ( $MarkdownLv1 ){
                 if ( $rdLine -match '^#' ) {
                     ## target line is beginning with "#"
@@ -388,7 +392,7 @@ function list2table {
                 }
             } elseif ( $MarkdownLv2){
                 if ( $rdLine -match '^##' ) {
-                    ## target line is beginning with "#"
+                    ## target line is beginning with "##"
                     [string] $rdLine = replaceMarkdownHeaderToList $rdLine
                     $readLineList.Add($rdLine)
                     Write-Debug $rdLine
