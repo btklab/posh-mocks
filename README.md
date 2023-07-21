@@ -3343,7 +3343,7 @@ Roughly equivalent to the script below:
         - double   `[System.Double]`
         - datetime `[System.DateTime]`
         - version  `[System.Version]`
-        - string   `[System.String]]`
+        - string   `[System.String]`
     - Empty records are skipped.
 
 Examples
