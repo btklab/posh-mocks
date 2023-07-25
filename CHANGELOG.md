@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- NA
+- Fixed [sed], [README.md] typo
 
 ## [4.2.2] - 2023-07-22
 
