@@ -44,7 +44,7 @@
     grep, sed, sed-i
 
 .EXAMPLE
-    # g flag - replace all strings mathing pattern
+    # g flag - replace all strings matching a pattern
     'a1b1c1' | sed 's;1;2;g'
     a2b2c2
 
