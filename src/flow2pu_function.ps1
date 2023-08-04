@@ -312,7 +312,7 @@ function flow2pu {
                         $readLineAryNode += "    $noteStr"
                     }
                 } else {
-                    ## begin note block
+                    ## start note block
                     if ( $rdLine -match '^\s+\-'){
                         $readLineAryNode += "  note left"
                     } else {
