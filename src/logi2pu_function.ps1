@@ -22,11 +22,12 @@
         - id must not contain spaces.Symbols and mutibyte characters
           can be used, but some symbols cannot be used.
         - If the first line starts with "#", it is recognized as title.
-        - "note (right|left)", "legend (right|left)" is available only with multi-lines.
+        - "note (right|left)", "legend (right|left)" is available only
+          with multi-lines.
             - Therefore, the characters "note" and "legend" cannot
               be used as IDs.
-        - If specify "-- group name --" , the nodes up to the next
-          empty line are grouped using subgraph.
+        - If specify "-- group name --" or "## group name", the nodes
+          up to the next empty line are grouped using subgraph.
         - After specifying the nodes, you can manually add
           commnents to any edge. the format is as follows.
             - id --> id : commnent
@@ -393,6 +394,9 @@ function logi2pu {
         [Parameter(Mandatory=$False)]
         [string]$AddEdgeLabelStr = "e",
 
+        [Parameter( Mandatory=$False)]
+        [string]$Spaces = '  ',
+
         [Parameter(Mandatory=$False,
             ValueFromPipeline=$True)]
         [string[]]$Text
@@ -574,137 +578,148 @@ function logi2pu {
             ## treat first line as title
             $fTitle = $rdLine -replace '^# ', ''
             $isFirstRowEqTitle = $true
-        } elseif ($rdLine -match "^\![di]|^skinparam|^'") {
+            return
+        }
+        if ($rdLine -match "^\![di]|^skinparam|^'") {
             ## skip line beginning with "!" or "skinparam"
             ## e.g. !define, !include
             $readLineAryNode += $rdLine
-        } else {
-            ## if "<--" or "-->" of "<->" appears,
-            # end of node block,
-            # start of edge block
-            if ($rdLine -match ' \<[-.~=]{2} | [-.~=]{2}\> | \<[-.~=]+\> '){
-                $NodeBlockFlag = $False
-                $EdgeBlockFlag = $True
-                ## close group if not closed
-                if ($NodeGroupFlag){
-                    $readLineAryNode += '}'
-                    $NodeGroupFlag = $False
-                }
+            return
+        }
+        ## Node grouping mode = ON
+        ## from "-- GroupName --" to the next blank line.
+        if ( (($rdLine -match '^\-\- ') -or ($rdLine -match '^##')) -and ($NodeBlockFlag)){
+            ## close group if not closed
+            if ($NodeGroupFlag){
+                $readLineAryNode += '}'
             }
-            ## Node grouping mode = ON
-            ## from "-- GroupName --" to the next blank line.
-            if (($rdLine -match '^\-\- ') -and ($NodeBlockFlag)){
-                ## close group if not closed
-                if ($NodeGroupFlag){
-                    $readLineAryNode += '}'
-                }
-                $NodeGroupFlag = $True
-                $groupCounter++
-                $groupId = "G" + [string]$groupCounter
-                $groupName = $rdLine -replace '^\-\-\s+',''
-                $groupName = $groupName -replace '\s+\-\-\s*$',''
-                $groupName = $groupName -replace '  *$',''
-                $readLineAryNode += "$GroupShape ""$groupName"" as $groupId {"
-                $wspace = '  '
+            $NodeGroupFlag = $True
+            $groupCounter++
+            $groupId = "G" + [string]$groupCounter
+            if ($rdLine -match '^\-\- '){
+                [string] $groupName = $rdLine -replace '^\-\-\s+',''
+                [string] $groupName = $groupName -replace '\s*\-\-\s*$',''
+                [string] $groupName = $groupName -replace '  *$',''
+            } elseif ($rdLine -match '^##'){
+                [string] $groupName = $rdLine -replace '^##+\s*',''
+                [string] $groupName = $groupName -replace '  *$',''
             }
-            ## Output line starting with "note" or "legend" as-is
-            if ($rdLine -match '^note|^legend'){
-                if ($rdLine -match '^note$'){
-                    $rdLine = 'note right'
-                }
-                if ($rdLine -match '^legend$'){
-                    $rdLine = 'legend right'
-                }
-                $RawBlockFlag = $True
+            $readLineAryNode += "$GroupShape ""$groupName"" as $groupId {"
+            $wspace = $Spaces
+            return
+        }
+        ## Output line starting with "note" or "legend" as-is
+        if ($rdLine -match '^note|^legend'){
+            if ($rdLine -match '^note$'){
+                $rdLine = 'note right'
             }
-            ## When line starting with "end" appears,
-            ## RowBlock mode ends.
-            if ($rdLine -match '^end (note|legend)'){
-                $RawBlockFlag = $False
+            if ($rdLine -match '^legend$'){
+                $rdLine = 'legend right'
             }
-            ## close if empty line and group not closed
-            if ($rdLine -eq ''){
-                if ($NodeGroupFlag){
-                    $readLineAryNode += '}'
-                    $NodeGroupFlag = $False
+            $RawBlockFlag = $True
+        }
+        ## if "<--" or "-->" of "<->" appears,
+        ## When line starting with "end" appears,
+        ## RowBlock mode ends.
+        if ($rdLine -match '^end (note|legend)$'){
+            $RawBlockFlag = $False
+        }
+        # end of node block,
+        # start of edge block
+        if ($rdLine -match ' \<[-.~=]{2} | [-.~=]{2}\> | \<[-.~=]+\> '){
+            $NodeBlockFlag = $False
+            $EdgeBlockFlag = $True
+            ## close group if not closed
+            if ($NodeGroupFlag){
+                $readLineAryNode += '}'
+                $NodeGroupFlag = $False
+            }
+        }
+        ## close if empty line and group not closed
+        if ($rdLine -eq ''){
+            if ($NodeGroupFlag){
+                $readLineAryNode += '}'
+                $NodeGroupFlag = $False
+            }
+            $wspace = ''
+            #return
+        }
+        ## Node block reading mode
+        if ($NodeBlockFlag){
+            if ($RawBlockFlag){
+                ## RawBlock reading mode
+                ## output as-is
+                $readLineAryNode += $wspace + $rdLine
+            } elseif ($rdLine -match '^\s*$'){
+                ## Skip blank line
+                $readLineAryNode += ''
+            } elseif ($rdLine -match '^//'){
+                ## Output comment
+                $readLineAryNode += $rdLine -replace '^//',"'"
+            } elseif ($rdLine -match '^\-\-'){
+                ## Group name is commented out
+                $readLineAryNode += $rdLine -replace '^\-\-',"'--"
+            } elseif ($rdLine -match '^end (note|legend)$'){
+                ## Output as-is if line beginning with "end"
+                $readLineAryNode += $wspace + $rdLine
+            } elseif ($rdLine -match '<img:'){
+                ## Image node dedicated processing
+                $nodeCounter++
+                $rdLine = parseImageNode $rdLine
+                $readLineAryNode += $wspace + $rdLine
+            } else {
+                ## Read node
+                $nodeCounter++
+                ## key is the leftmost column,
+                ## the others are the value
+                $splitLine = $rdLine.Split(' ')
+                if ($splitLine.Count -lt 2){
+                    Write-Error "Insufficient columns: $rdLine" -ErrorAction Stop
                 }
-                $wspace = ''
-            }
-            ## Node block reading mode
-            if ($NodeBlockFlag){
-                if ($RawBlockFlag){
-                    ## RawBlock reading mode
-                    ## output as-is
-                    $readLineAryNode += $wspace + $rdLine
-                } elseif ($rdLine -match '^\s*$'){
-                    ## Skip blank line
-                    $readLineAryNode += ''
-                } elseif ($rdLine -match '^//'){
-                    ## Output comment
-                    $readLineAryNode += $rdLine -replace '^//',"'"
-                } elseif ($rdLine -match '^\-\-'){
-                    ## Group name is commented out
-                    $readLineAryNode += $rdLine -replace '^\-\-',"'--"
-                } elseif ($rdLine -match '^end (note|legend)$'){
-                    ## Output as-is if line beginning with "end"
-                    $readLineAryNode += $wspace + $rdLine
-                } elseif ($rdLine -match '<img:'){
-                    ## Image node dedicated processing
-                    $nodeCounter++
-                    $rdLine = parseImageNode $rdLine
-                    $readLineAryNode += $wspace + $rdLine
-                } else {
-                    ## Read node
-                    $nodeCounter++
-                    ## key is the leftmost column,
-                    ## the others are the value
-                    $splitLine = $rdLine.Split(' ')
-                    if ($splitLine.Count -lt 2){
-                        Write-Error "Insufficient columns: $rdLine" -ErrorAction Stop
-                    }
-                    $readLineAryNode += parseNode $rdLine
-                    ## Parse edge
-                    $parsedEdgeStr = parseEdge $rdLine
-                    $splitEdgeAry = $parsedEdgeStr.Split( $edgeJoinDelim )
-                    for ($i = 0; $i -lt $splitEdgeAry.Count; $i++){
-                        $tmpStr = [string]($splitEdgeAry[$i])
-                        if ($tmpStr -ne ''){
-                            if (($BottomToTopDirection) -or ($RightToLeftDirection)){
-                                ## For Bottom -> Top, Right -> Left,
-                                ## rewrite the edge from "-->" to "-up->"
-                                $tmpStr = $tmpStr -replace ' \-\-> ',' -up-> '
-                            }
-                            if ($ReverseEdgeDir){
-                                $tmpStr = $tmpStr -replace ' \-\-> ',' <-- '
-                                $tmpStr = $tmpStr -replace ' \-up\-> ',' <-up- '
-                            }
-                            if ($AddEdgeLabel){
-                                ## Generate edge label
-                                $addEdgeLabelCounter++
-                                $tmpEdgeLabel = $AddEdgeLabelStr + [string]$addEdgeLabelCounter
-                                $tmpStr = $tmpStr + ' : ' + $tmpEdgeLabel
-                            }
-                            $readLineAryEdge += $tmpStr
+                $readLineAryNode += parseNode $rdLine
+                ## Parse edge
+                $parsedEdgeStr = parseEdge $rdLine
+                $splitEdgeAry = $parsedEdgeStr.Split( $edgeJoinDelim )
+                for ($i = 0; $i -lt $splitEdgeAry.Count; $i++){
+                    $tmpStr = [string]($splitEdgeAry[$i])
+                    if ($tmpStr -ne ''){
+                        if (($BottomToTopDirection) -or ($RightToLeftDirection)){
+                            ## For Bottom -> Top, Right -> Left,
+                            ## rewrite the edge from "-->" to "-up->"
+                            $tmpStr = $tmpStr -replace ' \-\-> ',' -up-> '
                         }
+                        if ($ReverseEdgeDir){
+                            $tmpStr = $tmpStr -replace ' \-\-> ',' <-- '
+                            $tmpStr = $tmpStr -replace ' \-up\-> ',' <-up- '
+                        }
+                        if ($AddEdgeLabel){
+                            ## Generate edge label
+                            $addEdgeLabelCounter++
+                            $tmpEdgeLabel = $AddEdgeLabelStr + [string]$addEdgeLabelCounter
+                            $tmpStr = $tmpStr + ' : ' + $tmpEdgeLabel
+                        }
+                        $readLineAryEdge += $tmpStr
                     }
                 }
             }
-            ## Edge block reading mode
-            ## Output as-is
-            if ($EdgeBlockFlag){
-                if ($RawBlockFlag){
+            return
+        }
+        ## Edge block reading mode
+        ## Output as-is
+        if ($EdgeBlockFlag){
+            if ($RawBlockFlag){
+                $readLineAryEdgeOpt += $rdLine
+            } else {
+                if ( $rdLine -match '^(..*)\-\-\>(..*):(..*)$' ){
+                    $readLineAryEdgeOpt += $rdLine
+                } elseif ( $rdLine -match '^\s*//' ){
+                    [string] $rdLine = $rdLine -replace '^\s*//',"'"
                     $readLineAryEdgeOpt += $rdLine
                 } else {
-                    if ( $rdLine -match '^(..*)\-\-\>(..*):(..*)$' ){
-                        $readLineAryEdgeOpt += $rdLine
-                    } elseif ( $rdLine -match '^\s*//' ){
-                        [string] $rdLine = $rdLine -replace '^\s*//',"'"
-                        $readLineAryEdgeOpt += $rdLine
-                    } else {
-                        $readLineAryEdgeOpt += $rdLine
-                    }
+                    $readLineAryEdgeOpt += $rdLine
                 }
             }
+            return
         }
     }
     end {

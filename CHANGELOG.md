@@ -8,7 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [4.2.3] - 2023-08-04
+
 - Fixed [sed], [README.md] typo
+- Refactored [logi2dot], [logi2pu]
+- Added [mind2pu] `-Raw` option
 
 ## [4.2.2] - 2023-07-22
 
@@ -363,7 +369,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [mdfocus]: src/mdfocus_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/4.2.2..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/4.2.3..HEAD
+[4.2.3]: https://github.com/btklab/posh-mocks/releases/tag/4.2.3
 [4.2.2]: https://github.com/btklab/posh-mocks/releases/tag/4.2.2
 [4.2.1]: https://github.com/btklab/posh-mocks/releases/tag/4.2.1
 [4.2.0]: https://github.com/btklab/posh-mocks/releases/tag/4.2.0
