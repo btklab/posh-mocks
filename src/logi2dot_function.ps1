@@ -24,8 +24,8 @@
         - id must not contain spaces.Symbols and mutibyte characters
           can be used, but some symbols cannot be used.
         - If the first line starts with "#", it is recognized as title.
-        - If specify "-- group name --" , the nodes up to the next
-          empty line are grouped using subgraph.
+        - If specify "-- group name --" or "## group name", the nodes
+          up to the next empty line are grouped using subgraph.
         - After specifying the nodes, you can manually add
           commnents to any edge. the format is as follows.
             - id --> id : commnent
@@ -505,6 +505,9 @@ function logi2dot {
         [Parameter( Mandatory=$False)]
         [int]$LegendFontSize = 11,
 
+        [Parameter( Mandatory=$False)]
+        [string]$Spaces = '  ',
+
         [Parameter(Mandatory=$False,
             ValueFromPipeline=$True)]
         [string[]]$Text
@@ -520,20 +523,20 @@ function logi2dot {
         [string[]] $readLineAry     = @()
         [string[]] $readLineAryNode = @()
         $readLineAryNode += ''
-        $readLineAryNode += " // Node settings"
+        $readLineAryNode += $Spaces + "// Node settings"
         if($AddStartNode){
             $readLineAryNode += ' "start" [label="start"];'
         }
         [string[]] $readLineAryEdge = @()
         $readLineAryEdge += ''
-        $readLineAryEdge += " // Edge settings"
+        $readLineAryEdge += $Spaces + "// Edge settings"
         [string[]]$readLineAryEdgeOpt = @()
         $readLineAryEdgeOpt += ''
-        $readLineAryEdgeOpt += " // Edge optional settings"
+        $readLineAryEdgeOpt += $Spaces + "// Edge optional settings"
         [string[]]$readLineAryDot = @()
         $readLineAryDot += ''
-        $readLineAryDot += " // Dot settings"
-        $wspace = ' '
+        $readLineAryDot += $Spaces + "// Dot settings"
+        $wspace = $Spaces * 1
         ## flags
         [bool] $isFirstRowEqTitle  = $False
         [bool] $NodeBlockFlag      = $True  # Loading node
@@ -552,8 +555,8 @@ function logi2dot {
                 return $False
             }
         }
-        function GetEdgeStr ([string]$lkey,[string]$edge, [string]$rkey, [string]$label, [string]$opt){
-            $tmpEdgeStr = " ""$lkey"" -> ""$rkey"" ["
+        function GetEdgeStr ([string]$lkey,[string]$edge, [string]$rkey, [string]$label, [string]$opt, [string]$sp){
+            $tmpEdgeStr = $sp + """$lkey"" -> ""$rkey"" ["
             ## set label
             if ($label -ne 'None'){
                 $label = $label -replace '^\s+',''
@@ -561,7 +564,7 @@ function logi2dot {
                 $tmpEdgeStr += "label=""$label"", "
             }
             ## set edge direction
-            switch ($edge)
+            switch -Exact ($edge)
             {
                 '<->' { $tmpEdgeStr += "style=""solid"", dir=both"; break }
                 '-->' { $tmpEdgeStr += "style=""solid"", dir=forward"; break }
@@ -634,7 +637,7 @@ function logi2dot {
             }
             return $rdLine
         }
-        function parseNode ([string]$rdLine){
+        function parseNode ([string]$rdLine, [string]$nodeSpaces = $Spaces){
             $nodeKey  = $rdLine -replace '^([^ ]+?) (..*) +\[(..*)\]\s*$','$1'
             $nodeVal  = $rdLine -replace '^([^ ]+?) (..*) +\[(..*)\]\s*$','$2'
             $nodeKey  = $nodeKey.Trim()
@@ -701,7 +704,7 @@ function logi2dot {
                 $nShape = $NodeShape
                 $nColor = ''
             }
-            $retStr += "$wspace""$nodeKey"" [label=""$nodeLabel"", shape=""$nShape""$nColor $nodeOpt];"
+            $retStr += "$nodeSpaces""$nodeKey"" [label=""$nodeLabel"", shape=""$nShape""$nColor $nodeOpt];"
             return $retStr
         }
         function parseEdge ([string]$rdLine) {
@@ -719,7 +722,7 @@ function logi2dot {
                 if($AddStartNode){
                     $from = [string]'start'
                     $to   = [string]($dId)
-                    $retStrAry += " ""$from"" -> ""$to"";"
+                    $retStrAry += $Spaces + """$from"" -> ""$to"";"
                 } else {
                     ## if no "start" node is specified, nothing is output.
                     $retStrAry += ''
@@ -731,16 +734,25 @@ function logi2dot {
                 for($j = 0; $j -lt $splitId.Count; $j++){
                     $from = ($splitId[$j]).Trim()
                     $to   = $dId
-                    $retStrAry += " ""$from"" -> ""$to"" [style=solid];"
+                    $retStrAry += $Spaces + """$from"" -> ""$to"" [style=solid];"
                 }
             } else {
                 ## if the preceding task is not separated by comma,
                 ## there is only one preceding task.
                 $from = $dPrec.Trim()
                 $to   = $dId
-                $retStrAry += " ""$from"" -> ""$to"" [style=solid];"
+                $retStrAry += $Spaces + """$from"" -> ""$to"" [style=solid];"
             }
             return $($retStrAry -Join "$edgeJoinDelim")
+        }
+        function parseTableStr ([string]$lin){
+            $ret = $lin
+            $ret = $ret -replace '\*\*\*([^\*]+)\*\*\*', '<I><B>$1</B></I>'
+            $ret = $ret -replace   '\*\*([^\*]+)\*\*',      '<B>$1</B>'
+            $ret = $ret -replace     '\*([^\*]+)\*',        '<I>$1</I>'
+            $ret = $ret -replace     '\~([^\~]+)\~',      '<SUB>$1</SUB>'
+            $ret = $ret -replace     '\^([^\^]+)\^',      '<SUP>$1</SUP>'
+            return $ret
         }
     }
     process {
@@ -749,249 +761,255 @@ function logi2dot {
         if (($lineCounter -eq 1) -and ($rdLine -match '^# ')) {
             ## treat first line as title
             [string] $fTitle = $rdLine -replace '^# ', ''
-            [bool] $isFirstRowEqTitle = $true
-        } else {
-            ## reading mode switch
-            ## if "//-- Dot --" appears,
-            ## following lines are output as-is (without processing)
-            if ($rdLine -match '^//\-\-\s*[Dd][Oo][tT]'){
-                [bool] $DotBlockFlag  = $True
-                [bool] $NodeBlockFlag = $False
-                [bool] $EdgeBlockFlag = $False
+            [bool] $isFirstRowEqTitle = $True
+            return
+        }
+        ## reading mode switch
+        ## if "//-- Dot --" appears,
+        ## following lines are output as-is (without processing)
+        if ($rdLine -match '^//\-\-\s*[Dd][Oo][tT]'){
+            [bool] $DotBlockFlag  = $True
+            [bool] $NodeBlockFlag = $False
+            [bool] $EdgeBlockFlag = $False
+            return
+        }
+        ## Node grouping mode = ON
+        ## from "-- GroupName --" to the next blank line.
+        if ( ( ($rdLine -match '^\-\- ') -or ($rdLine -match '^##')) -and (!$DotBlockFlag)) {
+            ## close group if not closed
+            if ($NodeGroupFlag){
+                $readLineAryNode += $wspace + '};'
             }
-            ## if "<--" or "-->" of "<->" appears,
-            # end of node block,
-            # start of edge block
-            if (($rdLine -match ' \<[-.]{2} | [-.]{2}\> | \<[-.]\> ') -and (!$DotBlockFlag)){
-                [bool] $NodeBlockFlag = $False
-                [bool] $EdgeBlockFlag = $True
-                ## close group if not closed
-                if ($NodeGroupFlag){
-                    $readLineAryNode += ' };'
-                    [bool] $NodeGroupFlag = $False
+            [bool] $NodeGroupFlag = $True
+            $groupCounter++
+            [string] $groupId = "G" + [string] $groupCounter
+            if ($rdLine -match '^\-\- '){
+                [string] $groupName = $rdLine -replace '^\-\-\s*',''
+                [string] $groupName = $groupName -replace '\s*\-\-\s*$',''
+            } elseif ($rdLine -match '^##'){
+                [string] $groupName = $rdLine -replace '^##+\s*',''
+            }
+            if ($groupName -match '\{..*\}'){
+                ## Additional options with brackets
+                $groupOpt  = $groupName -replace '^(..*)\s*\{(..*)\}$','$2'
+                $groupName = $groupName -replace '^(..*)\s*\{(..*)\}$','$1'
+            } else {
+                $groupOpt = ''
+            }
+            $groupName = $groupName -Replace '  *$',''
+            $wspace = $Spaces * 1
+            #$readLineAryNode += ""
+            $readLineAryNode += "$wspace" + "subgraph cluster_$groupId {"
+            $readLineAryNode += "$wspace" + $Spaces + "label = ""$groupName"";"
+            $readLineAryNode += "$wspace" + $Spaces + "shape = ""$GroupShape"";"
+            $readLineAryNode += "$wspace" + $Spaces + "style = ""dotted"";"
+            $readLineAryNode += "$wspace" + $Spaces + "//fontsize = 11;"
+            $readLineAryNode += "$wspace" + $Spaces + "labelloc = ""t"";"
+            $readLineAryNode += "$wspace" + $Spaces + "labeljust = ""l"";"
+            if ($groupOpt -ne ''){
+                $readLineAryNode += "$wspace" + "$groupOpt;"
+            }
+            return
+        }
+        ## if "legend" appears, begin legend block
+        if ($rdLine -eq "legend right" -or $rdLine -eq "legend left"){
+            [bool] $DotBlockFlag         = $False
+            [bool] $NodeBlockFlag        = $False
+            [bool] $EdgeBlockFlag        = $False
+            [bool] $LegendBlockFlag      = $True
+            [bool] $LegendBlockFirstLine = $True
+            if ($rdLine -eq "legend left"){
+                [string] $lloc = "l"
+            } else {
+                [string] $lloc = "r"
+            }
+            #if ( $RightToLeftDirection ){
+            #    [string] $lloc = "l"
+            #} else {
+            #    [string] $lloc = "r"
+            #}
+            ## close group if not closed
+            if ($NodeGroupFlag){
+                $readLineAryNode += $wspace + '};'
+                [bool] $NodeGroupFlag = $False
+            }
+            ## init var
+            [string[]] $readLineAryLegend = @()
+            $readLineAryLegend += ""
+            $readLineAryLegend += $Spaces * 1 + "// legend block"
+            $readLineAryLegend += $Spaces * 1 + "graph ["
+            if ( $BottomToTopDirection ){
+                $readLineAryLegend += $Spaces * 2 + "labelloc=""t"";"
+            } else {
+                $readLineAryLegend += $Spaces * 2 + "labelloc=""b"";"
+            }
+            $readLineAryLegend += $Spaces * 2 + "labeljust=""$lloc"";"
+            $readLineAryLegend += $Spaces * 2 + "color=""white"";"
+            $readLineAryLegend += $Spaces * 2 + "label=<"
+            $readLineAryLegend += $Spaces * 2 + "<TABLE"
+            $readLineAryLegend += $Spaces * 3 + "BORDER=""1"""
+            $readLineAryLegend += $Spaces * 3 + "CELLBORDER=""0"""
+            #$readLineAryLegend += $Spaces * 3 + "CELLSPACING=""6"""
+            $readLineAryLegend += $Spaces * 3 + "COLOR=""gray15"""
+            $readLineAryLegend += $Spaces * 3 + "BGCOLOR=""gray95"""
+            $readLineAryLegend += $Spaces * 2 + ">"
+        }
+        ## if "<--" or "-->" of "<->" appears,
+        # end of node block,
+        # start of edge block
+        if (($rdLine -match ' \<[-.]{2} | [-.]{2}\> | \<[-.]\> ') -and (!$DotBlockFlag)){
+            [bool] $NodeBlockFlag = $False
+            [bool] $EdgeBlockFlag = $True
+            ## close group if not closed
+            if ($NodeGroupFlag){
+                $readLineAryNode += $wspace + '};'
+                [bool] $NodeGroupFlag = $False
+            }
+        }
+        ## close if empty line and group not closed
+        if ($rdLine -eq '') {
+            if ($NodeGroupFlag){
+                $readLineAryNode += $wspace + '};'
+                [bool] $NodeGroupFlag = $False
+            }
+            $wspace = $Spaces * 1
+            #return
+        }
+        ## Node block reading mode
+        if (($NodeBlockFlag) -and (!$DotBlockFlag)) {
+            if ($rdLine -match '^\s*$'){
+                ## skip blank line
+                $readLineAryNode += ''
+            } elseif ($rdLine -match '^//'){
+                ## output comment as-is
+                $readLineAryNode += $wspace + $rdLine
+            } elseif ($rdLine -match '^\-\-'){
+                ## Group name is commented out
+                $readLineAryNode += $wspace + '//' + $rdLine
+            } elseif ($rdLine -match '<img:'){
+                ## Image node dedicated processing
+                $nodeCounter++
+                $rdLine = parseImageNode $rdLine
+                $readLineAryNode += "$wspace $rdLine"
+            } else {
+                ## Read node
+                $nodeCounter++
+                ## key is the leftmost column,
+                ## the others are the value
+                $splitLine = $rdLine.Split(' ')
+                if ($splitLine.Count -lt 2){
+                    Write-Error "Insufficient columns: $rdLine" -ErrorAction Stop
                 }
-            }
-            ## if "legend" appears, begin legend block
-            if ($rdLine -eq "legend right" -or $rdLine -eq "legend left"){
-                [bool] $DotBlockFlag   = $False
-                [bool] $NodeBlockFlag  = $False
-                [bool] $EdgeBlockFlag  = $False
-                [bool] $LegendBlockFlag = $True
-                [bool] $LegendBlockFirstLine = $True
-                if ($rdLine -eq "legend left"){
-                    [string] $lloc = "l"
+                ## set spaecs
+                if ( $NodeGroupFlag ){
+                    [string] $nSpaces = $Spaces * 2
                 } else {
-                    [string] $lloc = "r"
+                    [string] $nSpaces = $Spaces * 1
                 }
-                #if ( $RightToLeftDirection ){
-                #    [string] $lloc = "l"
-                #} else {
-                #    [string] $lloc = "r"
-                #}
-                ## close group if not closed
-                if ($NodeGroupFlag){
-                    $readLineAryNode += ' };'
-                    [bool] $NodeGroupFlag = $False
-                }
-                ## init var
-                [string[]] $readLineAryLegend = @()
-                $readLineAryLegend += ""
-                $readLineAryLegend += " // legend block"
-                $readLineAryLegend += " graph ["
-                if ( $BottomToTopDirection ){
-                    $readLineAryLegend += "   labelloc=""t"";"
-                } else {
-                    $readLineAryLegend += "   labelloc=""b"";"
-                }
-                $readLineAryLegend += "   labeljust=""$lloc"";"
-                $readLineAryLegend += "   color=""white"";"
-                $readLineAryLegend += "   label=<"
-                $readLineAryLegend += "   <TABLE"
-                $readLineAryLegend += "       BORDER=""1"""
-                $readLineAryLegend += "       CELLBORDER=""0"""
-                #$readLineAryLegend += "       CELLSPACING=""6"""
-                $readLineAryLegend += "       COLOR=""gray15"""
-                $readLineAryLegend += "       BGCOLOR=""gray95"""
-                $readLineAryLegend += "   >"
-                ## private function
-                function parseTableStr ([string]$lin){
-                    $ret = $lin
-                    $ret = $ret -replace '\*\*\*([^\*]+)\*\*\*', '<I><B>$1</B></I>'
-                    $ret = $ret -replace   '\*\*([^\*]+)\*\*',      '<B>$1</B>'
-                    $ret = $ret -replace     '\*([^\*]+)\*',        '<I>$1</I>'
-                    $ret = $ret -replace     '\~([^\~]+)\~',      '<SUB>$1</SUB>'
-                    $ret = $ret -replace     '\^([^\^]+)\^',      '<SUP>$1</SUP>'
-                    return $ret
-                }
-            }
-            
-            ## Node grouping mode = ON
-            ## from "-- GroupName --" to the next blank line.
-            if (($rdLine -match '^\-\- ') -and (!$DotBlockFlag)) {
-                ## close group if not closed
-                if ($NodeGroupFlag){
-                    $readLineAryNode += ' };'
-                }
-                [bool] $NodeGroupFlag = $True
-                $groupCounter++
-                $groupId = "G" + [string] $groupCounter
-                $groupName = $rdLine -replace '^\-\-\s*',''
-                $groupName = $groupName -replace '\s*\-\-\s*$',''
-                if ($groupName -match '\{..*\}'){
-                    ## Additional options with brackets
-                    $groupOpt  = $groupName -replace '^(..*)\s*\{(..*)\}$','$2'
-                    $groupName = $groupName -replace '^(..*)\s*\{(..*)\}$','$1'
-                } else {
-                    $groupOpt = ''
-                }
-                $groupName = $groupName -Replace '  *$',''
-                $readLineAryNode += " subgraph cluster_$groupId {"
-                $readLineAryNode += "  label = ""$groupName"";"
-                $readLineAryNode += "  shape = ""$GroupShape"";"
-                $readLineAryNode += "  style = ""dotted"";"
-                $readLineAryNode += "  //fontsize = 11;"
-                $readLineAryNode += "  labelloc = ""t"";"
-                $readLineAryNode += "  labeljust = ""l"";"
-                if ($groupOpt -ne ''){
-                    $readLineAryNode += "  $groupOpt;"
-                }
-                $wspace = '  '
-            }
-            ## close if empty line and group not closed
-            if ($rdLine -eq '') {
-                if ($NodeGroupFlag){
-                    $readLineAryNode += ' };'
-                    [bool] $NodeGroupFlag = $False
-                }
-                $wspace = ' '
-            }
-            ## Node block reading mode
-            if (($NodeBlockFlag) -and (!$DotBlockFlag)) {
-                if ($rdLine -match '^\s*$'){
-                    ## skip blank line
-                    $readLineAryNode += ''
-                } elseif ($rdLine -match '^//'){
-                    ## output comment as-is
-                    $readLineAryNode += $wspace + $rdLine
-                } elseif ($rdLine -match '^\-\-'){
-                    ## Group name is commented out
-                    $readLineAryNode += $wspace + '//' + $rdLine
-                } elseif ($rdLine -match '<img:'){
-                    ## Image node dedicated processing
-                    $nodeCounter++
-                    $rdLine = parseImageNode $rdLine
-                    $readLineAryNode += "$wspace $rdLine"
-                } else {
-                    ## Read node
-                    $nodeCounter++
-                    ## key is the leftmost column,
-                    ## the others are the value
-                    $splitLine = $rdLine.Split(' ')
-                    if ($splitLine.Count -lt 2){
-                        Write-Error "Insufficient columns: $rdLine" -ErrorAction Stop
-                    }
-                    $readLineAryNode += parseNode $rdLine
-                    ## Parse edge
-                    $parsedEdgeStr = parseEdge $rdLine
-                    $splitEdgeAry = $parsedEdgeStr.Split( $edgeJoinDelim )
-                    for ($i = 0; $i -lt $splitEdgeAry.Count; $i++){
-                        $tmpStr = [string]($splitEdgeAry[$i])
-                        if ($tmpStr -ne ''){
-                            if ($AddEdgeLabel){
-                                ## Generate edge label
-                                $addEdgeLabelCounter++
-                                $tmpEdgeLabel = $AddEdgeLabelStr + [string]$addEdgeLabelCounter
-                                $tmpStr = $tmpStr -replace '\];$',", label=""$tmpEdgeLabel""];"
-                                if($AddEdgeLabelFontsize){
-                                    $tmpStr = $tmpStr -replace '\];$',", fontsize=$AddEdgeLabelFontsize];"
-                                }
+                $readLineAryNode += parseNode $rdLine $nSpaces
+                ## Parse edge
+                $parsedEdgeStr = parseEdge $rdLine
+                $splitEdgeAry = $parsedEdgeStr.Split( $edgeJoinDelim )
+                for ($i = 0; $i -lt $splitEdgeAry.Count; $i++){
+                    $tmpStr = [string]($splitEdgeAry[$i])
+                    if ($tmpStr -ne ''){
+                        if ($AddEdgeLabel){
+                            ## Generate edge label
+                            $addEdgeLabelCounter++
+                            $tmpEdgeLabel = $AddEdgeLabelStr + [string]$addEdgeLabelCounter
+                            $tmpStr = $tmpStr -replace '\];$',", label=""$tmpEdgeLabel""];"
+                            if($AddEdgeLabelFontsize){
+                                $tmpStr = $tmpStr -replace '\];$',", fontsize=$AddEdgeLabelFontsize];"
                             }
-                            $readLineAryEdge += $tmpStr
                         }
+                        $readLineAryEdge += $tmpStr
                     }
                 }
-                return
             }
-            ## Edge block reading mode
-            ##   e.g. A --> B : label
-            ##   "A" -> "B" [label="label", style="solid", dir=both];
-            if ($EdgeBlockFlag){
-                if ($rdLine -match '^\s*$'){
-                    ## skip blank line
-                    $readLineAryEdgeOpt += $rdLine
-                } elseif ($rdLine -match '^\s*//'){
-                    ## skip comment line
-                    $readLineAryEdgeOpt += $wspace + $rdLine
-                } elseif ( $rdLine -match '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*\{(..*)\}\s*$') {
-                    ## case: "A" --> "B" : comment {option}
-                    $lkey  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*\{(..*)\}\s*$','$1'
-                    $edge  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*\{(..*)\}\s*$','$2'
-                    $rkey  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*\{(..*)\}\s*$','$3'
-                    $label = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*\{(..*)\}\s*$','$4'
-                    $opt   = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*\{(..*)\}\s*$','$5'
-                    $readLineAryEdgeOpt += GetEdgeStr $lkey $edge $rkey $label $opt
-                } elseif ( $rdLine -match '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*[: ]\s*\{(..*)\}\s*$'){
-                    ## case: "A" --> "B" : {option}
-                    $lkey = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*\{(..*)\}\s*$','$1'
-                    $edge = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*\{(..*)\}\s*$','$2'
-                    $rkey = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*\{(..*)\}\s*$','$3'
-                    $label = "None"
-                    $opt  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*\{(..*)\}\s*$','$4'
-                    $readLineAryEdgeOpt += GetEdgeStr $lkey $edge $rkey $label $opt
-                } elseif ( $rdLine -match '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*$'){
-                    ## case: "A" --> "B" : comment
-                    $lkey  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*$','$1'
-                    $edge  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*$','$2'
-                    $rkey  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*$','$3'
-                    $label = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*$','$4'
-                    $opt   = "None"
-                    $readLineAryEdgeOpt += GetEdgeStr $lkey $edge $rkey $label $opt
-                } elseif ( $rdLine -match '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*$'){
-                    ## case "A" --> "B"
-                    $lkey = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*$','$1'
-                    $edge = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*$','$2'
-                    $rkey = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*$','$3'
-                    $label = "None"
-                    $opt   = "None"
-                    $readLineAryEdgeOpt += GetEdgeStr $lkey $edge $rkey $label $opt
-                } else {
-                    Write-Error "parse error: invalid edge specification: $rdLine" -ErrorAction Stop
-                }
-                return
+            return
+        }
+        ## Edge block reading mode
+        ##   e.g. A --> B : label
+        ##   "A" -> "B" [label="label", style="solid", dir=both];
+        if ($EdgeBlockFlag){
+            ## set header spaces
+            $edgeSpace = $Spaces * 1
+            if ($rdLine -match '^\s*$'){
+                ## skip blank line
+                $readLineAryEdgeOpt += $rdLine
+            } elseif ($rdLine -match '^\s*//'){
+                ## skip comment line
+                $readLineAryEdgeOpt += $wspace + $rdLine
+            } elseif ( $rdLine -match '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*\{(..*)\}\s*$') {
+                ## case: "A" --> "B" : comment {option}
+                $lkey  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*\{(..*)\}\s*$','$1'
+                $edge  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*\{(..*)\}\s*$','$2'
+                $rkey  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*\{(..*)\}\s*$','$3'
+                $label = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*\{(..*)\}\s*$','$4'
+                $opt   = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*\{(..*)\}\s*$','$5'
+                $readLineAryEdgeOpt += GetEdgeStr $lkey $edge $rkey $label $opt $edgeSpace
+            } elseif ( $rdLine -match '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*[: ]\s*\{(..*)\}\s*$'){
+                ## case: "A" --> "B" : {option}
+                $lkey  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*\{(..*)\}\s*$','$1'
+                $edge  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*\{(..*)\}\s*$','$2'
+                $rkey  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*\{(..*)\}\s*$','$3'
+                $label = "None"
+                $opt   = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*\{(..*)\}\s*$','$4'
+                $readLineAryEdgeOpt += GetEdgeStr $lkey $edge $rkey $label $opt $edgeSpace
+            } elseif ( $rdLine -match '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*$'){
+                ## case: "A" --> "B" : comment
+                $lkey  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*$','$1'
+                $edge  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*$','$2'
+                $rkey  = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*$','$3'
+                $label = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*:\s*(..*)\s*$','$4'
+                $opt   = "None"
+                $readLineAryEdgeOpt += GetEdgeStr $lkey $edge $rkey $label $opt $edgeSpace
+            } elseif ( $rdLine -match '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*$'){
+                ## case "A" --> "B"
+                $lkey = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*$','$1'
+                $edge = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*$','$2'
+                $rkey = $rdLine -replace '^\s*([^ ]+)\s+([-><.]+)\s+([^ ]+)\s*$','$3'
+                $label = "None"
+                $opt   = "None"
+                $readLineAryEdgeOpt += GetEdgeStr $lkey $edge $rkey $label $opt $edgeSpace
+            } else {
+                Write-Error "parse error: invalid edge specification: $rdLine" -ErrorAction Stop
             }
-            ## Dot block reading mode
-            ## as-is output
-            if ($DotBlockFlag){
-                if ($rdLine -eq ''){
-                    $readLineAryDot += $rdLine
-                } else {
-                    $readLineAryDot += $wspace + $rdLine
-                }
-                return
+            return
+        }
+        ## Dot block reading mode
+        ## as-is output
+        if ($DotBlockFlag){
+            if ($rdLine -eq ''){
+                $readLineAryDot += $rdLine
+            } else {
+                $readLineAryDot += $wspace + $rdLine
             }
-            ## Legend block reading mode
-            ## as-is output
-            if ($LegendBlockFlag){
-                if ( $LegendBlockFirstLine ){
-                    #pass
-                    $LegendBlockFirstLine = $False
-                } elseif ($rdLine.Trim() -eq "end legend"){
-                    [bool] $LegendBlockEndFlag = $True
-                    $readLineAryLegend += "   </TABLE>>;"
-                    $readLineAryLegend += " ];"
-                    $readLineAryLegend += ""
-                    $readLineAryLegend += "};"
-                    $readLineAryLegend += ""
-                } elseif ($rdLine -eq ''){
-                    $readLineAryLegend += "   <TR><TD></TD></TR>"
-                } else {
-                    [string] $legLine = "   <TR><TD ALIGN=""LEFT""><FONT COLOR=""gray15"" POINT-SIZE=""$LegendFontSize"">"
-                    [string] $legLine += parseTableStr $rdLine
-                    [string] $legLine += "</FONT></TD></TR>"
-                    $readLineAryLegend += $legLine
-                }
-                return
+            return
+        }
+        ## Legend block reading mode
+        ## as-is output
+        if ($LegendBlockFlag){
+            if ( $LegendBlockFirstLine ){
+                #pass
+                $LegendBlockFirstLine = $False
+            } elseif ($rdLine.Trim() -eq "end legend"){
+                [bool] $LegendBlockEndFlag = $True
+                $readLineAryLegend += $Spaces * 2 + "</TABLE>>;"
+                $readLineAryLegend += $Spaces * 1 + "];"
+                $readLineAryLegend += ""
+                # Close legend
+                $readLineAryLegend += $Spaces * 1 + "};"
+                $readLineAryLegend += ""
+            } elseif ($rdLine -eq ''){
+                $readLineAryLegend += $Spaces * 2 + "<TR><TD></TD></TR>"
+            } else {
+                [string] $legLine = $Spaces * 2 + "<TR><TD ALIGN=""LEFT""><FONT COLOR=""gray15"" POINT-SIZE=""$LegendFontSize"">"
+                [string] $legLine += parseTableStr $rdLine
+                [string] $legLine += "</FONT></TD></TR>"
+                $readLineAryLegend += $legLine
             }
+            return
         }
     }
     end {
@@ -1009,111 +1027,111 @@ function logi2dot {
 
         ## graph settings #################################
         $readLineAryHeader += ''
-        $readLineAryHeader += ' graph ['
-        $readLineAryHeader += '  charset = "UTF-8";'
-        $readLineAryHeader += '  compound = true;'
+        $readLineAryHeader += $Spaces * 1 + 'graph ['
+        $readLineAryHeader += $Spaces * 2 + 'charset = "UTF-8";'
+        $readLineAryHeader += $Spaces * 2 + 'compound = true;'
         if($IsWindows){
             ## case  windows
             if($FontName){
-                $readLineAryHeader += '  fontname = "' + $FontName + '";'
+                $readLineAryHeader += $Spaces * 2 + 'fontname = "' + $FontName + '";'
             } else {
-                $readLineAryHeader += '  fontname = "' + $FontNameWindowsDefault + '";'
+                $readLineAryHeader += $Spaces * 2 + 'fontname = "' + $FontNameWindowsDefault + '";'
             }
         } else {
             ## case linux and mac
             if($FontName){
-                $readLineAryHeader += '  fontname = "' + $FontName + '";'
+                $readLineAryHeader += $Spaces * 2 + 'fontname = "' + $FontName + '";'
             }
         }
         if($FontSize){
-            $readLineAryHeader += '  fontsize = ' + [string]$FontSize + ';'
+            $readLineAryHeader += $Spaces * 2 + 'fontsize = ' + [string]$FontSize + ';'
         }
         if($Title){
-            $readLineAryHeader += '  label = "' + $Title + '";'
+            $readLineAryHeader += $Spaces * 2 + 'label = "' + $Title + '";'
         } elseif ($isFirstRowEqTitle) {
-            $readLineAryHeader += '  label = "' + $fTitle + '";'
+            $readLineAryHeader += $Spaces * 2 + 'label = "' + $fTitle + '";'
         }
         if($TitleLoc){
-            $readLineAryHeader += '  labelloc = "' + $TitleLoc + '";'
+            $readLineAryHeader += $Spaces * 2 + 'labelloc = "' + $TitleLoc + '";'
         }
         if($TitleJust){
-            $readLineAryHeader += '  labeljust = "' + $TitleJust + '";'
+            $readLineAryHeader += $Spaces * 2 + 'labeljust = "' + $TitleJust + '";'
         }
         if($LayoutEngine){
-            $readLineAryHeader += '  layout = "' + $LayoutEngine + '";'
+            $readLineAryHeader += $Spaces * 2 + 'layout = "' + $LayoutEngine + '";'
         }
         if($LeftToRightDirection){
-            $readLineAryHeader += '  rankdir = "LR";'
+            $readLineAryHeader += $Spaces * 2 + 'rankdir = "LR";'
         } elseif ($RightToLeftDirection){
-            $readLineAryHeader += '  rankdir = "RL";'
+            $readLineAryHeader += $Spaces * 2 + 'rankdir = "RL";'
         } elseif ($BottomToTopDirection){
-            $readLineAryHeader += '  rankdir = "BT";'
+            $readLineAryHeader += $Spaces * 2 + 'rankdir = "BT";'
         } else {
-            $readLineAryHeader += '  rankdir = "TB";'
+            $readLineAryHeader += $Spaces * 2 + 'rankdir = "TB";'
         }
-        $readLineAryHeader += '  newrank = true;'
-        $readLineAryHeader += ' ];'
+        $readLineAryHeader += $Spaces * 2 + 'newrank = true;'
+        $readLineAryHeader += $Spaces * 1 + '];'
 
         ## node settings #################################
         $readLineAryHeader += ''
-        $readLineAryHeader += ' node ['
+        $readLineAryHeader += $Spaces * 1 + 'node ['
         if($IsWindows){
             ## case  windows
             if($FontName){
-                $readLineAryHeader += '  fontname = "' + $FontName + '";'
+                $readLineAryHeader += $Spaces * 2 + 'fontname = "' + $FontName + '";'
             } else {
-                $readLineAryHeader += '  fontname = "' + $FontNameWindowsDefault + '";'
+                $readLineAryHeader += $Spaces * 2 + 'fontname = "' + $FontNameWindowsDefault + '";'
             }
         } else {
             ## case linux and mac
             if($FontName){
-                $readLineAryHeader += '  fontname = "' + $FontName + '";'
+                $readLineAryHeader += $Spaces * 2 + 'fontname = "' + $FontName + '";'
             }
         }
         if($FontSize){
-            $readLineAryHeader += '  fontsize = ' + [string]$FontSize + ';'
+            $readLineAryHeader += $Spaces * 2 + 'fontsize = ' + [string]$FontSize + ';'
         }
         if($NodeShape -ne 'Default'){
-            $readLineAryHeader += '  shape = "' + $NodeShape + '";'
+            $readLineAryHeader += $Spaces * 2 + 'shape = "' + $NodeShape + '";'
             if (!$OffRoundCorner) {
-                $readLineAryHeader += '  style = "rounded,solid";'
+                $readLineAryHeader += $Spaces * 2 + 'style = "rounded,solid";'
             } else {
-                $readLineAryHeader += '  style = "solid";'
+                $readLineAryHeader += $Spaces * 2 + 'style = "solid";'
             }
         }
         if($NodeWidth){
-            $readLineAryHeader += '  width = ' + [string]$NodeWidth + ';'
+            $readLineAryHeader += $Spaces * 2 + 'width = ' + [string]$NodeWidth + ';'
         }
         if($NodeHeight){
-            $readLineAryHeader += '  height = ' + [string]$NodeHeight + ';'
+            $readLineAryHeader += $Spaces * 2 + 'height = ' + [string]$NodeHeight + ';'
         }
-        $readLineAryHeader += ' ];'
+        $readLineAryHeader += $Spaces * 1 + '];'
 
         ## edge settings #################################
         $readLineAryHeader += ''
-        $readLineAryHeader += ' edge ['
+        $readLineAryHeader += $Spaces * 1 + 'edge ['
         if($IsWindows){
             ## case  windows
             if($FontName){
-                $readLineAryHeader += '  fontname = "' + $FontName + '";'
+                $readLineAryHeader += $Spaces * 2 + 'fontname = "' + $FontName + '";'
             } else {
-                $readLineAryHeader += '  fontname = "' + $FontNameWindowsDefault + '";'
+                $readLineAryHeader += $Spaces * 2 + 'fontname = "' + $FontNameWindowsDefault + '";'
             }
         } else {
             ## case linux and mac
             if($FontName){
-                $readLineAryHeader += '  fontname = "' + $FontName + '";'
+                $readLineAryHeader += $Spaces * 2 + 'fontname = "' + $FontName + '";'
             }
         }
         if($FontSize){
-            $readLineAryHeader += '  fontsize = ' + [string]$FontSize + ';'
+            $readLineAryHeader += $Spaces * 2 + 'fontsize = ' + [string]$FontSize + ';'
         }
         if($ReverseEdgeDir){
-            $readLineAryHeader += '  dir = back;'
+            $readLineAryHeader += $Spaces * 2 + 'dir = back;'
         } else {
-            $readLineAryHeader += '  dir = forward;'
+            $readLineAryHeader += $Spaces * 2 + 'dir = forward;'
         }
-        $readLineAryHeader += ' ];'
+        $readLineAryHeader += $Spaces * 1 + '];'
 
         ##
         ## Footer
@@ -1126,9 +1144,9 @@ function logi2dot {
         }
         if ( $LegendBlockFlag ){
             $readLineAry += ""
-            $readLineAry += " // legend subgraph"
-            $readLineAry += " subgraph cluster_legend {"
-            $readLineAry += "   //peripheries=0;"
+            $readLineAry += $Spaces * 1 + "// legend subgraph"
+            $readLineAry += $Spaces * 1 + "subgraph cluster_legend {"
+            $readLineAry += $Spaces * 2 + "//peripheries=0;"
             $readLineAry += ""
         }
         foreach ($lin in $readLineAryNode){
