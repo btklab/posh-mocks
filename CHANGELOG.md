@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- NA
+- Added Restart-Explorer function to operator.ps1
 
 ## [4.2.3] - 2023-08-04
 

@@ -12,6 +12,12 @@ if ($IsWindows){
     $env:LESSCHARSET = "utf-8"
 }
 if ($IsWindows){
+    ## private functions
+    function Restart-Explorer {
+        Stop-Process -ProcessName explorer -Force
+    }
+    Set-Alias -Name rmExplorer  -Value Restart-Explorer
+
     ## unix-like commands
     . $pwshSrcDir/sed_function.ps1
     . $pwshSrcDir/sed-i_function.ps1
