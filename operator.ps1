@@ -12,6 +12,12 @@ if ($IsWindows){
     $env:LESSCHARSET = "utf-8"
 }
 if ($IsWindows){
+    ## private functions
+    function Restart-Explorer {
+        Stop-Process -ProcessName explorer -Force
+    }
+    Set-Alias -Name rmExplorer  -Value Restart-Explorer
+
     ## unix-like commands
     . $pwshSrcDir/sed_function.ps1
     . $pwshSrcDir/sed-i_function.ps1
@@ -133,14 +139,14 @@ Set-Alias -name ml -value Get-OGP
 . $pwshSrcDir/toml2psobject_function.ps1
 . $pwshSrcDir/json2txt_function.ps1
 
-## clipboard
-. $pwshSrcDir/clip2img_function.ps1
-. $pwshSrcDir/clip2file_function.ps1
-. $pwshSrcDir/clip2normalize_function.ps1
-. $pwshSrcDir/clip2push_function.ps1
-. $pwshSrcDir/clip2hyperlink_function.ps1
+## clipboard operation
 if ( $IsWindows ){
-. $pwshSrcDir/clip2shortcut_function.ps1
+    . $pwshSrcDir/clip2img_function.ps1
+    . $pwshSrcDir/clip2file_function.ps1
+    . $pwshSrcDir/clip2normalize_function.ps1
+    . $pwshSrcDir/clip2push_function.ps1
+    . $pwshSrcDir/clip2hyperlink_function.ps1
+    . $pwshSrcDir/clip2shortcut_function.ps1
 }
 
 

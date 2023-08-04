@@ -362,7 +362,7 @@ function seq2pu {
                         $readLineAryNode += "    $noteStr"
                     }
                 } else {
-                    ## begin note block
+                    ## start note block
                     ## ignore keywords
                     [string] $noteStr = $rdLine -replace '^\s*[-+*]+|^\s*[0-9]+\.', ''
                     [string] $noteStr = $noteStr.Trim()

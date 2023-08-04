@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - NA
 
+## [4.2.4] - 2023-08-05
+
+- Added Restart-Explorer function to operator.ps1
+- Fixed [flow2pu], [seq2pu] Fixed an error that occurred when there was a string "begin" in a comment on PowerShell 7.3.6 on Linux(Ubuntu22.04) 
+    - `ParseError: Executable script code found in signature block.`
+- Changed [operator.ps1] Limit the use of functions using "System.Windows.Forms.dll" to the windows environment.
+
 ## [4.2.3] - 2023-08-04
 
 - Fixed [sed], [README.md] typo
@@ -369,7 +376,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [mdfocus]: src/mdfocus_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/4.2.3..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/4.2.4..HEAD
+[4.2.4]: https://github.com/btklab/posh-mocks/releases/tag/4.2.4
 [4.2.3]: https://github.com/btklab/posh-mocks/releases/tag/4.2.3
 [4.2.2]: https://github.com/btklab/posh-mocks/releases/tag/4.2.2
 [4.2.1]: https://github.com/btklab/posh-mocks/releases/tag/4.2.1
