@@ -142,7 +142,7 @@
     cat wbs.md | mind2pu -WBS | Tee-Object -FilePath a.pu ; pu2java a.pu -OutputFileType svg | ii
     # WBS
 
-    + <&flag>Presidend
+    + <&flag> Presidend
         + hoge
             + piyo
         + fuga
@@ -174,6 +174,9 @@ function mind2pu {
 
         [Parameter( Mandatory=$False)]
         [switch]$WBS,
+
+        [Parameter( Mandatory=$False)]
+        [switch]$Raw,
 
         [Parameter( Mandatory=$False)]
         [switch]$HandWritten,
@@ -273,7 +276,11 @@ function mind2pu {
         } elseif (($rdLine -match '^\s*[-+*]+') -and (-not $isLegend)){
             $ast = $rdLine -replace '^(\s*)([-+*]+).*$','$1'
             if($WBS){
-                $repMark = $rdLine -replace '^(\s*)([-+*]+).*$','$2'
+                if ( $Raw ){
+                    $repMark = $rdLine -replace '^(\s*)([-+*])+.*$','$2'
+                } else {
+                    $repMark = '*'
+                }
             } else {
                 $repMark = '*'
             }
