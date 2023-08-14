@@ -136,6 +136,35 @@ if ($IsWindows){
 
 Examples:
 
+Function names are sorted lexicographically from **top to bottom**.
+This behavior is similar to linux `ls` command.
+The reason for depending on [flat], [tateyoko] and [keta] is to obtain this output.
+
+```powershell
+man2 -Column 5
+man2 -c 5
+
+Add-CrLf           decil           han         mind2pu       table2md
+Add-CrLf-EndOfFile delf            head        movw          tac
+addb               dot2gviz        i           Override-Yaml tail
+addl               filehame        image2md    pawk          tarr
+addr               fillretu        jl          percentile    tateyoko
+addt               flat            json2txt    pu2java       teatimer
+cat2               flow2pu         juni        pwmake        tenki
+catcsv             fpath           keta        retu          tex2pdf
+chead              fval            kinsoku     rev           toml2psobject
+clip2img           fwatch          lcalc       rev2          uniq
+clipwatch          gantt2pu        linkcheck   say           vbStrConv
+conv               gdate           linkextract sed           watercss
+ConvImage          Get-AppShortcut logi2dot    sed-i         wrap
+count              Get-OGP         logi2pu     self          yarr
+csv2sqlite         getfirst        man2        seq2pu        ycalc
+csv2txt            getlast         map2        sleepy        ysort
+ctail              grep            mdgrep      sm2           zen
+ctail2             gyo             mind2dot    summary
+```
+
+
 Do the same using the [Format-Wide] commandlet instead of the [man2] command.
 However, the order of the files is slightly different from [man2].
 Lexicographically sorted from **left to right**.
@@ -165,36 +194,7 @@ tex2pdf       toml2psobject uniq         vbStrConv    watercss
 wrap          yarr          ycalc        ysort        zen
 ```
 
-[man2] version.
-Unlike before, they are sorted lexicographically from **top to bottom**.
-This behavior is similar to linux `ls` command.
-The reason for depending on [flat], [tateyoko] and [keta] is to obtain this output.
-
-```powershell
-man2 -Column 5
-man2 -c 5
-
-Add-CrLf           decil           han         mind2pu       table2md
-Add-CrLf-EndOfFile delf            head        movw          tac
-addb               dot2gviz        i           Override-Yaml tail
-addl               filehame        image2md    pawk          tarr
-addr               fillretu        jl          percentile    tateyoko
-addt               flat            json2txt    pu2java       teatimer
-cat2               flow2pu         juni        pwmake        tenki
-catcsv             fpath           keta        retu          tex2pdf
-chead              fval            kinsoku     rev           toml2psobject
-clip2img           fwatch          lcalc       rev2          uniq
-clipwatch          gantt2pu        linkcheck   say           vbStrConv
-conv               gdate           linkextract sed           watercss
-ConvImage          Get-AppShortcut logi2dot    sed-i         wrap
-count              Get-OGP         logi2pu     self          yarr
-csv2sqlite         getfirst        man2        seq2pu        ycalc
-csv2txt            getlast         map2        sleepy        ysort
-ctail              grep            mdgrep      sm2           zen
-ctail2             gyo             mind2dot    summary
-```
-
-[map2]を使わず、[flat], [tateyoko], [keta]のコンビネーションで[man2]の出力（上から下に辞書順）を得るワンライナーを以下に示す。
+[man2]を使わず、[flat], [tateyoko], [keta]のコンビネーションで[man2]の出力（上から下に辞書順）を得るワンライナーを以下に示す。
 `flat <n>`の値を変えると列数が変わる。
 
 ```powershell
