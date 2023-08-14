@@ -45,10 +45,11 @@
         # open link in "firefox" browser
 
 .EXAMPLE
-    i             ... Equivalent to Get-ChildItem .
+    i                  ... Equivalent to Get-ChildItem .
     i <dir>            ... Get-ChildItem <dir>
     i <file>           ... Invoke-Item <links-writtein-in-text-file>
     i <file> <command> ... command <links-writtein-in-text-file>
+    i <file> <command> -b    ... run command in background
     i <file> -l or -Location ... Open <link> location in explorer
     i <file> -q or -DryRun   ... DryRun (listup links)
     i <file> -e or -Edit     ... Edit <linkfile> using text editor
@@ -60,6 +61,7 @@
     # Get-ChildItem <dir>
     i ./link/
     i ./link/ | Format-Wide
+
     Mode         LastWriteTime Length Name
     ----         ------------- ------ ----
     -a---  2023/02/07    23:21    102 hoge.md
@@ -110,6 +112,10 @@ function i {
 
         [Parameter( Mandatory=$False )]
         [switch] $LinkCheck,
+
+        [Parameter( Mandatory=$False )]
+        [Alias('b')]
+        [switch] $BackGround,
 
         [Parameter( Mandatory=$False )]
         [Alias('q')]
@@ -254,11 +260,18 @@ function i {
             }
         }
         Write-Debug $hlink
-        $com = "$com '$hlink'"
+        [string] $com = "$com '$hlink'"
         if ( $DryRun ){
+            if ( $BackGround ){
+                [string] $com = "Start-Job -ScriptBlock { Invoke-Expression -Command $com }"
+            }
             Write-Output $com
         } else {
-            Invoke-Expression -Command $com
+            if ( $BackGround ){
+                Start-Job -ScriptBlock { Invoke-Expression -Command $com }
+            } else {
+                Invoke-Expression -Command $com
+            }
         }
     }
 }
