@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Added [pwmake] predefined variables (`-Param`, `-Params`)
 - Fixed [README.md] synopsis
 - Added [i] -BackGround option
 - Enabled [i] to specify multiple input files

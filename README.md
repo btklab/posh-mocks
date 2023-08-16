@@ -7677,6 +7677,9 @@ GNU make用のMakefileとの互換性は、シンプルな書き方をすれば�
     - `pwmake -f path/to/Makefile`・・・ファイル指定
     - `pwmake -Help`・・・各target行末尾の「` ## コメント`」部をヘルプとして出力
     - `pwmake -DryRun`
+    - `pwmake -Param "hoge"`・・・set predefined variable (string)
+    - `pwmake -Params "hoge", "fuga"`・・・set predefined variables (string array)
+    - `pwmake -Variables "file=main.md"`・・・override variable
     - `pwmake [[-Target] <String>] [[-Variables] <String[]>] [-File <String>] [-Delimiter <String>] [-TargetDelimiter <String>] [-ErrAction<String>] [-Help] [-DryRun]`
 - Options
     - `-DryRun`でコマンドを実行せずに実行ログのみ出力
@@ -7708,6 +7711,38 @@ GNU make用のMakefileとの互換性は、シンプルな書き方をすれば�
 - Inspired by Unix/Linux Commands
     - Command: `make`
 
+Makefile minimal examples:
+
+```Makefile
+all: ## do nothing
+    echo "hoge"
+```
+
+```Makefile
+file := index.md
+
+.PHONY: all
+all: ${file} ## echo filename
+    echo ${file}
+    # $param is predifined [string] variable
+    echo $param
+    # $params is also predifined string[]] variable
+    echo $params
+    echo $params[0]
+```
+
+Execute examples:
+
+```powershell
+pwmake
+pwmake -f ./path/to/the/Makefile
+pwmake -Help
+pwmake -DryRun
+pwmake -Param "hoge"             # set predefine variable string
+pwmake -Params "hoge", "fuga"    # set predefine variable string array
+pwmake -Variables "file=main.md" # override variable
+```
+
 Comment out example:
 
 ```Makefile
@@ -7722,7 +7757,7 @@ target: deps ## comment
         > a.md
 ```
 
-Examples:
+Another examples:
 
 ```Makefile
 # use uplatex
