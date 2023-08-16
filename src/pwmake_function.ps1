@@ -28,7 +28,7 @@
             echo ${file}
             # $param is predifined [string] variable
             echo $param
-            # $params is also predifined string[]] variable
+            # $params is also predifined [string[]] variable
             echo $params
             echo $params[0]
         ```
