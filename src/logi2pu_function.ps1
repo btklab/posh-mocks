@@ -26,8 +26,8 @@
           with multi-lines.
             - Therefore, the characters "note" and "legend" cannot
               be used as IDs.
-        - If specify "-- group name --" or "## group name", the nodes
-          up to the next empty line are grouped using subgraph.
+        - Node gouping symbols are "-- group name --" or "## group name"
+            - If increase the number of symbols, it becomes nested structure
         - After specifying the nodes, you can manually add
           commnents to any edge. the format is as follows.
             - id --> id : commnent
@@ -371,7 +371,7 @@ function logi2pu {
             "artifact", "card", "cloud", "component", "database",
             "file", "folder", "frame", "hexagon", "node",
             "package", "queue", "rectangle", "stack", "storage")]
-        [string]$GroupShape = "rectangle",
+        [string]$GroupShape = "folder",
 
         [Parameter(Mandatory=$False)]
         [int]$FoldLabel,
@@ -404,12 +404,14 @@ function logi2pu {
 
     begin{
         ## init var
-        [string] $wspace = ''
-        [string] $edgeJoinDelim = "@e@d@g@e@"
-        [int] $addEdgeLabelCounter = 0
-        [int] $lineCounter         = 0
-        [int] $groupCounter        = 0
-        [int] $nodeCounter         = 0
+        [string] $wspace            = ''
+        [string] $edgeJoinDelim     = "@e@d@g@e@"
+        [int] $addEdgeLabelCounter  = 0
+        [int] $lineCounter          = 0
+        [int] $groupCounter         = 0
+        [int] $nodeCounter          = 0
+        [int] $oldItemLevel         = 0
+        [int] $newItemLevel         = 0
         [string[]] $readLineAry     = @()
         [string[]] $readLineAryNode = @()
         $readLineAryNode += ''
@@ -469,7 +471,7 @@ function logi2pu {
             $rdLine = $rdLine -Replace '<img:(..*)\|(..*)>','<img:$1>\n$2'
             return $rdLine
         }
-        function parseNode ([string]$rdLine){
+        function parseNode ([string]$rdLine, [string]$nodeSpaces = $Spaces){
             $nodeKey  = $rdLine -replace '^([^ ]+?) (..*) +\[(..*)\]\s*$','$1'
             $nodeVal  = $rdLine -replace '^([^ ]+?) (..*) +\[(..*)\]\s*$','$2'
             $nodeKey  = $nodeKey.Trim()
@@ -528,7 +530,7 @@ function logi2pu {
                 $nShape = $NodeShape
                 $nColor = ''
             }
-            $nodeStr = $wspace + "$nShape ""$nodeLabel"" as $nodeKey $nColor"
+            $nodeStr = $nodeSpaces + "$nShape ""$nodeLabel"" as $nodeKey $nColor"
             $nodeStr = $nodeStr -Replace '  *$',''
             return $nodeStr
         }
@@ -570,10 +572,31 @@ function logi2pu {
             }
             return $($retStrAry -Join "$edgeJoinDelim")
         }
+        function replaceHyphensToSharps ( [string]$lin ){
+            [string] $hyphens = $lin -replace '^(\-+) (.*)$', '$1'
+            [string] $hyphens = $hyphens -replace '\-', '#'
+            [string] $grpName = $lin -replace '^(\-+) (.*)$', '$2'
+            [string] $grpName = $grpName -replace '\s*(\-)+', ''
+            [string] $ret = "$hyphens $grpName"
+            return $ret
+        }
+        function getItemLevel ([string]$lin){
+            [string] $sharps = $lin -replace '^(##+) (.*)$', '$1'
+            [int] $itemLevel = $sharps.Length - 1
+            return $itemLevel
+        }
+        function closeParenthesisForLevel ([int]$iLevel){
+            [string] $res = $Spaces * ($iLevel - 1) + "}"
+            return $res
+        }
     }
     process{
         $lineCounter++
         [string] $rdLine = [string] $_
+        if ( $rdLine -match '^(\-)+ '){
+            [string] $rdLine = replaceHyphensToSharps $rdLine
+        }
+        Write-Debug $rdLine
         if (($lineCounter -eq 1) -and ($rdLine -match '^# ')) {
             ## treat first line as title
             $fTitle = $rdLine -replace '^# ', ''
@@ -587,34 +610,60 @@ function logi2pu {
             return
         }
         ## Node grouping mode = ON
-        ## from "-- GroupName --" to the next blank line.
-        if ( (($rdLine -match '^\-\- ') -or ($rdLine -match '^##')) -and ($NodeBlockFlag)){
-            ## close group if not closed
-            if ($NodeGroupFlag){
-                $readLineAryNode += '}'
-            }
+        ## from "## GroupName" to the next blank line.
+        if ( ($rdLine -match '^##+') -and ($NodeBlockFlag)){
+            ## get group name
             $NodeGroupFlag = $True
             $groupCounter++
             $groupId = "G" + [string]$groupCounter
-            if ($rdLine -match '^\-\- '){
-                [string] $groupName = $rdLine -replace '^\-\-\s+',''
-                [string] $groupName = $groupName -replace '\s*\-\-\s*$',''
-                [string] $groupName = $groupName -replace '  *$',''
-            } elseif ($rdLine -match '^##'){
-                [string] $groupName = $rdLine -replace '^##+\s*',''
-                [string] $groupName = $groupName -replace '  *$',''
+            [string] $groupName = $rdLine -replace '^##+\s*',''
+            [string] $groupName = $groupName.Trim()
+            ## get itemlevel
+            [int] $newItemLevel = getItemLevel $rdLine
+            Write-Debug "ItemLevel: old = $oldItemLevel, new = $newItemLevel"
+            if ($newItemLevel -eq $oldItemLevel){
+                [string] $wspace = $Spaces * ($newItemLevel - 1)
+                ## close parenthesis
+                $readLineAryNode += closeParenthesisForLevel $oldItemLevel
+                $readLineAryNode += ''
+            } elseif ($newItemLevel -gt $oldItemLevel){
+                [string] $wspace = $Spaces * ($newItemLevel - 1)
+            } elseif ($newItemLevel -lt $oldItemLevel){
+                [string] $wspace = $Spaces * ($newItemLevel -1)
+                for ( $i=$oldItemLevel; $i -ge $newItemLevel; $i--){
+                    $readLineAryNode += closeParenthesisForLevel $i
+                }
+                $readLineAryNode += ''
+            } else {
+                Write-Error "error: Unknown error. Unable to detect hierarchy: $rdLine" -ErrorAction Stop
             }
-            $readLineAryNode += "$GroupShape ""$groupName"" as $groupId {"
-            $wspace = $Spaces
+            
+            $readLineAryNode += $wspace + "$GroupShape ""$groupName"" as $groupId {"
+            [int] $oldItemLevel = $newItemLevel
             return
         }
         ## Output line starting with "note" or "legend" as-is
-        if ($rdLine -match '^note|^legend'){
-            if ($rdLine -match '^note$'){
-                $rdLine = 'note right'
+        if ($rdLine -match '^legend'){
+            ## close group if not closed
+            if ( $oldItemLevel -ne 0) {
+                ## close parenthesis
+                for ( $i=$oldItemLevel; $i -ge 1; $i--){
+                    $readLineAryNode += closeParenthesisForLevel $i
+                }
+                $readLineAryNode += ''
+                [bool] $NodeGroupFlag = $False
+                Write-Debug "ItemLevel: old = $oldItemLevel, new = $newItemLevel"
+                [int] $oldItemLevel = 0
+                [int] $newItemLevel = 0
             }
             if ($rdLine -match '^legend$'){
                 $rdLine = 'legend right'
+            }
+            $RawBlockFlag = $True
+        }
+        if ($rdLine -match '^note'){
+            if ($rdLine -match '^note$'){
+                $rdLine = 'note right'
             }
             $RawBlockFlag = $True
         }
@@ -630,19 +679,17 @@ function logi2pu {
             $NodeBlockFlag = $False
             $EdgeBlockFlag = $True
             ## close group if not closed
-            if ($NodeGroupFlag){
-                $readLineAryNode += '}'
+            if ( $oldItemLevel -ne 0) {
+                ## close parenthesis
+                for ( $i=$oldItemLevel; $i -ge 1; $i--){
+                    $readLineAryNode += closeParenthesisForLevel $i
+                }
+                $readLineAryNode += ''
+                Write-Debug "ItemLevel: old = $oldItemLevel, new = $newItemLevel"
+                [int] $oldItemLevel = 0
+                [int] $newItemLevel = 0
                 $NodeGroupFlag = $False
             }
-        }
-        ## close if empty line and group not closed
-        if ($rdLine -eq ''){
-            if ($NodeGroupFlag){
-                $readLineAryNode += '}'
-                $NodeGroupFlag = $False
-            }
-            $wspace = ''
-            #return
         }
         ## Node block reading mode
         if ($NodeBlockFlag){
@@ -656,9 +703,6 @@ function logi2pu {
             } elseif ($rdLine -match '^//'){
                 ## Output comment
                 $readLineAryNode += $rdLine -replace '^//',"'"
-            } elseif ($rdLine -match '^\-\-'){
-                ## Group name is commented out
-                $readLineAryNode += $rdLine -replace '^\-\-',"'--"
             } elseif ($rdLine -match '^end (note|legend)$'){
                 ## Output as-is if line beginning with "end"
                 $readLineAryNode += $wspace + $rdLine
@@ -676,7 +720,12 @@ function logi2pu {
                 if ($splitLine.Count -lt 2){
                     Write-Error "Insufficient columns: $rdLine" -ErrorAction Stop
                 }
-                $readLineAryNode += parseNode $rdLine
+                if ( $NodeGroupFlag ){
+                    [string] $nSpaces = $Spaces * ($newItemLevel)
+                } else {
+                    [string] $nSpaces = $Spaces * 1
+                }
+                $readLineAryNode += parseNode $rdLine $nSpaces
                 ## Parse edge
                 $parsedEdgeStr = parseEdge $rdLine
                 $splitEdgeAry = $parsedEdgeStr.Split( $edgeJoinDelim )
@@ -721,8 +770,20 @@ function logi2pu {
             }
             return
         }
+
     }
     end {
+        ## close group if not closed
+        if ( $oldItemLevel -ne 0) {
+            ## close parenthesis
+            for ( $i=$oldItemLevel; $i -ge 1; $i--){
+                $readLineAryNode += closeParenthesisForLevel $i
+            }
+            $readLineAryNode += ''
+            [int] $oldItemLevel = 0
+            [int] $newItemLevel = 0
+            Write-Debug "ItemLevel: old = $oldItemLevel, new = $newItemLevel"
+        }
         ##
         ## Header
         ##
