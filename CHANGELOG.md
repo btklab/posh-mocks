@@ -8,9 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- Fixed [README.md] synopsis
+- NA
+
+## [4.3.0]
+
+- Enabled [logi2dot], [logi2pu] Nested groups
+- Added [pwmake] Predefined variables (`-Param`, `-Params`)
+- Fixed [README.md] Synopsis
 - Added [i] -BackGround option
 - Enabled [i] to specify multiple input files
+- Explicit [mind2dot] variable type
+
 
 ## [4.2.4] - 2023-08-05
 
@@ -378,7 +386,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [mdfocus]: src/mdfocus_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/4.2.4..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/4.3.0..HEAD
+[4.2.4]: https://github.com/btklab/posh-mocks/releases/tag/4.3.0
 [4.2.4]: https://github.com/btklab/posh-mocks/releases/tag/4.2.4
 [4.2.3]: https://github.com/btklab/posh-mocks/releases/tag/4.2.3
 [4.2.2]: https://github.com/btklab/posh-mocks/releases/tag/4.2.2

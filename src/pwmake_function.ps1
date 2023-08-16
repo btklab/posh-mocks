@@ -10,6 +10,40 @@
         - pwmake -f path/to/Makefile (specify external Makefile path)
         - pwmake -Help (get help comment written at the end of each target line)
         - pwmake -DryRun
+        - pwmake -Param "hoge"
+        - pwmake -Params "hoge", "fuga"
+
+    Makefile minimal examples:
+
+        ```Makefile
+        all: ## do nothing
+            echo "hoge"
+        ```
+
+        ```Makefile
+        file := index.md
+
+        .PHONY: all
+        all: ${file} ## echo filename
+            echo ${file}
+            # $param is predifined [string] variable
+            echo $param
+            # $params is also predifined [string[]] variable
+            echo $params
+            echo $params[0]
+        ```
+
+    Execute examples:
+
+        ```powershell
+        pwmake
+        pwmake -f ./path/to/the/Makefile
+        pwmake -Help
+        pwmake -DryRun
+        pwmake -Param "hoge"             # set predefine variable string
+        pwmake -Params "hoge", "fuga"    # set predefine variable string array
+        pwmake -Variables "file=main.md" # override variable
+        ```
 
     Note:
         Only the following automatic variables are impremented:
@@ -453,6 +487,12 @@ function pwmake {
         [switch] $DeleteCommentEndOfCommandLine,
 
         [Parameter(Mandatory=$False)]
+        [string] $Param,
+
+        [Parameter(Mandatory=$False)]
+        [string[]] $Params,
+
+        [Parameter(Mandatory=$False)]
         [Alias('n')]
         [switch] $DryRun
     )
@@ -532,9 +572,9 @@ function pwmake {
 
     ## private functions
     function AddEndOfFileMarkAndIncludeMakefile ([string]$mfile){
-        [string[]]$lines = @()
-        [string]$parentDir = Split-Path "$mfile" -Parent
-        $lines = Get-Content -LiteralPath "$mfile" -Encoding utf8 `
+        [string[]] $lines = @()
+        [string] $parentDir = Split-Path "$mfile" -Parent
+        [string[]] $lines = Get-Content -LiteralPath "$mfile" -Encoding utf8 `
             | ForEach-Object {
                 $mfileline = [string]$_
                 if ($mfileline -match '^include '){
@@ -630,12 +670,15 @@ function pwmake {
     }
 
     function SeparateBlock ([string[]]$lines){
-        [bool]$argBlockFlag = $true
-        [string[]]$argBlock = @()
-        [string[]]$comBlock = @()
+        [bool] $argBlockFlag = $true
+        [string[]] $argBlock = @()
+        [string[]] $comBlock = @()
         foreach ($line in $lines) {
             if ($line -match '.'){
-                if ($line -notmatch '='){ $argBlockFlag = $False } }
+                if ($line -notmatch '='){
+                    $argBlockFlag = $False
+                }
+            }
             if ($argBlockFlag){
                 if( ($line -ne '') -and ($line -match ':=') ){
                     $line = $line -replace '\s*:=\s*',':='
@@ -688,6 +731,12 @@ function pwmake {
             $varAry = $var -split ":=", 2
             [string]$key = $varAry[0].trim()
             [string]$val = $varAry[1].trim()
+            if ( $key -match '^[Pp]aram$'){
+                Write-Error 'Variable name: "Param" is predifined. Please use another keyword.' -ErrorAction Stop
+            }
+            if ( $key -match '^[Pp]arams$'){
+                Write-Error 'Variable name: "Params" is predifined. Please use another keyword.' -ErrorAction Stop
+            }
             ## replace ${var}
             if ($val -match '\$\{'){
                 if($varDict){
@@ -1055,19 +1104,19 @@ function pwmake {
     }
 
     ## parse Makefile
-    [string[]]$lines    = @()
-    [string[]]$argBlock = @()
-    [string[]]$comBlock = @()
-    [string[]]$phonies  = @()
+    [string[]] $lines    = @()
+    [string[]] $argBlock = @()
+    [string[]] $comBlock = @()
+    [string[]] $phonies  = @()
 
     ### preprocessing
-    $lines = AddEndOfFileMarkAndIncludeMakefile "$makeFile"
-    $lines = DeleteComment $lines
-    $lines = RemoveLineBreaks $lines
+    [string[]] $lines = AddEndOfFileMarkAndIncludeMakefile "$makeFile"
+    [string[]] $lines = DeleteComment $lines
+    [string[]] $lines = RemoveLineBreaks $lines
 
     ### replace variables
     if($Variables){
-        $lines = ReplaceOverrideVariables $lines
+        [string[]] $lines = ReplaceOverrideVariables $lines
     }
     $argBlock, $comBlock = SeparateBlock $lines
 

@@ -4208,102 +4208,102 @@ PS >  cat input.txt | logi2dot -Kinsoku 10 -BottomToTopDirection > a.dot ; dot2g
 ```dot
 strict digraph logictree {
 
- graph [
-  charset = "UTF-8";
-  compound = true;
-  fontname = "MS Gothic";
-  label = "how to cook curry";
-  labelloc = "t";
-  rankdir = "BT";
-  newrank = true;
- ];
+  graph [
+    charset = "UTF-8";
+    compound = true;
+    fontname = "MS Gothic";
+    label = "how to cook curry";
+    labelloc = "t";
+    rankdir = "BT";
+    newrank = true;
+  ];
 
- node [
-  fontname = "MS Gothic";
-  shape = "rectangle";
-  style = "rounded,solid";
- ];
+  node [
+    fontname = "MS Gothic";
+    shape = "rectangle";
+    style = "rounded,solid";
+  ];
 
- edge [
-  fontname = "MS Gothic";
-  dir = forward;
- ];
+  edge [
+    fontname = "MS Gothic";
+    dir = forward;
+  ];
 
- // legend subgraph
- subgraph cluster_legend {
-   //peripheries=0;
-
-
- // Node settings
-
- subgraph cluster_G1 {
-  label = "rice";
-  shape = "rectangle";
-  style = "dotted";
-  //fontsize = 11;
-  labelloc = "t";
-  labeljust = "l";
-  //-- rice --
-  "A" [label="A\lwash rice\l", shape="rectangle" ];
-  "B" [label="B\lsoak rice \lin fresh water\l", shape="rectangle" ];
-  "C" [label="C\lcook rice\l", shape="rectangle" ];
- };
-
- subgraph cluster_G2 {
-  label = "curry roux";
-  shape = "rectangle";
-  style = "dotted";
-  //fontsize = 11;
-  labelloc = "t";
-  labeljust = "l";
-  //-- curry roux --
-  "D" [label="D\lcut vegetables\l", shape="rectangle" ];
-  "E" [label="E\lcut meat into \lcubes\l", shape="rectangle" ];
-  "F" [label="F\lstew vegetables \land meat\l", shape="rectangle" ];
-  "G" [label="G\ladd curry \lroux and simmer\l", shape="rectangle" ];
- };
-
- "H" [label="H\lserve on plate\l", shape="rectangle" ];
- "I" [label="I\lcomplete!\l", shape="rectangle" ];
+  // legend subgraph
+  subgraph cluster_legend {
+    //peripheries=0;
 
 
- // Edge settings
- "A" -> "B" [style=solid];
- "B" -> "C" [style=solid];
- "D" -> "F" [style=solid];
- "E" -> "F" [style=solid];
- "F" -> "G" [style=solid];
- "C" -> "H" [style=solid];
- "G" -> "H" [style=solid];
- "H" -> "I" [style=solid];
-
- // Edge optional settings
- "B" -> "C" [label="at least\n30 minutes", style="solid", dir=forward];
+  // Node settings
 
 
- // Dot settings
- //-- dot --
- {rank=same; A, E, D};
+  subgraph cluster_G1 {
+    label = "rice";
+    shape = "Default";
+    style = "dotted";
+    //fontsize = 11;
+    labelloc = "t";
+    labeljust = "l";
+    "A" [label="A\lwash rice\l", shape="rectangle" ];
+    "B" [label="B\lsoak rice \lin fresh water\l", shape="rectangle" ];
+    "C" [label="C\lcook rice\l", shape="rectangle" ];
+
+  };
+
+  subgraph cluster_G2 {
+    label = "curry roux";
+    shape = "Default";
+    style = "dotted";
+    //fontsize = 11;
+    labelloc = "t";
+    labeljust = "l";
+    "D" [label="D\lcut vegetables\l", shape="rectangle" ];
+    "E" [label="E\lcut meat into \lcubes\l", shape="rectangle" ];
+    "F" [label="F\lstew vegetables \land meat\l", shape="rectangle" ];
+    "G" [label="G\ladd curry \lroux and simmer\l", shape="rectangle" ];
+
+    "H" [label="H\lserve on plate\l", shape="rectangle" ];
+    "I" [label="I\lcomplete!\l", shape="rectangle" ];
+
+  };
 
 
- // legend block
- graph [
-   labelloc="t";
-   labeljust="r";
-   color="white";
-   label=<
-   <TABLE
-       BORDER="1"
-       CELLBORDER="0"
-       COLOR="gray15"
-       BGCOLOR="gray95"
-   >
-   <TR><TD ALIGN="LEFT"><FONT COLOR="gray15" POINT-SIZE="11">this is</FONT></TD></TR>
-   <TR><TD ALIGN="LEFT"><FONT COLOR="gray15" POINT-SIZE="11">legend!</FONT></TD></TR>
-   </TABLE>>;
- ];
+  // Edge settings
+  "A" -> "B" [style=solid];
+  "B" -> "C" [style=solid];
+  "D" -> "F" [style=solid];
+  "E" -> "F" [style=solid];
+  "F" -> "G" [style=solid];
+  "C" -> "H" [style=solid];
+  "G" -> "H" [style=solid];
+  "H" -> "I" [style=solid];
 
-};
+  // Edge optional settings
+  "B" -> "C" [label="at least\n30 minutes", style="solid", dir=forward];
+
+
+  // Dot settings
+  {rank=same; A, E, D};
+
+
+  // legend block
+  graph [
+    labelloc="t";
+    labeljust="r";
+    color="white";
+    label=<
+    <TABLE
+      BORDER="1"
+      CELLBORDER="0"
+      COLOR="gray15"
+      BGCOLOR="gray95"
+    >
+    <TR><TD ALIGN="LEFT"><FONT COLOR="gray15" POINT-SIZE="11">this is</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT COLOR="gray15" POINT-SIZE="11">legend!</FONT></TD></TR>
+    </TABLE>>;
+  ];
+
+  };
 
 }
 ```
@@ -7677,6 +7677,9 @@ GNU make用のMakefileとの互換性は、シンプルな書き方をすれば�
     - `pwmake -f path/to/Makefile`・・・ファイル指定
     - `pwmake -Help`・・・各target行末尾の「` ## コメント`」部をヘルプとして出力
     - `pwmake -DryRun`
+    - `pwmake -Param "hoge"`・・・set predefined variable (string)
+    - `pwmake -Params "hoge", "fuga"`・・・set predefined variables (string array)
+    - `pwmake -Variables "file=main.md"`・・・override variable
     - `pwmake [[-Target] <String>] [[-Variables] <String[]>] [-File <String>] [-Delimiter <String>] [-TargetDelimiter <String>] [-ErrAction<String>] [-Help] [-DryRun]`
 - Options
     - `-DryRun`でコマンドを実行せずに実行ログのみ出力
@@ -7708,6 +7711,38 @@ GNU make用のMakefileとの互換性は、シンプルな書き方をすれば�
 - Inspired by Unix/Linux Commands
     - Command: `make`
 
+Makefile minimal examples:
+
+```Makefile
+all: ## do nothing
+    echo "hoge"
+```
+
+```Makefile
+file := index.md
+
+.PHONY: all
+all: ${file} ## echo filename
+    echo ${file}
+    # $param is predifined [string] variable
+    echo $param
+    # $params is also predifined [string[]] variable
+    echo $params
+    echo $params[0]
+```
+
+Execute examples:
+
+```powershell
+pwmake
+pwmake -f ./path/to/the/Makefile
+pwmake -Help
+pwmake -DryRun
+pwmake -Param "hoge"             # set predefine variable string
+pwmake -Params "hoge", "fuga"    # set predefine variable string array
+pwmake -Variables "file=main.md" # override variable
+```
+
 Comment out example:
 
 ```Makefile
@@ -7722,7 +7757,7 @@ target: deps ## comment
         > a.md
 ```
 
-Examples:
+Another examples:
 
 ```Makefile
 # use uplatex

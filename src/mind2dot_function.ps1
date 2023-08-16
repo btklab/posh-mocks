@@ -657,7 +657,7 @@ function mind2dot {
                 $contents = execKinsoku $contents
             }
             ## stack node IDs as hierarchy changes (push & pop)
-            $newItemLevel = getItemLevel "$whiteSpace"
+            [int] $newItemLevel = getItemLevel "$whiteSpace"
             ## set color scheme
             if ($schemeFlag){
                 if ($newItemLevel -eq 0){
