@@ -23,10 +23,11 @@
     Multiple links(lines) in a file available. Lines that empty or beginning
     with "#" are skipped.
 
+    Environment variables such as ${HOME} can be used for path strings.
 
     Usage:
-        i                  ... Equivalent to Get-ChildItem .
-        i <dir>            ... Get-ChildItem <dir>
+        i                  ... Equivalent to Invoke-Item .
+        i <dir>            ... Invoke-Item <dir>
         i <file>           ... Invoke-Item <links-writtein-in-text-file>
         i <file> <command> ... command <links-writtein-in-text-file>
         i <file> -l or -Location ... Open <link> location in explorer
@@ -45,8 +46,8 @@
         # open link in "firefox" browser
 
 .EXAMPLE
-    i                  ... Equivalent to Get-ChildItem .
-    i <dir>            ... Get-ChildItem <dir>
+    i                  ... Equivalent to Invoke-Item .
+    i <dir>            ... Invoke-Item <dir>
     i <file>           ... Invoke-Item <links-writtein-in-text-file>
     i <file> <command> ... command <links-writtein-in-text-file>
     i <file> <command> -b    ... run command in background
@@ -82,11 +83,11 @@
     PS > i ./link/rmarkdown_site.txt -l ii
 
 .EXAMPLE
-## Specify path containing wildcards
-PS > i ./link/a.*
-
-## Filee Recursive search
-PS > i .\work\google-* -Recurse
+    ## Specify path containing wildcards
+    PS > i ./link/a.*
+    
+    ## Filee Recursive search
+    PS > i .\work\google-* -Recurse
 
 
 
@@ -294,7 +295,7 @@ function i {
                 }
             }
             Write-Debug $hlink
-            [string] $com = "$com '$hlink'"
+            [string] $com = "$com ""$hlink"""
             if ( $DryRun ){
                 if ( $BackGround ){
                     [string] $com = "Start-Job -ScriptBlock { Invoke-Expression -Command $com -ErrorAction $ErrAction }"
