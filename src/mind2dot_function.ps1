@@ -398,6 +398,9 @@ function mind2dot {
         [Parameter( Mandatory=$False)]
         [string]$SkipTop = '\[#[^]]+\]\s*',
 
+        [Parameter( Mandatory=$False)]
+        [switch]$Concentrate,
+
         [Parameter( Mandatory=$False,
             ValueFromPipeline=$True)]
         [string[]]$Text
@@ -785,6 +788,9 @@ function mind2dot {
         }
         $readLineAryHeader += '  newrank = true;'
         $readLineAryHeader += '  overlap = "false";'
+        if ( $Concentrate ){
+            $readLineAryHeader += '  concentrate = true;'
+        }
         if($LayoutEngine -eq 'twopi'){
             $readLineAryHeader += '  dir = "None";'
         }
