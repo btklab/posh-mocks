@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 
 - Enabled [i] environment variables as path strings
+- Changed [i] to `Invoke-Item` to the parent directory when `-Location` option is specified.
 
 ## [4.3.0]
 

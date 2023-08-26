@@ -275,7 +275,7 @@ function i {
                     if ( isLinkHttp $_ ){
                         #pass
                     } else {
-                        Get-Item -Path $_ }
+                        Invoke-Item $_ }
                     }
                 continue
             }
