@@ -8,8 +8,6 @@
     Use ConvertFrom-Json -AsHashTable implemented in
     PowerShell 7.3 or later.
 
-    Error if key string contains symbols such as (,),-.
-    
     Inspired by:
 
         - tomnomnom/gron: Make JSON greppable! - GitHub
@@ -163,7 +161,8 @@ function json2txt {
     }
     ## transform json into key-value format
     function TransJsonKey ($contents, [string]$key){
-        $exp = '$contents' + '.' + "$key"
+        Write-Debug $key
+        $exp = '$contents' + '.' + $key
         #Write-Debug $exp
         if ($exp -match 'PS'){
             [string[]] $expAry = @()
@@ -185,6 +184,10 @@ function json2txt {
                     if ($i.GetType().Name -match 'HashTable'){
                         # item is hashtable
                         foreach ($k in $i.keys){
+                            if ( $k -match ' |\-|\(|\)|\[|\]|\{|\}|\$'){
+                                $k = """$k"""
+                                $k = $k -replace '\$','$'
+                            }
                             $k = "$key.$k"
                             TransJsonKey $contents $k
                         }
@@ -209,6 +212,10 @@ function json2txt {
             }
             "Hash"  {
                 foreach ($k in $con.keys){
+                    if ( $k -match ' |\-|\(|\)|\[|\]|\{|\}|\$'){
+                        $k = """$k"""
+                        $k = $k -replace '\$','$'
+                    }
                     [string] $hkey = "$key.$k"
                     TransJsonKey $contents "$hkey"
                 }
@@ -252,6 +259,10 @@ function json2txt {
             | ConvertFrom-Json -AsHashTable:$True
     }
     foreach ($key in $contents.keys){
+        if ( $key -match ' |\-|\(|\)|\[|\]|\{|\}|\$'){
+            $key = """$key"""
+            $key = $key -replace '\$','$'
+        }
         TransJsonKey $contents $key
     }
 }
