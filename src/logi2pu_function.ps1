@@ -316,7 +316,7 @@ function logi2pu {
         [string]$GrepShape = "rectangle",
 
         [Parameter(Mandatory=$False)]
-        [string]$GrepColor = '#pink',
+        [string]$GrepColor = 'pink',
 
         [Parameter(Mandatory=$False)]
         [switch]$Monochrome,
@@ -513,14 +513,14 @@ function logi2pu {
                 $nColor = ''
                 if ($Grep){
                     if ($nodeKeyVal -match $Grep){
-                        $nColor = $GrepColor
+                        $nColor = "#" + $GrepColor
                     }
                 }
             } elseif ($Grep) {
                 if ($nodeKeyVal -match $Grep){
                     ## Reshape only matched nodes
                     $nShape = $GrepShape
-                    $nColor = $GrepColor
+                    $nColor = "#" + $GrepColor
                 } else {
                     $nShape = $NodeShape
                     $nColor = ''

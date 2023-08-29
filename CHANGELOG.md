@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed [i] to `Invoke-Item` to the parent directory when `-Location` option is specified.
 - Added [mind2dot], [logi2dot] `-Concentrate` option
 - Enabled [json2txt] symbols for key strings
+- Changed [logi2pu] to omit `#` sign for -GrepColor option
 
 ## [4.3.0]
 
