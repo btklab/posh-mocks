@@ -508,6 +508,27 @@ function logi2dot {
         [Parameter( Mandatory=$False)]
         [string]$Spaces = '  ',
 
+        [Parameter( Mandatory=$False)]
+        [string[]]$GroupLabelLoc = @("t","l"),
+
+        [Parameter( Mandatory=$False)]
+        [string]$GroupLineColor = "black",
+
+        [Parameter( Mandatory=$False)]
+        [string]$GroupFontColor = "black",
+
+        [Parameter( Mandatory=$False)]
+        [string]$GroupLineStyle,
+
+        [Parameter( Mandatory=$False)]
+        [string]$GroupLabelPrefix = "[",
+
+        [Parameter( Mandatory=$False)]
+        [string]$GroupLabelSuffix = "]",
+
+        [Parameter( Mandatory=$False)]
+        [switch]$Concentrate,
+
         [Parameter(Mandatory=$False,
             ValueFromPipeline=$True)]
         [string[]]$Text
@@ -833,12 +854,29 @@ function logi2dot {
             }
             $readLineAryNode += ""
             $readLineAryNode += "$wspace" + "subgraph cluster_$groupId {"
+            if ( $GroupLabelPrefix -ne '' ){
+                [string] $groupName = $GroupLabelPrefix + $groupName
+            }
+            if ( $GroupLabelSuffix -ne '' ){
+                [string] $groupName = $groupName + $GroupLabelSuffix
+            }
             $readLineAryNode += "$wspace" + $Spaces + "label = ""$groupName"";"
             $readLineAryNode += "$wspace" + $Spaces + "shape = ""$GroupShape"";"
-            $readLineAryNode += "$wspace" + $Spaces + "style = ""dotted"";"
             $readLineAryNode += "$wspace" + $Spaces + "//fontsize = 11;"
-            $readLineAryNode += "$wspace" + $Spaces + "labelloc = ""t"";"
-            $readLineAryNode += "$wspace" + $Spaces + "labeljust = ""l"";"
+            $readLineAryNode += "$wspace" + $Spaces + "labelloc = ""$($GroupLabelLoc[0])"";"
+            $readLineAryNode += "$wspace" + $Spaces + "labeljust = ""$($GroupLabelLoc[1])"";"
+            $readLineAryNode += "$wspace" + $Spaces + "color = ""$GroupLineColor"";"
+            $readLineAryNode += "$wspace" + $Spaces + "fontcolor = ""$GroupFontColor"";"
+            if ( ($Grep) -and ($groupName -match $Grep )){
+                if ( $GroupLineStyle ){
+                    $readLineAryNode += "$wspace" + $Spaces + "style = ""$GroupLineStyle,filled"";"
+                } else {
+                    $readLineAryNode += "$wspace" + $Spaces + "style = ""solid,filled"";"
+                }
+                $readLineAryNode += "$wspace" + $Spaces + "fillcolor = ""$GrepColor"";"
+            } elseif ( $GroupLineStyle ){
+                $readLineAryNode += "$wspace" + $Spaces + "style = ""$GroupLineStyle"";"
+            }
             if ($groupOpt -ne ''){
                 $readLineAryNode += "$wspace" + "$groupOpt;"
             }
@@ -1124,6 +1162,9 @@ function logi2dot {
             $readLineAryHeader += $Spaces * 2 + 'rankdir = "TB";'
         }
         $readLineAryHeader += $Spaces * 2 + 'newrank = true;'
+        if ( $Concentrate ){
+            $readLineAryHeader += $Spaces * 2 + 'concentrate = true;'
+        }
         $readLineAryHeader += $Spaces * 1 + '];'
 
         ## node settings #################################

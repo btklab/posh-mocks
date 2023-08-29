@@ -8,8 +8,6 @@
     Use ConvertFrom-Json -AsHashTable implemented in
     PowerShell 7.3 or later.
 
-    Error if key string contains symbols such as (,),-.
-    
     Inspired by:
 
         - tomnomnom/gron: Make JSON greppable! - GitHub
@@ -93,6 +91,9 @@ function json2txt {
         [parameter(Mandatory=$False)]
         [string] $DateFormat,
 
+        [parameter(Mandatory=$False)]
+        [switch] $AsObject,
+
         [parameter(Mandatory=$False,ValueFromPipeline=$True)]
         [string[]] $Text
     )
@@ -161,9 +162,19 @@ function json2txt {
         }
         return "None"
     }
+    ## quote key strings
+    function quoteKey ([string] $key){
+        [string] $ret = $key
+        if ( $ret -match ' |\-|\(|\)|\[|\]|\{|\}|\$'){
+           $ret = """$ret"""
+           $ret = $ret -replace '\$','$'
+        }
+        return $ret
+    }
     ## transform json into key-value format
     function TransJsonKey ($contents, [string]$key){
-        $exp = '$contents' + '.' + "$key"
+        Write-Debug $key
+        $exp = '$contents' + '.' + $key
         #Write-Debug $exp
         if ($exp -match 'PS'){
             [string[]] $expAry = @()
@@ -185,6 +196,7 @@ function json2txt {
                     if ($i.GetType().Name -match 'HashTable'){
                         # item is hashtable
                         foreach ($k in $i.keys){
+                            $k = quoteKey $k
                             $k = "$key.$k"
                             TransJsonKey $contents $k
                         }
@@ -209,6 +221,7 @@ function json2txt {
             }
             "Hash"  {
                 foreach ($k in $con.keys){
+                    $k = quoteKey $k
                     [string] $hkey = "$key.$k"
                     TransJsonKey $contents "$hkey"
                 }
@@ -251,7 +264,12 @@ function json2txt {
         $contents = @($input) `
             | ConvertFrom-Json -AsHashTable:$True
     }
-    foreach ($key in $contents.keys){
-        TransJsonKey $contents $key
+    if ( $AsObject ){
+        $contents
+    } else {
+        foreach ($key in $contents.keys){
+            $key = quoteKey $key
+            TransJsonKey $contents $key
+        }
     }
 }
