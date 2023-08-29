@@ -91,6 +91,9 @@ function json2txt {
         [parameter(Mandatory=$False)]
         [string] $DateFormat,
 
+        [parameter(Mandatory=$False)]
+        [switch] $AsObject,
+
         [parameter(Mandatory=$False,ValueFromPipeline=$True)]
         [string[]] $Text
     )
@@ -159,6 +162,15 @@ function json2txt {
         }
         return "None"
     }
+    ## quote key strings
+    function quoteKey ([string] $key){
+        [string] $ret = $key
+        if ( $ret -match ' |\-|\(|\)|\[|\]|\{|\}|\$'){
+           $ret = """$ret"""
+           $ret = $ret -replace '\$','$'
+        }
+        return $ret
+    }
     ## transform json into key-value format
     function TransJsonKey ($contents, [string]$key){
         Write-Debug $key
@@ -184,10 +196,7 @@ function json2txt {
                     if ($i.GetType().Name -match 'HashTable'){
                         # item is hashtable
                         foreach ($k in $i.keys){
-                            if ( $k -match ' |\-|\(|\)|\[|\]|\{|\}|\$'){
-                                $k = """$k"""
-                                $k = $k -replace '\$','$'
-                            }
+                            $k = quoteKey $k
                             $k = "$key.$k"
                             TransJsonKey $contents $k
                         }
@@ -212,10 +221,7 @@ function json2txt {
             }
             "Hash"  {
                 foreach ($k in $con.keys){
-                    if ( $k -match ' |\-|\(|\)|\[|\]|\{|\}|\$'){
-                        $k = """$k"""
-                        $k = $k -replace '\$','$'
-                    }
+                    $k = quoteKey $k
                     [string] $hkey = "$key.$k"
                     TransJsonKey $contents "$hkey"
                 }
@@ -258,11 +264,12 @@ function json2txt {
         $contents = @($input) `
             | ConvertFrom-Json -AsHashTable:$True
     }
-    foreach ($key in $contents.keys){
-        if ( $key -match ' |\-|\(|\)|\[|\]|\{|\}|\$'){
-            $key = """$key"""
-            $key = $key -replace '\$','$'
+    if ( $AsObject ){
+        $contents
+    } else {
+        foreach ($key in $contents.keys){
+            $key = quoteKey $key
+            TransJsonKey $contents $key
         }
-        TransJsonKey $contents $key
     }
 }
