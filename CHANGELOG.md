@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added [mind2dot], [logi2dot] `-Concentrate` option
 - Enabled [json2txt] symbols for key strings
 - Changed [logi2pu] to omit `#` sign for -GrepColor option
+- Enabled [logi2dot], [logi2pu] `-Grep` to work on subgraphs
 
 ## [4.3.0]
 

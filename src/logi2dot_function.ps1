@@ -862,14 +862,21 @@ function logi2dot {
             }
             $readLineAryNode += "$wspace" + $Spaces + "label = ""$groupName"";"
             $readLineAryNode += "$wspace" + $Spaces + "shape = ""$GroupShape"";"
-            if ( $GroupLineStyle ){
-                $readLineAryNode += "$wspace" + $Spaces + "style = ""$GroupLineStyle"";"
-            }
             $readLineAryNode += "$wspace" + $Spaces + "//fontsize = 11;"
             $readLineAryNode += "$wspace" + $Spaces + "labelloc = ""$($GroupLabelLoc[0])"";"
             $readLineAryNode += "$wspace" + $Spaces + "labeljust = ""$($GroupLabelLoc[1])"";"
             $readLineAryNode += "$wspace" + $Spaces + "color = ""$GroupLineColor"";"
             $readLineAryNode += "$wspace" + $Spaces + "fontcolor = ""$GroupFontColor"";"
+            if ( ($Grep) -and ($groupName -match $Grep )){
+                if ( $GroupLineStyle ){
+                    $readLineAryNode += "$wspace" + $Spaces + "style = ""$GroupLineStyle,filled"";"
+                } else {
+                    $readLineAryNode += "$wspace" + $Spaces + "style = ""solid,filled"";"
+                }
+                $readLineAryNode += "$wspace" + $Spaces + "fillcolor = ""$GrepColor"";"
+            } elseif ( $GroupLineStyle ){
+                $readLineAryNode += "$wspace" + $Spaces + "style = ""$GroupLineStyle"";"
+            }
             if ($groupOpt -ne ''){
                 $readLineAryNode += "$wspace" + "$groupOpt;"
             }

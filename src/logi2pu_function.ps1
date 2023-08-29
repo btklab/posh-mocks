@@ -637,8 +637,11 @@ function logi2pu {
             } else {
                 Write-Error "error: Unknown error. Unable to detect hierarchy: $rdLine" -ErrorAction Stop
             }
-            
-            $readLineAryNode += $wspace + "$GroupShape ""$groupName"" as $groupId {"
+            if ( ($Grep) -and ($groupName -match $Grep) ){
+                $readLineAryNode += $wspace + "$GroupShape ""$groupName"" as $groupId #$GrepColor {"
+            } else {
+                $readLineAryNode += $wspace + "$GroupShape ""$groupName"" as $groupId {"
+            }
             [int] $oldItemLevel = $newItemLevel
             return
         }
