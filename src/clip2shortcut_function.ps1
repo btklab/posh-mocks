@@ -6,14 +6,13 @@
         PS > pushd 'where/you/want/to/put/shortcut'
          or
         (clip 'where/you/want/to/put/shortcut')
-        PS > clip2push -Execute
-        PS > clip2file | push2loc -Execute
+        PS > clip2shortcut -Execute
 
         ## Clip files what you want to create shortcuts
         ## (able to multiple copies)
 
         ## Create shortcuts
-        PS > clip2shortcut
+        PS > clip2shortcut -FromTo -Execute
             index.html.lnk    => ..\index.html
             index.ltjruby.lnk => ..\index.ltjruby
             index.pdf.lnk     => ..\index.pdf
@@ -79,7 +78,7 @@
     ## (able to multiple copies)
 
     ## Create shortcuts
-    PS > clip2shortcut
+    PS > clip2shortcut -FromTo
         index.html.lnk    => ..\index.html
         index.ltjruby.lnk => ..\index.ltjruby
         index.pdf.lnk     => ..\index.pdf
@@ -111,9 +110,16 @@ function clip2shortcut {
         [switch] $FullName,
         
         [Parameter( Mandatory=$False )]
+        [switch] $FromTo,
+        
+        [Parameter( Mandatory=$False )]
         [ValidateScript({ $_ -ge 0 })]
         [Alias("lv")]
-        [int] $Level
+        [int] $Level,
+        
+        [Parameter( Mandatory=$False )]
+        [Alias("e")]
+        [switch] $Execute
     )
     ## private function
     function CreateShortcutRelative {
@@ -138,7 +144,17 @@ function clip2shortcut {
     [string[]] $readLineAry = @()
     if ( $input.Count -gt 0 ){
         ## get file path from pipeline text
-        [string[]] $readLineAry = $input
+        [string[]] $readLineAry = $input `
+            | ForEach-Object {
+                if ( ($_ -is [System.IO.FileInfo]) -or ($_ -is [System.IO.DirectoryInfo]) ){
+                    ## from filesystem object
+                    [string] $oText = $_.FullName
+                } else {
+                    ## from text
+                    [string] $oText = $_
+                }
+                Write-Output $oText
+            }
         [string[]] $readLineAry = ForEach ($r in $readLineAry ){
             if ( $r -ne '' ){ $r.Replace('"', '') }
         }
@@ -204,15 +220,23 @@ function clip2shortcut {
             [string] $sPath =  Resolve-Path -LiteralPath $f -Relative
         }
         Write-Debug $sPath
-        CreateShortcutRelative "$sLoc" "$sPath"
+        if ( $Execute ){
+            CreateShortcutRelative "$sLoc" "$sPath"
+        }
         ### display item
-        #Get-Item -LiteralPath "$sLoc" 
-        [int] $curCharLength = [System.Text.Encoding]::GetEncoding("Shift_Jis").GetByteCount($sName)
-        [int] $padding = $maxCharLength - $curCharLength
-        Write-Host -NoNewline $sName -ForegroundColor "White"
-        Write-Host -NoNewline "$(" {0}=> " -f ( " " * $padding ))"
-        #Write-Host -NoNewline " => "
-        Write-Host $sPath -ForegroundColor "Cyan"
+        #Get-Item -LiteralPath "$sLoc"
+        if ( $FromTo -or -not $Execute){
+            ## display from path => to path
+            [int] $curCharLength = [System.Text.Encoding]::GetEncoding("Shift_Jis").GetByteCount($sName)
+            [int] $padding = $maxCharLength - $curCharLength
+            Write-Host -NoNewline $sName -ForegroundColor "White"
+            Write-Host -NoNewline "$(" {0}=> " -f ( " " * $padding ))"
+            #Write-Host -NoNewline " => "
+            Write-Host $sPath -ForegroundColor "Cyan"
+        } else {
+            ## output as file object
+            Get-Item $sLoc
+        }
     }
     return
 }

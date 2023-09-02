@@ -106,7 +106,17 @@ function clip2normalize {
     [string[]] $readLineAry = @()
     if ( $input.Count -gt 0 ){
         ### get text from pipeline
-        [string[]] $readLineAry = $input
+        [string[]] $readLineAry = $input `
+            | ForEach-Object {
+                if ( ($_ -is [System.IO.FileInfo]) -or ($_ -is [System.IO.DirectoryInfo]) ){
+                    ## from filesystem object
+                    [string] $oText = $_.FullName
+                } else {
+                    ## from text
+                    [string] $oText = $_
+                }
+                Write-Output $oText
+            }
     } else {
         ### get text from clipboard
         [string[]] $readLineAry = Get-Clipboard
