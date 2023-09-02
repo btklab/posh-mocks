@@ -119,6 +119,9 @@ function Rename-Normalize {
         [parameter( Mandatory=$False )]
         [string] $ReplaceChar = ' ',
         
+        [Parameter( Mandatory=$False )]
+        [switch] $FromTo,
+        
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
         [object[]] $InputFiles
     )
@@ -208,15 +211,17 @@ function Rename-Normalize {
             }
         }
         ### display item
-        [int] $curCharLength = [System.Text.Encoding]::GetEncoding("Shift_Jis").GetByteCount($oldName)
-        [int] $padding = $maxCharLength - $curCharLength
-        Write-Host -NoNewline $oldName -ForegroundColor "White"
-        Write-Host -NoNewline "$(" {0}=> " -f ( " " * $padding ))"
-        Write-Host $newName -ForegroundColor "Cyan"
+        if ( $FromTo -or -not $Execute ){
+            [int] $curCharLength = [System.Text.Encoding]::GetEncoding("Shift_Jis").GetByteCount($oldName)
+            [int] $padding = $maxCharLength - $curCharLength
+            Write-Host -NoNewline $oldName -ForegroundColor "White"
+            Write-Host -NoNewline "$(" {0}=> " -f ( " " * $padding ))"
+            Write-Host $newName -ForegroundColor "Cyan"
+        }
         if ( $oldName -ne $newName ){
             if ( $Execute ){
                 ### execute rename-item
-                $f | Rename-Item -NewName { $newName }
+                $f | Rename-Item -NewName { $newName } -ErrorAction Continue -PassThru
             }
         }
     }

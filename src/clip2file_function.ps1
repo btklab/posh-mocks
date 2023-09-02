@@ -125,7 +125,17 @@ function clip2file {
     [string[]] $readLineAry = @()
     if ( $input.Count -gt 0 ){
         ## get file path from pipeline text
-        [string[]] $readLineAry = $input
+        [string[]] $readLineAry = $input `
+            | ForEach-Object {
+                if ( ($_ -is [System.IO.FileInfo]) -or ($_ -is [System.IO.DirectoryInfo]) ){
+                    ## from filesystem object
+                    [string] $oText = $_.FullName
+                } else {
+                    ## from text
+                    [string] $oText = $_
+                }
+                Write-Output $oText
+            }
         [string[]] $readLineAry = ForEach ($r in $readLineAry ){
             if ( $r -ne '' ){ $r.Replace('"', '') }
         }
