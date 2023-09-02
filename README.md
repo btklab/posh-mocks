@@ -2716,12 +2716,12 @@ Calculate and ranking with percentile and quartiles on space-delimited data with
 
 - Usage
     - `man2 percentile`
-    - `percentile [[-Val] <Int32>] [[-Key] <Int32[]>] [-Rank|-Level5] [-NoHeader] [-Cast <String>]`
+    - `percentile [[-Val|-v] <Int32>] [[-Key|-k] <Int32[]>] [-Delimiter|-fs "<delim>"] [-Rank|-Level5] [-NoHeader] [-Cast <String>]`
 
 Examples:
 
 ```powershell
-cat iris.csv | percentile -v 1 -k 5 -d "," | ft
+cat iris.csv | percentile -v 1 -k 5 -fs "," | ft
 
 field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
 -----        ---        -----    --- ---- -----  --- ---- ---- ----
@@ -2857,14 +2857,14 @@ F1 F2 percentile label
 Another example:
 
 ```powershell
-cat iris.csv | percentile -d "," 1 | ft
+cat iris.csv | percentile -fs "," 1 | ft
 
 field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
 -----        -----    --- ---- -----  --- ---- ---- ----  ---
 sepal_length   150 876.50 5.84  0.83 4.30 5.10 5.80 6.40 7.90
 
 
-cat iris.csv | percentile -d "," 1,2,3,4 | ft
+cat iris.csv | percentile -fs "," 1,2,3,4 | ft
 
 field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
 -----        -----    --- ---- -----  --- ---- ---- ----  ---
@@ -2874,7 +2874,7 @@ petal_length   150 563.70 3.76  1.77 1.00 1.55 4.35 5.10 6.90
 petal_width    150 179.90 1.20  0.76 0.10 0.30 1.30 1.80 2.50
 
 
-cat iris.csv | percentile -d "," 1,2,3,4 -k 5 | ft
+cat iris.csv | percentile -fs "," 1,2,3,4 -k 5 | ft
 
 field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
 -----        ---        -----    --- ---- -----  --- ---- ---- ----
