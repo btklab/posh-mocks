@@ -16,7 +16,7 @@
         -NoHeader: No header data
 
     Example:
-        cat iris.csv | percentile -v 1 -k 5 -d "," | ft
+        cat iris.csv | percentile -v 1 -k 5 -fs "," | ft
 
             field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
             -----        ---        -----    --- ---- -----  --- ---- ---- ----
@@ -184,14 +184,14 @@
      d  5     1.0000     A
 
 .EXAMPLE
-    cat iris.csv | percentile -d "," 1 | ft
+    cat iris.csv | percentile -fs "," 1 | ft
 
     field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
     -----        -----    --- ---- -----  --- ---- ---- ----  ---
     sepal_length   150 876.50 5.84  0.83 4.30 5.10 5.80 6.40 7.90
 
 
-    PS > cat iris.csv | percentile -d "," 1,2,3,4 | ft
+    PS > cat iris.csv | percentile -fs "," 1,2,3,4 | ft
 
     field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
     -----        -----    --- ---- -----  --- ---- ---- ----  ---
@@ -201,7 +201,7 @@
     petal_width    150 179.90 1.20  0.76 0.10 0.30 1.30 1.80 2.50
 
     
-    PS > cat iris.csv | percentile -d "," 1,2,3,4 -k 5 | ft
+    PS > cat iris.csv | percentile -fs "," 1,2,3,4 -k 5 | ft
 
     field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
     -----        ---        -----    --- ---- -----  --- ---- ---- ----

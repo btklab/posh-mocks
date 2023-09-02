@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Fixed [percentile] typo in synopsis
 - Enabled [clip2dir], [clip2file], [clip2hyperlink], [clip2normalize], [clip2push], [clip2shortcut], [clip2txt], [Rename-Normalize] pipeline input of file object, changed output from text object to file object
 - Enabled [i] environment variables as path strings
 - Changed [i] to `Invoke-Item` to the parent directory when `-Location` option is specified.
