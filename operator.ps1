@@ -137,7 +137,9 @@ Set-Alias -name ml -value Get-OGP
 
 ## TOML/JSON
 . $pwshSrcDir/toml2psobject_function.ps1
-. $pwshSrcDir/json2txt_function.ps1
+if ( [double]("$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor)") -ge 7.3 ){
+    . $pwshSrcDir/json2txt_function.ps1
+}
 
 ## clipboard operation
 if ( $IsWindows ){
