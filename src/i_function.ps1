@@ -129,6 +129,10 @@ function i {
         [switch] $Recurse,
         
         [Parameter( Mandatory=$False )]
+        [Alias('g')]
+        [switch] $AsFileObject,
+        
+        [Parameter( Mandatory=$False )]
         [ValidateSet(
             "Break", "Ignore", "SilentlyContinue",
             "Suspend", "Continue", "Inquire", "Stop" )]
@@ -290,6 +294,8 @@ function i {
             } else {
                 if ( isLinkHttp $hlink ){
                     [string] $com = "Start-Process -FilePath"
+                } elseif ($AsFileObject) {
+                    [string] $com = "Get-Item -LiteralPath"
                 } else {
                     [string] $com = "Invoke-Item"
                 }
