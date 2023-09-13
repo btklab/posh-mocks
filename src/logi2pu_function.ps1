@@ -28,6 +28,9 @@
               be used as IDs.
         - Node gouping symbols are "-- group name --" or "## group name"
             - If increase the number of symbols, it becomes nested structure
+            - When grouping, the last group contains all statements up to the
+              end. But, Inserting a hyphen-only line like "--" closes all
+              groups that are not closed at that line.
         - After specifying the nodes, you can manually add
           commnents to any edge. the format is as follows.
             - id --> id : commnent
@@ -58,6 +61,8 @@
         F stew vegetables and meat [D,E]
         G add curry roux and simmer [F]
 
+        --
+
         H serve on plate [C,G]
         I complete! [H]
 
@@ -69,37 +74,37 @@
     
     Output:
         @startuml
-
-        title how to cook curry
+        
+        title "how to cook curry"
         skinparam DefaultFontName "MS Gothic"
         skinparam roundCorner 15
         skinparam shadowing false
-
-
+        
+        
         'Node settings
-
-        rectangle "rice" as G1 {
-        '-- rice --
+        
+        folder "rice" as G1 {
           rectangle "**A**\nwash rice" as A
-          note right
-            this is note
-          end note
+        note right
+          this is note
+        end note
           rectangle "**B**\nsoak rice in fresh water" as B
           rectangle "**C**\ncook rice" as C
+        
         }
-
-        rectangle "curry roux" as G2 {
-        '-- curry roux --
+        
+        folder "curry roux" as G2 {
           rectangle "**D**\ncut vegetables" as D
           rectangle "**E**\ncut meat into cubes" as E
           rectangle "**F**\nstew vegetables and meat" as F
           rectangle "**G**\nadd curry roux and simmer" as G
+        
         }
-
-        rectangle "**H**\nserve on plate" as H
-        rectangle "**I**\ncomplete!" as I
-
-
+        
+          rectangle "**H**\nserve on plate" as H
+          rectangle "**I**\ncomplete!" as I
+        
+        
         'Edge settings
         A --> B
         B --> C
@@ -109,15 +114,14 @@
         C --> H
         G --> H
         H --> I
-
+        
         'Edge optional settings
         B --> C #line:transparent : at least\n30 minutes
-
+        
         legend right
           this is legend
         end legend
-
-
+        
         @enduml
 
 .LINK
@@ -593,11 +597,11 @@ function logi2pu {
     process{
         $lineCounter++
         [string] $rdLine = [string] $_
-        if ( $rdLine -match '^(\-)+ '){
+        if ( $rdLine -match '^(\-)+ [^-]'){
             [string] $rdLine = replaceHyphensToSharps $rdLine
         }
         Write-Debug $rdLine
-        if (($lineCounter -eq 1) -and ($rdLine -match '^# ')) {
+        if (($lineCounter -eq 1) -and ($rdLine -match '^# .')) {
             ## treat first line as title
             $fTitle = $rdLine -replace '^# ', ''
             $isFirstRowEqTitle = $true
@@ -693,6 +697,21 @@ function logi2pu {
                 [int] $newItemLevel = 0
                 $NodeGroupFlag = $False
             }
+        }
+        ## if "--" appears, call closeParenthesis
+        if ("$rdLine".Trim() -match '^(\-)+$'){
+            ## close group if not closed
+            if ( $oldItemLevel -ne 0) {
+                ## close parenthesis
+                for ( $i=$oldItemLevel; $i -ge 1; $i--){
+                    $readLineAryNode += closeParenthesisForLevel $i
+                }
+                Write-Debug "ItemLevel: old = $oldItemLevel, new = $newItemLevel"
+                [int] $oldItemLevel = 0
+                [int] $newItemLevel = 0
+                $NodeGroupFlag = $False
+            }
+            return
         }
         ## Node block reading mode
         if ($NodeBlockFlag){
