@@ -62,6 +62,12 @@
       [GitHub: Let’s build from here][]
       [GitHub: Let’s build from here]: <https://github.com/>
 
+.PARAMETER Raw
+    Returns a link without parenthesis
+
+      title
+      uri
+
 .EXAMPLE
     "https://github.com/" | Get-OGP | fl
     curl https://github.com/
@@ -264,6 +270,9 @@ function Get-OGP {
 
         [Parameter(Mandatory=$False)]
         [switch] $Cite,
+
+        [Parameter(Mandatory=$False)]
+        [switch] $Raw,
 
         [Parameter(Mandatory=$False)]
         [switch] $NoShrink
@@ -522,18 +531,18 @@ function Get-OGP {
             } else {
                 return $oHtml
             }
-        }elseif($Markdown){
+        } elseif( $Markdown ){
             # markdown href output
+            [string[]] $oMarkdown = @()
             if($Id -eq '@not@set@'){
                 if ( $Cite ){
-                    [string] $oMarkdown = "<cite>[$innerTitle]($innerUri)</cite>"
+                    $oMarkdown += "<cite>[$innerTitle]($innerUri)</cite>"
                 } else {
-                    [string] $oMarkdown = "[$innerTitle]($innerUri)"
+                    $oMarkdown += "[$innerTitle]($innerUri)"
                 }
             } else {
-                [string[]] $oMarkdown = @()
                 if ( $Cite ){
-                    $oMarkdown += "<cite>[$innerTitle][$Id]</cite"
+                    $oMarkdown += "<cite>[$innerTitle][$Id]</cite>"
                 } else {
                     $oMarkdown += "[$innerTitle][$Id]"
                 }
@@ -549,7 +558,7 @@ function Get-OGP {
             } else {
                 return $oMarkdown
             }
-        }elseif($Html){
+        } elseif ( $Html ){
             if ( $Cite ){
                 [string] $oHref = "<cite><a href=""$innerUri"">$innerTitle</a></cite>"
             } else {
@@ -561,7 +570,22 @@ function Get-OGP {
             } else {
                 return $oHref
             }
-        }else{
+        } elseif ( $Raw ){
+            # markdown href output
+            [string[]] $oRaw = @()
+            if ( $innerTitle -ne '' ){
+                $oRaw += "$innerTitle"
+                $oRaw += "$innerUri"
+            } else {
+                $oRaw += "$innerUri"
+            }
+            if ($Clip){
+                $oRaw | Set-ClipBoard
+                return
+            } else {
+                return $oRaw
+            }
+        } else {
             if ($Clip){
                 [pscustomobject] $o `
                     | ConvertTo-Csv -NoTypeInformation `
