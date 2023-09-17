@@ -1,25 +1,33 @@
 <#
 .SYNOPSIS
-    i - Invoke-Link - Open links written in a text file
+    i : Invoke-Link - Open links written in a text file
 
     Open links written in a text file.
 
-    - If a text file (.txt, .md, ...) is specified, open each line as link in default application
-        - Link beginning with "http" or "www": Start-Process (default browser)
-        - Directory and others: Invoke-Item <link>
-    - If a link file (.lnk) is specified, open the link in explorer(filer)
-    - If a PowerShell Script file (.ps1) is specified, execute the script
+    - If a text file (.txt, .md, ...) is specified,
+      open each line as link in default application
+        - Link beginning with "http" or "www":
+            - Start-Process (default browser)
+        - Directory and others:
+            - Invoke-Item <link>
+    - If a link file (.lnk) is specified, open the link in explorer
+    - If a PowerShell Script file (.ps1) is specified,
+      execute the script in current process:
+        - able to use dot sourcing functions in current process
+        - Specify the absolute file path in the text file as possible.
+          Or Note that when specifying a relative path, the root is the
+          location of the current process
 
     Multiple links(lines) in a file available.
     Lines that empty or beginning with "#" are skipped.
 
-    The link execution app can be any command if "-Command" option is
-    specified, otherwise follow the rules below:
+    The link execution app can be any command if -Command option is
+    specified.
 
     Links written in a text file may or may not be enclosed in
     single/double quotes.
 
-    If -l or -Location specified, open the "file location" in explorer
+    If -l or -Location specified, open the file location in explorer
 
     Environment variables such as ${HOME} can be used for path strings.
 
@@ -50,7 +58,6 @@
         2. As a website favorite link collection
         3. As a simple task runner
 
-
 .EXAMPLE
     i                  ... Equivalent to Invoke-Item .
     i <dir>            ... Invoke-Item <dir>
@@ -66,34 +73,54 @@
     "C:\Users\path\to\the\index.html"
 
     # dry run
-    PS > i ./link/rmarkdown_site.txt -q
+    i ./link/rmarkdown_site.txt -q
     .\link\rmarkdown.txt
     Invoke-Item "C:\Users\path\to\the\index.html"
 
     # open index.html in default browser/explorer/apps
-    PS > i ./link/rmarkdown_site.txt
+    i ./link/rmarkdown_site.txt
 
     # open index.html in firefox browser
-    PS > i ./link/rmarkdown_site.txt firefox
+    i ./link/rmarkdown_site.txt firefox
 
     # open index.html in VSCode
-    PS > i ./link/rmarkdown_site.txt code
+    i ./link/rmarkdown_site.txt code
 
     # show index.html file location
-    PS > i ./link/rmarkdown_site.txt -l
+    i ./link/rmarkdown_site.txt -l
 
     # show index.html file location and resolve-path
-    PS > i ./link/rmarkdown_site.txt -l | Resolve-Path -Relative
+    i ./link/rmarkdown_site.txt -l | Resolve-Path -Relative
 
     # open index.html file location in explorer using Invoke-Item
-    PS > i ./link/rmarkdown_site.txt -l ii
+    i ./link/rmarkdown_site.txt -l ii
 
 .EXAMPLE
     ## Specify path containing wildcards
-    PS > i ./link/a.*
+    i ./link/a.*
     
     ## Filee Recursive search
-    PS > i .\work\google-* -Recurse
+    i ./work/google-* -Recurse
+
+.EXAMPLE
+    ## execute if *.ps1 file specified
+
+    cat .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+    # MSRC - Microsoft Security Response Center
+    rssfeed https://api.msrc.microsoft.com/update-guide/rss -MaxResults 30
+
+    ## execute .ps1 function
+    ## able to use dot sourcing functions in current process
+    i .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+
+    channel                    date       item
+    -------                    ----       ----
+    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4900...
+    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4901...
+    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4902...
+    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4903...
+    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4904...
+    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4905...
 
 .LINK
     linkcheck
@@ -227,6 +254,7 @@ function Invoke-Link {
             }
             # is windows shortcut?
             [string] $ext = (Get-Item -LiteralPath $File).Extension
+            ## is file shortcut?
             if ( ( $ext -eq '.lnk' ) -or ( $ext -eq '.url') ){
                 if ( $DryRun ){
                     "Invoke-Item -LiteralPath $File"
@@ -236,6 +264,18 @@ function Invoke-Link {
                     continue
                 }
             }
+            ## is file .ps1 script?
+            if ( $ext -eq '.ps1' ){
+                [string] $ps1FileFullPath = (Resolve-Path -LiteralPath $File).Path
+                if ( $DryRun ){
+                    "Invoke-Item -LiteralPath ""$ps1FileFullPath"""
+                    continue
+                } else {
+                    & $ps1FileFullPath
+                    continue
+                }
+            }
+            ## is -not shortcut and -not ps1 script?
             [string[]] $linkLines = Get-Content -LiteralPath $File -Encoding utf8 `
                 | ForEach-Object {
                     [string] $linkLine = $_
