@@ -1,27 +1,25 @@
 <#
 .SYNOPSIS
-    i - Invoke-Links - Read and execute links written in text files.
+    i - Invoke-Link - Open links written in a text file
 
-    This function is similar to execute shortcut (ii shortcut.lnk),
-    but also open the file location in explorer, or open the link
-    with any command.
+    Open links written in a text file.
 
-    If you want to open files as a link, but sometimes you want to
-    open the "file location" in explorer, you can do it with one file.
-    (For those who don't want to create two shortcuts for files and
-    directories)
+    - If a text file (.txt, .md, ...) is specified, open each line as link in default application
+        - Link beginning with "http" or "www": Start-Process (default browser)
+        - Directory and others: Invoke-Item <link>
+    - If a link file (.lnk) is specified, open the link in explorer(filer)
+    - If a PowerShell Script file (.ps1) is specified, execute the script
+
+    Multiple links(lines) in a file available.
+    Lines that empty or beginning with "#" are skipped.
 
     The link execution app can be any command if "-Command" option is
     specified, otherwise follow the rules below:
 
-    - Link beginning with "http" or "www": Start-Process (default browser)
-    - Directory and others: Invoke-Item <link>
-
-    Shortcuts writtein in a text file may or may not be enclosed in
+    Links written in a text file may or may not be enclosed in
     single/double quotes.
 
-    Multiple links(lines) in a file available. Lines that empty or beginning
-    with "#" are skipped.
+    If -l or -Location specified, open the "file location" in explorer
 
     Environment variables such as ${HOME} can be used for path strings.
 
@@ -44,6 +42,14 @@
 
         i ./link/about_Invoke-Item.txt firefox
         # open link in "firefox" browser
+
+    Note:
+        I use this function and link file combination:
+
+        1. As a starting point for tasks and apps
+        2. As a website favorite link collection
+        3. As a simple task runner
+
 
 .EXAMPLE
     i                  ... Equivalent to Invoke-Item .
@@ -89,13 +95,11 @@
     ## Filee Recursive search
     PS > i .\work\google-* -Recurse
 
-
-
 .LINK
     linkcheck
 
 #>
-function i {
+function Invoke-Link {
 
     param (
         [Parameter( Mandatory=$True, Position=0 )]
@@ -317,3 +321,4 @@ function i {
         }
     }
 }
+Set-Alias -name i -value Invoke-Link
