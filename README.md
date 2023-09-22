@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-LineBreak], [Add-LineBreakEndOfFile], [Add-Stats], [addb], [addl], [addr], [addt], [Apply-Function], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [Delete-Field], [delf], [Detect-XrsAnomaly], [dot2gviz], [Drop-NA], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [GoupBy-Object], [grep], [gyo], [han], [head], [image2md], [Invoke-Link], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdfocus], [mdgrep], [Measure-Property], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [Plot-BarChart], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [Replace-NA], [retu], [rev], [rev2], [say], [sed-i], [sed], [Select-Field], [self], [seq2pu], [Shorten-PropertyName], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-LineBreak], [Add-LineBreakEndOfFile], [Add-Stats], [addb], [addl], [addr], [addt], [Apply-Function], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [Delete-Field], [delf], [Detect-XrsAnomaly], [dot2gviz], [Drop-NA], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [GroupBy-Object], [grep], [gyo], [han], [head], [image2md], [Invoke-Link], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdfocus], [mdgrep], [Measure-Property], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [Plot-BarChart], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [Replace-NA], [retu], [rev], [rev2], [say], [sed-i], [sed], [Select-Field], [self], [seq2pu], [Shorten-PropertyName], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 Inspired by:
 
@@ -3875,9 +3875,9 @@ count species   island    b_l_m b_d_m f_l_m b_m_g sex    year key
 153   Gentoo    Biscoe    46.1  13.2  211   4500  female 2007 Gentoo, Biscoe
 ```
 
-#### [GoupBy-Object] - Apply function to each group
+#### [GroupBy-Object] - Apply function to each group
 
-[GoupBy-Object]: src/GoupBy-Object_function.ps1
+[GroupBy-Object]: src/GroupBy-Object_function.ps1
 
 Pre `sort -Stable` is no needed.
 
