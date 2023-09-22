@@ -36,7 +36,6 @@ if ($IsWindows){
 
     ## file and directory manipuration
     . $pwshSrcDir/Rename-Normalize_function.ps1
-    Set-Alias -name ren2norm -value Rename-Normalize
     . $pwshSrcDir/push2loc_function.ps1
 
     ## misc
@@ -71,8 +70,8 @@ if ($IsWindows){
 . $pwshSrcDir/getlast_function.ps1
 . $pwshSrcDir/fval_function.ps1
 
-. $pwshSrcDir/Add-CrLf_function.ps1
-. $pwshSrcDir/Add-CrLf-EndOfFile_function.ps1
+. $pwshSrcDir/Add-LineBreak_function.ps1
+. $pwshSrcDir/Add-LineBreakEndOfFile_function.ps1
 
 . $pwshSrcDir/lcalc_function.ps1
 . $pwshSrcDir/pawk_function.ps1
@@ -126,7 +125,6 @@ if ($IsWindows){
 . $pwshSrcDir/linkcheck_function.ps1
 . $pwshSrcDir/linkextract_function.ps1
 . $pwshSrcDir/Get-OGP_function.ps1
-Set-Alias -name ml -value Get-OGP
 . $pwshSrcDir/fpath_function.ps1
 . $pwshSrcDir/watercss_function.ps1
 
@@ -168,10 +166,27 @@ if ( $IsWindows ){
 . $pwshSrcDir/ysort_function.ps1
 . $pwshSrcDir/ycalc_function.ps1
 
+# statistics - Anomaly detection
+. $pwshSrcDir/Shorten-PropertyName_function.ps1
+. $pwshSrcDir/Drop-NA_function.ps1
+. $pwshSrcDir/Replace-NA_function.ps1
+. $pwshSrcDir/Apply-Function_function.ps1
+. $pwshSrcDir/GroupBy-Object_function.ps1
+. $pwshSrcDir/Measure-Property_function.ps1
+. $pwshSrcDir/Add-Stats_function.ps1
+. $pwshSrcDir/Detect-XrsAnomaly_function.ps1
+. $pwshSrcDir/Plot-BarChart_function.ps1
+
+. $pwshSrcDir/Get-First_function.ps1
+. $pwshSrcDir/Get-Last_function.ps1
+. $pwshSrcDir/Select-Field_function.ps1
+. $pwshSrcDir/Delete-Field_function.ps1
+
+
 ## math
 
 ## misc
-. $pwshSrcDir/i_function.ps1
+. $pwshSrcDir/Invoke-Link_function.ps1
 . $pwshSrcDir/tenki_function.ps1
 . $pwshSrcDir/sleepy_function.ps1
 . $pwshSrcDir/Get-AppShortcut_function.ps1

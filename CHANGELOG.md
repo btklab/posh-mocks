@@ -8,22 +8,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [5.0.0] - 2023-09-22
+
+### New functions
+
+- Added: [Shorten-PropertyName] function
+- Added: [Drop-NA], [Replace-NA] function
+- Added: [Apply-Function] function
+- Added: [GroupBy-Object] function
+- Added: [Measure-Property] function
+- Added: [Add-Stats] function
+- Added: [Detect-XrsAnomaly] function
+- Added: [Plot-BarChart] function
+- Added: [Get-First], [Get-Last] function
+- Added: [Select-Field], [Delete-Field] function
+
+### Changes
+
+- Added: [Get-OGP] `-Raw` option
 - Fixed [percentile] typo in synopsis
 - Enabled [clip2dir], [clip2file], [clip2hyperlink], [clip2normalize], [clip2push], [clip2shortcut], [clip2txt], [Rename-Normalize] pipeline input of file object, changed output from text object to file object
-- Enabled [i] environment variables as path strings
-- Changed [i] to `Invoke-Item` to the parent directory when `-Location` option is specified.
+- Enabled `i` environment variables as path strings
+- Changed `i` to `Invoke-Item` to the parent directory when `-Location` option is specified.
+- Added `i` `-AsFileObject` output
 - Added [mind2dot], [logi2dot] `-Concentrate` option
 - Enabled [json2txt] symbols for key strings
 - Changed [logi2pu] to omit `#` sign for -GrepColor option
 - Enabled [logi2dot], [logi2pu] `-Grep` to work on subgraphs
+- Added [mind2dot] `-TerminalShape` option
+- Added [logi2dot], [logi2pu] `--` syntax to close all group parenthesis
+- Fixed [pwmake] typo in synopsis
+
+### Breaking Changes
+
+- Renamed: `i` to [Invoke-Link]
+- Renamed: `Add-CrLf` to [Add-LineBreak]
+- Renamed: `Add-CrLf-EndOfFile` to [Add-LineBreakEndOfFile]
+
 
 ## [4.3.0]
 
 - Enabled [logi2dot], [logi2pu] Nested groups
 - Added [pwmake] Predefined variables (`-Param`, `-Params`)
 - Fixed [README.md] Synopsis
-- Added [i] -BackGround option
-- Enabled [i] to specify multiple input files
+- Added `i` -BackGround option
+- Enabled `i` to specify multiple input files
 - Explicit [mind2dot] variable type
 
 
@@ -142,7 +173,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.6.2] - 2023-04-06
 
-- Updated [i] synopsis
+- Updated `i` synopsis
 - Updated [README.md] synopsis
 - Changed [mind2dot] legend table color
 
@@ -221,7 +252,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.1.1]
 
-- Changed [i] behavior when non-existent file is specified.
+- Changed `i` behavior when non-existent file is specified.
 - Fixed [README.md] examples.
 
 
@@ -239,7 +270,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0]
 
 - Breaking Change [chead], [ctail] refactored.
-- Fixed [i] error handling when file does not exist.
+- Fixed `i` error handling when file does not exist.
 
 
 ## [1.1.0]
@@ -272,15 +303,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2023-02-19
 
 - Changed Translate japanese to english
-- Added [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], ctail2, [delf], [dot2gviz], [filehame], [fillretu], [flat], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [nextyear], [Override-Yaml], [pawk], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [sleepy], [sm2], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [yarr], [zen]
+- Added `Add-CrLf-EndOfFile`, `Add-CrLf`, [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], ctail2, [delf], [dot2gviz], [filehame], [fillretu], [flat], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], `i`, [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [nextyear], [Override-Yaml], [pawk], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [sleepy], [sm2], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [yarr], [zen]
 
 
 
 [README.md]: blob/main/README.md
 [CHANGELOG.md]: blob/main/CHANGELOG.md
 
-[Add-CrLf-EndOfFile]: src/Add-CrLf-EndOfFile_function.ps1
-[Add-CrLf]: src/Add-CrLf_function.ps1
 [addb]: src/addb_function.ps1
 [addl]: src/addl_function.ps1
 [addr]: src/addr_function.ps1
@@ -312,7 +341,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [gyo]: src/gyo_function.ps1
 [han]: src/han_function.ps1
 [head]: src/head_function.ps1
-[i]: src/i_function.ps1
 [image2md]: src/image2md_function.ps1
 [jl]: src/jl_function.ps1
 [json2txt]: src/json2txt_function.ps1
@@ -392,9 +420,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [list2table]: src/list2table_function.ps1
 [mdfocus]: src/mdfocus_function.ps1
 
+[Apply-Function]: src/Apply-Function_function.ps1
+[Detect-XrsAnomaly]: src/Detect-XrsAnomaly_function.ps1
+[Drop-NA]: src/Drop-NA_function.ps1
+[Replace-NA]: src/Replace-NA_function.ps1
+[Get-RandomRecord]: src/Get-RandomRecord_function.ps1
+[Plot-BarChart]: src/Plot-BarChart_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/4.3.0..HEAD
-[4.2.4]: https://github.com/btklab/posh-mocks/releases/tag/4.3.0
+[Add-LineBreak]: src/Add-LineBreak_function.ps1
+[Add-LineBreakEndOfFile]: src/Add-LineBreakEndOfFile_function.ps1
+
+[Shorten-PropertyName]: src/Shorten-PropertyName_function.ps1
+[Drop-NA]: src/Drop-NA_function.ps1
+[Replace-NA]: src/Replace-NA_function.ps1
+[Apply-Function]: src/Apply-Function_function.ps1
+[GroupBy-Object]: src/GroupBy-Object_function.ps1
+[Measure-Property]: src/Measure-Property_function.ps1
+[Add-Stats]: src/Add-Stats_function.ps1
+[Detect-XrsAnomaly]: src/Detect-XrsAnomaly_function.ps1
+[Plot-BarChart]: src/Plot-BarChart_function.ps1
+
+[Get-First]: src/Get-First_function.ps1
+[Get-Last]: src/Get-Last_function.ps1
+[Select-Field]: src/Select-Field_function.ps1
+[Delete-Field]: src/Delete-Field_function.ps1
+
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/5.0.0..HEAD
+[5.0.0]: https://github.com/btklab/posh-mocks/releases/tag/5.0.0
+[4.3.0]: https://github.com/btklab/posh-mocks/releases/tag/4.3.0
 [4.2.4]: https://github.com/btklab/posh-mocks/releases/tag/4.2.4
 [4.2.3]: https://github.com/btklab/posh-mocks/releases/tag/4.2.3
 [4.2.2]: https://github.com/btklab/posh-mocks/releases/tag/4.2.2

@@ -20,7 +20,7 @@ function list:
 cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
 ```
 
-- [Add-CrLf-EndOfFile], [Add-CrLf], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], [i], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdfocus], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-LineBreak], [Add-LineBreakEndOfFile], [Add-Stats], [addb], [addl], [addr], [addt], [Apply-Function], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [Delete-Field], [delf], [Detect-XrsAnomaly], [dot2gviz], [Drop-NA], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [GoupBy-Object], [grep], [gyo], [han], [head], [image2md], [Invoke-Link], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdfocus], [mdgrep], [Measure-Property], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [Plot-BarChart], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [Replace-NA], [retu], [rev], [rev2], [say], [sed-i], [sed], [Select-Field], [self], [seq2pu], [Shorten-PropertyName], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 Inspired by:
 
@@ -141,27 +141,38 @@ This behavior is similar to linux `ls` command.
 The reason for depending on [flat], [tateyoko] and [keta] is to obtain this output.
 
 ```powershell
-man2 -Column 5
-man2 -c 5
+man2 -Column 4
+man2 -c 4
 
-Add-CrLf           decil           han         mind2pu       table2md
-Add-CrLf-EndOfFile delf            head        movw          tac
-addb               dot2gviz        i           Override-Yaml tail
-addl               filehame        image2md    pawk          tarr
-addr               fillretu        jl          percentile    tateyoko
-addt               flat            json2txt    pu2java       teatimer
-cat2               flow2pu         juni        pwmake        tenki
-catcsv             fpath           keta        retu          tex2pdf
-chead              fval            kinsoku     rev           toml2psobject
-clip2img           fwatch          lcalc       rev2          uniq
-clipwatch          gantt2pu        linkcheck   say           vbStrConv
-conv               gdate           linkextract sed           watercss
-ConvImage          Get-AppShortcut logi2dot    sed-i         wrap
-count              Get-OGP         logi2pu     self          yarr
-csv2sqlite         getfirst        man2        seq2pu        ycalc
-csv2txt            getlast         map2        sleepy        ysort
-ctail              grep            mdgrep      sm2           zen
-ctail2             gyo             mind2dot    summary
+Add-LineBreak          Detect-XrsAnomaly kinsoku          sed
+Add-LineBreakEndOfFile dot2gviz          lcalc            sed-i
+addb                   Drop-NA           linkcheck        Select-Field
+addl                   filehame          linkextract      self
+addr                   fillretu          list2table       seq2pu
+addt                   flat              logi2dot         Shorten-PropertyName
+Apply-Function         flow2pu           logi2pu          sleepy
+Cast-Double            fpath             man2             sm2
+Cast-Integer           fval              map2             summary
+cat2                   fwatch            mdfocus          table2md
+catcsv                 gantt2pu          mdgrep           tac
+chead                  gdate             Measure-Property tail
+clip2dir               Get-AppShortcut   mind2dot         tail-f
+clip2file              Get-First         mind2pu          tarr
+clip2hyperlink         Get-Last          movw             tateyoko
+clip2img               Get-OGP           Override-Yaml    teatimer
+clip2normalize         Get-RandomRecord  pawk             tenki
+clip2push              getfirst          percentile       tex2pdf
+clip2shortcut          getlast           Plot-BarChart    toml2psobject
+conv                   grep              pu2java          uniq
+ConvImage              gyo               push2loc         vbStrConv
+count                  han               pwmake           watercss
+csv2sqlite             head              pwsync           wrap
+csv2txt                i                 Rename-Normalize yarr
+ctail                  image2md          Replace-NA       ycalc
+ctail2                 jl                retu             ysort
+decil                  json2txt          rev              zen
+Delete-Field           juni              rev2
+delf                   keta              say
 ```
 
 
@@ -170,28 +181,39 @@ However, the order of the files is slightly different from [man2].
 Lexicographically sorted from **left to right**.
 
 ```powershell
-ls *.ps1 -File `
+ls src/*.ps1 -File `
   | select @{L="Name";E={$_.Name.Replace('_function.ps1','')}} `
-  | Format-Wide -Column 5
+  | Format-Wide -Column 4
 
-Add-CrLf      Add-CrLf-End… addb         addl         addr
-addt          cat2          catcsv       chead        clip2img
-clipwatch     conv          ConvImage    count        csv2sqlite
-csv2txt       ctail         ctail2       decil        delf
-dot2gviz      filehame      fillretu     flat         flow2pu
-fpath         fval          fwatch       gantt2pu     gdate
-Get-AppShort… Get-OGP       getfirst     getlast      grep
-gyo           han           head         i            image2md
-jl            json2txt      juni         keta         kinsoku
-lcalc         linkcheck     linkextract  logi2dot     logi2pu
-man2          map2          mdgrep       mind2dot     mind2pu
-movw          Override-Yaml pawk         percentile   pu2java
-pwmake        retu          rev          rev2         say
-sed           sed-i         self         seq2pu       sleepy
-sm2           summary       table2md     tac          tail
-tarr          tateyoko      teatimer_ex… teatimer     tenki
-tex2pdf       toml2psobject uniq         vbStrConv    watercss
-wrap          yarr          ycalc        ysort        zen
+Add-LineBreak         Add-LineBreakEndOfFi… addb                  addl
+addr                  addt                  Apply-Function        Cast-Double
+Cast-Integer          cat2                  catcsv                chead
+clip2dir              clip2file             clip2hyperlink        clip2img
+clip2normalize        clip2push             clip2shortcut         conv
+ConvImage             count                 csv2sqlite            csv2txt
+ctail                 ctail2                decil                 Delete-Field
+delf                  Detect-XrsAnomaly     dot2gviz              Drop-NA
+filehame              fillretu              flat                  flow2pu
+fpath                 fval                  fwatch                gantt2pu
+gdate                 Get-AppShortcut       Get-First             Get-Last
+Get-OGP               Get-RandomRecord      getfirst              getlast
+grep                  gyo                   han                   head
+i                     image2md              jl                    json2txt
+juni                  keta                  kinsoku               lcalc
+linkcheck             linkextract           list2table            logi2dot
+logi2pu               man2                  map2                  mdfocus
+mdgrep                Measure-Property      mind2dot              mind2pu
+movw                  Override-Yaml         pawk                  percentile
+Plot-BarChart         pu2java               push2loc              pwmake
+pwsync                Rename-Normalize      Replace-NA            retu
+rev                   rev2                  say                   sed
+sed-i                 Select-Field          self                  seq2pu
+Shorten-PropertyName  sleepy                sm2                   summary
+table2md              tac                   tail                  tail-f
+tarr                  tateyoko              teatimer_exec.ps1     teatimer
+tenki                 tex2pdf               toml2psobject         uniq
+vbStrConv             watercss              wrap                  yarr
+ycalc                 ysort                 zen
 ```
 
 [man2]を使わず、[flat], [tateyoko], [keta]のコンビネーションで[man2]の出力（上から下に辞書順）を得るワンライナーを以下に示す。
@@ -200,34 +222,40 @@ wrap          yarr          ycalc        ysort        zen
 ```powershell
 ls src/*.ps1 -File -Name `
     | %{ $_.Replace('_function.ps1','') } `
-    | flat 24 `
+    | flat 30 `
     | tateyoko `
     | keta -l
 
-Add-CrLf           flow2pu         logi2dot      table2md
-Add-CrLf-EndOfFile fpath           logi2pu       tac
-addb               fval            man2          tail
-addl               fwatch          map2          tarr
-addr               gantt2pu        mdgrep        tateyoko
-addt               gdate           mind2dot      teatimer_exec.ps1
-cat2               Get-AppShortcut mind2pu       teatimer
-catcsv             Get-OGP         movw          tenki
-chead              getfirst        Override-Yaml tex2pdf
-clip2img           getlast         pawk          toml2psobject
-clipwatch          grep            percentile    uniq
-conv               gyo             pu2java       vbStrConv
-ConvImage          han             pwmake        watercss
-count              head            retu          wrap
-csv2sqlite         i               rev           yarr
-csv2txt            image2md        rev2          ycalc
-ctail              jl              say           ysort
-ctail2             json2txt        sed           zen
-decil              juni            sed-i
-delf               keta            self
-dot2gviz           kinsoku         seq2pu
-filehame           lcalc           sleepy
-fillretu           linkcheck       sm2
-flat               linkextract     summary
+Add-LineBreak          dot2gviz         linkcheck        self
+Add-LineBreakEndOfFile Drop-NA          linkextract      seq2pu
+addb                   filehame         list2table       Shorten-PropertyName
+addl                   fillretu         logi2dot         sleepy
+addr                   flat             logi2pu          sm2
+addt                   flow2pu          man2             summary
+Apply-Function         fpath            map2             table2md
+Cast-Double            fval             mdfocus          tac
+Cast-Integer           fwatch           mdgrep           tail
+cat2                   gantt2pu         Measure-Property tail-f
+catcsv                 gdate            mind2dot         tarr
+chead                  Get-AppShortcut  mind2pu          tateyoko
+clip2dir               Get-First        movw             teatimer_exec.ps1
+clip2file              Get-Last         Override-Yaml    teatimer
+clip2hyperlink         Get-OGP          pawk             tenki
+clip2img               Get-RandomRecord percentile       tex2pdf
+clip2normalize         getfirst         Plot-BarChart    toml2psobject
+clip2push              getlast          pu2java          uniq
+clip2shortcut          grep             push2loc         vbStrConv
+conv                   gyo              pwmake           watercss
+ConvImage              han              pwsync           wrap
+count                  head             Rename-Normalize yarr
+csv2sqlite             i                Replace-NA       ycalc
+csv2txt                image2md         retu             ysort
+ctail                  jl               rev              zen
+ctail2                 json2txt         rev2
+decil                  juni             say
+Delete-Field           keta             sed
+delf                   kinsoku          sed-i
+Detect-XrsAnomaly      lcalc            Select-Field
 ```
 
 ### Unix-like text filters
@@ -2284,19 +2312,19 @@ Examples
 </table>
 ```
 
-#### [Add-CrLf] , [Add-CrLf-EndOfFile] - Add LineFeed
+#### [Add-LineBreak] , [Add-LineBreakEndOfFile] - Add LineFeed
 
-[Add-CrLf]: src/Add-CrLf_function.ps1
-[Add-CrLf-EndOfFile]: src/Add-CrLf-EndOfFile_function.ps1
+[Add-LineBreak]: src/Add-LineBreak_function.ps1
+[Add-LineBreakEndOfFile]: src/Add-LineBreakEndOfFile_function.ps1
 
 改行を挿入する。
-`Add-CrLf`は、文字列中に``` `r`n ```を見つけるとそこに改行を挿入する。
-`Add-CrLf-EndOfFile`は、入力の最後に改行を1行挿入する。
+`Add-LineBreak`は、文字列中に``` `r`n ```を見つけるとそこに改行を挿入する。
+`Add-LineBreakEndOfFile`は、入力の最後に改行を1行挿入する。
 `Get-Content -Delimiter`と似た挙動である。
 
 - Usage
-    - `man2 Add-CrLf`
-    - `man2 Add-CrLf-EndOfFile`
+    - `man2 Add-LineBreak`
+    - `man2 Add-LineBreakEndOfFile`
 
 #### [addb], [addl], [addr], [addt] - Insert text strings at the top, bottom, left, and right of the input
 
@@ -3524,6 +3552,710 @@ k1 k2 12 24 37 11 23 107 21.4 37 11
 #     sum remaining fields horizontally.
 ```
 
+### Statistical analysis toolset for categorical time series dataset
+
+A toolset for categorical analysis and anomaly detection for time series data.
+
+As a basis for the anomaly detection mechanism, I adopted the X-control chart method, in which process variation is determinded from the average of the difference between successive observations.
+
+- [JISZ9020-2:2016 管理図 - 第2部：シューハート管理図](https://kikakurui.com/z9/Z9020-2-2016-01.html) - Part 2: Shewhart control charts
+
+The functions of the anomaly detection mechanism used in this section to be considered in its use are completely similar to those of an X-control chart.
+
+Most of the functions presented in this section are also compartible with other type of data exploration.
+
+![Detect anomaly with X-Rs control chart](img/Detect-XrsAnomaly_01.png)
+
+> X管理図については，次によって幾つかの注意を払うことが望ましい。
+>
+> - a) X管理図は，群に基づく管理図ほど，工程変化に敏感ではない
+> - b) 工程分布が正規分布でない場合は，X管理図の解釈に注意しなければならない
+> - c) X管理図は，連続する観測値の間の差の平均値から工程変動を求める。したがって，データは時系列に沿ったものであり，また連続する二つの個々の測定値の収集の間に，いかなる大きな変化も工程内では発生していないことが条件となる。例えば，生産ラインを途中で停止した場合，二つの不連続のバッチ化学製品の生産活動からデータを収集し，最初の活動の最終バッチと次の活動の最初のバッチとの間の移動範囲を計算することは賢明なことではない
+
+<cite>from: [JISZ9020-2:2016 管理図－第2部：シューハート管理図](https://kikakurui.com/z9/Z9020-2-2016-01.html)　Control charts-Part 2: Shewhart control charts</cite>
+
+Example script to calculate basic statistics by category:
+
+```powershell
+# Code example 1
+# Categorical analysis with this section's toolset
+Import-Csv iris.csv `
+    | sort species -Stable `
+    | Apply-Function species {
+        Measure-Property sepal_length species -Sum -Average } `
+    | ft
+
+species    Property        Sum Average
+-------    --------        --- -------
+setosa     sepal_length 250.30    5.01
+versicolor sepal_length 296.80    5.94
+virginica  sepal_length 329.40    6.59
+```
+
+The anomaly detection procedure implemented in this section is as follows:
+
+```powershell
+# Code example 2
+# Anomaly detection with this section's toolset
+Import-Csv penguins.csv `
+    | Drop-NA bill_length_mm `
+    | Shorten-PropertyName `
+    | sort species -Stable `
+    | Apply-Function species {
+        Detect-XrsAnomaly b_l_m -Detect } `
+    | Plot-BarChart b_l_m count,species,xrs,detect -w 20 -m "|" `
+    | ft `
+    | oss `
+    | sls "deviated" -Context 3
+
+count species xrs detect   b_l_m BarChart
+----- ------- --- ------   ----- --------
+  183 Gentoo    0           47.3 |||||||||||||||
+  184 Gentoo    0           42.8 ||||||||||||||
+  185 Gentoo    0           45.1 |||||||||||||||
+> 186 Gentoo    3 deviated  59.6 ||||||||||||||||||||
+  187 Gentoo    0           49.1 ||||||||||||||||
+  188 Gentoo    0           48.4 ||||||||||||||||
+  189 Gentoo    0           42.6 ||||||||||||||
+```
+
+
+Procedure:
+
+1. **Convert** dataset to PSObject with:
+    - `ConvertFrom-Csv` (built-in Cmdlet)
+    - `Import-Csv` (built-in Cmdlet)
+    - `Import-Excel` (external module)
+1. **Shorten** long column names to make data exploration easier (Optional):
+    - `Shorten-PropertyName`
+1. **Select** the required columns with:
+    - `Select-Object` (built-in Cmdlet)
+    - `Select-Field`
+    - `Delete-Field`
+1. **Filter** the required records with:
+    - `Where-Object` (built-in Cmdlet)
+1. **Drop** NA, NaN, Null record from data with:
+    - `Drop-NA`
+    - `Replace-NA`
+1. **Sort** data stably by category with:
+    - `Sort-Object <property> -Stable`
+1. **GroupBy** category and add to each record with:
+    - `Apply-Function`
+    - `GroupBy-Object`
+1. **Calculate** and add basic statistics and add to each record with:
+    - `Add-Stats`
+    - `Measure-Property`
+    - `Measure-Object` (built-in Cmdlet)
+1. **Detect** anomaly record (using X-Rs control method) with:
+    - `Detect-XrsAnomaly`
+1. **Visualize** the results in charts with:
+    - `Plot-BarChart`
+
+
+#### [Shorten-PropertyName] - Shorten long property names
+
+[Shorten-PropertyName]: src/Shorten-PropertyName_function.ps1
+
+Shorten the property names to one letter after each hyphens/underscores/dots.
+The aim is to reduce the number of characters input for long property name when data exploration.
+
+- Usage
+    - `man2 Shorten-PropertyName`
+- Options
+    - `[-d|-Delimiter] <String>]` (default:`_`)
+    - `[-v|-VeryShorten]`
+
+**Before**
+
+```powershell
+# Long property names
+Import-Csv iris.csv `
+    | select -First 1 `
+    | fl
+
+sepal_length : 5.1
+sepal_width  : 3.5
+petal_length : 1.4
+petal_width  : 0.2
+species      : setosa
+```
+
+**After**
+
+```powershell
+# Shorten property names
+Import-Csv iris.csv `
+    | Shorten-PropertyName `
+    | select -First 1 `
+    | fl
+
+s_l     : 5.1
+s_w     : 3.5
+p_l     : 1.4
+p_w     : 0.2
+species : setosa
+```
+
+```powershell
+# Very shorten property name
+Import-Csv iris.csv `
+    | Shorten-PropertyName -VeryShorten `
+    | select -First 1 `
+    | fl
+
+sl      : 5.1
+sw      : 3.5
+pl      : 1.4
+pw      : 0.2
+species : setosa
+```
+
+Rename rules:
+
+- Pattern 1: For Property name without delimiter
+    - Display as is
+- Pattern 2: For property names containing delimiter
+    - Concatenate the following strings with delimiter
+        - first character
+        - the first character after the delimiter
+
+Delimiters are allowed `_`, `.`, `-`.
+Default delimiter is `_`.
+
+
+
+#### [Select-Field], [Delete-Field] - Select/Delete properties by number of columns
+
+[Delete-Field]: src/Select-Field_function.ps1
+[Select-Field]: src/Delete-Field_function.ps1
+
+Specify the field numbers you want to **SELECT**, with the leftmost column as 1st.
+
+**Dataset**
+
+```powershell
+Import-Csv penguins.csv `
+    | Shorten-PropertyName `
+    | head -n 1 `
+    | ft
+
+count species island    b_l_m b_d_m f_l_m b_m_g sex    year
+----- ------- ------    ----- ----- ----- ----- ---    ----
+1     Adelie  Torgersen 39.1  18.7  181   3750  male   2007
+```
+
+**Select Field**
+
+```powershell
+Import-Csv penguins.csv `
+    | Shorten-PropertyName `
+    | head -n 1 `
+    | Select-Field 1,3,5,-2 `
+    | ft
+
+count island    b_d_m sex
+----- ------    ----- ---
+1     Torgersen 18.7  male
+```
+
+Specify the field numbers you want to **DELETE**, with the leftmost column as 1st.
+
+**Dataset**
+
+```powershell
+Import-Csv penguins.csv `
+    | Shorten-PropertyName `
+    | head -n 1 `
+    | ft
+
+count species island    b_l_m b_d_m f_l_m b_m_g sex    year
+----- ------- ------    ----- ----- ----- ----- ---    ----
+1     Adelie  Torgersen 39.1  18.7  181   3750  male   2007
+```
+
+**Delete Field**
+
+```powershell
+Import-Csv penguins.csv `
+    | Shorten-PropertyName `
+    | head -n 1 `
+    | Delete-Field 2,3,-2 `
+    | ft
+    
+count b_l_m b_d_m f_l_m b_m_g year
+----- ----- ----- ----- ----- ----
+1     39.1  18.7  181   3750  2007
+```
+
+
+
+#### [Drop-NA], [Replace-NA] - Drop/Replace NA, NaN, Null Value of specified property
+
+[Drop-NA]: src/Drop-NA_function.ps1
+[Replace-NA]: src/Replace-NA_function.ps1
+
+- Usage
+    - `Drop-NA [-p|-Property] <String[]> [[-n|-NA] <String>]`
+    - `Replace-NA [-p|-Property] <String[]> [-f|-From <String>] -To <String>`
+
+Examples:
+
+```powershell
+# Drop-NA
+Import-Csv penguins.csv `
+    | Drop-NA "bill_length_mm", "flipper_length_mm"
+```
+
+```powershell
+# Replace-NA
+Import-Csv penguins.csv `
+    | Replace-NA "bill_length_mm" -To "hoge" `
+    | where "bill_length_mm" -eq "hoge" `
+    | ft
+
+count species island    bill_length_mm bill_depth_mm sex year
+----- ------- ------    -------------- ------------- --- ----
+4     Adelie  Torgersen hoge           NA            NA  2007
+272   Gentoo  Biscoe    hoge           NA            NA  2009
+```
+
+
+#### [Apply-Function] - Apply function for each category
+
+[Apply-Function]: src/Apply-Function_function.ps1
+
+Apply a script for each category in the specified column.
+Pre `sort -Stable` needed.
+
+- Usage
+    - `man2 apply`
+    - `man2 Apply-Function`
+- Syntax
+    - `Apply-Function key,key,... [{ script | script}]`
+
+Input must be pre stable-sorted by category(key) fields
+(`Sort-Object <key>,<key>,... -Stable`)
+
+Example:
+
+Get the minimum Id per processName
+
+```powershell
+ps `
+| Sort-Object ProcessName, Id -Stable `
+| Apply-Function ProcessName { select -First 1 } `
+| ft
+
+ NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
+ ------    -----      -----     ------      --  -- -----------
+     10     2.88       8.89       0.00    5816   0 AggregatorHost
+     26    16.09      33.21       0.84    7276   1 ApplicationFrameHost
+      9     1.61       6.76       0.00    4300   0 armsvc
+     17    17.21      17.87       3.47    3624   0 audiodg
+    817   382.38     198.16       0.00    4336   0 avp
+...
+```
+
+Multiple category properties can be specified.
+
+```powershell
+# Example of specifying multiple category properties:
+Import-Csv penguins.csv `
+    | sort species, island -Stable `
+    | Shorten-PropertyName `
+    | Apply-Function -key species,island {select -First 1} `
+    | ft
+
+count species   island    b_l_m b_d_m f_l_m b_m_g sex    year key
+----- -------   ------    ----- ----- ----- ----- ---    ---- ---
+21    Adelie    Biscoe    37.8  18.3  174   3400  female 2007 Adelie, Biscoe
+31    Adelie    Dream     39.5  16.7  178   3250  female 2007 Adelie, Dream
+1     Adelie    Torgersen 39.1  18.7  181   3750  male   2007 Adelie, Torgersen
+277   Chinstrap Dream     46.5  17.9  192   3500  female 2007 Chinstrap, Dream
+153   Gentoo    Biscoe    46.1  13.2  211   4500  female 2007 Gentoo, Biscoe
+```
+
+#### [GoupBy-Object] - Apply function to each group
+
+[GoupBy-Object]: src/GoupBy-Object_function.ps1
+
+Pre `sort -Stable` is no needed.
+
+- Usage
+    - `man2 GroupBy-Object`
+    - `man2 groupBy`
+- Syntax
+    - `GroupBy-Object [-k] <col>,<col>,... [{script | script}]`
+    - `groupBy [-k] <col>,<col>,... [{script | script}]`
+
+Example:
+
+```powershell
+# Select first record for each key (key = species and island)
+# (pre-sorted key do not required)
+Import-Csv penguins.csv `
+    | Shorten-PropertyName `
+    | GroupBy-Object species, island { select -First 1 } `
+    | ft species, island, b_l_m, sex, year, key
+
+species   island    b_l_m sex    year key
+-------   ------    ----- ---    ---- ---
+Adelie    Biscoe    37.8  female 2007 Adelie, Biscoe
+Adelie    Dream     39.5  female 2007 Adelie, Dream
+Adelie    Torgersen 39.1  male   2007 Adelie, Torgersen
+Chinstrap Dream     46.5  female 2007 Chinstrap, Dream
+Gentoo    Biscoe    46.1  female 2007 Gentoo, Biscoe
+```
+
+```powershell
+# Calculate stats of bill_length_mm for each Group (key = species and island)
+# (pre-sorted key do not required)
+Import-Csv penguins.csv `
+    | GroupBy-Object species, island {
+        Drop-NA bill_length_mm `
+        | Measure-Property bill_length_mm key -Average -Sum -Count
+    } `
+    | ft
+
+key               Count Average     Sum Property
+---               ----- -------     --- --------
+Adelie, Biscoe       44   38.98 1714.90 bill_length_mm
+Adelie, Dream        56   38.50 2156.10 bill_length_mm
+Adelie, Torgersen    51   38.95 1986.50 bill_length_mm
+Chinstrap, Dream     68   48.83 3320.70 bill_length_mm
+Gentoo, Biscoe      123   47.50 5843.10 bill_length_mm
+```
+
+
+#### [Add-Stats] - Add statistics columns to each record
+
+[Add-Stats]: src/Add-Stats_function.ps1
+
+For categorical data analysis of time series data.
+Automatically exclude `NA`, `NaN`, `Null` from the specified column.
+Multiple columns can be specified at once.
+
+- Usage
+    - `man2 Add-Stats`
+- Syntax
+    - `Add-Stats [-v] <col>,<col>,... <params>`
+- Params
+    - `[-Sum]`
+    - `[-Cnt|-Count]`
+    - `[-Mean|-Average]`
+    - `[-Max|-Maximum]`
+    - `[-Min|-Minimum]`
+    - `[-Sd|-StandardDeviation]`
+    - `[-All|-AllStats]`
+    - `[-Rs]` ...Absolute value of deviation from previous record
+
+Example:
+
+```powershell
+1..5 `
+    | %{ "$_,$_" } `
+    | addt "v1,v2" `
+    | ConvertFrom-Csv `
+    | Add-Stats v1,v2 -Sum -Mean `
+    | ft
+
+v1 v2 MeanOf_v1 MeanOf_v2 SumOf_v1 SumOf_v2
+-- -- --------- --------- -------- --------
+1  1       3.00      3.00    15.00    15.00
+2  2       3.00      3.00    15.00    15.00
+3  3       3.00      3.00    15.00    15.00
+4  4       3.00      3.00    15.00    15.00
+5  5       3.00      3.00    15.00    15.00
+```
+
+```powershell
+# Adds the sum and average value for each category (species)
+# of the values in the specified column (sl = sepal_length)
+Import-Csv iris.csv `
+    | Shorten-PropertyName -v `
+    | Drop-NA sl `
+    | sort species -Stable `
+    | Apply-Function species {
+        Add-Stats sl -Sum -Mean `
+    | select -First 3 } `
+    | ft
+
+sl  sw  pl  pw  species    MeanOf_sl SumOf_sl
+--  --  --  --  -------    --------- --------
+5.1 3.5 1.4 0.2 setosa          5.01   250.30
+4.9 3.0 1.4 0.2 setosa          5.01   250.30
+4.7 3.2 1.3 0.2 setosa          5.01   250.30
+7.0 3.2 4.7 1.4 versicolor      5.94   296.80
+6.4 3.2 4.5 1.5 versicolor      5.94   296.80
+6.9 3.1 4.9 1.5 versicolor      5.94   296.80
+6.3 3.3 6.0 2.5 virginica       6.59   329.40
+5.8 2.7 5.1 1.9 virginica       6.59   329.40
+7.1 3.0 5.9 2.1 virginica       6.59   329.40
+```
+
+
+#### [Measure-Property] - Apply first record's key to each output
+
+[Measure-Property]: src/Measure-Property_function.ps1
+
+Pre `sort -Stable` needed.
+
+- Usage
+    - `man2 Measure-Property`
+- Syntax
+    - ` Measure-Property [-v|-Value] <String[]> [[-k|-Key] <String[]>]`
+- Params
+    - `[-Stdev|-StandardDeviation]`
+    - `[-Sum]`
+    - `[-All|-AllStats]`
+    - `[-Mean|-Average]`
+    - `[-Max|-Maximum]`
+    - `[-Min|-Minimum]`
+    - `[-Cnt|-Count]`
+
+Example:
+
+```powershell
+Import-Csv iris.csv `
+    | sort species -Stable `
+    | Measure-Property sepal_length species -Sum -Average `
+    | ft
+
+species    Average    Sum Property
+-------    -------    --- --------
+setosa        5.01 250.30 sepal_length
+versicolor    5.94 296.80 sepal_length
+virginica     6.59 329.40 sepal_length
+```
+
+```powershell
+Import-Csv iris.csv `
+    | sort species -Stable `
+    | Apply-Function species {
+        Measure-Property sepal_length species -Sum -Average } `
+    | ft
+
+species    Average    Sum Property
+-------    -------    --- --------
+setosa        5.01 250.30 sepal_length
+versicolor    5.94 296.80 sepal_length
+virginica     6.59 329.40 sepal_length
+```
+
+
+#### [Detect-XrsAnomaly] - Detect anomaly values with X-Rs control
+
+[Detect-XrsAnomaly]: src/Detect-XrsAnomaly_function.ps1
+
+Anomaly detection on the console without plotting a chart.
+Using the X-Rs control chart algorithm.
+
+```markdown
+**X-Rs Algorithm:**
+
+    X      = Specified property's value
+    Rs     = Absolute value of the difference from the previous X
+    X-Bar  = Mean of X
+    Rs-Bar = Mean of Rs
+
+    X-CL   = X-Bar
+    X-UCL  = X-Bar + 2.659 * Rs-Bar
+    X-LCL  = X-Bar - 2.659 * Rs-Bar
+    Rs-UCL = 3.267 * Rs-Bar
+
+- UCL: Upper Control Limit
+- LCL: Lower Control Limit
+```
+
+- reference:
+    - Z 9020-2：2016 (ISO 7870-2：2013) 
+    - <https://kikakurui.com/z9/Z9020-2-2016-01.html>
+        - Table 3 - Control limits formula for X control chart (individual measurement value control chart)
+
+Deviation judgment is expressed as an integer
+from 0 to 3 in Property="xrs":
+
+- `0` ... No deviation
+- `1` ... Anomalies detected as deviation from the X-UCL line
+- `2` ... Anomalies detected as deviation from the Rs-UCL line
+- `4` ... Anomalies detected as deviation from the X-LCL line
+
+and:
+
+- `3` ... Detected pattern `1 + 2 = 3`
+- `5` ... Detected pattern `1 + 4 = 5`
+- `6` ... Detected pattern `4 + 2 = 6`
+- `7` ... Detected pattern `1 + 2 + 4 = 7`
+
+Synopsis:
+
+- Usage
+    - `man2 Detect-XrsAnomaly`
+- Syntax
+    - `Detect-XrsAnomaly [-v|Value] <String>`
+- Options
+    - `[-v|-Value] <String>`
+        - Specify property for detect anomaly value
+    - `[-r|-RowCounter]`
+        - Add row index property
+    - `[-d|-Detail]`
+        - Output all properties
+    - `[-Detect]`
+        - Add a property that outputs "detect" to records where abnormal values are detected
+    - `[-o|-OnlyDeviationRecord]`
+        - Output only records with detected abnormal values
+
+Examples:
+
+```powershell
+Import-Csv iris.csv `
+    | Shorten-PropertyName `
+    | Drop-NA "s_l" `
+    | Detect-XrsAnomaly "s_l" -OnlyDeviationRecord -RowCounter `
+    | ft
+
+s_l s_w p_l p_w species    xrs row
+--- --- --- --- -------    --- ---
+4.3 3.0 1.1 0.1 setosa       1  14
+7.0 3.2 4.7 1.4 versicolor   2  51
+7.6 3.0 6.6 2.1 virginica    1 106
+4.9 2.5 4.5 1.7 virginica    2 107
+7.3 2.9 6.3 1.8 virginica    2 108
+7.7 3.8 6.7 2.2 virginica    1 118
+7.7 2.6 6.9 2.3 virginica    1 119
+7.7 2.8 6.7 2.0 virginica    3 123
+7.4 2.8 6.1 1.9 virginica    1 131
+7.9 3.8 6.4 2.0 virginica    1 132
+7.7 3.0 6.1 2.3 virginica    1 136
+```
+
+```powershell
+Import-Csv iris.csv `
+    | Shorten-PropertyName `
+    | Drop-NA "p_w" `
+    | sort "species" -Stable `
+    | apply "species" {
+        Detect-XrsAnomaly "p_w" -Detect -OnlyDeviationRecord } `
+    | ft
+
+s_l s_w p_l p_w species key    xrs detect
+--- --- --- --- ------- ---    --- ------
+5.1 3.3 1.7 0.5 setosa  setosa   3 deviated
+4.8 3.4 1.9 0.2 setosa  setosa   2 deviated
+5.2 4.1 1.5 0.1 setosa  setosa   2 deviated
+5.0 3.5 1.6 0.6 setosa  setosa   3 deviated
+```
+
+```powershell
+# Detect anomaly values by category(species)
+Import-Csv penguins.csv `
+    | Drop-NA bill_length_mm `
+    | Shorten-PropertyName `
+    | sort species, island -Stable `
+    | Apply-Function species, island {
+        Detect-XrsAnomaly b_l_m -OnlyDeviationRecord } `
+    |  ft count, key, b_l_m, sex, year, xrs
+
+count key            b_l_m sex  year xrs
+----- ---            ----- ---  ---- ---
+186   Gentoo, Biscoe 59.6  male 2007   3
+```
+
+#### [Plot-BarChart] - Plot Barchart on the console
+
+[Plot-BarChart]: src/Plot-BarChart_function.ps1
+
+- Usage
+    - `man2 Plot-BarChart`
+- Syntax
+    - `Plot-BarChart [-Value] <String> [[-Key] <String[]>]`
+- Params
+    - `[-v|-Value] <String>`
+        - Specify value property for plot barchart
+    - `[[-k|-Key] <String[]>]` (Optional)
+        - Specify puroperties to output
+    - `[-w|-Width <Int32>]` (Optional)
+        - Specify the maximum length of the chart from 1 to 100. (default:100)
+    - `[-m|-Mark <String>]` (Optional)
+        - Specify the chart string
+    - `[-MaxValue <Int32>]` (Optional)
+        - Specify the maximum value of the chart manually
+
+Examples:
+
+```powershell
+1..10 `
+    | addt val `
+    | ConvertFrom-Csv `
+    | Plot-BarChart v -w 10 -m "|"
+
+val  BarChart
+-  --------
+1  |
+2  ||
+3  |||
+4  ||||
+5  |||||
+6  ||||||
+7  |||||||
+8  ||||||||
+9  |||||||||
+10 ||||||||||
+```
+
+```powershell
+Import-Csv iris.csv `
+    | Drop-NA sepal_length `
+    | Shorten-PropertyName `
+    | Plot-BarChart s_l -m "|" -w 20 `
+    | ft
+
+s_w  p_l  p_w species  s_l BarChart
+---  ---  --- -------  --- --------
+3.50 1.40 0.20 setosa  5.10 ||||||||||||
+3.00 1.40 0.20 setosa  4.90 ||||||||||||
+3.20 1.30 0.20 setosa  4.70 |||||||||||
+3.10 1.50 0.20 setosa  4.60 |||||||||||
+3.60 1.40 0.20 setosa  5.00 ||||||||||||
+3.90 1.70 0.40 setosa  5.40 |||||||||||||
+```
+
+```powershell
+ls ./tmp/ -File `
+    | Plot-BarChart Length Name, Length -Mark "|" -w 40 `
+    | ft
+
+Name  Length BarChart
+----  ------ --------
+a.dot   2178 |||||||||
+a.md     209 |
+a.pu     859 |||
+a.svg   8842 ||||||||||||||||||||||||||||||||||||||||
+```
+
+```powershell
+Import-Csv penguins.csv `
+    | Drop-NA bill_length_mm `
+    | Shorten-PropertyName `
+    | sort species -Stable `
+    | Apply-Function species {
+        Detect-XrsAnomaly b_l_m -Detect } `
+    | Plot-BarChart b_l_m count,species,xrs,detect -w 20 -m "|" `
+    | ft `
+    | oss `
+    | sls "deviated" -Context 3
+
+count species xrs detect   b_l_m BarChart
+----- ------- --- ------   ----- --------
+    183 Gentoo    0           47.3 |||||||||||||||
+    184 Gentoo    0           42.8 ||||||||||||||
+    185 Gentoo    0           45.1 |||||||||||||||
+> 186 Gentoo    3 deviated  59.6 ||||||||||||||||||||
+    187 Gentoo    0           49.1 ||||||||||||||||
+    188 Gentoo    0           48.4 ||||||||||||||||
+    189 Gentoo    0           42.6 ||||||||||||||
+```
+
 
 ### Plot chart and graph
 
@@ -4185,6 +4917,8 @@ E cut meat into cubes [-]
 F stew vegetables and meat [D,E]
 G add curry roux and simmer [F]
 
+--
+
 H serve on plate [C,G]
 I complete! [H]
 
@@ -4212,9 +4946,9 @@ strict digraph logictree {
     charset = "UTF-8";
     compound = true;
     fontname = "MS Gothic";
-    label = "how to cook curry";
+    label = "ow to cook curry";
     labelloc = "t";
-    rankdir = "BT";
+    rankdir = "TB";
     newrank = true;
   ];
 
@@ -4238,34 +4972,36 @@ strict digraph logictree {
 
 
   subgraph cluster_G1 {
-    label = "rice";
+    label = "[rice]";
     shape = "Default";
-    style = "dotted";
     //fontsize = 11;
     labelloc = "t";
     labeljust = "l";
-    "A" [label="A\lwash rice\l", shape="rectangle" ];
-    "B" [label="B\lsoak rice \lin fresh water\l", shape="rectangle" ];
-    "C" [label="C\lcook rice\l", shape="rectangle" ];
+    color = "black";
+    fontcolor = "black";
+    "A" [label="A\lwash rice", shape="rectangle" ];
+    "B" [label="B\lsoak rice in fresh water", shape="rectangle" ];
+    "C" [label="C\lcook rice", shape="rectangle" ];
 
   };
 
   subgraph cluster_G2 {
-    label = "curry roux";
+    label = "[curry roux]";
     shape = "Default";
-    style = "dotted";
     //fontsize = 11;
     labelloc = "t";
     labeljust = "l";
-    "D" [label="D\lcut vegetables\l", shape="rectangle" ];
-    "E" [label="E\lcut meat into \lcubes\l", shape="rectangle" ];
-    "F" [label="F\lstew vegetables \land meat\l", shape="rectangle" ];
-    "G" [label="G\ladd curry \lroux and simmer\l", shape="rectangle" ];
-
-    "H" [label="H\lserve on plate\l", shape="rectangle" ];
-    "I" [label="I\lcomplete!\l", shape="rectangle" ];
+    color = "black";
+    fontcolor = "black";
+    "D" [label="D\lcut vegetables", shape="rectangle" ];
+    "E" [label="E\lcut meat into cubes", shape="rectangle" ];
+    "F" [label="F\lstew vegetables and meat", shape="rectangle" ];
+    "G" [label="G\ladd curry roux and simmer", shape="rectangle" ];
 
   };
+
+  "H" [label="H\lserve on plate", shape="rectangle" ];
+  "I" [label="I\lcomplete!", shape="rectangle" ];
 
 
   // Edge settings
@@ -4288,7 +5024,7 @@ strict digraph logictree {
 
   // legend block
   graph [
-    labelloc="t";
+    labelloc="b";
     labeljust="r";
     color="white";
     label=<
@@ -4313,7 +5049,7 @@ strict digraph logictree {
 Input2:
 
 ```powershell
-cat input.txt
+PS> cat input.txt
 # logic tree
 
 Goal Making a profit for the company  [ReqA, ReqB]
@@ -4325,6 +5061,8 @@ ActA Reduce the price [-]
 -- GroupB --
 ReqB Secure profits [ActB]
 ActB keep the price [-]
+
+--
 
 ActA <-> ActB: conflict！
 
@@ -4341,69 +5079,71 @@ cat input.txt | logi2dot -BottomToTopDirection -Kinsoku 10 > a.dot; dot2gviz a.d
 ```dot
 strict digraph logictree {
 
- graph [
-  charset = "UTF-8";
-  compound = true;
-  fontname = "MS Gothic";
-  label = "logic tree";
-  rankdir = "BT";
-  newrank = true;
- ];
+  graph [
+    charset = "UTF-8";
+    compound = true;
+    fontname = "MS Gothic";
+    label = "ogic tree";
+    labelloc = "t";
+    rankdir = "TB";
+    newrank = true;
+  ];
 
- node [
-  fontname = "MS Gothic";
-  shape = "rectangle";
-  style = "rounded,solid";
- ];
+  node [
+    fontname = "MS Gothic";
+    shape = "rectangle";
+    style = "rounded,solid";
+  ];
 
- edge [
-  fontname = "MS Gothic";
-  dir = forward;
- ];
+  edge [
+    fontname = "MS Gothic";
+    dir = forward;
+  ];
 
- // Node settings
+  // Node settings
 
- "Goal" [label="Goal\lMaking a profit \lfor the company\l", shape="rectangle" ];
-
- subgraph cluster_G1 {
-  label = "GroupA";
-  shape = "rectangle";
-  style = "dotted";
-  //fontsize = 11;
-  labelloc = "t";
-  labeljust = "l";
-  //-- GroupA --
-  "ReqA" [label="ReqA\lSecure sales\l", shape="rectangle" ];
-  "ActA" [label="ActA\lReduce the \lprice\l", shape="rectangle" ];
- };
-
- subgraph cluster_G2 {
-  label = "GroupB";
-  shape = "rectangle";
-  style = "dotted";
-  //fontsize = 11;
-  labelloc = "t";
-  labeljust = "l";
-  //-- GroupB --
-  "ReqB" [label="ReqB\lSecure profits\l", shape="rectangle" ];
-  "ActB" [label="ActB\lkeep the price\l", shape="rectangle" ];
- };
+  "Goal" [label="Goal\lMaking a profit for the company", shape="rectangle" ];
 
 
- // Edge settings
- "ReqA" -> "Goal" [style=solid];
- "ReqB" -> "Goal" [style=solid];
- "ActA" -> "ReqA" [style=solid];
- "ActB" -> "ReqB" [style=solid];
+  subgraph cluster_G1 {
+    label = "[GroupA]";
+    shape = "Default";
+    //fontsize = 11;
+    labelloc = "t";
+    labeljust = "l";
+    color = "black";
+    fontcolor = "black";
+    "ReqA" [label="ReqA\lSecure sales", shape="rectangle" ];
+    "ActA" [label="ActA\lReduce the price", shape="rectangle" ];
 
- // Edge optional settings
- "ActA" -> "ActB" [label="conflict！", style="solid", dir=both];
+  };
+
+  subgraph cluster_G2 {
+    label = "[GroupB]";
+    shape = "Default";
+    //fontsize = 11;
+    labelloc = "t";
+    labeljust = "l";
+    color = "black";
+    fontcolor = "black";
+    "ReqB" [label="ReqB\lSecure profits", shape="rectangle" ];
+    "ActB" [label="ActB\lkeep the price", shape="rectangle" ];
+
+  };
 
 
- // Dot settings
- //-- dot --
- {rank=same; ActA, ActB};
+  // Edge settings
+  "ReqA" -> "Goal" [style=solid];
+  "ReqB" -> "Goal" [style=solid];
+  "ActA" -> "ReqA" [style=solid];
+  "ActB" -> "ReqB" [style=solid];
 
+  // Edge optional settings
+  "ActA" -> "ActB" [label="conflict！", style="solid", dir=both];
+
+
+  // Dot settings
+  {rank=same; ActA, ActB};
 }
 ```
 
@@ -4451,7 +5191,7 @@ C task-C [A,B]
 Input:
 
 ```powershell
-cat input.txt
+PS> cat input.txt
 # how to cook curry
 
 -- rice --
@@ -4468,6 +5208,8 @@ E cut meat into cubes [-]
 F stew vegetables and meat [D,E]
 G add curry roux and simmer [F]
 
+--
+
 H serve on plate [C,G]
 I complete! [H]
 
@@ -4480,8 +5222,11 @@ end legend
 
 Output:
 
+```powershell
+PS> cat input.txt | logi2dot > a.dot; dot2gviz a.dot png | ii
 ```
-cat input.txt | logi2dot > a.dot; dot2gviz a.dot png | ii
+
+```
 @startuml
 
 title "how to cook curry"
@@ -4492,26 +5237,26 @@ skinparam shadowing false
 
 'Node settings
 
-rectangle "rice" as G1 {
-'-- rice --
+folder "rice" as G1 {
   rectangle "**A**\nwash rice" as A
-  note right
-    this is note
-  end note
+note right
+  this is note
+end note
   rectangle "**B**\nsoak rice in fresh water" as B
   rectangle "**C**\ncook rice" as C
+
 }
 
-rectangle "curry roux" as G2 {
-'-- curry roux --
+folder "curry roux" as G2 {
   rectangle "**D**\ncut vegetables" as D
   rectangle "**E**\ncut meat into cubes" as E
   rectangle "**F**\nstew vegetables and meat" as F
   rectangle "**G**\nadd curry roux and simmer" as G
+
 }
 
-rectangle "**H**\nserve on plate" as H
-rectangle "**I**\ncomplete!" as I
+  rectangle "**H**\nserve on plate" as H
+  rectangle "**I**\ncomplete!" as I
 
 
 'Edge settings
@@ -4540,7 +5285,7 @@ end legend
 Input2:
 
 ```powershell
-cat input.txt
+PS> cat input.txt
 # logic tree
 
 Goal Making a profit for the company [ReqA, ReqB]
@@ -4553,13 +5298,18 @@ ActA Reduce the price [-]
 ReqB Secure profits [ActB]
 ActB keep the price [-]
 
+--
+
 ActA <-> ActB #line:red : conflict！
 ```
 
 Output2:
 
+```powershell
+PS> cat input.txt | logi2pu -BottomToTopDirection -Kinsoku 10 > a.pu; pu2java a.pu png | ii
 ```
-cat input.txt | logi2pu -BottomToTopDirection -Kinsoku 10 > a.pu; pu2java a.pu png | ii
+
+```
 @startuml
 
 title "logic tree"
@@ -4570,18 +5320,18 @@ skinparam shadowing false
 
 'Node settings
 
-rectangle "**Goal**\nMaking a profit \nfor the company" as Goal
+  rectangle "**Goal**\nMaking a profit \nfor the company" as Goal
 
-rectangle "GroupA" as G1 {
-'-- GroupA --
+folder "GroupA" as G1 {
   rectangle "**ReqA**\nSecure sales" as ReqA
   rectangle "**ActA**\nReduce the \nprice" as ActA
+
 }
 
-rectangle "GroupB" as G2 {
-'-- GroupB --
+folder "GroupB" as G2 {
   rectangle "**ReqB**\nSecure profits" as ReqB
   rectangle "**ActB**\nkeep the price" as ActB
+
 }
 
 
@@ -4593,7 +5343,6 @@ ActB -up-> ReqB
 
 'Edge optional settings
 ActA <-> ActB #line:red : conflict！
-
 
 @enduml
 ```
@@ -7962,25 +8711,50 @@ clean: ## Remove "*.txt" items in Documents directory
 ```
 
 
-#### [i] - Invoke-Links - Read and execute links written in a text file
+#### [Invoke-Link] (Alias: i) - Read and execute links written in a text file
 
-[i]: src/i_function.ps1
+[Invoke-Link]: src/Invoke-Link_function.ps1
 
-テキストファイルに記述されたリンクを任意のアプリで実行する。Windowsにおけるショートカットに対して`Invoke-Item(Alias:ii)`するのと似た挙動だが、リンクの実行に任意のアプリを用いたり、「ファイルの場所」をエクスプローラで開いたりできる。
+Open links written in a text file.
 
-ふだんはショートカットとしてリンク先のファイルを開きたいが、たまに「リンク先ファイルの場所」をエクスプローラで開きたいとき、これを一つのリンクファイルで済ませられる。（ファイルオープン用とディレクトリオープン用の**2つのショートカット**を作りたくない人向け）
+- If a text file (`.txt`, `.md`, ...) is specified, open each line as link in default application
+    - Link beginning with "http" or "www":
+        - `Start-Process` (default browser)
+    - Directory and others:
+        - `Invoke-Item <link>`
+- If a link file (`.lnk`) is specified, open the link in explorer
+- If a PowerShell Script file (`.ps1`) is specified, execute the script in current process:
+    - able to use dot sourcing functions in current process
+    - Specify the absolute file path in the text file as possible.
+      Or Note that when specifying a relative path, the root is the
+      location of the current process
+
+Multiple links(lines) in a file available.
+Lines that empty or beginning with `#` are skipped.
+
+The link execution app can be any command if `-Command` option is specified.
+
+Links written in a text file may or may not be enclosed in single/double quotes.
+
+If `-l` or `-Location`` specified, open the file location in explorer
 
 - Usage
     - `man2 i`
-    - `i [[-File] <String>] [[-Command] <String>] [-Location] [-Edit] [-LinkCheck] [-DryRun]`
-    - `i` ... Equivalent to `Get-ChildItem .`
-    - `i <dir>` ... `Get-ChildItem <dir>`
-    - `i <file>` ... `Invoke-Item <links-writtein-in-text-file>`
-    - `i <file> <command>` ... `command <links-writtein-in-text-file>`
-    - `i <file> -l or -Location` ... Open `<link>` location in explorer
-    - `i <file> -q or -DryRun` ... DryRun (listup links)
-    - `i <file> -e or -Edit` ... Edit `<linkfile>` using text editor
-
+    - `man2 Invoke-Link`
+        - `i [[-File] <String>] [[-Command] <String>] [-Location] [-Edit] [-LinkCheck] [-DryRun]`
+        - `i` ... Equivalent to `Get-ChildItem .`
+        - `i <dir>` ... `Get-ChildItem <dir>`
+        - `i <file>` ... `Invoke-Item <links-writtein-in-text-file>`
+        - `i <file> <command>` ... `command <links-writtein-in-text-file>`
+        - `i <file> -l or -Location` ... Open `<link>` location in explorer
+        - `i <file> -q or -DryRun` ... DryRun (listup links)
+        - `i <file> -e or -Edit` ... Edit `<linkfile>` using text editor
+- Note
+    - This is the command I use most often in my daily work
+    - I use this command and link file combination:
+        1. As a starting point for tasks and apps
+        2. As a website favorite link collection
+        3. As a simple task runner
 
 Input:
 
@@ -8004,7 +8778,7 @@ Examples:
 ```powershell
 # input text file
 cat ./link/rmarkdown_site.txt
-"C:\Users\path\to\the\index.html"
+"C:/Users/path/to/the/index.html"
 
 # Get-ChildItem <dir>
 i ./link/
@@ -8018,7 +8792,7 @@ Mode         LastWriteTime Length Name
 # dry run
 i ./link/rmarkdown_site.txt -q
 .\link\rmarkdown.txt
-Invoke-Item "C:\Users\path\to\the\index.html"
+Invoke-Item "C:/Users/path/to/the/index.html"
 
 # open index.html in default browser
 i ./link/rmarkdown_site.txt
@@ -8028,6 +8802,27 @@ i ./link/rmarkdown_site.txt code
 
 # open linked file location in explorer
 i ./link/rmarkdown_site.txt -l
+```
+
+```powershell
+    ## execute if *.ps1 file specified
+
+    cat .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+    # MSRC - Microsoft Security Response Center
+    rssfeed https://api.msrc.microsoft.com/update-guide/rss -MaxResults 30
+
+    ## execute .ps1 function
+    ## able to use dot sourcing functions in current process
+    i .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+
+    channel                    date       item
+    -------                    ----       ----
+    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4900...
+    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4901...
+    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4902...
+    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4903...
+    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4904...
+    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4905...
 ```
 
 #### [pwsync] - Invoke Robocopy.exe
