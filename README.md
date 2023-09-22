@@ -3820,7 +3820,7 @@ count species island    bill_length_mm bill_depth_mm sex year
 ```
 
 
-#### [Apply-Function] - Apply function for each category
+#### [Apply-Function] (Alias: apply) - Apply function for each category
 
 [Apply-Function]: src/Apply-Function_function.ps1
 
@@ -3875,7 +3875,7 @@ count species   island    b_l_m b_d_m f_l_m b_m_g sex    year key
 153   Gentoo    Biscoe    46.1  13.2  211   4500  female 2007 Gentoo, Biscoe
 ```
 
-#### [GroupBy-Object] - Apply function to each group
+#### [GroupBy-Object] (Alias: groupBy) - Apply function to each group
 
 [GroupBy-Object]: src/GroupBy-Object_function.ps1
 
@@ -4187,7 +4187,7 @@ Examples:
 1..10 `
     | addt val `
     | ConvertFrom-Csv `
-    | Plot-BarChart v -w 10 -m "|"
+    | Plot-BarChart val -w 10 -m "|"
 
 val  BarChart
 -  --------
