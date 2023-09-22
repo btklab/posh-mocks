@@ -26,6 +26,9 @@
         - If the first line starts with "#", it is recognized as title.
         - Node gouping symbols are "-- group name --" or "## group name"
             - If increase the number of symbols, it becomes nested structure
+            - When grouping, the last group contains all statements up to the
+              end. But, Inserting a hyphen-only line like "--" closes all
+              groups that are not closed at that line.
         - After specifying the nodes, you can manually add
             commnents to any edge. the format is as follows.
             - id --> id : commnent
@@ -60,6 +63,8 @@
         F stew vegetables and meat [D,E]
         G add curry roux and simmer [F]
 
+        --
+
         H serve on plate [C,G]
         I complete! [H]
 
@@ -75,103 +80,105 @@
     
     Output:
         strict digraph logictree {
-
-        graph [
+        
+          graph [
             charset = "UTF-8";
             compound = true;
             fontname = "MS Gothic";
-            label = "how to cook curry";
+            label = "ow to cook curry";
             labelloc = "t";
             rankdir = "TB";
             newrank = true;
-        ];
+          ];
 
-        node [
+          node [
             fontname = "MS Gothic";
             shape = "rectangle";
             style = "rounded,solid";
-        ];
+          ];
 
-        edge [
+          edge [
             fontname = "MS Gothic";
             dir = forward;
-        ];
+          ];
 
-        // legend subgraph
-        subgraph cluster_legend {
+          // legend subgraph
+          subgraph cluster_legend {
             //peripheries=0;
 
 
-        // Node settings
+          // Node settings
 
 
-        subgraph cluster_G1 {
-            label = "rice";
+          subgraph cluster_G1 {
+            label = "[rice]";
             shape = "Default";
-            style = "dotted";
             //fontsize = 11;
             labelloc = "t";
             labeljust = "l";
+            color = "black";
+            fontcolor = "black";
             "A" [label="A\lwash rice", shape="rectangle" ];
             "B" [label="B\lsoak rice in fresh water", shape="rectangle" ];
             "C" [label="C\lcook rice", shape="rectangle" ];
 
-        };
+          };
 
-        subgraph cluster_G2 {
-            label = "curry roux";
+          subgraph cluster_G2 {
+            label = "[curry roux]";
             shape = "Default";
-            style = "dotted";
             //fontsize = 11;
             labelloc = "t";
             labeljust = "l";
+            color = "black";
+            fontcolor = "black";
             "D" [label="D\lcut vegetables", shape="rectangle" ];
             "E" [label="E\lcut meat into cubes", shape="rectangle" ];
             "F" [label="F\lstew vegetables and meat", shape="rectangle" ];
             "G" [label="G\ladd curry roux and simmer", shape="rectangle" ];
 
-            "H" [label="H\lserve on plate", shape="rectangle" ];
-            "I" [label="I\lcomplete!", shape="rectangle" ];
+          };
 
-        };
-
-
-        // Edge settings
-        "A" -> "B" [style=solid];
-        "B" -> "C" [style=solid];
-        "D" -> "F" [style=solid];
-        "E" -> "F" [style=solid];
-        "F" -> "G" [style=solid];
-        "C" -> "H" [style=solid];
-        "G" -> "H" [style=solid];
-        "H" -> "I" [style=solid];
-
-        // Edge optional settings
-        "B" -> "C" [label="at least\n30 minutes", style="solid", dir=forward];
+          "H" [label="H\lserve on plate", shape="rectangle" ];
+          "I" [label="I\lcomplete!", shape="rectangle" ];
 
 
-        // Dot settings
-        {rank=same; A, E, D};
+          // Edge settings
+          "A" -> "B" [style=solid];
+          "B" -> "C" [style=solid];
+          "D" -> "F" [style=solid];
+          "E" -> "F" [style=solid];
+          "F" -> "G" [style=solid];
+          "C" -> "H" [style=solid];
+          "G" -> "H" [style=solid];
+          "H" -> "I" [style=solid];
+
+          // Edge optional settings
+          "B" -> "C" [label="at least\n30 minutes", style="solid", dir=forward];
 
 
-        // legend block
-        graph [
+          // Dot settings
+          {rank=same; A, E, D};
+
+
+          // legend block
+          graph [
             labelloc="b";
             labeljust="r";
             color="white";
             label=<
             <TABLE
-            BORDER="1"
-            CELLBORDER="0"
-            COLOR="gray15"
-            BGCOLOR="gray95"
+              BORDER="1"
+              CELLBORDER="0"
+              COLOR="gray15"
+              BGCOLOR="gray95"
             >
             <TR><TD ALIGN="LEFT"><FONT COLOR="gray15" POINT-SIZE="11">this is</FONT></TD></TR>
             <TR><TD ALIGN="LEFT"><FONT COLOR="gray15" POINT-SIZE="11">legend!</FONT></TD></TR>
             </TABLE>>;
-        ];
+          ];
 
-        };
+          };
 
         }
 
@@ -283,6 +290,8 @@
     ReqB Secure profits [ActB]
     ActB keep the price [-]
 
+    --
+
     ActA <-> ActB: conflict！
 
     //-- dot --
@@ -305,6 +314,8 @@
     E cut meat into cubes [-]
     F stew vegetables and meat [D,E]
     G add curry roux and simmer [F]
+
+    --
 
     H serve on plate [C,G]
     I complete! [H]
@@ -733,7 +744,7 @@ function logi2dot {
         function parseEdge ([string]$rdLine) {
             [string[]]$retStrAry = @()
             if ( $rdLine -notmatch '\[' ){
-                Write-Error "Invalid task specification." -ErrorAction Stop
+                Write-Error "Invalid task specification: $rdLine" -ErrorAction Stop
             }
             $dId    = $rdLine -replace '^([^ ]+?) (..*) +\[(..*)\]\s*$','$1'
             $dName  = $rdLine -replace '^([^ ]+?) (..*) +\[(..*)\]\s*$','$2'
@@ -798,13 +809,13 @@ function logi2dot {
     process {
         $lineCounter++
         [string] $rdLine = [string] $_
-        if ( $rdLine -match '^(\-)+ '){
+        if ( $rdLine -match '^(\-)+ [^-]'){
             [string] $rdLine = replaceHyphensToSharps $rdLine
         }
         Write-Debug $rdLine
         if (($lineCounter -eq 1) -and ($rdLine -match '^# ')) {
             ## treat first line as title
-            [string] $fTitle = $rdLine -replace '^# ', ''
+            [string] $fTitle = $rdLine -replace '^# .', ''
             [bool] $isFirstRowEqTitle = $True
             return
         }
@@ -819,7 +830,7 @@ function logi2dot {
         }
         ## Node grouping mode = ON
         ## from "## GroupName" to the next blank line.
-        if ( ($rdLine -match '^##+') -and (!$DotBlockFlag) ) {
+        if ( ($rdLine -match '^##+') -and ( -not $DotBlockFlag) ) {
             ## get group name
             [bool] $NodeGroupFlag = $True
             $groupCounter++
@@ -931,7 +942,7 @@ function logi2dot {
         ## if "<--" or "-->" of "<->" appears,
         # end of node block,
         # start of edge block
-        if (($rdLine -match ' \<[-.]{2} | [-.]{2}\> | \<[-.]\> ') -and (!$DotBlockFlag)){
+        if (($rdLine -match ' \<[-.]{2} | [-.]{2}\> | \<[-.]\> ') -and ( -not $DotBlockFlag)){
             ## close group if not closed
             if ( $oldItemLevel -ne 0) {
                 ## close parenthesis
@@ -947,8 +958,23 @@ function logi2dot {
             [bool] $NodeBlockFlag = $False
             [bool] $EdgeBlockFlag = $True
         }
+        ## if "--" appears, call closeParenthesis
+        if ("$rdLine".Trim() -match '^\-+$'){
+            ## close group if not closed
+            if ( $oldItemLevel -ne 0) {
+                ## close parenthesis
+                for ( $i=$oldItemLevel; $i -ge 1; $i--){
+                    $readLineAryNode += closeParenthesisForLevel $i
+                }
+                Write-Debug "ItemLevel: old = $oldItemLevel, new = $newItemLevel"
+                [int] $oldItemLevel = 0
+                [int] $newItemLevel = 0
+                [bool] $NodeGroupFlag = $False
+            }
+            return
+        }
         ## Node block reading mode
-        if (($NodeBlockFlag) -and (!$DotBlockFlag)) {
+        if (($NodeBlockFlag) -and ( -not $DotBlockFlag)) {
             if ($rdLine -match '^\s*$'){
                 ## skip blank line
                 $readLineAryNode += ''

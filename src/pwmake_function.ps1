@@ -23,7 +23,7 @@
         ```Makefile
         file := index.md
 
-        .PHONY: all
+        (dot)PHONY: all
         all: ${file} ## echo filename
             echo ${file}
             # $param is predifined [string] variable
@@ -79,7 +79,7 @@
               at the end of the line.
                 - comment at the end of command line is unavailable, but
                   using the "-DeleteCommentEndOfCommandLine" switch forces
-                  delete comment from the "#"" sign to the end of the line.
+                  delete comment from the "#" sign to the end of the line.
             - end-of-line commnent not allowed in command line.
             - do not comment out if the rightmost character of the comment
               line is double-quote or single-quote. for example, following
@@ -117,7 +117,7 @@
             ```
 
             ```powershell
-            $ pwmake -Help
+            PS> pwmake -Help
             ##
             ## target synopsis
             ## ------ --------
@@ -168,12 +168,16 @@
             - backquote
             - pipeline (vertical bar)
 
-
     references:
+
         - https://www.gnu.org/software/make/
         - https://www.oreilly.co.jp/books/4873112699/
 
-    Makefile example1:
+.LINK
+    toposort, pwmake
+
+.EXAMPLE
+    # Makefile example1: simple Makefile
 
     ```Makefile
     .PHONY: all
@@ -186,110 +190,11 @@
         (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') | sed 's;2022;2000;' | md2html >> log.txt
     ```
 
-    Makefile example2:
+.EXAMPLE
+    # Get help of each task and DryRun Makefile
+    PS > cat Makefile
 
     ```Makefile
-    min = 10  ## min
-    max = 100 ## max
-    epochs = 3
-    lr = 1e-5
-
-    ## output files
-    OUT_DIR = min_${min}_max_${max}
-    PARSED_FILE = ${OUT_DIR}/parsed.txt
-    DATASET_DIR = ${OUT_DIR}/dataset
-    DATASET = ${DATASET_DIR}/train.tsv ${DATASET_DIR}/dev.tsv ${DATASET_DIR}/test.tsv
-    LOG_FILE = output/min_${min}_max_${max}.log
-
-    .PHONY: all
-
-    all: ${LOG_FILE}
-      cat ${LOG_FILE}
-
-    ${PARSED_FILE}: input.txt
-      python parse.py input.txt --min ${min} --max ${max} > ${PARSED_FILE}
-
-    ${DATASET}: ${PARSED_FILE}
-      python dataset.py ${PARSED_FILE} ${DATASET_DIR}
-
-    ${LOG_FILE}: ${DATASET}
-      python run.py ${DATASET_DIR} \
-        --epochs ${epochs} --lr ${lr} \
-        --do_train --do_eval --do_test
-    ```
-
-.LINK
-    toposort, pwmake
-
-.EXAMPLE
-    cat Makefile
-
-    min = 10  ## min
-    max = 100 ## max
-    epochs = 3
-    lr = 1e-5
-
-    ## output files
-    OUT_DIR = min_${min}_max_${max}
-    PARSED_FILE = ${OUT_DIR}/parsed.txt
-    DATASET_DIR = ${OUT_DIR}/dataset
-    DATASET = ${DATASET_DIR}/train.tsv ${DATASET_DIR}/dev.tsv ${DATASET_DIR}/test.tsv
-    LOG_FILE = output/min_${min}_max_${max}.log
-
-    .PHONY: all
-
-    all: ${LOG_FILE}
-      cat ${LOG_FILE}
-
-    ${PARSED_FILE}: input.txt
-      python parse.py input.txt --min ${min} --max ${max} > ${PARSED_FILE}
-
-    ${DATASET}: ${PARSED_FILE}
-      python dataset.py ${PARSED_FILE} ${DATASET_DIR}
-
-    ${LOG_FILE}: ${DATASET}
-      python run.py ${DATASET_DIR} \
-        --epochs ${epochs} --lr ${lr} \
-        --do_train --do_eval --do_test
-
-    PS > pwmake -Variables max=100,min=99,epochs=8
-    ######## override args ##########
-    max=100
-    min=99
-    epochs=8
-    ######## argblock ##########
-    min=10
-    max=100
-    epochs=3
-    lr=1e-5
-    OUT_DIR=min_99_max_100
-    PARSED_FILE=min_99_max_100/parsed.txt
-    DATASET_DIR=min_99_max_100/dataset
-    DATASET=min_99_max_100/dataset/train.tsv min_99_max_100/dataset/dev.tsv min_99_max_100/dataset/test.tsv
-    LOG_FILE=output/min_99_max_100.log
-    ######## phonies ##########
-    all
-    ######## comBlock ##########
-
-    all: output/min_99_max_100.log
-     cat output/min_99_max_100.log
-
-    min_99_max_100/parsed.txt: input.txt
-     python parse.py input.txt --min 99 --max 100 > min_99_max_100/parsed.txt
-
-    min_99_max_100/dataset/train.tsv min_99_max_100/dataset/dev.tsv min_99_max_100/dataset/test.tsv: min_99_max_100/parsed.txt
-     python dataset.py min_99_max_100/parsed.txt min_99_max_100/dataset
-
-    output/min_99_max_100.log: min_99_max_100/dataset/train.tsv min_99_max_100/dataset/dev.tsv min_99_max_100/dataset/test.tsv
-     python run.py min_99_max_100/dataset --epochs 8 --lr 1e-5 --do_train --do_eval --do_test
-
-
-    ====
-    override variables
-
-
-.EXAMPLE
-    cat Makefile
     # use uplatex
     file    := a
     texfile := ${file}.tex
@@ -311,8 +216,9 @@
     .PHONY: clean
     clean: ## Remove cache files.
         Remove-Item -Path *.aux,*.dvi,*.log -Force
+    ```
 
-
+    # Get help of each task
     PS > pwmake -f Makefile -Help
     PS > pwmake -Help
 
@@ -323,7 +229,7 @@
     a.dvi  Generate dvi file from tex file.
     clean  Remove cache files.
 
-
+    # DryRun
     PS > pwmake -DryRun
     ######## override args ##########
     None
@@ -380,6 +286,9 @@
 
 .EXAMPLE
     # clone posh-source to posh-mocks
+    PS > cat Makefile
+
+    ```Makefile
     home := $($HOME)
     pwshdir  := ${home}\cms\bin\posh-source
     poshmock := ${home}\cms\bin\posh-mocks
@@ -407,17 +316,19 @@
         Robocopy "${pwshdir}\img\" "${poshmock}\img\" /MIR /XA:SH /R:0 /W:1 /COPY:DAT /DCOPY:DT /UNILOG:NUL /TEE
         Robocopy "${pwshdir}\.github\" "${poshmock}\.github\" /MIR /XA:SH /R:0 /W:1 /COPY:DAT /DCOPY:DT /UNILOG:NUL /TEE
         Robocopy "${pwshdir}\tests\" "${poshmock}\tests\" /MIR /XA:SH /R:0 /W:1 /COPY:DAT /DCOPY:DT /UNILOG:NUL /TEE
+    ```
 
 .EXAMPLE
-    pwmake -f ~/Documents/Makefile -Help
+    # Rename extension of script files and Zip archive
+    PS > pwmake -f ~/Documents/Makefile -Help
 
     target synopsis
     ------ --------
     all    Add ".txt" to the extension of the script file and Zip archive
     clean  Remove "*.txt" items in Documents directory
 
-
-    cat ~/Documents/Makefile
+    # Show Makefile
+    PS > cat ~/Documents/Makefile
     documentdir := ~/Documents
 
     .PHONY: all
@@ -502,14 +413,14 @@ function pwmake {
         ## parse help messages written in the following format
         ##   target: [dep dep ...] ## synopsis
         ##
-        ## bellow is the output
+        ##   bellow is the output
         ##
-        ## $ pwmake -Help
+        ##   PS> pwmake -Help
         ##
-        ## target synopsis
-        ## ------ --------
-        ## help   help message
-        ## new    create directory and set skeleton files
+        ##   target synopsis
+        ##   ------ --------
+        ##   help   help message
+        ##   new    create directory and set skeleton files
         ##
         if ($argBlock){
             $varDict = @{}

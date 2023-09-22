@@ -20,6 +20,8 @@
         - root
             - this is plain text_
     
+    You can change the plaintext shape with -TerminalShape <shape> option
+    
     The 1st line begins with "# ", it is considered as a title.
     Blank lines are ignored.
     Lines beginning with "//" are treated as comments.
@@ -340,6 +342,26 @@ function mind2dot {
         [string]$FirstNodeShape,
 
         [Parameter( Mandatory=$False)]
+        [ValidateSet(
+            "Default", "record",
+            "box","polygon","ellipse","oval",
+            "circle","point","egg","triangle",
+            "plaintext","plain","diamond","trapezium",
+            "parallelogram","house","pentagon","hexagon",
+            "septagon","octagon","doublecircle","doubleoctagon",
+            "tripleoctagon","invtriangle","invtrapezium","invhouse",
+            "Mdiamond","Msquare","Mcircle","rect",
+            "rectangle","square","star","none",
+            "underline","cylinder","note","tab",
+            "folder","box3d","component","promoter",
+            "cds","terminator","utr","primersite",
+            "restrictionsite","fivepoverhang","threepoverhang","noverhang",
+            "assembly","signature","insulator","ribosite",
+            "rnastab","proteasesite","proteinstab","rpromoter",
+            "rarrow","larrow","lpromoter")]
+        [string]$TerminalShape = "plaintext",
+
+        [Parameter( Mandatory=$False)]
         [string]$FirstNodeFillColor,
 
         [Parameter( Mandatory=$False)]
@@ -511,7 +533,7 @@ function mind2dot {
             [string] $nodeId    = """$nodeId"""
             [string] $nodeLabel = """$nodeLabel"""
             if ($plainTextFlag){
-                $nShape = '"plaintext"'
+                $nShape = """$TerminalShape"""
             } elseif (($FirstNodeShape) -and ($nodeID -eq '"ID0001"')){
                 $nShape = """$FirstNodeShape"""
             } else {

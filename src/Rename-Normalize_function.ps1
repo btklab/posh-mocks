@@ -226,3 +226,4 @@ function Rename-Normalize {
         }
     }
 }
+Set-Alias -name ren2norm -value Rename-Normalize
