@@ -17,10 +17,17 @@ function list:
 
 ```powershell
 # one-liner to create function list
-cat README.md | grep '^#### ' | grep -o '\[[^[]+\]' | sort | flat -ofs ", " | Set-Clipboard
+cat README.md `
+    | grep '^#### ' `
+    | grep -o '\[[^[]+\]' `
+    | sort {
+        -join ( [int[]] $_.ToCharArray()).ForEach('ToString', 'x4')
+    } `
+    | flat -ofs ", " `
+    | Set-Clipboard
 ```
 
-- [Add-LineBreak], [Add-LineBreakEndOfFile], [Add-Stats], [addb], [addl], [addr], [addt], [Apply-Function], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [Delete-Field], [delf], [Detect-XrsAnomaly], [dot2gviz], [Drop-NA], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [Get-AppShortcut], [Get-OGP], [getfirst], [getlast], [GroupBy-Object], [grep], [gyo], [han], [head], [image2md], [Invoke-Link], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdfocus], [mdgrep], [Measure-Property], [mind2dot], [mind2pu], [movw], [nextyear], [Override-Yaml], [pawk], [percentile], [Plot-BarChart], [pu2java], [push2loc], [pwmake], [pwsync], [Rename-Normalize], [Replace-NA], [retu], [rev], [rev2], [say], [sed-i], [sed], [Select-Field], [self], [seq2pu], [Shorten-PropertyName], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-LineBreakEndOfFile], [Add-LineBreak], [Add-Stats], [Apply-Function], [ConvImage], [Delete-Field], [Detect-XrsAnomaly], [Drop-NA], [Get-AppShortcut], [Get-OGP], [GroupBy-Object], [Invoke-Link], [Measure-Property], [Override-Yaml], [Plot-BarChart], [Rename-Normalize], [Replace-NA], [Select-Field], [Shorten-PropertyName], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [getfirst], [getlast], [grep], [gyo], [han], [head], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdfocus], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [retu], [rev2], [rev], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 Inspired by:
 
@@ -3940,12 +3947,12 @@ Multiple columns can be specified at once.
 - Syntax
     - `Add-Stats [-v] <col>,<col>,... <params>`
 - Params
-    - `[-Sum]`
     - `[-Cnt|-Count]`
+    - `[-Sum]`
     - `[-Mean|-Average]`
     - `[-Max|-Maximum]`
     - `[-Min|-Minimum]`
-    - `[-Sd|-StandardDeviation]`
+    - `[-SD|-StandardDeviation]`
     - `[-All|-AllStats]`
     - `[-Rs]` ...Absolute value of deviation from previous record
 
@@ -4005,7 +4012,7 @@ Pre `sort -Stable` needed.
 - Syntax
     - ` Measure-Property [-v|-Value] <String[]> [[-k|-Key] <String[]>]`
 - Params
-    - `[-Stdev|-StandardDeviation]`
+    - `[-SD|-StandardDeviation]`
     - `[-Sum]`
     - `[-All|-AllStats]`
     - `[-Mean|-Average]`
@@ -4073,7 +4080,7 @@ Using the X-Rs control chart algorithm.
         - Table 3 - Control limits formula for X control chart (individual measurement value control chart)
 
 Deviation judgment is expressed as an integer
-from 0 to 3 in Property="xrs":
+from `0` to `7` in Property="xrs":
 
 - `0` ... No deviation
 - `1` ... Anomalies detected as deviation from the X-UCL line
