@@ -8,7 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- Fixed [Plot-BarChart] typo
+- NA
+
+## [5.0.2] - 2023-09-23
+
+- Fixed [README.md], [Plot-BarChart], [Detect-XrsAnomaly] typo
+- Renamed [Measure-Property], [Add-Stats] alias
 
 ## [5.0.1] - 2023-09-22
 
@@ -450,7 +455,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Delete-Field]: src/Delete-Field_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/5.0.1..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/5.0.2..HEAD
+[5.0.1]: https://github.com/btklab/posh-mocks/releases/tag/5.0.2
 [5.0.1]: https://github.com/btklab/posh-mocks/releases/tag/5.0.1
 [5.0.0]: https://github.com/btklab/posh-mocks/releases/tag/5.0.0
 [4.3.0]: https://github.com/btklab/posh-mocks/releases/tag/4.3.0
@@ -495,4 +501,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.0]: https://github.com/btklab/posh-mocks/releases/tag/1.0.0
 [0.2.0]: https://github.com/btklab/posh-mocks/releases/tag/0.2.0
 [0.1.0]: https://github.com/btklab/posh-mocks/releases/tag/0.1.0
-

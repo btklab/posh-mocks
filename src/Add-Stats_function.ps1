@@ -9,12 +9,12 @@
         Add-Stats [-v] <col>,<col>,... <params>
 
     Params:
-        [-Sum]
         [-Cnt|-Count]
+        [-Sum]
         [-Mean|-Average]
         [-Max|-Maximum]
         [-Min|-Minimum]
-        [-Sd|-StandardDeviation]
+        [-SD|-StandardDeviation]
         [-All|-AllStats]
         [-Rs] ...Absolute value of deviation
                  from previous record
@@ -126,7 +126,7 @@ function Add-Stats
         [switch] $Rs,
         
         [Parameter( Mandatory=$False)]
-        [Alias('Sd')]
+        [Alias('SD')]
         [switch] $StandardDeviation,
         
         [Parameter( Mandatory=$False)]

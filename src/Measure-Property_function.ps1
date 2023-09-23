@@ -40,7 +40,7 @@ function Measure-Property
         [string[]] $Key,
         
         [Parameter( Mandatory=$False)]
-        [Alias('Stdev')]
+        [Alias('SD')]
         [switch] $StandardDeviation,
         
         [Parameter( Mandatory=$False)]
@@ -51,7 +51,7 @@ function Measure-Property
         [switch] $AllStats,
         
         [Parameter( Mandatory=$False)]
-        [Alias('<ean')]
+        [Alias('Mean')]
         [switch] $Average,
         
         [Parameter( Mandatory=$False)]
