@@ -28,7 +28,7 @@
             (individual measurement value control chart)
         
         Deviation judgment is expressed as an integer
-        from 0 to 3 in Property="xrs":
+        from 0 to 7 in Property="xrs":
 
             0 ... No deviation
             1 ... Anomalies detected as deviation from the X-UCL line

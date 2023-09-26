@@ -48,7 +48,7 @@
     1..10 `
         | addt val `
         | ConvertFrom-Csv `
-        | Plot-BarChart v -w 10 -m "|"
+        | Plot-BarChart val -w 10 -m "|"
 
     val  BarChart
       -  --------

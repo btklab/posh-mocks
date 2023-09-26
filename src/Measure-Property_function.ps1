@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Measure-Property - Apply first record's key to each output
+    Measure-Property (Alias: mprop) - Apply first record's key to each output
 
     Pre sort -Stable needed
 
@@ -40,7 +40,7 @@ function Measure-Property
         [string[]] $Key,
         
         [Parameter( Mandatory=$False)]
-        [Alias('Stdev')]
+        [Alias('SD')]
         [switch] $StandardDeviation,
         
         [Parameter( Mandatory=$False)]
@@ -51,7 +51,7 @@ function Measure-Property
         [switch] $AllStats,
         
         [Parameter( Mandatory=$False)]
-        [Alias('<ean')]
+        [Alias('Mean')]
         [switch] $Average,
         
         [Parameter( Mandatory=$False)]
@@ -165,3 +165,5 @@ function Measure-Property
             $gObj | Select-Object -ExcludeProperty $ExcludeProperties
     }
 }
+Set-Alias -Name mprop -Value Measure-Property
+

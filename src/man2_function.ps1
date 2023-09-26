@@ -28,27 +28,37 @@
 
 
 .EXAMPLE
-    man2 -Column 5
-    PS > man2 -c 5
+    man2 -Column 4
+    PS > man2 -c 4
 
-    Add-CrLf           decil           han         mind2pu       table2md
-    Add-CrLf-EndOfFile delf            head        movw          tac
-    addb               dot2gviz        i           Override-Yaml tail
-    addl               filehame        image2md    pawk          tarr
-    addr               fillretu        jl          percentile    tateyoko
-    addt               flat            json2txt    pu2java       teatimer
-    cat2               flow2pu         juni        pwmake        tenki
-    catcsv             fpath           keta        retu          tex2pdf
-    chead              fval            kinsoku     rev           toml2psobject
-    clip2img           fwatch          lcalc       rev2          uniq
-    clipwatch          gantt2pu        linkcheck   say           vbStrConv
-    conv               gdate           linkextract sed           watercss
-    ConvImage          Get-AppShortcut logi2dot    sed-i         wrap
-    count              Get-OGP         logi2pu     self          yarr
-    csv2sqlite         getfirst        man2        seq2pu        ycalc
-    csv2txt            getlast         map2        sleepy        ysort
-    ctail              grep            mdgrep      sm2           zen
-    ctail2             gyo             mind2dot    summary
+    Add-LineBreakEndOfFile clip2file      han         rev2
+    Add-LineBreak          clip2hyperlink head        rev
+    Add-Stats              clip2img       image2md    say
+    Apply-Function         clip2normalize jl          sed-i
+    ConvImage              clip2push      json2txt    sed
+    Delete-Field           clip2shortcut  juni        self
+    Detect-XrsAnomaly      conv           keta        seq2pu
+    Drop-NA                count          kinsoku     sleepy
+    Get-AppShortcut        csv2sqlite     lcalc       sm2
+    Get-First              csv2txt        linkcheck   summary
+    Get-Last               ctail2         linkextract table2md
+    Get-OGP                ctail          list2table  tac
+    GroupBy-Object         decil          logi2dot    tail-f
+    Invoke-Link            delf           logi2pu     tail
+    Measure-Property       dot2gviz       man2        tarr
+    Override-Yaml          filehame       map2        tateyoko
+    Plot-BarChart          fillretu       mdfocus     teatimer
+    Rename-Normalize       flat           mdgrep      tenki
+    Replace-NA             flow2pu        mind2dot    tex2pdf
+    Select-Field           fpath          mind2pu     toml2psobject
+    Shorten-PropertyName   fval           movw        uniq
+    addb                   fwatch         pawk        vbStrConv
+    addl                   gantt2pu       percentile  watercss
+    addr                   gdate          pu2java     wrap
+    addt                   getfirst       push2loc    yarr
+    cat2                   getlast        pwmake      ycalc
+    catcsv                 grep           pwsync      ysort
+    chead                  gyo            retu        zen
 
 .EXAMPLE
     man2 getlast
@@ -73,29 +83,41 @@
 
 .EXAMPLE
     # use only Format-Wide command let
-    ls *.ps1 -File `
-        | select @{L="Name";E={$_.Name.Replace('_function.ps1','')}} `
-        | Format-Wide -Column 5
+    ls src/*_function.ps1 -File `
+      | Sort-Object {
+        -join ( [int[]] $_.Name.ToCharArray()).ForEach('ToString', 'x4')
+        } `
+      | select @{L="Name";E={$_.Name.Replace('_function.ps1','')}} `
+      | Format-Wide -Column 4
 
-    Add-CrLf      Add-CrLf-End… addb         addl         addr
-    addt          cat2          catcsv       chead        clip2img
-    clipwatch     conv          ConvImage    count        csv2sqlite
-    csv2txt       ctail         ctail2       decil        delf
-    dot2gviz      filehame      fillretu     flat         flow2pu
-    fpath         fval          fwatch       gantt2pu     gdate
-    Get-AppShort… Get-OGP       getfirst     getlast      grep
-    gyo           han           head         i            image2md
-    jl            json2txt      juni         keta         kinsoku
-    lcalc         linkcheck     linkextract  logi2dot     logi2pu
-    man2          map2          mdgrep       mind2dot     mind2pu
-    movw          Override-Yaml pawk         percentile   pu2java
-    pwmake        retu          rev          rev2         say
-    sed           sed-i         self         seq2pu       sleepy
-    sm2           summary       table2md     tac          tail
-    tarr          tateyoko      teatimer_ex… teatimer     tenki
-    tex2pdf       toml2psobject uniq         vbStrConv    watercss
-    wrap          yarr          ycalc        ysort        zen
-
+    Add-LineBreakEn… Add-LineBreak    Add-Stats        Apply-Function
+    ConvImage        Delete-Field     Detect-XrsAnoma… Drop-NA
+    Get-AppShortcut  Get-First        Get-Last         Get-OGP
+    GroupBy-Object   Invoke-Link      Measure-Property Override-Yaml
+    Plot-BarChart    Rename-Normalize Replace-NA       Select-Field
+    Shorten-Propert… addb             addl             addr
+    addt             cat2             catcsv           chead
+    clip2file        clip2hyperlink   clip2img         clip2normalize
+    clip2push        clip2shortcut    conv             count
+    csv2sqlite       csv2txt          ctail2           ctail
+    decil            delf             dot2gviz         filehame
+    fillretu         flat             flow2pu          fpath
+    fval             fwatch           gantt2pu         gdate
+    getfirst         getlast          grep             gyo
+    han              head             image2md         jl
+    json2txt         juni             keta             kinsoku
+    lcalc            linkcheck        linkextract      list2table
+    logi2dot         logi2pu          man2             map2
+    mdfocus          mdgrep           mind2dot         mind2pu
+    movw             pawk             percentile       pu2java
+    push2loc         pwmake           pwsync           retu
+    rev2             rev              say              sed-i
+    sed              self             seq2pu           sleepy
+    sm2              summary          table2md         tac
+    tail-f           tail             tarr             tateyoko
+    teatimer         tenki            tex2pdf          toml2psobject
+    uniq             vbStrConv        watercss         wrap
+    yarr             ycalc            ysort            zen
 
 #>
 function man2 {
@@ -175,8 +197,8 @@ function man2 {
 
     # Do not use dependency files
     if ( $Independent ){
-        Get-ChildItem -Path $targetDir -File `
-            | Sort-Object -Property Name `
+        Get-ChildItem -Path $targetDir -File -Name `
+            | Sort-Object { -join ( [int[]]($_.Name.ToCharArray()).ForEach('ToString', 'x4')) } `
             | Select-Object @{ label="Name"; expression={ $_.Name.Replace('_function.ps1','') } } `
             | Where-Object {
                 if (($Exclude) -and ($Include)) {
@@ -197,7 +219,7 @@ function man2 {
     if ($isPwshDir) {
         # pwsh dir
         $fileList = Get-ChildItem -Path $targetDir -File `
-            | Sort-Object -Property Name `
+            | Sort-Object { -join ( [int[]] $_.Name.ToCharArray()).ForEach('ToString', 'x4') } `
             | Where-Object { $_.Name -match '_function\.ps1$' } `
             | Select-Object @{ label="Name"; expression={ $_.Name.Replace('_function.ps1','') } } `
             | Where-Object {
@@ -215,7 +237,7 @@ function man2 {
     } else {
         # not pwsh dir
         $fileList = Get-ChildItem -Path $targetDir -File  `
-            | Sort-Object -Property Name `
+            | Sort-Object { -join ( [int[]] $_.Name.ToCharArray()).ForEach('ToString', 'x4') } `
             | Where-Object {
                 if (($Exclude) -and ($Include)) {
                     $_.Name -match $Include -and $_.Name -notmatch $Exclude
