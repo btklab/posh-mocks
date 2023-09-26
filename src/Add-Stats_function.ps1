@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Add-Stats - Add statistics columns to each record
+    Add-Stats (Alias: astat) - Add statistics columns to each record
 
     For categorical data analysis of time series data.
     Automatically exclude NA, NaN, Null from the specified column.
@@ -370,3 +370,4 @@ function Add-Stats
         #$obj
     }
 }
+Set-Alias -Name astat -Value Add-Stats

@@ -21,7 +21,7 @@ cat README.md `
     | grep '^#### ' `
     | grep -o '\[[^[]+\]' `
     | sort {
-        -join ( [int[]] $_.ToCharArray()).ForEach('ToString', 'x4')
+        -join ( [int[]]($_.ToCharArray()).ForEach('ToString', 'x4'))
     } `
     | flat -ofs ", " `
     | Set-Clipboard
@@ -56,7 +56,8 @@ Inspired by:
 - [Water.css](https://watercss.kognise.dev/)
     - GitHub: <https://github.com/kognise/water.css>
     - License: The MIT License (MIT) Copyright © 2019 Kognise
-
+- [nicholasdille/PowerShell-Statistics - GitHub](https://github.com/nicholasdille/PowerShell-Statistics/tree/master)
+    - License: [The Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 
 主に現実世界の不定形文字列に対してパターンマッチング処理を行うためのフィルタ群。基本的な入力として、UTF-8＋半角スペース区切り＋行指向のパイプライン経由文字列データ（テキストオブジェクト）を期待する。出力もPowerShellらしいオブジェクトではなく、文字列である。一部の関数はオブジェクトのパイプライン入力を受け付けたり、オブジェクトとして出力する「PowerShellのコマンドレット的といえるもの」もあるが、動作としてはUnix/LinuxのBashなどのシェルに寄せている。
@@ -151,35 +152,34 @@ The reason for depending on [flat], [tateyoko] and [keta] is to obtain this outp
 man2 -Column 4
 man2 -c 4
 
-Add-LineBreak          Detect-XrsAnomaly kinsoku          sed
-Add-LineBreakEndOfFile dot2gviz          lcalc            sed-i
-addb                   Drop-NA           linkcheck        Select-Field
-addl                   filehame          linkextract      self
-addr                   fillretu          list2table       seq2pu
-addt                   flat              logi2dot         Shorten-PropertyName
-Apply-Function         flow2pu           logi2pu          sleepy
-Cast-Double            fpath             man2             sm2
-Cast-Integer           fval              map2             summary
-cat2                   fwatch            mdfocus          table2md
-catcsv                 gantt2pu          mdgrep           tac
-chead                  gdate             Measure-Property tail
-clip2dir               Get-AppShortcut   mind2dot         tail-f
-clip2file              Get-First         mind2pu          tarr
-clip2hyperlink         Get-Last          movw             tateyoko
-clip2img               Get-OGP           Override-Yaml    teatimer
-clip2normalize         Get-RandomRecord  pawk             tenki
-clip2push              getfirst          percentile       tex2pdf
-clip2shortcut          getlast           Plot-BarChart    toml2psobject
-conv                   grep              pu2java          uniq
-ConvImage              gyo               push2loc         vbStrConv
-count                  han               pwmake           watercss
-csv2sqlite             head              pwsync           wrap
-csv2txt                i                 Rename-Normalize yarr
-ctail                  image2md          Replace-NA       ycalc
-ctail2                 jl                retu             ysort
-decil                  json2txt          rev              zen
-Delete-Field           juni              rev2
-delf                   keta              say
+Add-LineBreakEndOfFile clip2file      han         rev2
+Add-LineBreak          clip2hyperlink head        rev
+Add-Stats              clip2img       image2md    say
+Apply-Function         clip2normalize jl          sed-i
+ConvImage              clip2push      json2txt    sed
+Delete-Field           clip2shortcut  juni        self
+Detect-XrsAnomaly      conv           keta        seq2pu
+Drop-NA                count          kinsoku     sleepy
+Get-AppShortcut        csv2sqlite     lcalc       sm2
+Get-First              csv2txt        linkcheck   summary
+Get-Last               ctail2         linkextract table2md
+Get-OGP                ctail          list2table  tac
+GroupBy-Object         decil          logi2dot    tail-f
+Invoke-Link            delf           logi2pu     tail
+Measure-Property       dot2gviz       man2        tarr
+Override-Yaml          filehame       map2        tateyoko
+Plot-BarChart          fillretu       mdfocus     teatimer
+Rename-Normalize       flat           mdgrep      tenki
+Replace-NA             flow2pu        mind2dot    tex2pdf
+Select-Field           fpath          mind2pu     toml2psobject
+Shorten-PropertyName   fval           movw        uniq
+addb                   fwatch         pawk        vbStrConv
+addl                   gantt2pu       percentile  watercss
+addr                   gdate          pu2java     wrap
+addt                   getfirst       push2loc    yarr
+cat2                   getlast        pwmake      ycalc
+catcsv                 grep           pwsync      ysort
+chead                  gyo            retu        zen
 ```
 
 
@@ -188,39 +188,41 @@ However, the order of the files is slightly different from [man2].
 Lexicographically sorted from **left to right**.
 
 ```powershell
-ls src/*.ps1 -File `
-  | select @{L="Name";E={$_.Name.Replace('_function.ps1','')}} `
-  | Format-Wide -Column 4
+ls src/*_function.ps1 -File `
+    | Sort-Object {
+        -join ( [int[]] $_.Name.ToCharArray()).ForEach('ToString', 'x4')
+    } `
+    | select @{L="Name";E={$_.Name.Replace('_function.ps1','')}} `
+    | Format-Wide -Column 4
 
-Add-LineBreak         Add-LineBreakEndOfFi… addb                  addl
-addr                  addt                  Apply-Function        Cast-Double
-Cast-Integer          cat2                  catcsv                chead
-clip2dir              clip2file             clip2hyperlink        clip2img
-clip2normalize        clip2push             clip2shortcut         conv
-ConvImage             count                 csv2sqlite            csv2txt
-ctail                 ctail2                decil                 Delete-Field
-delf                  Detect-XrsAnomaly     dot2gviz              Drop-NA
-filehame              fillretu              flat                  flow2pu
-fpath                 fval                  fwatch                gantt2pu
-gdate                 Get-AppShortcut       Get-First             Get-Last
-Get-OGP               Get-RandomRecord      getfirst              getlast
-grep                  gyo                   han                   head
-i                     image2md              jl                    json2txt
-juni                  keta                  kinsoku               lcalc
-linkcheck             linkextract           list2table            logi2dot
-logi2pu               man2                  map2                  mdfocus
-mdgrep                Measure-Property      mind2dot              mind2pu
-movw                  Override-Yaml         pawk                  percentile
-Plot-BarChart         pu2java               push2loc              pwmake
-pwsync                Rename-Normalize      Replace-NA            retu
-rev                   rev2                  say                   sed
-sed-i                 Select-Field          self                  seq2pu
-Shorten-PropertyName  sleepy                sm2                   summary
-table2md              tac                   tail                  tail-f
-tarr                  tateyoko              teatimer_exec.ps1     teatimer
-tenki                 tex2pdf               toml2psobject         uniq
-vbStrConv             watercss              wrap                  yarr
-ycalc                 ysort                 zen
+Add-LineBreakEn… Add-LineBreak    Add-Stats        Apply-Function
+ConvImage        Delete-Field     Detect-XrsAnoma… Drop-NA
+Get-AppShortcut  Get-First        Get-Last         Get-OGP
+GroupBy-Object   Invoke-Link      Measure-Property Override-Yaml
+Plot-BarChart    Rename-Normalize Replace-NA       Select-Field
+Shorten-Propert… addb             addl             addr
+addt             cat2             catcsv           chead
+clip2file        clip2hyperlink   clip2img         clip2normalize
+clip2push        clip2shortcut    conv             count
+csv2sqlite       csv2txt          ctail2           ctail
+decil            delf             dot2gviz         filehame
+fillretu         flat             flow2pu          fpath
+fval             fwatch           gantt2pu         gdate
+getfirst         getlast          grep             gyo
+han              head             image2md         jl
+json2txt         juni             keta             kinsoku
+lcalc            linkcheck        linkextract      list2table
+logi2dot         logi2pu          man2             map2
+mdfocus          mdgrep           mind2dot         mind2pu
+movw             pawk             percentile       pu2java
+push2loc         pwmake           pwsync           retu
+rev2             rev              say              sed-i
+sed              self             seq2pu           sleepy
+sm2              summary          table2md         tac
+tail-f           tail             tarr             tateyoko
+teatimer         tenki            tex2pdf          toml2psobject
+uniq             vbStrConv        watercss         wrap
+yarr             ycalc            ysort            zen
 ```
 
 [man2]を使わず、[flat], [tateyoko], [keta]のコンビネーションで[man2]の出力（上から下に辞書順）を得るワンライナーを以下に示す。
@@ -228,41 +230,44 @@ ycalc                 ysort                 zen
 
 ```powershell
 ls src/*.ps1 -File -Name `
+    | Sort-Object {
+        -join ( [int[]] $_.ToCharArray()).ForEach('ToString', 'x4')
+    } `
     | %{ $_.Replace('_function.ps1','') } `
     | flat 30 `
     | tateyoko `
     | keta -l
 
-Add-LineBreak          dot2gviz         linkcheck        self
-Add-LineBreakEndOfFile Drop-NA          linkextract      seq2pu
-addb                   filehame         list2table       Shorten-PropertyName
-addl                   fillretu         logi2dot         sleepy
-addr                   flat             logi2pu          sm2
-addt                   flow2pu          man2             summary
-Apply-Function         fpath            map2             table2md
-Cast-Double            fval             mdfocus          tac
-Cast-Integer           fwatch           mdgrep           tail
-cat2                   gantt2pu         Measure-Property tail-f
-catcsv                 gdate            mind2dot         tarr
-chead                  Get-AppShortcut  mind2pu          tateyoko
-clip2dir               Get-First        movw             teatimer_exec.ps1
-clip2file              Get-Last         Override-Yaml    teatimer
-clip2hyperlink         Get-OGP          pawk             tenki
-clip2img               Get-RandomRecord percentile       tex2pdf
-clip2normalize         getfirst         Plot-BarChart    toml2psobject
-clip2push              getlast          pu2java          uniq
-clip2shortcut          grep             push2loc         vbStrConv
-conv                   gyo              pwmake           watercss
-ConvImage              han              pwsync           wrap
-count                  head             Rename-Normalize yarr
-csv2sqlite             i                Replace-NA       ycalc
-csv2txt                image2md         retu             ysort
-ctail                  jl               rev              zen
-ctail2                 json2txt         rev2
-decil                  juni             say
-Delete-Field           keta             sed
-delf                   kinsoku          sed-i
-Detect-XrsAnomaly      lcalc            Select-Field
+Add-LineBreakEndOfFile clip2img       json2txt    seq2pu
+Add-LineBreak          clip2normalize juni        sleepy
+Add-Stats              clip2push      keta        sm2
+Apply-Function         clip2shortcut  kinsoku     summary
+ConvImage              conv           lcalc       table2md
+Delete-Field           count          linkcheck   tac
+Detect-XrsAnomaly      csv2sqlite     linkextract tail-f
+Drop-NA                csv2txt        list2table  tail
+Get-AppShortcut        ctail2         logi2dot    tarr
+Get-First              ctail          logi2pu     tateyoko
+Get-Last               decil          man2        teatimer_exec.ps1
+Get-OGP                delf           map2        teatimer
+GroupBy-Object         dot2gviz       mdfocus     tenki
+Invoke-Link            filehame       mdgrep      tex2pdf
+Measure-Property       fillretu       mind2dot    toml2psobject
+Override-Yaml          flat           mind2pu     uniq
+Plot-BarChart          flow2pu        movw        vbStrConv
+Rename-Normalize       fpath          pawk        watercss
+Replace-NA             fval           percentile  wrap
+Select-Field           fwatch         pu2java     yarr
+Shorten-PropertyName   gantt2pu       push2loc    ycalc
+addb                   gdate          pwmake      ysort
+addl                   getfirst       pwsync      zen
+addr                   getlast        retu
+addt                   grep           rev2
+cat2                   gyo            rev
+catcsv                 han            say
+chead                  head           sed-i
+clip2file              image2md       sed
+clip2hyperlink         jl             self
 ```
 
 ### Unix-like text filters
@@ -3563,6 +3568,13 @@ k1 k2 12 24 37 11 23 107 21.4 37 11
 
 A toolset for categorical analysis and anomaly detection for time series data.
 
+The core concept of this section, the idea of performing data analysis on the console, was heavily inspired by the following sites:
+
+- thanks to
+    - Nicholas Dille, [Data Analysis using #PowerShell](https://dille.name/blog/2017/03/21/data-analysis-using-powershell/), Published on 21 Mar 2017
+    - [GitHub - nicholasdille/PowerShell-Statistics: Statistical analysis of data on the command line](https://github.com/nicholasdille/PowerShell-Statistics)
+        - License: [Apache License 2.0](http://www.apache.org/licenses/)
+
 As a basis for the anomaly detection mechanism, I adopted the X-control chart method, in which process variation is determinded from the average of the difference between successive observations.
 
 - [JISZ9020-2:2016 管理図 - 第2部：シューハート管理図](https://kikakurui.com/z9/Z9020-2-2016-01.html) - Part 2: Shewhart control charts
@@ -4001,7 +4013,7 @@ sl  sw  pl  pw  species    MeanOf_sl SumOf_sl
 ```
 
 
-#### [Measure-Property] - Apply first record's key to each output
+#### [Measure-Property] (Alias: mprop) - Apply first record's key to each output
 
 [Measure-Property]: src/Measure-Property_function.ps1
 

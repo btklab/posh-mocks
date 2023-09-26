@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Measure-Property - Apply first record's key to each output
+    Measure-Property (Alias: mprop) - Apply first record's key to each output
 
     Pre sort -Stable needed
 
@@ -165,3 +165,5 @@ function Measure-Property
             $gObj | Select-Object -ExcludeProperty $ExcludeProperties
     }
 }
+Set-Alias -Name mprop -Value Measure-Property
+
