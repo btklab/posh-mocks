@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Measure-Property (Alias: mprop) - Apply first record's key to each output
+    Measure-Stats (Alias: mstats) - Apply first record's key to each output
 
     Pre sort -Stable needed
 
@@ -10,13 +10,13 @@
 .EXAMPLE
     Import-Csv iris.csv `
         | sort species -Stable `
-        | Measure-Property sepal_length species -Sum -Average `
+        | Measure-Stats sepal_length species -Sum -Average `
         | ft
 
     Import-Csv iris.csv `
         | sort species -Stable `
         | Apply-Function species {
-            Measure-Property sepal_length species -Sum -Average } `
+            Measure-Stats sepal_length species -Sum -Average } `
         | ft
 
     species    Property        Sum Average
@@ -27,7 +27,7 @@
 
 
 #>
-function Measure-Property
+function Measure-Stats
 {
     [CmdletBinding()]
     Param(
@@ -165,5 +165,4 @@ function Measure-Property
             $gObj | Select-Object -ExcludeProperty $ExcludeProperties
     }
 }
-Set-Alias -Name mprop -Value Measure-Property
-
+Set-Alias -Name mstats -Value Measure-Stats

@@ -21,13 +21,13 @@ cat README.md `
     | grep '^#### ' `
     | grep -o '\[[^[]+\]' `
     | sort {
-        -join ( [int[]]($_.ToCharArray()).ForEach('ToString', 'x4'))
+        -join ( [int[]] $_.ToCharArray()).ForEach('ToString', 'x4')
     } `
     | flat -ofs ", " `
     | Set-Clipboard
 ```
 
-- [Add-LineBreakEndOfFile], [Add-LineBreak], [Add-Stats], [Apply-Function], [ConvImage], [Delete-Field], [Detect-XrsAnomaly], [Drop-NA], [Get-AppShortcut], [Get-OGP], [GroupBy-Object], [Invoke-Link], [Measure-Property], [Override-Yaml], [Plot-BarChart], [Rename-Normalize], [Replace-NA], [Select-Field], [Shorten-PropertyName], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [getfirst], [getlast], [grep], [gyo], [han], [head], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdfocus], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [retu], [rev2], [rev], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-LineBreakEndOfFile], [Add-LineBreak], [Add-Stats], [Apply-Function], [ConvImage], [Delete-Field], [Detect-XrsAnomaly], [Drop-NA], [Get-AppShortcut], [Get-Histogram], [Get-OGP], [GroupBy-Object], [Invoke-Link], [Measure-Stats], [Override-Yaml], [Plot-BarChart], [Rename-Normalize], [Replace-NA], [Select-Field], [Shorten-PropertyName], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [getfirst], [getlast], [grep], [gyo], [han], [head], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [man2], [map2], [mdfocus], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [retu], [rev2], [rev], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 Inspired by:
 
@@ -152,34 +152,35 @@ The reason for depending on [flat], [tateyoko] and [keta] is to obtain this outp
 man2 -Column 4
 man2 -c 4
 
-Add-LineBreakEndOfFile clip2file      han         rev2
-Add-LineBreak          clip2hyperlink head        rev
-Add-Stats              clip2img       image2md    say
-Apply-Function         clip2normalize jl          sed-i
-ConvImage              clip2push      json2txt    sed
-Delete-Field           clip2shortcut  juni        self
-Detect-XrsAnomaly      conv           keta        seq2pu
-Drop-NA                count          kinsoku     sleepy
-Get-AppShortcut        csv2sqlite     lcalc       sm2
-Get-First              csv2txt        linkcheck   summary
-Get-Last               ctail2         linkextract table2md
-Get-OGP                ctail          list2table  tac
-GroupBy-Object         decil          logi2dot    tail-f
-Invoke-Link            delf           logi2pu     tail
-Measure-Property       dot2gviz       man2        tarr
-Override-Yaml          filehame       map2        tateyoko
-Plot-BarChart          fillretu       mdfocus     teatimer
-Rename-Normalize       flat           mdgrep      tenki
-Replace-NA             flow2pu        mind2dot    tex2pdf
-Select-Field           fpath          mind2pu     toml2psobject
-Shorten-PropertyName   fval           movw        uniq
-addb                   fwatch         pawk        vbStrConv
-addl                   gantt2pu       percentile  watercss
-addr                   gdate          pu2java     wrap
-addt                   getfirst       push2loc    yarr
-cat2                   getlast        pwmake      ycalc
-catcsv                 grep           pwsync      ysort
-chead                  gyo            retu        zen
+Add-LineBreakEndOfFile clip2file      head        say
+Add-LineBreak          clip2hyperlink image2md    sed-i
+Add-Stats              clip2img       jl          sed
+Apply-Function         clip2normalize json2txt    self
+ConvImage              clip2push      juni        seq2pu
+Delete-Field           clip2shortcut  keta        sleepy
+Detect-XrsAnomaly      conv           kinsoku     sm2
+Drop-NA                count          lcalc       summary
+Get-AppShortcut        csv2sqlite     linkcheck   table2md
+Get-First              csv2txt        linkextract tac
+Get-Histogram          ctail2         list2table  tail-f
+Get-Last               ctail          logi2dot    tail
+Get-OGP                decil          logi2pu     tarr
+GroupBy-Object         delf           man2        tateyoko
+Invoke-Link            dot2gviz       map2        teatimer
+Measure-Stats          filehame       mdfocus     tenki
+Override-Yaml          fillretu       mdgrep      tex2pdf
+Plot-BarChart          flat           mind2dot    toml2psobject
+Rename-Normalize       flow2pu        mind2pu     uniq
+Replace-NA             fpath          movw        vbStrConv
+Select-Field           fval           pawk        watercss
+Shorten-PropertyName   fwatch         percentile  wrap
+addb                   gantt2pu       pu2java     yarr
+addl                   gdate          push2loc    ycalc
+addr                   getfirst       pwmake      ysort
+addt                   getlast        pwsync      zen
+cat2                   grep           retu
+catcsv                 gyo            rev2
+chead                  han            rev
 ```
 
 
@@ -195,34 +196,35 @@ ls src/*_function.ps1 -File `
     | select @{L="Name";E={$_.Name.Replace('_function.ps1','')}} `
     | Format-Wide -Column 4
 
-Add-LineBreakEn… Add-LineBreak    Add-Stats        Apply-Function
-ConvImage        Delete-Field     Detect-XrsAnoma… Drop-NA
-Get-AppShortcut  Get-First        Get-Last         Get-OGP
-GroupBy-Object   Invoke-Link      Measure-Property Override-Yaml
-Plot-BarChart    Rename-Normalize Replace-NA       Select-Field
-Shorten-Propert… addb             addl             addr
-addt             cat2             catcsv           chead
-clip2file        clip2hyperlink   clip2img         clip2normalize
-clip2push        clip2shortcut    conv             count
-csv2sqlite       csv2txt          ctail2           ctail
-decil            delf             dot2gviz         filehame
-fillretu         flat             flow2pu          fpath
-fval             fwatch           gantt2pu         gdate
-getfirst         getlast          grep             gyo
-han              head             image2md         jl
-json2txt         juni             keta             kinsoku
-lcalc            linkcheck        linkextract      list2table
-logi2dot         logi2pu          man2             map2
-mdfocus          mdgrep           mind2dot         mind2pu
-movw             pawk             percentile       pu2java
-push2loc         pwmake           pwsync           retu
-rev2             rev              say              sed-i
-sed              self             seq2pu           sleepy
-sm2              summary          table2md         tac
-tail-f           tail             tarr             tateyoko
-teatimer         tenki            tex2pdf          toml2psobject
-uniq             vbStrConv        watercss         wrap
-yarr             ycalc            ysort            zen
+Add-LineBreakEndOfFi… Add-LineBreak        Add-Stats            Apply-Function
+ConvImage             Delete-Field         Detect-XrsAnomaly    Drop-NA
+Get-AppShortcut       Get-First            Get-Histogram        Get-Last
+Get-OGP               GroupBy-Object       Invoke-Link          Measure-Stats
+Override-Yaml         Plot-BarChart        Rename-Normalize     Replace-NA
+Select-Field          Shorten-PropertyName addb                 addl
+addr                  addt                 cat2                 catcsv
+chead                 clip2file            clip2hyperlink       clip2img
+clip2normalize        clip2push            clip2shortcut        conv
+count                 csv2sqlite           csv2txt              ctail2
+ctail                 decil                delf                 dot2gviz
+filehame              fillretu             flat                 flow2pu
+fpath                 fval                 fwatch               gantt2pu
+gdate                 getfirst             getlast              grep
+gyo                   han                  head                 image2md
+jl                    json2txt             juni                 keta
+kinsoku               lcalc                linkcheck            linkextract
+list2table            logi2dot             logi2pu              man2
+map2                  mdfocus              mdgrep               mind2dot
+mind2pu               movw                 pawk                 percentile
+pu2java               push2loc             pwmake               pwsync
+retu                  rev2                 rev                  say
+sed-i                 sed                  self                 seq2pu
+sleepy                sm2                  summary              table2md
+tac                   tail-f               tail                 tarr
+tateyoko              teatimer             tenki                tex2pdf
+toml2psobject         uniq                 vbStrConv            watercss
+wrap                  yarr                 ycalc                ysort
+zen
 ```
 
 [man2]を使わず、[flat], [tateyoko], [keta]のコンビネーションで[man2]の出力（上から下に辞書順）を得るワンライナーを以下に示す。
@@ -238,21 +240,22 @@ ls src/*.ps1 -File -Name `
     | tateyoko `
     | keta -l
 
-Add-LineBreakEndOfFile clip2img       json2txt    seq2pu
-Add-LineBreak          clip2normalize juni        sleepy
-Add-Stats              clip2push      keta        sm2
-Apply-Function         clip2shortcut  kinsoku     summary
-ConvImage              conv           lcalc       table2md
-Delete-Field           count          linkcheck   tac
-Detect-XrsAnomaly      csv2sqlite     linkextract tail-f
-Drop-NA                csv2txt        list2table  tail
-Get-AppShortcut        ctail2         logi2dot    tarr
-Get-First              ctail          logi2pu     tateyoko
+Add-LineBreakEndOfFile clip2hyperlink jl          self
+Add-LineBreak          clip2img       json2txt    seq2pu
+Add-Stats              clip2normalize juni        sleepy
+Apply-Function         clip2push      keta        sm2
+ConvImage              clip2shortcut  kinsoku     summary
+Delete-Field           conv           lcalc       table2md
+Detect-XrsAnomaly      count          linkcheck   tac
+Drop-NA                csv2sqlite     linkextract tail-f
+Get-AppShortcut        csv2txt        list2table  tail
+Get-First              ctail2         logi2dot    tarr
+Get-Histogram          ctail          logi2pu     tateyoko
 Get-Last               decil          man2        teatimer_exec.ps1
 Get-OGP                delf           map2        teatimer
 GroupBy-Object         dot2gviz       mdfocus     tenki
 Invoke-Link            filehame       mdgrep      tex2pdf
-Measure-Property       fillretu       mind2dot    toml2psobject
+Measure-Stats          fillretu       mind2dot    toml2psobject
 Override-Yaml          flat           mind2pu     uniq
 Plot-BarChart          flow2pu        movw        vbStrConv
 Rename-Normalize       fpath          pawk        watercss
@@ -267,7 +270,6 @@ cat2                   gyo            rev
 catcsv                 han            say
 chead                  head           sed-i
 clip2file              image2md       sed
-clip2hyperlink         jl             self
 ```
 
 ### Unix-like text filters
@@ -301,7 +303,8 @@ Examples:
 'a1b1c1' | sed 's;1;2;g'
 a2b2c2
 
-# replace only first match
+# replace only first match 
+# (Note that this mode is case sensitive)
 'a1b1c1' | sed 's;1;2;'
 a2b1c1
 
@@ -3574,6 +3577,7 @@ The core concept of this section, the idea of performing data analysis on the co
     - Nicholas Dille, [Data Analysis using #PowerShell](https://dille.name/blog/2017/03/21/data-analysis-using-powershell/), Published on 21 Mar 2017
     - [GitHub - nicholasdille/PowerShell-Statistics: Statistical analysis of data on the command line](https://github.com/nicholasdille/PowerShell-Statistics)
         - License: [Apache License 2.0](http://www.apache.org/licenses/)
+        - See CREDIT section
 
 As a basis for the anomaly detection mechanism, I adopted the X-control chart method, in which process variation is determinded from the average of the difference between successive observations.
 
@@ -3601,7 +3605,7 @@ Example script to calculate basic statistics by category:
 Import-Csv iris.csv `
     | sort species -Stable `
     | Apply-Function species {
-        Measure-Property sepal_length species -Sum -Average } `
+        Measure-Stats sepal_length species -Sum -Average } `
     | ft
 
 species    Property        Sum Average
@@ -3663,7 +3667,7 @@ Procedure:
     - `GroupBy-Object`
 1. **Calculate** and add basic statistics and add to each record with:
     - `Add-Stats`
-    - `Measure-Property`
+    - `Measure-Stats`
     - `Measure-Object` (built-in Cmdlet)
 1. **Detect** anomaly record (using X-Rs control method) with:
     - `Detect-XrsAnomaly`
@@ -3932,7 +3936,7 @@ Gentoo    Biscoe    46.1  female 2007 Gentoo, Biscoe
 Import-Csv penguins.csv `
     | GroupBy-Object species, island {
         Drop-NA bill_length_mm `
-        | Measure-Property bill_length_mm key -Average -Sum -Count
+        | Measure-Stats bill_length_mm key -Average -Sum -Count
     } `
     | ft
 
@@ -4013,16 +4017,16 @@ sl  sw  pl  pw  species    MeanOf_sl SumOf_sl
 ```
 
 
-#### [Measure-Property] (Alias: mprop) - Apply first record's key to each output
+#### [Measure-Stats] (Alias: mstats) - Apply first record's key to each output
 
-[Measure-Property]: src/Measure-Property_function.ps1
+[Measure-Stats]: src/Measure-Stats_function.ps1
 
 Pre `sort -Stable` needed.
 
 - Usage
-    - `man2 Measure-Property`
+    - `man2 Measure-Stats`
 - Syntax
-    - ` Measure-Property [-v|-Value] <String[]> [[-k|-Key] <String[]>]`
+    - ` Measure-Stats [-v|-Value] <String[]> [[-k|-Key] <String[]>]`
 - Params
     - `[-SD|-StandardDeviation]`
     - `[-Sum]`
@@ -4037,7 +4041,7 @@ Example:
 ```powershell
 Import-Csv iris.csv `
     | sort species -Stable `
-    | Measure-Property sepal_length species -Sum -Average `
+    | Measure-Stats sepal_length species -Sum -Average `
     | ft
 
 species    Average    Sum Property
@@ -4051,7 +4055,7 @@ virginica     6.59 329.40 sepal_length
 Import-Csv iris.csv `
     | sort species -Stable `
     | Apply-Function species {
-        Measure-Property sepal_length species -Sum -Average } `
+        Measure-Stats sepal_length species -Sum -Average } `
     | ft
 
 species    Average    Sum Property
@@ -4273,6 +4277,113 @@ count species xrs detect   b_l_m BarChart
     187 Gentoo    0           49.1 ||||||||||||||||
     188 Gentoo    0           48.4 ||||||||||||||||
     189 Gentoo    0           42.6 ||||||||||||||
+```
+
+#### [Get-Histogram] - Get histogram data
+
+[Get-Histogram]: src/Get-Histogram_function.ps1
+
+- Usage
+    - `man2 Get-Histogram`
+- Syntax
+    - `Get-Histogram`
+- Params
+    - `[-v|-Value] <String>`
+    - `[-k|-Key <String>]`
+    - `[-min|-Minimum <Single>]`
+    - `[-max|-Maximum <Single>]`
+    - `[-w|-BucketWidth <Single>]`
+    - `[-c|-BucketCount <Single>]`
+    - `[-a|-AllProperty]`
+
+Examples:
+
+```powershell
+Get-Process `
+    | select Name,Id,WorkingSet `
+    | Get-Histogram -Value WorkingSet -BucketWidth 5mb -Minimum 0 -Maximum 50mb `
+    | Plot-BarChart count -w 40 -m "|" `
+    | ft
+
+Index  lowerBound  upperBound Count BarChart
+-----  ----------  ---------- ----- --------
+    1        0.00  5242880.00    13 ||||||||
+    2  5242880.00 10485760.00    64 ||||||||||||||||||||||||||||||||||||||||
+    3 10485760.00 15728640.00    35 |||||||||||||||||||||
+    4 15728640.00 20971520.00    22 |||||||||||||
+    5 20971520.00 26214400.00    14 ||||||||
+    6 26214400.00 31457280.00     5 |||
+    7 31457280.00 36700160.00     5 |||
+    8 36700160.00 41943040.00     5 |||
+    9 41943040.00 47185920.00     3 |
+    10 47185920.00 52428800.00     1 |
+```
+
+```powershell
+Import-Excel iris.xlsx `
+    | Shorten-PropertyName `
+    | Get-Histogram p_l -w 0.3 `
+    | Plot-BarChart count -w 40 -m "|" `
+    | ft
+
+Index lowerBound upperBound Count BarChart
+----- ---------- ---------- ----- --------
+    1       1.00       1.30    11 |||||||||||||
+    2       1.30       1.60    33 ||||||||||||||||||||||||||||||||||||||||
+    3       1.60       1.90     6 |||||||
+    4       1.90       2.20     0 |
+    5       2.20       2.50     0 |
+    6       2.50       2.80     0 |
+    7       2.80       3.10     1 |
+    8       3.10       3.40     2 ||
+    9       3.40       3.70     4 ||||
+    10       3.70       4.00     9 ||||||||||
+    11       4.00       4.30     9 ||||||||||
+    12       4.30       4.60    15 ||||||||||||||||||
+    13       4.60       4.90    14 ||||||||||||||||
+    14       4.90       5.20    14 ||||||||||||||||
+    15       5.20       5.50     7 ||||||||
+    16       5.50       5.80    12 ||||||||||||||
+    17       5.80       6.10     7 ||||||||
+    18       6.10       6.40     2 ||
+    19       6.40       6.70     3 |||
+    20       6.70       7.00     1 |
+```
+
+```powershell
+# -Key <key> Get the Key property from the
+# first record and display it. Use Apply-Function to
+# aggregate by group in advance.
+
+Import-Excel iris.xlsx `
+    | Shorten-PropertyName -v `
+    | sort species -Stable `
+    | Apply-Function species { `
+        MovingWindow-Approach -v sl `
+        | Get-Histogram rolling -BucketWidth .7 -Maximum 8 -Minimum 4 -Key species `
+        | Plot-BarChart count -m "|" } `
+    | ft
+
+species    Index lowerBound upperBound Count BarChart
+-------    ----- ---------- ---------- ----- --------
+setosa         1       4.00       4.70     1
+setosa         2       4.70       5.40    43 ||||||||||||||||||||
+setosa         3       5.40       6.10     2
+setosa         4       6.10       6.80     0
+setosa         5       6.80       7.50     0
+setosa         6       7.50       8.20     0
+versicolor     1       4.00       4.70     0
+versicolor     2       4.70       5.40     0
+versicolor     3       5.40       6.10    36 ||||||||||||||||||||
+versicolor     4       6.10       6.80    10 |||||
+versicolor     5       6.80       7.50     0
+versicolor     6       7.50       8.20     0
+virginica      1       4.00       4.70     0
+virginica      2       4.70       5.40     0
+virginica      3       5.40       6.10     0
+virginica      4       6.10       6.80    36 ||||||||||||||||||||
+virginica      5       6.80       7.50    10 |||||
+virginica      6       7.50       8.20     0
 ```
 
 
@@ -9176,3 +9287,25 @@ Microsoft Powerpoint Full screen               Alt W D
 Microsoft Word       Full screen               Alt V U
 Windows OS           Magnifying glass          Win +
 ```
+
+## CREDITS
+
+### [Plot-BarChart]
+
+- Original code:
+    - GitHub - nicholasdille/PowerShell-Statistics/Add-Bar.ps1
+        - <https://github.com/nicholasdille/PowerShell-Statistics>
+- License:
+    - Apache License 2.0 (c) 2017 Nicholas Dille
+        - <http://www.apache.org/licenses/LICENSE-2.0>
+        - A copy of the Apache license 2.0 is written in the script file
+
+### [Get-Histogram]
+
+- Original code:
+    - GitHub - nicholasdille/PowerShell-Statistics/Get-Histogram.ps1
+        - <https://github.com/nicholasdille/PowerShell-Statistics>
+- License:
+    - Apache License 2.0 (c) 2017 Nicholas Dille
+        - <http://www.apache.org/licenses/LICENSE-2.0>
+        - A copy of the Apache license 2.0 is written in the script file

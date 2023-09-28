@@ -31,34 +31,35 @@
     man2 -Column 4
     PS > man2 -c 4
 
-    Add-LineBreakEndOfFile clip2file      han         rev2
-    Add-LineBreak          clip2hyperlink head        rev
-    Add-Stats              clip2img       image2md    say
-    Apply-Function         clip2normalize jl          sed-i
-    ConvImage              clip2push      json2txt    sed
-    Delete-Field           clip2shortcut  juni        self
-    Detect-XrsAnomaly      conv           keta        seq2pu
-    Drop-NA                count          kinsoku     sleepy
-    Get-AppShortcut        csv2sqlite     lcalc       sm2
-    Get-First              csv2txt        linkcheck   summary
-    Get-Last               ctail2         linkextract table2md
-    Get-OGP                ctail          list2table  tac
-    GroupBy-Object         decil          logi2dot    tail-f
-    Invoke-Link            delf           logi2pu     tail
-    Measure-Property       dot2gviz       man2        tarr
-    Override-Yaml          filehame       map2        tateyoko
-    Plot-BarChart          fillretu       mdfocus     teatimer
-    Rename-Normalize       flat           mdgrep      tenki
-    Replace-NA             flow2pu        mind2dot    tex2pdf
-    Select-Field           fpath          mind2pu     toml2psobject
-    Shorten-PropertyName   fval           movw        uniq
-    addb                   fwatch         pawk        vbStrConv
-    addl                   gantt2pu       percentile  watercss
-    addr                   gdate          pu2java     wrap
-    addt                   getfirst       push2loc    yarr
-    cat2                   getlast        pwmake      ycalc
-    catcsv                 grep           pwsync      ysort
-    chead                  gyo            retu        zen
+    Add-LineBreakEndOfFile clip2file      head        say
+    Add-LineBreak          clip2hyperlink image2md    sed-i
+    Add-Stats              clip2img       jl          sed
+    Apply-Function         clip2normalize json2txt    self
+    ConvImage              clip2push      juni        seq2pu
+    Delete-Field           clip2shortcut  keta        sleepy
+    Detect-XrsAnomaly      conv           kinsoku     sm2
+    Drop-NA                count          lcalc       summary
+    Get-AppShortcut        csv2sqlite     linkcheck   table2md
+    Get-First              csv2txt        linkextract tac
+    Get-Histogram          ctail2         list2table  tail-f
+    Get-Last               ctail          logi2dot    tail
+    Get-OGP                decil          logi2pu     tarr
+    GroupBy-Object         delf           man2        tateyoko
+    Invoke-Link            dot2gviz       map2        teatimer
+    Measure-Stats          filehame       mdfocus     tenki
+    Override-Yaml          fillretu       mdgrep      tex2pdf
+    Plot-BarChart          flat           mind2dot    toml2psobject
+    Rename-Normalize       flow2pu        mind2pu     uniq
+    Replace-NA             fpath          movw        vbStrConv
+    Select-Field           fval           pawk        watercss
+    Shorten-PropertyName   fwatch         percentile  wrap
+    addb                   gantt2pu       pu2java     yarr
+    addl                   gdate          push2loc    ycalc
+    addr                   getfirst       pwmake      ysort
+    addt                   getlast        pwsync      zen
+    cat2                   grep           retu
+    catcsv                 gyo            rev2
+    chead                  han            rev
 
 .EXAMPLE
     man2 getlast
@@ -90,34 +91,35 @@
       | select @{L="Name";E={$_.Name.Replace('_function.ps1','')}} `
       | Format-Wide -Column 4
 
-    Add-LineBreakEn… Add-LineBreak    Add-Stats        Apply-Function
-    ConvImage        Delete-Field     Detect-XrsAnoma… Drop-NA
-    Get-AppShortcut  Get-First        Get-Last         Get-OGP
-    GroupBy-Object   Invoke-Link      Measure-Property Override-Yaml
-    Plot-BarChart    Rename-Normalize Replace-NA       Select-Field
-    Shorten-Propert… addb             addl             addr
-    addt             cat2             catcsv           chead
-    clip2file        clip2hyperlink   clip2img         clip2normalize
-    clip2push        clip2shortcut    conv             count
-    csv2sqlite       csv2txt          ctail2           ctail
-    decil            delf             dot2gviz         filehame
-    fillretu         flat             flow2pu          fpath
-    fval             fwatch           gantt2pu         gdate
-    getfirst         getlast          grep             gyo
-    han              head             image2md         jl
-    json2txt         juni             keta             kinsoku
-    lcalc            linkcheck        linkextract      list2table
-    logi2dot         logi2pu          man2             map2
-    mdfocus          mdgrep           mind2dot         mind2pu
-    movw             pawk             percentile       pu2java
-    push2loc         pwmake           pwsync           retu
-    rev2             rev              say              sed-i
-    sed              self             seq2pu           sleepy
-    sm2              summary          table2md         tac
-    tail-f           tail             tarr             tateyoko
-    teatimer         tenki            tex2pdf          toml2psobject
-    uniq             vbStrConv        watercss         wrap
-    yarr             ycalc            ysort            zen
+    Add-LineBreakEndOfFi… Add-LineBreak        Add-Stats            Apply-Function
+    ConvImage             Delete-Field         Detect-XrsAnomaly    Drop-NA
+    Get-AppShortcut       Get-First            Get-Histogram        Get-Last
+    Get-OGP               GroupBy-Object       Invoke-Link          Measure-Stats
+    Override-Yaml         Plot-BarChart        Rename-Normalize     Replace-NA
+    Select-Field          Shorten-PropertyName addb                 addl
+    addr                  addt                 cat2                 catcsv
+    chead                 clip2file            clip2hyperlink       clip2img
+    clip2normalize        clip2push            clip2shortcut        conv
+    count                 csv2sqlite           csv2txt              ctail2
+    ctail                 decil                delf                 dot2gviz
+    filehame              fillretu             flat                 flow2pu
+    fpath                 fval                 fwatch               gantt2pu
+    gdate                 getfirst             getlast              grep
+    gyo                   han                  head                 image2md
+    jl                    json2txt             juni                 keta
+    kinsoku               lcalc                linkcheck            linkextract
+    list2table            logi2dot             logi2pu              man2
+    map2                  mdfocus              mdgrep               mind2dot
+    mind2pu               movw                 pawk                 percentile
+    pu2java               push2loc             pwmake               pwsync
+    retu                  rev2                 rev                  say
+    sed-i                 sed                  self                 seq2pu
+    sleepy                sm2                  summary              table2md
+    tac                   tail-f               tail                 tarr
+    tateyoko              teatimer             tenki                tex2pdf
+    toml2psobject         uniq                 vbStrConv            watercss
+    wrap                  yarr                 ycalc                ysort
+    zen
 
 #>
 function man2 {

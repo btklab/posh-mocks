@@ -125,7 +125,7 @@
     Import-Csv penguins.csv `
         | GroupBy-Object species, island { `
             Drop-NA bill_length_mm `
-            | Measure-Property bill_length_mm key -Average -Sum -Count
+            | Measure-Stats bill_length_mm key -Average -Sum -Count
         } `
         | ft
 
@@ -143,7 +143,7 @@
         | sort species, island `
         | GroupBy-Object species,island { `
             Drop-NA bill_length_mm `
-            | Measure-Property bill_length_mm key -Average -Sum -Count
+            | Measure-Stats bill_length_mm key -Average -Sum -Count
         } `
         | ft
 
