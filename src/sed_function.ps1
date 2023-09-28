@@ -49,6 +49,7 @@
     a2b2c2
 
     # replace only first match
+    # (Note that this mode is case sensitive)
     'a1b1c1' | sed 's;1;2;'
     a2b1c1
 

@@ -172,9 +172,11 @@ if ( $IsWindows ){
 . $pwshSrcDir/Replace-NA_function.ps1
 . $pwshSrcDir/Apply-Function_function.ps1
 . $pwshSrcDir/GroupBy-Object_function.ps1
-. $pwshSrcDir/Measure-Property_function.ps1
+. $pwshSrcDir/Measure-Stats_function.ps1
 . $pwshSrcDir/Add-Stats_function.ps1
 . $pwshSrcDir/Detect-XrsAnomaly_function.ps1
+
+. $pwshSrcDir/Get-Histogram_function.ps1
 . $pwshSrcDir/Plot-BarChart_function.ps1
 
 . $pwshSrcDir/Get-First_function.ps1

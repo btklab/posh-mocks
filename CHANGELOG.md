@@ -10,16 +10,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - NA
 
+## [6.0.0] - 2023-09-28
+
+- Added [Get-Histogram]
+- Added [README.md] section CREDIT
+- Added [Plot-BarChart] Apache License 2.0 into script file
+- Updated [sed] Synopsis
+
+### Breaking Changes
+
+- Renamed `Measure-Property` to [Measure-Stats]
+
 ## [5.0.3] - 2023-09-23
 
-- Added [Measure-Property] function alias: mprop
+- Added `Measure-Property` function alias: mprop
 - Added [Add-Stats] function alias: astat
 - Changed [man2] ordinal sort
 
 ## [5.0.2] - 2023-09-23
 
 - Fixed [README.md], [Plot-BarChart], [Detect-XrsAnomaly] typo
-- Renamed [Measure-Property] param alias
+- Renamed `Measure-Property` param alias
 - Renamed [Add-Stats] param alias
 
 ## [5.0.1] - 2023-09-22
@@ -34,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added: [Drop-NA], [Replace-NA] function
 - Added: [Apply-Function] function
 - Added: [GroupBy-Object] function
-- Added: [Measure-Property] function
+- Added: `Measure-Property` function
 - Added: [Add-Stats] function
 - Added: [Detect-XrsAnomaly] function
 - Added: [Plot-BarChart] function
@@ -436,13 +447,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [list2table]: src/list2table_function.ps1
 [mdfocus]: src/mdfocus_function.ps1
 
-[Apply-Function]: src/Apply-Function_function.ps1
-[Detect-XrsAnomaly]: src/Detect-XrsAnomaly_function.ps1
-[Drop-NA]: src/Drop-NA_function.ps1
-[Replace-NA]: src/Replace-NA_function.ps1
-[Get-RandomRecord]: src/Get-RandomRecord_function.ps1
-[Plot-BarChart]: src/Plot-BarChart_function.ps1
-
 [Add-LineBreak]: src/Add-LineBreak_function.ps1
 [Add-LineBreakEndOfFile]: src/Add-LineBreakEndOfFile_function.ps1
 
@@ -451,9 +455,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Replace-NA]: src/Replace-NA_function.ps1
 [Apply-Function]: src/Apply-Function_function.ps1
 [GroupBy-Object]: src/GroupBy-Object_function.ps1
-[Measure-Property]: src/Measure-Property_function.ps1
+[Measure-Stats]: src/Measure-Stats_function.ps1
 [Add-Stats]: src/Add-Stats_function.ps1
 [Detect-XrsAnomaly]: src/Detect-XrsAnomaly_function.ps1
+
+[Get-Histogram]: src/Get-Histogram_function.ps1
 [Plot-BarChart]: src/Plot-BarChart_function.ps1
 
 [Get-First]: src/Get-First_function.ps1
@@ -462,7 +468,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Delete-Field]: src/Delete-Field_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/5.0.3..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.0.0..HEAD
+[6.0.0]: https://github.com/btklab/posh-mocks/releases/tag/6.0.0
 [5.0.3]: https://github.com/btklab/posh-mocks/releases/tag/5.0.3
 [5.0.2]: https://github.com/btklab/posh-mocks/releases/tag/5.0.2
 [5.0.1]: https://github.com/btklab/posh-mocks/releases/tag/5.0.1
