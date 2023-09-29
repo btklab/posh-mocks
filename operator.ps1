@@ -184,6 +184,7 @@ if ( $IsWindows ){
 . $pwshSrcDir/Select-Field_function.ps1
 . $pwshSrcDir/Delete-Field_function.ps1
 
+. $pwshSrcDir/Replace-ForEach_function.ps1
 
 ## math
 

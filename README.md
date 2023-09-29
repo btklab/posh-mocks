@@ -22,7 +22,7 @@ cat README.md `
     | grep -o '\[[^[]+\]' `
     | sort {
         -join ( [int[]] $_.ToCharArray()).ForEach('ToString', 'x4')
-    } `
+    } -Unique `
     | flat -ofs ", " `
     | Set-Clipboard
 ```
@@ -4386,6 +4386,44 @@ virginica      5       6.80       7.50    10 |||||
 virginica      6       7.50       8.20     0
 ```
 
+#### [Replace-ForEach] - Replace specified property string
+
+[Replace-ForEach]: src/Replace-ForEach_function.ps1
+
+- Usage
+    - `man2 Replace-ForEach`
+- Params
+    - `[-p|-Property] <String[]>`
+    - `[-f|-From] <Regex>`
+    - `[-t|-To] <Regex>`
+
+Example:
+
+```powershell
+# replace method property's space to underscore
+
+Import-Csv planets.csv `
+    | select -First 3 `
+    | ft
+
+method          number orbital_period mass distance year
+------          ------ -------------- ---- -------- ----
+Radial Velocity 1      269.3          7.1  77.4     2006
+Radial Velocity 1      874.774        2.21 56.95    2008
+Radial Velocity 1      763.0          2.6  19.84    2011
+
+
+Import-Csv planets.csv `
+    | select -First 3 `
+    | Replace-ForEach method -From " " -To "_" `
+    | ft
+
+method          number orbital_period mass distance year
+------          ------ -------------- ---- -------- ----
+Radial_Velocity 1      269.3          7.1  77.4     2006
+Radial_Velocity 1      874.774        2.21 56.95    2008
+Radial_Velocity 1      763.0          2.6  19.84    2011
+```
 
 ### Plot chart and graph
 
