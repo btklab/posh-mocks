@@ -9,10 +9,10 @@
 
             X      = Specified property's value
             Rs     = Absolute value of the difference from the previous X
-            X-Bar  = Mean of X
+            X-Bar  = Mean of X (if -Median specified, Median of X)
             Rs-Bar = Mean of Rs
 
-            X-CL   = X-Bar
+            X-CL   = X-Bar (if -Median specified, Median of X)
             X-UCL  = X-Bar + 2.659 * Rs-Bar
             X-LCL  = X-Bar - 2.659 * Rs-Bar
             Rs-UCL = 3.267 * Rs-Bar
@@ -169,6 +169,9 @@ function Detect-XrsAnomaly
         [string] $ResultPropertyName = "xrs",
         
         [Parameter(Mandatory=$False)]
+        [switch] $Median,
+        
+        [Parameter(Mandatory=$False)]
         [switch] $ChartX,
         
         [Parameter(Mandatory=$False)]
@@ -183,9 +186,28 @@ function Detect-XrsAnomaly
         StandardDeviation = $True
         Average = $True
     }
-    [object] $MeasuredData = $input | Measure-Object @HashArguments
-    [decimal] $XBar = $MeasuredData.Average
-    [decimal] $XCount = $MeasuredData.Count
+    if ( $Median ){
+        # calculate median
+        [string] $mPropName = "X_Median"
+        if ( $input.Count % 2 -eq 0){
+            # count even
+            [int] $MedianIndex = ($input.Count / 2) - 1
+            [double] $LowerMedian = $input[$MedianIndex]     | Select-Object -ExpandProperty $Value
+            [double] $UpperMedian = $input[$MedianIndex + 1] | Select-Object -ExpandProperty $Value
+            [double] $XMedian = ([double]$LowerMedian + [double]$UpperMedian) / 2
+        } else {
+            # count odd
+            [int] $MedianIndex = [math]::Ceiling(($input.Count - 1) / 2)
+            $XMedian = $input[$MedianIndex] | Select-Object -ExpandProperty $Value
+        }
+        [decimal] $XBar = $XMedian
+        [decimal] $XCount = $input.Count
+    } else {
+        [string] $mPropName = "X_Bar"
+        [object] $MeasuredData = $input | Measure-Object @HashArguments
+        [decimal] $XBar = $MeasuredData.Average
+        [decimal] $XCount = $MeasuredData.Count
+    }
     # 1st pass
     [bool] $isFirstItem = $True
     [decimal] $oldVal = $Null
@@ -216,12 +238,12 @@ function Detect-XrsAnomaly
         if ( $isFirstItem ){
             $isFirstItem = $False
             if ( $Detail -or $ChartX -or $ChartRs ){
-                $obj | Add-Member -NotePropertyName "X_Bar"  -NotePropertyValue $XBar
-                $obj | Add-Member -NotePropertyName "Rs"     -NotePropertyValue $Null
-                $obj | Add-Member -NotePropertyName "Rs_Bar" -NotePropertyValue $RsBar
-                $obj | Add-Member -NotePropertyName "X_UCL"  -NotePropertyValue $Null
-                $obj | Add-Member -NotePropertyName "X_LCL"  -NotePropertyValue $Null
-                $obj | Add-Member -NotePropertyName "Rs_UCL" -NotePropertyValue $Null
+                $obj | Add-Member -NotePropertyName $mPropName -NotePropertyValue $XBar
+                $obj | Add-Member -NotePropertyName "Rs"       -NotePropertyValue $Null
+                $obj | Add-Member -NotePropertyName "Rs_Bar"   -NotePropertyValue $RsBar
+                $obj | Add-Member -NotePropertyName "X_UCL"    -NotePropertyValue $Null
+                $obj | Add-Member -NotePropertyName "X_LCL"    -NotePropertyValue $Null
+                $obj | Add-Member -NotePropertyName "Rs_UCL"   -NotePropertyValue $Null
             }
             $obj | Add-Member `
                 -NotePropertyName $ResultPropertyName `
@@ -259,12 +281,12 @@ function Detect-XrsAnomaly
                 $Result = $Result + 4
             }
             if ( $Detail -or $ChartX -or $ChartRs ){
-                $obj | Add-Member -NotePropertyName "X_Bar"  -NotePropertyValue $XBar
-                $obj | Add-Member -NotePropertyName "Rs"     -NotePropertyValue $Duration
-                $obj | Add-Member -NotePropertyName "Rs_Bar" -NotePropertyValue $RsBar
-                $obj | Add-Member -NotePropertyName "X_UCL"  -NotePropertyValue $X_UCL
-                $obj | Add-Member -NotePropertyName "X_LCL"  -NotePropertyValue $X_LCL
-                $obj | Add-Member -NotePropertyName "Rs_UCL" -NotePropertyValue $Rs_UCL
+                $obj | Add-Member -NotePropertyName $mPropName -NotePropertyValue $XBar
+                $obj | Add-Member -NotePropertyName "Rs"       -NotePropertyValue $Duration
+                $obj | Add-Member -NotePropertyName "Rs_Bar"   -NotePropertyValue $RsBar
+                $obj | Add-Member -NotePropertyName "X_UCL"    -NotePropertyValue $X_UCL
+                $obj | Add-Member -NotePropertyName "X_LCL"    -NotePropertyValue $X_LCL
+                $obj | Add-Member -NotePropertyName "Rs_UCL"   -NotePropertyValue $Rs_UCL
             }
             $obj | Add-Member -NotePropertyName $ResultPropertyName -NotePropertyValue $Result
             if ( $RowCounter ){
@@ -288,7 +310,7 @@ function Detect-XrsAnomaly
         } elseif ( $ChartX ){
             [string[]] $outputProperties = @(
                 "$Value"
-                , "X_Bar"
+                , $mPropName
                 , "X_UCL"
                 , "X_LCL"
                 , $ResultPropertyName
@@ -306,10 +328,14 @@ function Detect-XrsAnomaly
             Write-Output $obj
         }
     }
-    Write-Debug "X-UCL : $X_UCL"
-    Write-Debug "X-Bar : $XBar"
-    Write-Debug "X-LCL : $X_LCL"
+    Write-Debug "X-UCL    : $X_UCL"
+    if ( $Median ){
+        Write-Debug "X-Median : $XBar"
+    } else {
+        Write-Debug "X-Bar    : $XBar"
+    }
+    Write-Debug "X-LCL    : $X_LCL"
     Write-Debug ""
-    Write-Debug "Rs-UCL : $Rs_UCL"
-    Write-Debug "Rs-Bar : $Duration"
+    Write-Debug "Rs-UCL    : $Rs_UCL"
+    Write-Debug "Rs-Bar    : $Duration"
 }
