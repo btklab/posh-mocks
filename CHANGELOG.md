@@ -8,11 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- NA
+- Added [Replace-ForEach] function
 
 ## [6.0.0] - 2023-09-28
 
-- Added [Get-Histogram]
+- Added [Get-Histogram] function
 - Added [README.md] section CREDIT
 - Added [Plot-BarChart] Apache License 2.0 into script file
 - Updated [sed] Synopsis
@@ -466,6 +466,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Get-Last]: src/Get-Last_function.ps1
 [Select-Field]: src/Select-Field_function.ps1
 [Delete-Field]: src/Delete-Field_function.ps1
+
+[Replace-ForEach]: src/Replace-ForEach_function.ps1
 
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/6.0.0..HEAD
