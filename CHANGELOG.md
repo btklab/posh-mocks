@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 
 - Added [Replace-ForEach] function
-- Added: [Detect-XrsAnomaly] `-Median` option
+- Added [Detect-XrsAnomaly] `-Median` option
+- Updated [README.md]
 
 ## [6.0.0] - 2023-09-28
 

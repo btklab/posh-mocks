@@ -62,6 +62,13 @@
 .LINK
     Shorten-PropertyName, Drop-NA, Replace-NA, Apply-Function, Add-Stats, Detect-XrsAnomaly, Plot-BarChart, Get-First, Get-Last, Select-Field, Delete-Field
 
+.NOTES
+    reference: Z 9020-2：2016 (ISO 7870-2：2013) 
+    
+    - <https://kikakurui.com/z9/Z9020-2-2016-01.html>
+    - Table 3 - Control limits formula for X control chart (individual measurement value control chart)
+
+
 .EXAMPLE
     Import-Csv iris.csv `
         | Shorten-PropertyName `
