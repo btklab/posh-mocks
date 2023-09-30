@@ -58,6 +58,12 @@ Inspired by:
     - License: The MIT License (MIT) Copyright © 2019 Kognise
 - [nicholasdille/PowerShell-Statistics - GitHub](https://github.com/nicholasdille/PowerShell-Statistics/tree/master)
     - License: [The Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)
+- Dataset
+    - allisonhorst / palmerpenguins
+        - [palmerpenguins R data package](https://allisonhorst.github.io/palmerpenguins/)
+        - [GitHub - allisonhorst/palmerpenguins: A great intro dataset for data exploration &amp; visualization (alternative to iris).](https://github.com/allisonhorst/palmerpenguins)
+        - License: Creative Commons Zero v1.0 Universal
+
 
 
 主に現実世界の不定形文字列に対してパターンマッチング処理を行うためのフィルタ群。基本的な入力として、UTF-8＋半角スペース区切り＋行指向のパイプライン経由文字列データ（テキストオブジェクト）を期待する。出力もPowerShellらしいオブジェクトではなく、文字列である。一部の関数はオブジェクトのパイプライン入力を受け付けたり、オブジェクトとして出力する「PowerShellのコマンドレット的といえるもの」もあるが、動作としてはUnix/LinuxのBashなどのシェルに寄せている。
@@ -117,9 +123,18 @@ if ($IsWindows){
 筆者は作った関数をすぐに忘れてしまうため。
 
 - Usage
-    - `man2`
+    - `man2 man2`
     - `man2 <function-name> [-p|-Paging]`
-    - `man2 [[-f|-FunctionName] <String>] [-c|-Column <Int32>] [-e|-Exclude <String>] [-p|-Paging] [-i|-Include <String>] [-Examples] [-Independent] [-l|-Line]`
+- Params
+    - `man2`
+        - `[[-f|-FunctionName] <String>]`
+        - `[-c|-Column <Int32>]`
+        - `[-e|-Exclude <String>]`
+        - `[-p|-Paging]`
+        - `[-i|-Include <String>]`
+        - `[-Examples]`
+        - `[-Independent]`
+        - `[-l|-Line]`
 - 挙動
     - `man2`関数ファイルと同階層にある`*_function.ps1`ファイルのファイル名から`_function.ps1`を除去して列挙する
 - 依存
@@ -1161,6 +1176,7 @@ Examples:
 
 - Usage
     - `man2 sm2`
+- Params
     - `sm2 [+count] <k1> <k2> <s1> <s2>`
 - Options
     - `+count`: Output the total number of rows in the leftmost column. 合計した行数を最左列に出力
@@ -1465,7 +1481,7 @@ PS> 1..10 | pawk -Begin { $sum=0 } -Action { $sum+=$1 } -End { $sum }
 - Usage
     - `man2 pawk`
     - `pawk [-fs "delim"] [-Pattern { condition }] -Action { action }`
-- Options
+- Params
     - `[[-a|-Action] <ScriptBlock>]` ...action script
     - `[-p|-Pattern <ScriptBlock>]` ...pattern criteria
     - `[-b|-Begin <ScriptBlock>]` ...run before reading input
@@ -2540,7 +2556,7 @@ gyo *.*
 
 - Usage
     - `man2 han`
-- Options
+- Params
     - `[-k|-Kana]` - Do not convert full-width(zenkaku) KANA
 - Examples
     - `"input" | han | zen -k`
@@ -2571,13 +2587,13 @@ Examples:
 "パピプペポ０１２３４５６７８９＝Ａ" | han
 ﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟ0123456789=A
 
-"パピプペポ０１２３４５６７８９＝Ａ" | han | zen
-パピプペポ０１２３４５６７８９＝Ａ
-
 "パピプペポ０１２３４５６７８９＝Ａ" | han -k
 パピプペポ0123456789=A
 
 "パピプペポ０１２３４５６７８９＝Ａ" | han -k | zen
+パピプペポ０１２３４５６７８９＝Ａ
+
+"パピプペポ０１２３４５６７８９＝Ａ" | han | zen
 パピプペポ０１２３４５６７８９＝Ａ
 
 "パピプペポ０１２３４５６７８９＝Ａ" | han | zen -k
@@ -2623,13 +2639,13 @@ Examples:
 "パピプペポ０１２３４５６７８９＝Ａ" | han
 ﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟ0123456789=A
 
-"パピプペポ０１２３４５６７８９＝Ａ" | han | zen
-パピプペポ０１２３４５６７８９＝Ａ
-
 "パピプペポ０１２３４５６７８９＝Ａ" | han -k
 パピプペポ0123456789=A
 
 "パピプペポ０１２３４５６７８９＝Ａ" | han -k | zen
+パピプペポ０１２３４５６７８９＝Ａ
+
+"パピプペポ０１２３４５６７８９＝Ａ" | han | zen
 パピプペポ０１２３４５６７８９＝Ａ
 
 "パピプペポ０１２３４５６７８９＝Ａ" | han | zen -k
@@ -2644,15 +2660,15 @@ Examples:
 
 - Usage
     - `man2 vbStrConv`
-    - `vbStrConv [-Lowercase] [-Uppercase] [-ProperCase] [-Wide] [-Narrow] [-Hiragana] [-Katakana]`
-- Options
-    - `-Lowercase`
-    - `-Uppercase`
-    - `-ProperCase`
-    - `-Wide`
-    - `-Narrow`
-    - `-Hiragana`
-    - `-Katakana`
+- Params
+    - `vbStrConv`
+        - `[-Lowercase]`
+        - `[-Uppercase]`
+        - `[-ProperCase]`
+        - `[-Wide]`
+        - `[-Narrow]`
+        - `[-Hiragana]`
+        - `[-Katakana]`
 - Examples
     - `"input" | vbStrConv -ProperCase`
 
@@ -2698,9 +2714,25 @@ lastyear 2/28
     - `man2 lastyear`
     - `man2 *year`
 - Syntax
-    - `thisyear [-Date] <String[]> [-RedirectTo <String>] [-Prefix <String>] [-Suffix <String>] [-Format <String>] [-FormatJP] [-FormatJPZeroPadding] [-Slash] [-GetDateTimeFormat] [-Year2] [-DayOfWeek] [-DayOfWeekWithRound] [-AddDays <Int32>] [-AddMonths <Int32>] [-AddYears <Int32>] [-Duplicate <Int32>] [-NoSeparator] [-EndOfMonth]`
-    - `nextyear [-Date] <String[]> [-RedirectTo <String>] [-Prefix <String>] [-Suffix <String>] [-Format <String>] [-FormatJP] [-FormatJPZeroPadding] [-Slash] [-GetDateTimeFormat] [-Year2] [-DayOfWeek] [-DayOfWeekWithRound] [-AddDays <Int32>] [-AddMonths <Int32>] [-AddYears <Int32>] [-Duplicate <Int32>] [-NoSeparator] [-EndOfMonth]`
-    - `lastyear [-Date] <String[]> [-RedirectTo <String>] [-Prefix <String>] [-Suffix <String>] [-Format <String>] [-FormatJP] [-FormatJPZeroPadding] [-Slash] [-GetDateTimeFormat] [-Year2] [-DayOfWeek] [-DayOfWeekWithRound] [-AddDays <Int32>] [-AddMonths <Int32>] [-AddYears <Int32>] [-Duplicate <Int32>] [-NoSeparator] [-EndOfMonth]`
+    - `thisyear / nextyear / lastyear`
+        - `[-Date] <String[]>`
+        - `[-RedirectTo <String>]`
+        - `[-Prefix <String>]`
+        - `[-Suffix <String>]`
+        - `[-Format <String>]`
+        - `[-FormatJP]`
+        - `[-FormatJPZeroPadding]`
+        - `[-Slash]`
+        - `[-GetDateTimeFormat]`
+        - `[-Year2]`
+        - `[-DayOfWeek]`
+        - `[-DayOfWeekWithRound]`
+        - `[-AddDays <Int32>]`
+        - `[-AddMonths <Int32>]`
+        - `[-AddYears <Int32>]`
+        - `[-Duplicate <Int32>]`
+        - `[-NoSeparator]`
+        - `[-EndOfMonth]`
 - Examples
     - `thisyear 1/23`
     - `nextyear 1/23`
@@ -2734,7 +2766,11 @@ lastyear 2/28 -s "_last_year"
 
 - Usage
     - `man2 fval`
-    - `fval [-f|-Format] <String> [[-n|-Num] <Int32[]>] [-SkipHeader]`
+- Params
+    - `fval`
+        - `[-f|-Format] <String>`
+        - `[[-n|-Num] <Int32[]>]`
+        - `[-SkipHeader]`
 
 Example:
 
@@ -2759,12 +2795,21 @@ Calculate and ranking with percentile and quartiles on space-delimited data with
 
 - Usage
     - `man2 percentile`
-    - `percentile [[-Val|-v] <Int32>] [[-Key|-k] <Int32[]>] [-Delimiter|-fs "<delim>"] [-Rank|-Level5] [-NoHeader] [-Cast <String>]`
+- Params
+    - `percentile`
+        - `[[-Val|-v] <Int32>]`
+        - `[[-Key|-k] <Int32[]>]`
+        - `[-Delimiter|-fs <delim>]`
+        - `[-Rank|-Level5]`
+        - `[-NoHeader]`
+        - `[-Cast <String>]`
 
 Examples:
 
 ```powershell
-cat iris.csv | percentile -v 1 -k 5 -fs "," | ft
+cat iris.csv `
+    | percentile -v 1 -k 5 -fs "," `
+    | ft
 
 field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
 -----        ---        -----    --- ---- -----  --- ---- ---- ----
@@ -2777,7 +2822,8 @@ Input
 
 ```powershell
 ## Input
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } }
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s $_" } }
 
 a 1
 a 2
@@ -2805,7 +2851,9 @@ Output
 
 ```powershell
 ## calc summary of 2nd field
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -NoHeader
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s $_" } } `
+    | percentile 2 -NoHeader
 
 field : F2
 count : 20
@@ -2822,11 +2870,16 @@ HiIQR : 7
 LoIQR : -1
 
 ## same as below (calc rightmost field by default)
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile -NoHeader
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s $_" } } `
+    | percentile -NoHeader
 
 ## percentile 2 -k 1 :
 ##  means summary 2nd field using 1st field as key
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -k 1 -NoHeader | ft
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s $_" } } `
+    | percentile 2 -k 1 -NoHeader `
+    | ft
 
 field key count   sum mean stdev  min Qt25 Qt50 Qt75
 ----- --- -----   --- ---- -----  --- ---- ---- ----
@@ -2836,7 +2889,10 @@ F2    c       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
 F2    d       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
 
 ## -k 1,2 means fields from 1st to 2nd are considered keys
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $s $_" } } | percentile 3 -k 1,2 -NoHeader | ft
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s $s $_" } } `
+    | percentile 3 -k 1,2 -NoHeader `
+    | ft
 
 field key count   sum mean stdev  min Qt25 Qt50 Qt75
 ----- --- -----   --- ---- -----  --- ---- ---- ----
@@ -2849,7 +2905,11 @@ F3    d d     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
 ```powershell
 ## -Rank means ranking with quartile
 ##   add cumulative-ratio and quartile-labels
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Rank -NoHeader | keta
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s $_" } } `
+    | percentile 2 -Rank -NoHeader `
+    | keta
+
 F1 F2 percentile label
  a  1     0.0167   Qt1
  b  1     0.0333   Qt1
@@ -2873,7 +2933,11 @@ F1 F2 percentile label
  d  5     1.0000   Qt4
 
 ## -Level5 means ranking by 20% cumurative ratio
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | percentile 2 -Level5 -Rank -NoHeader | keta
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s $_" } } `
+    | percentile 2 -Level5 -Rank -NoHeader `
+    | keta
+
 F1 F2 percentile label
  a  1     0.0167     E
  b  1     0.0333     E
@@ -2900,14 +2964,18 @@ F1 F2 percentile label
 Another example:
 
 ```powershell
-cat iris.csv | percentile -fs "," 1 | ft
+cat iris.csv `
+    | percentile -fs "," 1 `
+    | ft
 
 field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
 -----        -----    --- ---- -----  --- ---- ---- ----  ---
 sepal_length   150 876.50 5.84  0.83 4.30 5.10 5.80 6.40 7.90
 
 
-cat iris.csv | percentile -fs "," 1,2,3,4 | ft
+cat iris.csv `
+    | percentile -fs "," 1,2,3,4 `
+    | ft
 
 field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
 -----        -----    --- ---- -----  --- ---- ---- ----  ---
@@ -2917,7 +2985,9 @@ petal_length   150 563.70 3.76  1.77 1.00 1.55 4.35 5.10 6.90
 petal_width    150 179.90 1.20  0.76 0.10 0.30 1.30 1.80 2.50
 
 
-cat iris.csv | percentile -fs "," 1,2,3,4 -k 5 | ft
+cat iris.csv `
+    | percentile -fs "," 1,2,3,4 -k 5 `
+    | ft
 
 field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
 -----        ---        -----    --- ---- -----  --- ---- ---- ----
@@ -2941,7 +3011,10 @@ Missing/Empty value detection/removal/replacement examples
 # Empty value control (empty record detection/removal/replacement)
 
 # input (include empty value field)
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s,$_" } } | %{ $_ -replace ',5$',',' }
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s,$_" } } `
+    | %{ $_ -replace ',5$',',' }
+
 a,1
 a,2
 a,3
@@ -2964,11 +3037,18 @@ d,4
 d,
 
 # detect empty line and stop processing (use -isEmpty option)
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s,$_" } } | %{ $_ -replace ',5$',',' } | percentile -fs "," -NoHeader -isEmpty
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s,$_" } } `
+    | %{ $_ -replace ',5$',',' } `
+    | percentile -fs "," -NoHeader -isEmpty
+
 percentile: Detect "Empty" : a,
 
 # fill empty values with "NaN" (use -FillNaN option)
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s,$_" } } | %{ $_ -replace ',5$',',' } | percentile -fs "," -NoHeader -FillNaN
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s,$_" } } `
+    | %{ $_ -replace ',5$',',' } `
+    | percentile -fs "," -NoHeader -FillNaN
 
 field : F2
 count : 20
@@ -2985,7 +3065,10 @@ max   : 4
 ```powershell
 # NaN control (Missing value detection/removal/replacement)
 
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' }
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s $_" } } `
+    | %{ $_ -replace '5$','NaN' }
+
 a 1
 a 2
 a 3
@@ -3008,7 +3091,10 @@ d 4
 d NaN
 
 
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' } | percentile 2 -NoHeader
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s $_" } } `
+    | %{ $_ -replace '5$','NaN' } `
+    | percentile 2 -NoHeader
 
 field : F2
 count : 20
@@ -3023,7 +3109,10 @@ max   : 4
 
 
 # Output "NaN" information (use -Detail option)
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' } | percentile 2 -NoHeader -Detail
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s $_" } } `
+    | %{ $_ -replace '5$','NaN' } `
+    | percentile 2 -NoHeader -Detail
 
 field      : F2
 count      : 20
@@ -3045,12 +3134,19 @@ ReplaceNaN : 0
 
 
 # Detect "NaN" and stop processing (use -isNaN option)
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' } | percentile 2 -NoHeader -isNaN
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s $_" } } `
+    | %{ $_ -replace '5$','NaN' } `
+    | percentile 2 -NoHeader -isNaN
+
 percentile: Detect "NaN" : a NaN
 
 
 # Drop "NaN" (use -DropNaN option)
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' } | percentile 2 -NoHeader -DropNaN -Detail
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s $_" } } `
+    | %{ $_ -replace '5$','NaN' } `
+    | percentile 2 -NoHeader -DropNaN -Detail
 
 field      : F2
 count      : 16
@@ -3072,7 +3168,10 @@ ReplaceNaN : 0
 
 
 # Replace "NaN" (use -ReplaceNaN option)
-"a".."d" | %{ $s=$_; 1..5 | %{ "$s $_" } } | %{ $_ -replace '5$','NaN' } | percentile 2 -NoHeader -ReplaceNaN 0 -Detail
+"a".."d" `
+    | %{ $s=$_; 1..5 | %{ "$s $_" } } `
+    | %{ $_ -replace '5$','NaN' } `
+    | percentile 2 -NoHeader -ReplaceNaN 0 -Detail
 
 field      : F2
 count      : 20
@@ -3103,7 +3202,17 @@ ReplaceNaN : 4
 
 - Usage
     - `man2 decil`
-    - `decil [[-Key] <Int32>] [[-Val] <Int32>] [-Delimiter <String>] [-Rank] [-NaN <String>] [-NoHeader] [-Quartile] [-Outlier] [-StandardDeviation]`
+- Params
+    - `decil`
+        - `[[-Key] <Int32>]`
+        - `[[-Val] <Int32>]`
+        - `[-Delimiter <String>]`
+        - `[-Rank]`
+        - `[-NaN <String>]`
+        - `[-NoHeader]`
+        - `[-Quartile]`
+        - `[-Outlier]`
+        - `[-StandardDeviation]`
 - thanks:
     - [デシル分析表の作成 with Excel](https://hitorimarketing.net/tools/decile-analysis.html)
 
@@ -3126,7 +3235,9 @@ U041 6751113
 Output:
 
 ```powershell
-cat data.txt | decil | Format-Table
+cat data.txt `
+    | decil `
+    | Format-Table
 
 Name  Seg Count          Sum       Mean Ratio Cumulative-Ratio
 ----  --- -----          ---       ---- ----- ----------------
@@ -3145,7 +3256,9 @@ Sales D10    56  76811269.00 1371629.80  0.02             1.00
 Another examples:
 
 ```powershell
-cat data.txt | decil -NoHeader | ft
+cat data.txt `
+    | decil -NoHeader `
+    | ft
 
 Name Seg Count          Sum       Mean Ratio Cumulative-Ratio
 ---- --- -----          ---       ---- ----- ----------------
@@ -3177,7 +3290,9 @@ U040 6500047
 U041 6751113
 
 
-cat data.txt | decil -Rank | head
+cat data.txt `
+    | decil -Rank `
+    | head
 Seg Customers Sales
 D01 BZ30 9830001
 D01 CZ31 9600101
@@ -3205,7 +3320,12 @@ U040 6500047
 U041 6751113
 
 
-cat data.txt | decil -Rank | chead | ratio 3 | head
+cat data.txt `
+    | decil -Rank `
+    | chead `
+    | ratio 3 `
+    | head
+
 D01 BZ30 9830001 0.0030872127736867039417159664
 D01 CZ31 9600101 0.0030150103174844539891268974
 D01 GZ96 9500965 0.0029838756385019996555041486
@@ -3255,7 +3375,15 @@ Count-Total : 150
 
 - Usage
     - `man2 summary`
-    - `summary [[-Num] <Int32>] [-Delimiter <String>] [-NaN <String>] [-noHeader] [-Quartile] [-Outlier] [-StandardDeviation]`
+- Params
+    - `summary`
+        - `[[-Num] <Int32>]`
+        - `[-Delimiter <String>]`
+        - `[-NaN <String>]`
+        - `[-noHeader]`
+        - `[-Quartile]`
+        - `[-Outlier]`
+        - `[-StandardDeviation]`
 
 Examples:
 
@@ -3314,7 +3442,18 @@ from [グローバル化と食品微生物規格の考え方 - J-Stage](https://
 
 - Usage
     - `man2 movw`
-    - `movw [[-Num] <Int32>] -WindowSize <Int32> -AcceptableLevel <Double> -MaxLimit <Double> -MaxFrequency <Double> [-ReverseLimit] [-OnlyResult] [-NoHeader] [-Delimiter <String>] [-NaN <String>]`
+- Params
+    - `movw`
+        - `[[-Num] <Int32>]`
+        - `[-WindowSize <Int32>]`
+        - `[-AcceptableLevel <Double>]`
+        - `[-MaxLimit <Double>]`
+        - `[-MaxFrequency <Double>]`
+        - `[-ReverseLimit]`
+        - `[-OnlyResult]`
+        - `[-NoHeader]`
+        - `[-Delimiter <String>]`
+        - `[-NaN <String>]`
 - Exmples:
     - `cat iris.txt | movw -Num 1 -WindowSize 5 -AcceptableLevel 4.7 -MaxLimit 5.5 -MaxFrequency 3`
 - Notes:
@@ -3338,7 +3477,13 @@ from [グローバル化と食品微生物規格の考え方 - J-Stage](https://
 Examples:
 
 ```powershell
-cat iris.txt | movw -Num 1 -WindowSize 5 -AcceptableLevel 4.7 -MaxLimit 5.5 -MaxFrequency 3
+cat iris.txt `
+    | movw `
+        -Num 1 `
+        -WindowSize 5 `
+        -AcceptableLevel 4.7 `
+        -MaxLimit 5.5 `
+        -MaxFrequency 3
 
 s_l AcceptableLevel MaxLimit MaxFrequency WindowSize Res
 --- --------------- -------- ------------ ---------- ---
@@ -3377,7 +3522,14 @@ Roughly equivalent to the script below:
 
 - Usage
     - `man2 ysort`
-    - `ysort [[-n|-Num] <Int32>] [-Cast <String>] [-Descending] [-CaseSensitive] [-Unique] [-SkipHeader]`
+- Params
+    - `ysort`
+        - `[[-n|-Num] <Int32>]`
+        - `[-Cast <String>]`
+        - `[-Descending]`
+        - `[-CaseSensitive]`
+        - `[-Unique]`
+        - `[-SkipHeader]`
 - Options
     - `-SkipHeader`: skip first record
     - `-Cast <datatype>`: any data type can be specified.
@@ -3540,7 +3692,17 @@ k1 k2 12 24 37 11 23 107 21.4 37 11
 
 - Usage
     - `man2 ycalc`
-    - `ycalc [[-n|-Num] <Int32>] [-Sum] [-Average] [-Mean] [-Maximum] [-Minimum] [-StandardDeviation] [-AllStats] [-NoHeader]`
+- Params
+    - `ycalc`
+        - `[[-n|-Num] <Int32>]`
+        - `[-Sum]`
+        - `[-Average]`
+        - `[-Mean]`
+        - `[-Maximum]`
+        - `[-Minimum]`
+        - `[-StandardDeviation]`
+        - `[-AllStats]`
+        - `[-NoHeader]`
 - Example
     - `cat data | ycalc -n 2 -Sum`
         - Means ignore fields 1-2 as keys, sum remaining fields horizontally
@@ -3558,7 +3720,8 @@ F1 F2 F3 sum
 
 ```powershell
 # key-value data
-"k1 k2 12 24 37 11 23" | ycalc -n 2 -NoHeader -Sum -Average -Minimum -Maximum
+"k1 k2 12 24 37 11 23" `
+    | ycalc -n 2 -NoHeader -Sum -Average -Minimum -Maximum
 F1 F2 F3 F4 F5 F6 F7 sum ave max min
 k1 k2 12 24 37 11 23 107 21.4 37 11
 
@@ -3579,7 +3742,7 @@ The core concept of this section, the idea of performing data analysis on the co
         - License: [Apache License 2.0](http://www.apache.org/licenses/)
         - See CREDIT section
 
-As a basis for the anomaly detection mechanism, I adopted the X-control chart method, in which process variation is determinded from the average of the difference between successive observations.
+As a basis for the anomaly detection mechanism, I adopted the X-control chart method, in which process variation is determined from the average of the difference between successive observations.
 
 - [JISZ9020-2:2016 管理図 - 第2部：シューハート管理図](https://kikakurui.com/z9/Z9020-2-2016-01.html) - Part 2: Shewhart control charts
 
@@ -3642,6 +3805,12 @@ count species xrs detect   b_l_m BarChart
   189 Gentoo    0           42.6 ||||||||||||||
 ```
 
+- Dataset `penguins.csv` from:
+    - allisonhorst / palmerpenguins
+        - [palmerpenguins R data package](https://allisonhorst.github.io/palmerpenguins/)
+        - [GitHub - allisonhorst/palmerpenguins: A great intro dataset for data exploration &amp; visualization (alternative to iris).](https://github.com/allisonhorst/palmerpenguins)
+        - License: Creative Commons Zero v1.0 Universal
+
 
 Procedure:
 
@@ -3684,7 +3853,7 @@ The aim is to reduce the number of characters input for long property name when 
 
 - Usage
     - `man2 Shorten-PropertyName`
-- Options
+- Params
     - `[-d|-Delimiter] <String>]` (default:`_`)
     - `[-v|-VeryShorten]`
 
@@ -3853,7 +4022,7 @@ Pre `sort -Stable` needed.
 - Usage
     - `man2 apply`
     - `man2 Apply-Function`
-- Syntax
+- Params
     - `Apply-Function key,key,... [{ script | script}]`
 
 Input must be pre stable-sorted by category(key) fields
@@ -3907,7 +4076,7 @@ Pre `sort -Stable` is no needed.
 - Usage
     - `man2 GroupBy-Object`
     - `man2 groupBy`
-- Syntax
+- Params
     - `GroupBy-Object [-k] <col>,<col>,... [{script | script}]`
     - `groupBy [-k] <col>,<col>,... [{script | script}]`
 
@@ -4078,10 +4247,10 @@ Using the X-Rs control chart algorithm.
 
     X      = Specified property's value
     Rs     = Absolute value of the difference from the previous X
-    X-Bar  = Mean of X
+    X-Bar  = Mean of X (if -Median specified, Median of X)
     Rs-Bar = Mean of Rs
 
-    X-CL   = X-Bar
+    X-CL   = X-Bar (if -Median specified, Median of X)
     X-UCL  = X-Bar + 2.659 * Rs-Bar
     X-LCL  = X-Bar - 2.659 * Rs-Bar
     Rs-UCL = 3.267 * Rs-Bar
@@ -4090,10 +4259,9 @@ Using the X-Rs control chart algorithm.
 - LCL: Lower Control Limit
 ```
 
-- reference:
-    - Z 9020-2：2016 (ISO 7870-2：2013) 
+- reference: Z 9020-2：2016 (ISO 7870-2：2013) 
     - <https://kikakurui.com/z9/Z9020-2-2016-01.html>
-        - Table 3 - Control limits formula for X control chart (individual measurement value control chart)
+    - Table 3 - Control limits formula for X control chart (individual measurement value control chart)
 
 Deviation judgment is expressed as an integer
 from `0` to `7` in Property="xrs":
@@ -4116,7 +4284,7 @@ Synopsis:
     - `man2 Detect-XrsAnomaly`
 - Syntax
     - `Detect-XrsAnomaly [-v|Value] <String>`
-- Options
+- Params
     - `[-v|-Value] <String>`
         - Specify property for detect anomaly value
     - `[-r|-RowCounter]`
@@ -4268,12 +4436,12 @@ Import-Csv penguins.csv `
     | oss `
     | sls "deviated" -Context 3
 
-count species xrs detect   b_l_m BarChart
------ ------- --- ------   ----- --------
+  count species xrs detect   b_l_m BarChart
+  ----- ------- --- ------   ----- --------
     183 Gentoo    0           47.3 |||||||||||||||
     184 Gentoo    0           42.8 ||||||||||||||
     185 Gentoo    0           45.1 |||||||||||||||
-> 186 Gentoo    3 deviated  59.6 ||||||||||||||||||||
+  > 186 Gentoo    3 deviated  59.6 ||||||||||||||||||||
     187 Gentoo    0           49.1 ||||||||||||||||
     188 Gentoo    0           48.4 ||||||||||||||||
     189 Gentoo    0           42.6 ||||||||||||||
@@ -4402,6 +4570,7 @@ Example:
 ```powershell
 # replace method property's space to underscore
 
+# input
 Import-Csv planets.csv `
     | select -First 3 `
     | ft
@@ -4412,10 +4581,10 @@ Radial Velocity 1      269.3          7.1  77.4     2006
 Radial Velocity 1      874.774        2.21 56.95    2008
 Radial Velocity 1      763.0          2.6  19.84    2011
 
-
+# Use Replace-ForEach function
 Import-Csv planets.csv `
     | select -First 3 `
-    | Replace-ForEach method -From " " -To "_" `
+    | Replace-ForEach method -From ' ' -To '_' `
     | ft
 
 method          number orbital_period mass distance year
@@ -4423,6 +4592,12 @@ method          number orbital_period mass distance year
 Radial_Velocity 1      269.3          7.1  77.4     2006
 Radial_Velocity 1      874.774        2.21 56.95    2008
 Radial_Velocity 1      763.0          2.6  19.84    2011
+
+# Equivalent to
+Import-Csv planets.csv `
+    | select -First 3 `
+    | %{ $_.method = $_.method -replace ' ', '_'; $_ } `
+    | ft
 ```
 
 ### Plot chart and graph
@@ -4445,7 +4620,14 @@ Radial_Velocity 1      763.0          2.6  19.84    2011
 
 - Usage
     - `man2 dot2gviz`
-    - `dot2gviz [-InputFile] <String> [[-OutputFileType] <String>] [-FontName <String>] [-LayoutEngine <String>] [-NotOverWrite] [-ErrorCheck]`
+- Params
+    - `dot2gviz`
+        - `[-InputFile] <String>`
+        - `[[-OutputFileType] <String>]`
+        - `[-FontName <String>]`
+        - `[-LayoutEngine <String>]`
+        - `[-NotOverWrite]`
+        - `[-ErrorCheck]`
 - Examples
     - `dot2gviz a.dot`
         - `dot -Tpng -o a.png a.dot`と等価
@@ -4481,7 +4663,19 @@ Radial_Velocity 1      763.0          2.6  19.84    2011
 
 - Usage
     - `man2 pu2java`
-    - `pu2java [-InputFile] <String> [[-OutputFileType] <String>] [-ConfigFile <String>] [-OutputDir <String>] [-Charset <String>] [-Jar <String>] [-TestDot] [-CheckOnly] [-NoMetadata] [-NotOverWrite] [-ErrorCheck]`
+- Params
+    - `pu2java`
+        - `[-InputFile] <String>`
+        - `[[-OutputFileType] <String>]`
+        - `[-ConfigFile <String>]`
+        - `[-OutputDir <String>]`
+        - `[-Charset <String>]`
+        - `[-Jar <String>]`
+        - `[-TestDot]`
+        - `[-CheckOnly]`
+        - `[-NoMetadata]`
+        - `[-NotOverWrite]`
+        - `[-ErrorCheck]`
 - Examples
     - `pu2java a.pu`
         - `java -jar plantuml.jar -charset "UTF-8" -t"png" a.pu`と等価
@@ -4526,7 +4720,39 @@ Japanese "DANDORI" means "make arrangement", "take steps", "plan".
 
 - Usage
     - `man2 gantt2pu`
-    - `gantt2pu [[-Unit] <String>] [-Period <String>] [-Title <String>] [-StartDate <DateTime>] [-EndDate <DateTime>] [-MarkdownLevel2AsSeparator] [-SectionLv2] [-AsMilestone] [-TaskbarColor <String>] [-ArrowColor <String>] [-CloseSatSun] [-CloseDates <String[]>] [-CloseCalendar <String[]>] [-OpenDates <String[]>] [-OpenCalendar <String[]>] [-ColorDates <String[]>] [-NamedDates <String[]>] [-TodayColor <String>] [-Grep <Regex>] [-GrepColor <String>] [-GrepRes <Regex>] [-Zoom <Int32>] [-Scale <Int32>] [-ColorResult <String>] [-Today] [-Monochrome] [-HandWritten] [-InheritTasks] [-DuplicatedTaskMark <String>] [-DefaultFontName <String>] [-Theme <String>]`
+- Params
+    - `gantt2pu`
+        - `[[-Unit] <String>]`
+        - `[-Period <String>]`
+        - `[-Title <String>]`
+        - `[-StartDate <DateTime>]`
+        - `[-EndDate <DateTime>]`
+        - `[-MarkdownLevel2AsSeparator]`
+        - `[-SectionLv2]`
+        - `[-AsMilestone]`
+        - `[-TaskbarColor <String>]`
+        - `[-ArrowColor <String>]`
+        - `[-CloseSatSun]`
+        - `[-CloseDates <String[]>]`
+        - `[-CloseCalendar <String[]>]`
+        - `[-OpenDates <String[]>]`
+        - `[-OpenCalendar <String[]>]`
+        - `[-ColorDates <String[]>]`
+        - `[-NamedDates <String[]>]`
+        - `[-TodayColor <String>]`
+        - `[-Grep <Regex>]`
+        - `[-GrepColor <String>]`
+        - `[-GrepRes <Regex>]`
+        - `[-Zoom <Int32>]`
+        - `[-Scale <Int32>]`
+        - `[-ColorResult <String>]`
+        - `[-Today]`
+        - `[-Monochrome]`
+        - `[-HandWritten]`
+        - `[-InheritTasks]`
+        - `[-DuplicatedTaskMark <String>]`
+        - `[-DefaultFontName <String>]`
+        - `[-Theme <String>]`
 - Examples
     - `cat a.txt | gantt2pu > a.pu`
     - `pu2java`との連携
@@ -4581,7 +4807,13 @@ cat input.txt
 Output:
 
 ```
-PS > cat input.txt | gantt2pu -CloseSatSun -Today -StartDate 2023-1-18 > a.pu; pu2java a.pu png | ii
+cat input.txt `
+    | gantt2pu `
+        -CloseSatSun `
+        -Today `
+        -StartDate 2023-1-18 > a.pu;
+pu2java a.pu png | ii
+
 @startgantt
 
 <style>
@@ -4637,7 +4869,35 @@ markdown形式のリストデータからマインドマップを描画する`gr
 
 - Usage
     - `man2 mind2dot`
-    - `mind2dot [[-OutputFile] <String>] [[-Space] <Int32>] [[-GraphType] <String>] [-TopToBottom] [-ReverseEdge] [[-DotFile] <String>] [[-NodeShape] <String>] [[-NodeFillColor] <String>] [[-FirstNodeShape] <String>] [[-FirstNodeFillColor] <String>] [-OffRounded] [[-Title] <String>] [[-TitleLoc] <String>] [[-TitleJust] <String>] [[-FontName] <String>] [[-FontNameWindowsDefault] <String>] [[-FontSize]<Double>] [[-FontColor] <String>] [[-FoldLabel] <Int32>] [[-Kinsoku] <Int32>] [[-LayoutEngine] <String>] [[-Delimiter] <String>] [[-LegendFontSize] <Int32>] [-SolarizedDark] [-SolarizedLight] [[-PenWidth] <Int32>] [[-SkipTop] <String>]`
+- Params
+    - `mind2dot`
+        - `[[-OutputFile] <String>]`
+        - `[[-Space] <Int32>]`
+        - `[[-GraphType] <String>]`
+        - `[-TopToBottom]`
+        - `[-ReverseEdge]`
+        - `[[-DotFile] <String>]`
+        - `[[-NodeShape] <String>]`
+        - `[[-NodeFillColor] <String>]`
+        - `[[-FirstNodeShape] <String>]`
+        - `[[-FirstNodeFillColor] <String>]`
+        - `[-OffRounded]`
+        - `[[-Title] <String>]`
+        - `[[-TitleLoc] <String>]`
+        - `[[-TitleJust] <String>]`
+        - `[[-FontName] <String>]`
+        - `[[-FontNameWindowsDefault] <String>]`
+        - `[[-FontSize]<Double>]`
+        - `[[-FontColor] <String>]`
+        - `[[-FoldLabel] <Int32>]`
+        - `[[-Kinsoku] <Int32>]`
+        - `[[-LayoutEngine] <String>]`
+        - `[[-Delimiter] <String>]`
+        - `[[-LegendFontSize] <Int32>]`
+        - `[-SolarizedDark]`
+        - `[-SolarizedLight]`
+        - `[[-PenWidth] <Int32>]`
+        - `[[-SkipTop] <String>]`
 - Examples
     - `cat a.md | mind2dot -o a.dot`
     - `cat a.md | mind2dot > a.dot`
@@ -4689,10 +4949,13 @@ this is legend
 end legend
 ```
 
-```dot
+```powershell
 # output
 # Note that fontname="meiryo" is specified by default
 cat a.md | mind2dot
+```
+
+```dot
 graph mindmap {
  // graph settings
  graph [
@@ -4848,14 +5111,32 @@ markdown形式のリストデータからマインドマップを描画する`pl
 
 - Usage
     - `man2 mind2pu`
-    - `mind2pu [[-OutputFile] <String>] [[-Space] <Int32>] [[-Title] <String>] [[-Scale] <Double>] [-Monochrome] [-WBS] [-HandWritten] [[-FontName] <String>] [[-FontNameWindowsDefault] <String>] [[-Theme] <String>] [[-FoldLabel] <Int32>] [[-FoldLabelOnlyPlainText] <Int32>] [[-Kinsoku] <Int32>] [[-KinsokuOnlyPlainText] <Int32>] [[-LegendRight] <String[]>] [[-LegendLeft] <String[]>] [-RightToLeft]`
+- Params
+    - `mind2pu`
+        - `[[-OutputFile] <String>]`
+        - `[[-Space] <Int32>]`
+        - `[[-Title] <String>]`
+        - `[[-Scale] <Double>]`
+        - `[-Monochrome]`
+        - `[-WBS]`
+        - `[-HandWritten]`
+        - `[[-FontName] <String>]`
+        - `[[-FontNameWindowsDefault] <String>]`
+        - `[[-Theme] <String>]`
+        - `[[-FoldLabel] <Int32>]`
+        - `[[-FoldLabelOnlyPlainText] <Int32>]`
+        - `[[-Kinsoku] <Int32>]`
+        - `[[-KinsokuOnlyPlainText] <Int32>]`
+        - `[[-LegendRight] <String[]>]`
+        - `[[-LegendLeft] <String[]>]`
+        - `[-RightToLeft]`
 - Examples
     - `cat a.md | mind2pu -o a.pu`
     - `cat a.md | mind2pu > a.pu`
     - `cat a.md | mind2pu | Out-File a.pu -Encoding utf8`
     - [pu2java]との連携
         - `cat a.md | mind2pu > a.pu ; pu2java a.pu | ii`
-- Options
+- Params
     - `-Theme <theme>`でカラースキーマを指定可能
     - `-FontName <fontname>`でフォントを指定可能
     - `-Kinsoku <int>`で日本語文書に禁則処理を適用して任意の文字幅で折り返し
@@ -4898,6 +5179,7 @@ end legend
 # Note that fontname="meiryo" is specified by default
 
 cat a.md | mind2pu
+
 @startmindmap
 
 title "What flavor would you like?"
@@ -4957,7 +5239,9 @@ cat a.md
 # -Kinsoku 14で、全角文字として7文字で折り返し。
 # ただし行頭行末に禁則文字が来ないように、
 # 折り返し幅が自動調整される
-cat a.md | mind2pu -Scale 1.3 -Kinsoku 14 > a.pu; pu2java a.pu | ii
+cat a.md `
+    | mind2pu -Scale 1.3 -Kinsoku 14 > a.pu;
+pu2java a.pu | ii
 ```
 
 ![](img/mind2pu_Kinsoku.png)
@@ -4994,7 +5278,12 @@ cat wbs.md
             + QC
 
 # Output
-cat wbs.md | mind2pu -WBS | Tee-Object -FilePath a.pu ; pu2java a.pu -OutputFileType svg | ii
+cat wbs.md `
+    | mind2pu -WBS `
+    | Tee-Object -FilePath a.pu ;
+pu2java a.pu -OutputFileType svg | ii
+
+
 @startwbs
 
 title "WBS"
@@ -5049,7 +5338,25 @@ C task-C [A,B]
 
 - Usage
     - `man2 logi2dot`
-    - `logi2dot [[-Title] <String>] [[-LayoutEngine] <String>] [-LeftToRightDirection] [-RightToLeftDirection] [-BottomToTopDirection] [-ReverseEdgeDir] [[-FontName] <String>] [[-NodeShape] <String>] [[-NodeShapeFirst] <String>] [[-GroupShape] <String>] [[-Kinsoku] <Int32>] [[-KinsokuDelim] <String>] [[-GrepShape] <String>] [[-Grep] <Regex>] [[-GrepColor] <String>] [-AddStartNode] [-AddEdgeLabel] ...`
+- Params
+    - `logi2dot`
+        - `[[-Title] <String>]`
+        - `[[-LayoutEngine] <String>]`
+        - `[-LeftToRightDirection]`
+        - `[-RightToLeftDirection]`
+        - `[-BottomToTopDirection]`
+        - `[-ReverseEdgeDir]`
+        - `[[-FontName] <String>]`
+        - `[[-NodeShape] <String>]`
+        - `[[-NodeShapeFirst] <String>]`
+        - `[[-GroupShape] <String>]`
+        - `[[-Kinsoku] <Int32>]`
+        - `[[-KinsokuDelim] <String>]`
+        - `[[-GrepShape] <String>]`
+        - `[[-Grep] <Regex>]`
+        - `[[-GrepColor] <String>]`
+        - `[-AddStartNode]`
+        - `[-AddEdgeLabel]`
 - Examples
     - `cat input.txt | logi2dot`
     - `dot2gviz`との連携
@@ -5071,7 +5378,7 @@ C task-C [A,B]
 Input:
 
 ```powershell
-PS > cat input.txt
+cat input.txt
 # how to cook curry
 
 -- rice --
@@ -5104,7 +5411,9 @@ end legend
 Output:
 
 ```powershell
-PS >  cat input.txt | logi2dot -Kinsoku 10 -BottomToTopDirection > a.dot ; dot2gviz a.dot png | ii
+cat input.txt `
+    | logi2dot -Kinsoku 10 -BottomToTopDirection > a.dot ;
+dot2gviz a.dot png | ii
 ```
 
 ```dot
@@ -5114,7 +5423,7 @@ strict digraph logictree {
     charset = "UTF-8";
     compound = true;
     fontname = "MS Gothic";
-    label = "ow to cook curry";
+    label = "how to cook curry";
     labelloc = "t";
     rankdir = "TB";
     newrank = true;
@@ -5338,7 +5647,26 @@ C task-C [A,B]
 
 - Usage
     - `man2 logi2pu`
-    - `logi2pu [[-Title] <String>] [-LeftToRightDirection] [-BottomToTopDirection] [-RightToLeftDirection] [-ReverseEdgeDir] [-Shadow] [[-Scale] <Double>] [[-Grep] <Regex>] [[-GrepShape] <String>] [[-GrepColor] <String>] [-Monochrome] [-HandWritten] [[-FontName] <String>] [[-Theme] <String>] [[-NodeShape] <String>] [[-NodeShapeFirst] <String>] [[-GroupShape] <String>] [[-Kinsoku] <Int32>] [[-KinsokuDelim] <String>] ...`
+- Params
+    - `logi2pu`
+        - `[[-Title] <String>]`
+        - `[-LeftToRightDirection]`
+        - `[-BottomToTopDirection]`
+        - `[-RightToLeftDirection]`
+        - `[-ReverseEdgeDir]`
+        - `[-Shadow] [[-Scale] <Double>]`
+        - `[[-Grep] <Regex>]`
+        - `[[-GrepShape] <String>]`
+        - `[[-GrepColor] <String>]`
+        - `[-Monochrome]`
+        - `[-HandWritten]`
+        - `[[-FontName] <String>]`
+        - `[[-Theme] <String>]`
+        - `[[-NodeShape] <String>]`
+        - `[[-NodeShapeFirst] <String>]`
+        - `[[-GroupShape] <String>]`
+        - `[[-Kinsoku] <Int32>]`
+        - `[[-KinsokuDelim] <String>]`
 - Examples
     - `cat input.txt | logi2pu`
     - [pu2java]との連携
@@ -5391,7 +5719,8 @@ end legend
 Output:
 
 ```powershell
-PS> cat input.txt | logi2dot > a.dot; dot2gviz a.dot png | ii
+cat input.txt | logi2dot > a.dot;
+dot2gviz a.dot png | ii
 ```
 
 ```
@@ -5453,7 +5782,8 @@ end legend
 Input2:
 
 ```powershell
-PS> cat input.txt
+cat input.txt
+
 # logic tree
 
 Goal Making a profit for the company [ReqA, ReqB]
@@ -5474,7 +5804,9 @@ ActA <-> ActB #line:red : conflict！
 Output2:
 
 ```powershell
-PS> cat input.txt | logi2pu -BottomToTopDirection -Kinsoku 10 > a.pu; pu2java a.pu png | ii
+cat input.txt `
+    | logi2pu -BottomToTopDirection -Kinsoku 10 > a.pu;
+pu2java a.pu png | ii
 ```
 
 ```
@@ -5529,7 +5861,20 @@ Easy and quick sequence-diagram creator from lists written in markdown-like form
 
 - Usage
     - `man2 seq2pu`
-    - `seq2pu [[-OutputFile] <String>] [[-Title] <String>] [[-Scale] <Double>] [-Monochrome] [-HandWritten] [-AutoActivate] [[-FontName] <String>] [[-Theme] <String>] [[-SequenceMessageAlign] <String>] [-ResponseMessageBelowArrow] [[-Kinsoku] <Int32>] [[-KinsokuNote] <Int32>]`
+- Params
+    - `seq2pu`
+        - `[[-OutputFile] <String>]`
+        - `[[-Title] <String>]`
+        - `[[-Scale] <Double>]`
+        - `[-Monochrome]`
+        - `[-HandWritten]`
+        - `[-AutoActivate]`
+        - `[[-FontName] <String>]`
+        - `[[-Theme] <String>]`
+        - `[[-SequenceMessageAlign] <String>]`
+        - `[-ResponseMessageBelowArrow]`
+        - `[[-Kinsoku] <Int32>]`
+        - `[[-KinsokuNote] <Int32>]`
 - Examples
     - `cat a.md | seq2pu -o a.pu`
     - `cat a.md | seq2pu > a.pu`
@@ -5585,7 +5930,9 @@ Examples:
 
 ```powershell
 # Create sequence-diagram example
-cat a.md | seq2pu -KinsokuNote 24 -ResponseMessageBelowArrow > a.pu; pu2java a.pu svg | ii
+cat a.md `
+    | seq2pu -KinsokuNote 24 -ResponseMessageBelowArrow > a.pu;
+pu2java a.pu svg | ii
 ```
 
 出力：
@@ -5648,7 +5995,9 @@ cat a.md | seq2pu -KinsokuNote 24 -ResponseMessageBelowArrow > a.pu; pu2java a.p
 
 ```powershell
 # Create sequence-diagram:
-cat a.md | seq2pu -KinsokuNote 24 -ResponseMessageBelowArrow > a.pu; pu2java a.pu svg | ii
+cat a.md `
+    | seq2pu -KinsokuNote 24 -ResponseMessageBelowArrow > a.pu;
+pu2java a.pu svg | ii
 ```
 
 出力：
@@ -5668,7 +6017,21 @@ Easy and quick flow chart creator from lists written in markdown format.
 
 - Usage
     - `man2 flow2pu`
-    - `flow2pu [[-OutputFile] <String>] [[-Title] <String>] [[-Scale] <Double>] [-Monochrome] [-HandWritten] [[-Grep] <Regex>] [[-FontName] <String>] [[-FontNameWindowsDefault] <String>] [[-Theme] <String>] [[-Kinsoku] <Int32>] [[-KinsokuNote] <Int32>] [[-LegendRight] <String[]>] [[-LegendLeft] <String[]>]`
+- Params
+    - `flow2pu`
+        - `[[-OutputFile] <String>]`
+        - `[[-Title] <String>]`
+        - `[[-Scale] <Double>]`
+        - `[-Monochrome]`
+        - `[-HandWritten]`
+        - `[[-Grep] <Regex>]`
+        - `[[-FontName] <String>]`
+        - `[[-FontNameWindowsDefault] <String>]`
+        - `[[-Theme] <String>]`
+        - `[[-Kinsoku] <Int32>]`
+        - `[[-KinsokuNote] <Int32>]`
+        - `[[-LegendRight] <String[]>]`
+        - `[[-LegendLeft] <String[]>]`
 - Examples
     - `cat a.md | flow2pu -o a.pu`
     - `cat a.md | flow2pu > a.pu`
@@ -5713,7 +6076,9 @@ Examples:
 
 ```powershell
 # Create flowchart (activity-diagram)
-cat a.md | flow2pu -Kinsoku 10 -KinsokuNote 20 > a.pu; pu2java a.pu svg | ii
+cat a.md `
+    | flow2pu -Kinsoku 10 -KinsokuNote 20 > a.pu;
+pu2java a.pu svg | ii
 ```
 
 出力画像：
@@ -5765,7 +6130,9 @@ end
 
 ```powershell
 ## output activity-diagram
-cat a.md | flow2pu -Kinsoku 16 -KinsokuNote 20 > a.pu; pu2java a.pu svg | ii
+cat a.md `
+    | flow2pu -Kinsoku 16 -KinsokuNote 20 > a.pu;
+pu2java a.pu svg | ii
 ```
 
 出力： （リストとヘッダ行以外はそのまま出力される）
@@ -5789,7 +6156,17 @@ cat a.md | flow2pu -Kinsoku 16 -KinsokuNote 20 > a.pu; pu2java a.pu svg | ii
 
 - Usage
     - `man2 ConvImage`
-    - `ConvImage [-inputFile] <String[]> [-outputFile] <String[]> [-resize <String>] [-rotate <String>] [-flip] [-flop] [-Exif] [-ExifOrientationOnly] [-notOverWrite]`
+- Params
+    - `ConvImage`
+        - `[-inputFile] <String[]>`
+        - `[-outputFile] <String[]>`
+        - `[-resize <String>]`
+        - `[-rotate <String>]`
+        - `[-flip]`
+        - `[-flop]`
+        - `[-Exif]`
+        - `[-ExifOrientationOnly]`
+        - `[-notOverWrite]`
 - Examples
     - `ConvImage -inputFile <file> -outputFile <file> [-notOverWrite]`
     - `ConvImage -inputFile <file> -outputFile <file> -resize <height>x<width> [-notOverWrite]`
@@ -5911,38 +6288,39 @@ Markdownファイルの処理に特化した行指向ならぬブロック指向
 
 ```powershell
 # 当README.mdから「man2」ファンクションのセクションのみ抜き出す
-PS > cat READMD.md | mdgrep man2 -Level 4 -MatchOnlyTitle -Expand
-PS > cat READMD.md | mdgrep man2 -l 4 -t -e
+cat README.md `
+    | mdgrep man2 -Level 4 -MatchOnlyTitle -Expand `
+    | head
 
-#### [man2] - Enumerate the function names
+or
+
+cat README.md | mdgrep man2 -l 4 -t -e | head
+
+#### [man2] - Formats filelist as a wide table and gets manual
 
 [man2]: src/man2_function.ps1
 
-src配下の関数（ファイル）名を列挙する。
+`src`配下の関数（ファイル）名を列挙する。
 筆者は作った関数をすぐに忘れてしまうため。
 
 - Usage
-    - man2
-    - man2 [func-name] [-p|-paging]
-    - man2 [[-FunctionName] <String>] [-c|-Column <Int32>] [-Exclude <String>] [-p|-Paging] [-Include <String>] [-Examples] [-l|-Line]
-- 挙動
-    - man2関数ファイルと同階層にある*_function.ps1ファイルのファイル名から_function.ps1を除去して列挙する
-- 依存
-    - [flat], [tateyoko], [keta]
-- Examples
-    - man2
-    - man2 man2
-    - man2 man2 -p
-- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
-    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
-    - Command: man2
-...
+    - `man2 man2`
+    - `man2 <function-name> [-p|-Paging]`
 ```
 
 
 - Usage
     - `man2 mdgrep`
-    - `mdgrep [[-Grep] <String>] [-l|-Level <Int32>] [-t|-MatchOnlyTitle] [-e|-Expand] [-p|-OutputParentSection] [-v|-NotMatch] [-List]`
+- Params
+    - `mdgrep`
+        - `[[-Grep] <String>]`
+        - `[-l|-Level <Int32>]`
+        - `[-t|-MatchOnlyTitle]`
+        - `[-e|-Expand]`
+        - `[-p|-OutputParentSection]`
+        - `[-v|-NotMatch]`
+        - `[-List]`
+- Example
     - `cat file | mdgrep "<regex>"`
 - Note
     - The number signs (`#`) written in the following block is ignored
@@ -6354,7 +6732,15 @@ Markdownのリストブロックに対するパターンマッチング。
 
 - Usage
     - `man2 mdfocus`
-    - `mdfocus [[-Grep] <String>] [-l|-Level <Int32>] [-t|-MatchOnlyTitle] [-e|-Expand] [-p|-OutputParentSection] [-v|-NotMatch]`
+- Params
+    - `mdfocus`
+        - `[[-Grep] <String>]`
+        - `[-l|-Level <Int32>]`
+        - `[-t|-MatchOnlyTitle]`
+        - `[-e|-Expand]`
+        - `[-p|-OutputParentSection]`
+        - `[-v|-NotMatch]`
+- Example
     - `cat file | mdfocus "<regex>"`
 - Note
     - The lists written in the following block are ignored
@@ -6453,7 +6839,15 @@ PS> cat a.md | mdfocus 'Lv\.2' | list2table
 
 - Usage
     - `man2 kinsoku`
-    - `kinsoku [-Width] <Int32> [-Expand] [-Yoon] [-Join <String>] [-OffTrim] [-SkipTop <String>] [-SkipTopJoinStr <String>]`
+- Params
+    - `kinsoku`
+        - `[-w|-Width] <Int32>`
+        - `[-e|-Expand]`
+        - `[-y|-Yoon]`
+        - `[-j|-Join <String>]`
+        - `[-OffTrim]`
+        - `[-SkipTop <String>]`
+        - `[-SkipTopJoinStr <String>]`
 - Options:
     - `-Width <int>`で折返し文字幅を指定（全角2、半角1）
     - `-Expand`でぶら下げ禁則処理ON
@@ -6486,7 +6880,7 @@ hoge fuga.
 
 ```powershell
 # How to use -Expand and -Join <str> option
-"あいうえおかきくけこ、さしすせそたち。" | kinsoku 20
+"あいうえおかきくけこ、さしすせそたち。" `| kinsoku 20
 あいうえおかきくけ
 こ、さしすせそたち。
 
@@ -6504,7 +6898,8 @@ hoge fuga.
 
 ```powershell
 # How to use -SkipTop option
-"ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand
+"ID0001:あああああ、いいいいい、ううううう" `
+    | kinsoku 10 -Expand
 ID0001:ああ
 あああ、い
 いいいい、
@@ -6512,20 +6907,24 @@ ID0001:ああ
 
 # -SkipTop 'ID....:'で、ID文字列はノーカウント。
 # 先頭にIDがあり、それをカウントしたくない場合などに使う。
-"ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:'
+"ID0001:あああああ、いいいいい、ううううう" `
+    | kinsoku 10 -Expand -SkipTop 'ID....:'
 ID0001:あああああ、
 いいいいい、
 ううううう
 
-"ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n'
+"ID0001:あああああ、いいいいい、ううううう" `
+    | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n'
 ID0001:\nあああああ、
 いいいいい、
 ううううう
 
-"ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n'
+"ID0001:あああああ、いいいいい、ううううう" `
+    | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n'
 ID0001:\nあああああ、\nいいいいい、\nううううう
 
-"ID0001:あああああ、いいいいい、ううううう" | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n' -AddLastChar '\r\n'
+"ID0001:あああああ、いいいいい、ううううう" `
+    | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n' -AddLastChar '\r\n'
 ID0001:\nあああああ、\nいいいいい、\nううううう\r\n
 ```
 
@@ -6542,6 +6941,7 @@ ID0001:\nあああああ、\nいいいいい、\nううううう\r\n
 
 - Usage
     - `man2 filehame`
+- Params
     - `filehame -l <keyword> <templateFile> <insertFile>`
 - Examples
     - `cat contents.md | pandoc | filehame -l KEYWORD template.html -`
@@ -6587,7 +6987,9 @@ hoge
 Output:
 
 ```powershell
-cat contents.md | pandoc -f markdown -t html5 | filehame -l TEXTBODY template.html -
+cat contents.md `
+    | pandoc -f markdown -t html5 `
+    | filehame -l TEXTBODY template.html -
 # Meaning:
 #   Insert pandoc-converted content into the line
 #   containing the keyword "TEXTBODY" in template.html
@@ -6626,6 +7028,28 @@ cat contents.md | pandoc -f markdown -t html5 | filehame -l TEXTBODY template.ht
 - Usage (`Set-Alias -name ml -value Get-OGP`)
     - `man2 Get-OGP`
     - `man2 ml`
+- Params
+    - `Get-OGP`
+        - `[[-u|-Uri] <String>]`
+        - `[-b|-Card]`
+        - `[-m|-Markdown]`
+        - `[-i|-Id <String>]`
+        - `[-h|-Html]`
+        - `[-c|-Clip]`
+        - `[-DownloadMetaImage]`
+        - `[-Method <String>]`
+        - `[-UserAgent <String>]`
+        - `[-Image <String>]`
+        - `[-ImagePathOverwrite <String>]`
+        - `[-Title <String>]`
+        - `[-Description <String>]`
+        - `[-AllMetaData]`
+        - `[-ShrinkSize <String>]`
+        - `[-UriEncode]`
+        - `[-Canonical]`
+        - `[-Cite]`
+        - `[-Raw]`
+        - `[-NoShrink]`
 - Examples
     - `ml -m | Set-Clipboard`
         - クリップボードのUriをマークダウン形式のリンクに変換して再度クリップボードに格納
@@ -6743,7 +7167,16 @@ PS > watercss -Light
 
 - Usage
     - `man2 watercss`
-    - `watercss [-Automatic] [-Light] [-Dark] [-GitHub] [-WebSite] [-CDN] [[-CDNVersion] <Int32>] [-Extra]`
+- Params
+    - `watercss`
+        - `[-Automatic]`
+        - `[-Light]`
+        - `[-Dark]`
+        - `[-GitHub]`
+        - `[-WebSite]`
+        - `[-CDN]`
+        - `[[-CDNVersion] <Int32>]`
+        - `[-Extra]`
 - Examples
     - `watercss`
     - `watercss -Light`
@@ -6776,7 +7209,17 @@ PS > watercss -Light
 
 - Usage
     - `man2 image2md`
-    - `image2md [[-Flat] <Int32>] [[-Option] <String>] [-Table] [-Hugo] [-Html] [-Markdownify] [-NoTableHeader] [[-Step] <Int32>] [[-StepString] <String>]`
+- Params
+    - `image2md`
+        - `[[-Flat] <Int32>]`
+        - `[[-Option] <String>]`
+        - `[-Table]`
+        - `[-Hugo]`
+        - `[-Html]`
+        - `[-Markdownify]`
+        - `[-NoTableHeader]`
+        - `[[-Step] <Int32>]`
+        - `[[-StepString] <String>]`
 - Examples
     - `"a.png alt text" | image2md`
         - Output: `![alt text](a.png)`
@@ -6856,7 +7299,12 @@ csv, tsvは**ヘッダありデータ**のみ受付（1行目をヘッダ行と�
 
 - Usage
     - `man2 table2md`
-    - `table2md [[-Units] <String[]>] [[-DefaultUnits] <String[]>] [[-Delimiter] <String>] [[-Caption] <String>]`
+- Params
+    - `table2md`
+        - `[[-Units] <String[]>]`
+        - `[[-DefaultUnits] <String[]>]`
+        - `[[-Delimiter] <String>]`
+        - `[[-Caption] <String>]`
 - Options
     - `-Caption <caption>`で表にmarkdown形式のキャプションを追加
 - Examples
@@ -7030,6 +7478,9 @@ With `ConvertTo-Json` command
 
 ```powershell
 PS> cat a.md | list2table -MarkdownLv1 | ConvertTo-Json
+```
+
+```json
 [
   {
     "F1": "title",
@@ -7115,7 +7566,12 @@ PS> cat list-with-tag.md | list2table -TagOff | ft
 
 - Usage
     - `man2 linkextract`
-    - `linkextract [-Html] <String[]> [-ExcludeUris <Regex[]>] [-DelIndexHtml] [-AddUri]`
+- Params
+    - `linkextract`
+        - `[-Html] <String[]>`
+        - `[-ExcludeUris <Regex[]>]`
+        - `[-DelIndexHtml]`
+        - `[-AddUri]`
 - Operation
     - For uri:
         - `(Invoke-WebRequest $uri).Links.href`    
@@ -7233,7 +7689,12 @@ Detect broken links.
 
 - Usage
     - `man2 linkcheck`
-    - `linkcheck [-Uris] <String[]> [-Header] [-WaitSeconds <Int32>] [-VerboseOutput]`
+- Params
+    - `linkcheck`
+        - `[-Uris] <String[]>`
+        - `[-Header]`
+        - `[-WaitSeconds <Int32>]`
+        - `[-VerboseOutput]`
 - Examples
     - `"https://www.example.com/", "www.microsoft.com/unknownhost" | linkcheck`
 
@@ -7272,7 +7733,12 @@ Detect broken links in m.html
 
 - Usage
     - `man2 jl`
-    - `jl [[-Key] <String>] [-Delimiter <String>] [-SkipBlank] [-AddCrLf]`
+- Params
+    - `jl`
+        - `[[-Key] <String>]`
+        - `[-Delimiter <String>]`
+        - `[-SkipBlank]`
+        - `[-AddCrLf]`
 - Note
     - `-Key <regex>`で任意の末尾文字列を指定できる。ただし正規表現regexである点に注意
     - たとえば`-Key .`を指定すると、すべての行（空行以外）が連結される
@@ -7363,7 +7829,11 @@ date: today
 
 - Usage
     - `man2 Override-Yaml`
-    - `Override-Yaml [-Yaml] <String> [[-Settings] <String[]>] [-Footers <String[]>]`
+- Params
+    - `Override-Yaml`
+        - `[-Yaml] <String>`
+        - `[[-Settings] <String[]>]`
+        - `[-Footers <String[]>]`
 - Options
     - `-Settings <file>,<file>,...` : Load external files right after yaml header
     - `-Footers <file>,<file>,...` : Load external files at the end of the content
@@ -7636,7 +8106,16 @@ CSV形式などの「1行1レコード形式」では表現しにくい情報を
 
 - Usage
     - `man2 toml2psobject`
-    - `toml2psobject [[-File] <String>] [-DateFormat <String>] [-ToJson] [-JsonDepth <Int32>] [-Simplify] [-Quote] [-NoPoshListAndHash] [-Execute]`
+- Params
+    - `toml2psobject`
+        - `[[-File] <String>]`
+        - `[-DateFormat <String>]`
+        - `[-ToJson]`
+        - `[-JsonDepth <Int32>]`
+        - `[-Simplify]`
+        - `[-Quote]`
+        - `[-NoPoshListAndHash]`
+        - `[-Execute]`
 - Examples
     - `cat a.toml | toml2psobject`
 
@@ -7817,7 +8296,14 @@ id main id2 sub val
 
 - Usage
     - `man2 catcsv`
-    - `catcsv [[-Path] <String>] [-Output <String>] [-List] [-OffList] [-OverWrite] [-NoHeader]`
+- Params
+    - `catcsv`
+        - `[[-Path] <String>]`
+        - `[-Output <String>]`
+        - `[-List]`
+        - `[-OffList]`
+        - `[-OverWrite]`
+        - `[-NoHeader]`
 - Examples
     - `catcsv`
         - カレントディレクトリの`*.csv`を`out.csv`に出力する
@@ -7834,9 +8320,19 @@ CSVファイルをSQLで操作し、集計したり検索できる。
 
 - Usage
     - `man2 csv2sqlite`
+- Params
+    - `csv2sqlite`
+        - `[-Files] <String[]>`
+        - `[-OutputFile <String>]`
+        - `[-Mode <String>]`
+        - `[-Delimiter <String>]`
+        - `[-ReadFile <String>]`
+        - `[-Coms <String[]>]`
+        - `[-ComsBefore <String[]>]`
+        - `[-NoHeader]`
+        - `[-SQL <String[]>]`
 - Dependencies
-    - sqlite3
-        - <https://www.sqlite.org/index.html>
+    - sqlite3: <https://www.sqlite.org/index.html>
 - Examples
     - `csv2sqlite csv,csv,... "<sqlstring>"`
     - `csv2sqlite csv,csv,... -ReadFile <sqlfile>`
@@ -7883,7 +8379,9 @@ ddd   30
 SQL from stdin:
 
 ```powershell
-"select *,sum(val) from dat where main like '%b%' group by main;" | csv2sqlite dat.csv -o o.csv | cat
+"select *,sum(val) from dat where main like '%b%' group by main;" `
+    | csv2sqlite dat.csv -o o.csv `
+    | cat
 id  main  id2  sub  val  sum(val)
 --  ----  ---  ---  ---  --------
 02  bbb   01   xxx  10   30
@@ -7932,7 +8430,17 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 
 - Usage
     - `man2 fwatch`
-    - `fwatch [-Path] <String> [[-Action] <ScriptBlock>] [-Interval <String>] [-Log <String>] [-Message <String>] [-Recurse] [-Hash] [-OutOnlyLog] [-Quiet]`
+- Params
+    - `fwatch`
+        - `[-Path] <String>`
+        - `[[-Action] <ScriptBlock>]`
+        - `[-Interval <String>]`
+        - `[-Log <String>]`
+        - `[-Message <String>]`
+        - `[-Recurse]`
+        - `[-Hash]`
+        - `[-OutOnlyLog]`
+        - `[-Quiet]`
 - Examples
     - `fwatch -Path index.md -Action {cat index.md | md2html > a.html; ii a.html}`
     - `fwatch -Path . -Action {cat a.md | md2html > a.html; ii a.html} -Recurse`
@@ -7957,6 +8465,7 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 
 - Usage
     - `man2 Rename-Normalize`
+- Params
     - `Rename-Normalize`
         - `[-e|-Execute]`
         - `[-a|-AddDate]`
@@ -8056,6 +8565,7 @@ clip2file | Rename-Normalize
 
 - Usage
     - `man2 push2loc`
+- Params
     - `clip2file | push2loc [-a|-Action {script}] [-p|-Pop] [-e|-Execute] [-q|-Quiet]`
 - Option
     - `-a|-Action {scriptblock}`: the commands want to run
@@ -8208,7 +8718,7 @@ PS > clip2file | push2loc -Action { git status } -Pop -Execute
 
 - Usage
     - `man2 clip2file`
-- Options
+- Params
     - `[-r|-Relative]`
     - `[-n|-Name]`
     - `[-f|-FullName]`
@@ -8289,7 +8799,12 @@ clip2file | Rename-Normalize
 
 - Usage
     - `man2 clip2push`
-    - `clip2push [-a|-Action {script}] [-p|-Pop] [-e|-Execute] [-q|-Quiet]`
+- Params
+    - `clip2push`
+        - `[-a|-Action {script}]`
+        - `[-p|-Pop]`
+        - `[-e|-Execute]`
+        - `[-q|-Quiet]`
 - Option
     - `-a|-Action {scriptblock}`: the commands want to run
     - `-p|-Pop` Pop-Location after running Push-Location (and execute -Action script)
@@ -8380,7 +8895,7 @@ PS > clip2push -Action { git status } -Pop -Execute
 
 - Usage
     - `man2 clip2hyperlink`
-- Options
+- Params
     - `[-r|-Relative]`
     - `[-n|-Name]`
     - `[-f|-FullName]`
@@ -8524,7 +9039,7 @@ Only for windows.
 
 - Usage
     - `man2 clip2shortcut`
-- Options
+- Params
     - `[-loc|-Location]` ...Specify directory in which to create shortcuts. default: current directory.
     - `[-home|-ReplaceHome]` ...Represent home directory with tilde
     - `[-f|-FullName]` ...Create shortcuts with absolute paths instead of relative paths
@@ -9006,7 +9521,7 @@ UTF-8環境下のPowerShell7での使用を想定している。
 - Usage
     - `man2 pwsync`
     - `pwsync <source> <destination> [-MIR] [options] [-Exec|-Echo|-DryRun|-Quit]`
-- Options
+- Params
     - `[-f|-Source]`
     - `[-t|-Destination]`
     - `[-Files = '*.*']`
@@ -9194,7 +9709,7 @@ Open Hyogo/Japan weather reports in browser (on windows).
     - `man2 tenki`
     - `tenki` ... open tenki.jp forecast and map
     - `tenki -jma` ... open jma.go.jp forecast and map
-- Options (Open pages)
+- Params (Open pages)
     - `[-f|-Forecast]` (default)
     - `[-m|-Map]` (default)
     - `[-r|-Radar]`
@@ -9270,8 +9785,19 @@ Windows環境用ティータイマー。時間がきたら通知トレイから�
 
 - Usage
     - `man2 teatimer`
-    - `teatimer [[-Minutes] <Int32>] [[-Hours] <Int32>] [[-Seconds] <Int32>] [[-At] <DateTime>] [[-Title] <String>] [[-Text] <String>] [[-Timeout] <Int32>] [[-EventTimeout] <Int32>] [-ShowPastTime] [-Quiet] [[-IconType]`
-
+- Params
+    - `teatimer`
+        - `[[-Minutes] <Int32>]`
+        - `[[-Hours] <Int32>]`
+        - `[[-Seconds] <Int32>]`
+        - `[[-At] <DateTime>]`
+        - `[[-Title] <String>]`
+        - `[[-Text] <String>]`
+        - `[[-Timeout] <Int32>]`
+        - `[[-EventTimeout] <Int32>]`
+        - `[-ShowPastTime]`
+        - `[-Quiet]`
+        - `[[-IconType]`
 
 #### [Get-AppShortcut] - List up app-shortcuts
 

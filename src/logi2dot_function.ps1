@@ -85,7 +85,7 @@
             charset = "UTF-8";
             compound = true;
             fontname = "MS Gothic";
-            label = "ow to cook curry";
+            label = "how to cook curry";
             labelloc = "t";
             rankdir = "TB";
             newrank = true;
