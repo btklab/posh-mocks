@@ -47,7 +47,7 @@
         | sort species -Stable `
         | Apply-Function species {
             Add-Stats sl -Sum -Mean `
-        | select -First 3 } `
+            | select -First 3 } `
         | ft
 
     sl  sw  pl  pw  species    MeanOf_sl SumOf_sl

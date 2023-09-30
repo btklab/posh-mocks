@@ -4034,9 +4034,9 @@ Get the minimum Id per processName
 
 ```powershell
 ps `
-| Sort-Object ProcessName, Id -Stable `
-| Apply-Function ProcessName { select -First 1 } `
-| ft
+    | Sort-Object ProcessName, Id -Stable `
+    | Apply-Function ProcessName { select -First 1 } `
+    | ft
 
  NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
  ------    -----      -----     ------      --  -- -----------
@@ -4169,7 +4169,7 @@ Import-Csv iris.csv `
     | sort species -Stable `
     | Apply-Function species {
         Add-Stats sl -Sum -Mean `
-    | select -First 3 } `
+        | select -First 3 } `
     | ft
 
 sl  sw  pl  pw  species    MeanOf_sl SumOf_sl
