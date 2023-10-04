@@ -4151,13 +4151,13 @@ Example:
     | Add-Stats v1,v2 -Sum -Mean `
     | ft
 
-v1 v2 MeanOf_v1 MeanOf_v2 SumOf_v1 SumOf_v2
--- -- --------- --------- -------- --------
-1  1       3.00      3.00    15.00    15.00
-2  2       3.00      3.00    15.00    15.00
-3  3       3.00      3.00    15.00    15.00
-4  4       3.00      3.00    15.00    15.00
-5  5       3.00      3.00    15.00    15.00
+v1 v2 Mean_Of_v1 Mean_Of_v2 Sum_Of_v1 Sum_Of_v2
+-- -- ---------- ---------- --------- ---------
+1  1        3.00       3.00     15.00     15.00
+2  2        3.00       3.00     15.00     15.00
+3  3        3.00       3.00     15.00     15.00
+4  4        3.00       3.00     15.00     15.00
+5  5        3.00       3.00     15.00     15.00
 ```
 
 ```powershell
@@ -4172,17 +4172,47 @@ Import-Csv iris.csv `
         | select -First 3 } `
     | ft
 
-sl  sw  pl  pw  species    MeanOf_sl SumOf_sl
---  --  --  --  -------    --------- --------
-5.1 3.5 1.4 0.2 setosa          5.01   250.30
-4.9 3.0 1.4 0.2 setosa          5.01   250.30
-4.7 3.2 1.3 0.2 setosa          5.01   250.30
-7.0 3.2 4.7 1.4 versicolor      5.94   296.80
-6.4 3.2 4.5 1.5 versicolor      5.94   296.80
-6.9 3.1 4.9 1.5 versicolor      5.94   296.80
-6.3 3.3 6.0 2.5 virginica       6.59   329.40
-5.8 2.7 5.1 1.9 virginica       6.59   329.40
-7.1 3.0 5.9 2.1 virginica       6.59   329.40
+sl  sw  pl  pw  species    key        Mean_Of_sl Sum_Of_sl
+--  --  --  --  -------    ---        ---------- ---------
+5.1 3.5 1.4 0.2 setosa     setosa           5.01    250.30
+4.9 3.0 1.4 0.2 setosa     setosa           5.01    250.30
+4.7 3.2 1.3 0.2 setosa     setosa           5.01    250.30
+7.0 3.2 4.7 1.4 versicolor versicolor       5.94    296.80
+6.4 3.2 4.5 1.5 versicolor versicolor       5.94    296.80
+6.9 3.1 4.9 1.5 versicolor versicolor       5.94    296.80
+6.3 3.3 6.0 2.5 virginica  virginica        6.59    329.40
+5.8 2.7 5.1 1.9 virginica  virginica        6.59    329.40
+7.1 3.0 5.9 2.1 virginica  virginica        6.59    329.40
+```
+
+```powershell
+# Adds the sum and average value and
+# Detext X-Rs control deviation and
+# Calculate Deviation from the average value
+# For each record
+
+Import-Csv iris.csv `
+    | Shorten-PropertyName -v `
+    | Drop-NA sl `
+    | sort species -Stable `
+    | Add-Stats sl -Sum -Mean `
+    | select *, @{N="DevFromMean";E={$_."sl" - $_."Mean_Of_sl"}} `
+    | Detect-XrsAnomaly sl -OnlyDeviationRecord `
+    | ft
+    
+sl  sw  pl  pw  species    Mean_Of_sl Sum_Of_sl DevFromMean xrs
+--  --  --  --  -------    ---------- --------- ----------- ---
+4.3 3.0 1.1 0.1 setosa           5.84    876.50       -1.54   4
+7.0 3.2 4.7 1.4 versicolor       5.84    876.50        1.16   2
+7.6 3.0 6.6 2.1 virginica        5.84    876.50        1.76   1
+4.9 2.5 4.5 1.7 virginica        5.84    876.50       -0.94   2
+7.3 2.9 6.3 1.8 virginica        5.84    876.50        1.46   2
+7.7 3.8 6.7 2.2 virginica        5.84    876.50        1.86   1
+7.7 2.6 6.9 2.3 virginica        5.84    876.50        1.86   1
+7.7 2.8 6.7 2.0 virginica        5.84    876.50        1.86   3
+7.4 2.8 6.1 1.9 virginica        5.84    876.50        1.56   1
+7.9 3.8 6.4 2.0 virginica        5.84    876.50        2.06   1
+7.7 3.0 6.1 2.3 virginica        5.84    876.50        1.86   1
 ```
 
 
