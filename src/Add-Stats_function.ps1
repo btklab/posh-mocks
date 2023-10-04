@@ -27,16 +27,16 @@
             | Add-Stats v1,v2 -Sum -Mean `
             | ft
 
-        v1 v2 MeanOf_v1 MeanOf_v2 SumOf_v1 SumOf_v2
-        -- -- --------- --------- -------- --------
-        1  1       3.00      3.00    15.00    15.00
-        2  2       3.00      3.00    15.00    15.00
-        3  3       3.00      3.00    15.00    15.00
-        4  4       3.00      3.00    15.00    15.00
-        5  5       3.00      3.00    15.00    15.00
+        v1 v2 Mean_Of_v1 Mean_Of_v2 Sum_Of_v1 Sum_Of_v2
+        -- -- ---------- ---------- --------- ---------
+        1  1        3.00       3.00     15.00     15.00
+        2  2        3.00       3.00     15.00     15.00
+        3  3        3.00       3.00     15.00     15.00
+        4  4        3.00       3.00     15.00     15.00
+        5  5        3.00       3.00     15.00     15.00
 
 .LINK
-    Shorten-PropertyName, Drop-NA, Replace-NA, Apply-Function, Add-Stats, Detect-XrsAnomaly, Plot-BarChart, Get-First, Get-Last, Select-Field, Delete-Field
+    Shorten-PropertyName, Drop-NA, Replace-NA, Apply-Function, Add-Stats, Add-Quartile, Detect-XrsAnomaly, Plot-BarChart, Get-First, Get-Last, Select-Field, Delete-Field
 
 .EXAMPLE
     # Adds the sum and average value for each category (species)
@@ -47,20 +47,20 @@
         | sort species -Stable `
         | Apply-Function species {
             Add-Stats sl -Sum -Mean `
-        | select -First 3 } `
+            | select -First 3 } `
         | ft
 
-    sl  sw  pl  pw  species    MeanOf_sl SumOf_sl
-    --  --  --  --  -------    --------- --------
-    5.1 3.5 1.4 0.2 setosa          5.01   250.30
-    4.9 3.0 1.4 0.2 setosa          5.01   250.30
-    4.7 3.2 1.3 0.2 setosa          5.01   250.30
-    7.0 3.2 4.7 1.4 versicolor      5.94   296.80
-    6.4 3.2 4.5 1.5 versicolor      5.94   296.80
-    6.9 3.1 4.9 1.5 versicolor      5.94   296.80
-    6.3 3.3 6.0 2.5 virginica       6.59   329.40
-    5.8 2.7 5.1 1.9 virginica       6.59   329.40
-    7.1 3.0 5.9 2.1 virginica       6.59   329.40
+    sl  sw  pl  pw  species    key        Mean_Of_sl Sum_Of_sl
+    --  --  --  --  -------    ---        ---------- ---------
+    5.1 3.5 1.4 0.2 setosa     setosa           5.01    250.30
+    4.9 3.0 1.4 0.2 setosa     setosa           5.01    250.30
+    4.7 3.2 1.3 0.2 setosa     setosa           5.01    250.30
+    7.0 3.2 4.7 1.4 versicolor versicolor       5.94    296.80
+    6.4 3.2 4.5 1.5 versicolor versicolor       5.94    296.80
+    6.9 3.1 4.9 1.5 versicolor versicolor       5.94    296.80
+    6.3 3.3 6.0 2.5 virginica  virginica        6.59    329.40
+    5.8 2.7 5.1 1.9 virginica  virginica        6.59    329.40
+    7.1 3.0 5.9 2.1 virginica  virginica        6.59    329.40
 
 .EXAMPLE
     # Adds the sum and average value and
@@ -72,23 +72,23 @@
         | Drop-NA sl `
         | sort species -Stable `
         | Add-Stats sl -Sum -Mean `
-        | select *, @{N="DevFromMean";E={$_."sl" - $_."MeanOf_sl"}} `
+        | select *, @{N="DevFromMean";E={$_."sl" - $_."Mean_Of_sl"}} `
         | Detect-XrsAnomaly sl -OnlyDeviationRecord `
         | ft
         
-    sl  sw  pl  pw  species    MeanOf_sl SumOf_sl DevFromMean xrs
-    --  --  --  --  -------    --------- -------- ----------- ---
-    4.3 3.0 1.1 0.1 setosa          5.84   876.50       -1.54   4
-    7.0 3.2 4.7 1.4 versicolor      5.84   876.50        1.16   2
-    7.6 3.0 6.6 2.1 virginica       5.84   876.50        1.76   1
-    4.9 2.5 4.5 1.7 virginica       5.84   876.50       -0.94   2
-    7.3 2.9 6.3 1.8 virginica       5.84   876.50        1.46   2
-    7.7 3.8 6.7 2.2 virginica       5.84   876.50        1.86   1
-    7.7 2.6 6.9 2.3 virginica       5.84   876.50        1.86   1
-    7.7 2.8 6.7 2.0 virginica       5.84   876.50        1.86   3
-    7.4 2.8 6.1 1.9 virginica       5.84   876.50        1.56   1
-    7.9 3.8 6.4 2.0 virginica       5.84   876.50        2.06   1
-    7.7 3.0 6.1 2.3 virginica       5.84   876.50        1.86   1
+    sl  sw  pl  pw  species    Mean_Of_sl Sum_Of_sl DevFromMean xrs
+    --  --  --  --  -------    ---------- --------- ----------- ---
+    4.3 3.0 1.1 0.1 setosa           5.84    876.50       -1.54   4
+    7.0 3.2 4.7 1.4 versicolor       5.84    876.50        1.16   2
+    7.6 3.0 6.6 2.1 virginica        5.84    876.50        1.76   1
+    4.9 2.5 4.5 1.7 virginica        5.84    876.50       -0.94   2
+    7.3 2.9 6.3 1.8 virginica        5.84    876.50        1.46   2
+    7.7 3.8 6.7 2.2 virginica        5.84    876.50        1.86   1
+    7.7 2.6 6.9 2.3 virginica        5.84    876.50        1.86   1
+    7.7 2.8 6.7 2.0 virginica        5.84    876.50        1.86   3
+    7.4 2.8 6.1 1.9 virginica        5.84    876.50        1.56   1
+    7.9 3.8 6.4 2.0 virginica        5.84    876.50        2.06   1
+    7.7 3.0 6.1 2.3 virginica        5.84    876.50        1.86   1
 
 #>
 function Add-Stats
@@ -139,22 +139,22 @@ function Add-Stats
     # property name prefix for storing statistics per column
     [string] $delim = $Delimiter
     $hashPrePropName = @{
-        NewVal = "NewVal" + "Of${delim}"
-        OldVal = "OldVal" + "Of${delim}"
-        OldMax = "OldMax" + "Of${delim}"
-        OldMin = "OldMin" + "Of${delim}"
-        Cnt    = "Count"  + "Of${delim}"
-        Sum    = "Sum"    + "Of${delim}"
-        Mean   = "Mean"   + "Of${delim}"
-        Max    = "Max"    + "Of${delim}"
-        Min    = "Min"    + "Of${delim}" 
-        Sd     = "Sd"     + "Of${delim}"
-        Var    = "Var"    + "Of${delim}"
-        DivAndSqr = "DivAndSqr" + "Of${delim}"
-        Rs     = "Rs"     + "Of${delim}"
-        RsCnt  = "RsCnt"  + "Of${delim}"
-        RsSum  = "RsSum"  + "Of${delim}"
-        RsBar  = "RsBar"  + "Of${delim}"
+        NewVal = "NewVal" + "${delim}Of${delim}"
+        OldVal = "OldVal" + "${delim}Of${delim}"
+        OldMax = "OldMax" + "${delim}Of${delim}"
+        OldMin = "OldMin" + "${delim}Of${delim}"
+        Cnt    = "Count"  + "${delim}Of${delim}"
+        Sum    = "Sum"    + "${delim}Of${delim}"
+        Mean   = "Mean"   + "${delim}Of${delim}"
+        Max    = "Max"    + "${delim}Of${delim}"
+        Min    = "Min"    + "${delim}Of${delim}"
+        Sd     = "Sd"     + "${delim}Of${delim}"
+        Var    = "Var"    + "${delim}Of${delim}"
+        DivAndSqr = "DivAndSqr" + "${delim}Of${delim}"
+        Rs     = "Rs"     + "${delim}Of${delim}"
+        RsCnt  = "RsCnt"  + "${delim}Of${delim}"
+        RsSum  = "RsSum"  + "${delim}Of${delim}"
+        RsBar  = "RsBar"  + "${delim}Of${delim}"
     }
     [string[]] $ExcludeProperties = @()
     if ( $Count -or $AllStats ){
@@ -221,27 +221,27 @@ function Add-Stats
     $hashCalcVals = @{}
     foreach ( $val in $Value ){
         # for calculation only
-        $hashCalcVals.Add($( $hashPrePropName["IsFirstItem"] + "$val"), [decimal] $True)
-        $hashCalcVals.Add($( $hashPrePropName["NewVal"] + "$val"), [decimal] 0.0)
-        $hashCalcVals.Add($( $hashPrePropName["OldVal"] + "$val"), [decimal] 0.0)
-        $hashCalcVals.Add($( $hashPrePropName["OldMax"] + "$val"), [decimal] 0.0)
-        $hashCalcVals.Add($( $hashPrePropName["OldMin"] + "$val"), [decimal] 0.0)
+        $hashCalcVals.Add($( $hashPrePropName["IsFirstItem"] + "$val"), [bool] $True)
+        $hashCalcVals.Add($( $hashPrePropName["NewVal"] + "$val"), [decimal] 0)
+        $hashCalcVals.Add($( $hashPrePropName["OldVal"] + "$val"), [decimal] 0)
+        $hashCalcVals.Add($( $hashPrePropName["OldMax"] + "$val"), [decimal] 0)
+        $hashCalcVals.Add($( $hashPrePropName["OldMin"] + "$val"), [decimal] 0)
         # for output
         $hashStatVals.Add($( $hashPrePropName["Cnt"]   + "$val"), [int] 0)
-        $hashStatVals.Add($( $hashPrePropName["Sum"]   + "$val"), [decimal] 0.0)
-        $hashStatVals.Add($( $hashPrePropName["Mean"]  + "$val"), [decimal] 0.0)
-        $hashStatVals.Add($( $hashPrePropName["Max"]   + "$val"), [decimal] 0.0)
-        $hashStatVals.Add($( $hashPrePropName["Min"]   + "$val"), [decimal] 0.0)
+        $hashStatVals.Add($( $hashPrePropName["Sum"]   + "$val"), [decimal] 0)
+        $hashStatVals.Add($( $hashPrePropName["Mean"]  + "$val"), [decimal] 0)
+        $hashStatVals.Add($( $hashPrePropName["Max"]   + "$val"), [decimal] 0)
+        $hashStatVals.Add($( $hashPrePropName["Min"]   + "$val"), [decimal] 0)
         if ( $StandardDeviation -or $AllStats ){
-            $hashCalcVals.Add($( $hashPrePropName["DivAndSqr"] + "$val"), [decimal] 0.0)
+            $hashCalcVals.Add($( $hashPrePropName["DivAndSqr"] + "$val"), [decimal] 0)
 
-            $hashStatVals.Add($( $hashPrePropName["Var"]  + "$val"), [decimal] 0.0)
-            $hashStatVals.Add($( $hashPrePropName["Sd"]   + "$val"), [decimal] 0.0)
+            $hashStatVals.Add($( $hashPrePropName["Var"]  + "$val"), [decimal] 0)
+            $hashStatVals.Add($( $hashPrePropName["Sd"]   + "$val"), [decimal] 0)
         }
         if ( $Rs ){
             $hashStatVals.Add($( $hashPrePropName["RsCnt"] + "$val"), [int] 0)
-            $hashStatVals.Add($( $hashPrePropName["RsSum"] + "$val"), [decimal] 0.0)
-            $hashStatVals.Add($( $hashPrePropName["RsBar"] + "$val"), [decimal] 0.0)
+            $hashStatVals.Add($( $hashPrePropName["RsSum"] + "$val"), [decimal] 0)
+            $hashStatVals.Add($( $hashPrePropName["RsBar"] + "$val"), [decimal] 0)
         }
     }
     # 1st pass : get sum, count

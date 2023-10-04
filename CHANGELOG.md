@@ -6,11 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [unreleased]
+## [6.1.0] - 2023-10-04
 
 - Added [Replace-ForEach] function
 - Added [Detect-XrsAnomaly] `-Median` option
 - Updated [README.md]
+- Fixed [Add-Stats] type error in variable initialization
+
+### Breaking Change
+
+- Changed [Add-Stats] Output property name
+
 
 ## [6.0.0] - 2023-09-28
 
@@ -19,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added [Plot-BarChart] Apache License 2.0 into script file
 - Updated [sed] Synopsis
 
-### Breaking Changes
+### Breaking Change
 
 - Renamed `Measure-Property` to [Measure-Stats]
 
