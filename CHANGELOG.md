@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added [Replace-ForEach] function
 - Added [Detect-XrsAnomaly] `-Median` option
 - Updated [README.md]
+- Fixed [Add-Stats] type error in variable initialization
 
 ## [6.0.0] - 2023-09-28
 

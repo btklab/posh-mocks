@@ -221,27 +221,27 @@ function Add-Stats
     $hashCalcVals = @{}
     foreach ( $val in $Value ){
         # for calculation only
-        $hashCalcVals.Add($( $hashPrePropName["IsFirstItem"] + "$val"), [decimal] $True)
-        $hashCalcVals.Add($( $hashPrePropName["NewVal"] + "$val"), [decimal] 0.0)
-        $hashCalcVals.Add($( $hashPrePropName["OldVal"] + "$val"), [decimal] 0.0)
-        $hashCalcVals.Add($( $hashPrePropName["OldMax"] + "$val"), [decimal] 0.0)
-        $hashCalcVals.Add($( $hashPrePropName["OldMin"] + "$val"), [decimal] 0.0)
+        $hashCalcVals.Add($( $hashPrePropName["IsFirstItem"] + "$val"), [bool] $True)
+        $hashCalcVals.Add($( $hashPrePropName["NewVal"] + "$val"), [decimal] 0)
+        $hashCalcVals.Add($( $hashPrePropName["OldVal"] + "$val"), [decimal] 0)
+        $hashCalcVals.Add($( $hashPrePropName["OldMax"] + "$val"), [decimal] 0)
+        $hashCalcVals.Add($( $hashPrePropName["OldMin"] + "$val"), [decimal] 0)
         # for output
         $hashStatVals.Add($( $hashPrePropName["Cnt"]   + "$val"), [int] 0)
-        $hashStatVals.Add($( $hashPrePropName["Sum"]   + "$val"), [decimal] 0.0)
-        $hashStatVals.Add($( $hashPrePropName["Mean"]  + "$val"), [decimal] 0.0)
-        $hashStatVals.Add($( $hashPrePropName["Max"]   + "$val"), [decimal] 0.0)
-        $hashStatVals.Add($( $hashPrePropName["Min"]   + "$val"), [decimal] 0.0)
+        $hashStatVals.Add($( $hashPrePropName["Sum"]   + "$val"), [decimal] 0)
+        $hashStatVals.Add($( $hashPrePropName["Mean"]  + "$val"), [decimal] 0)
+        $hashStatVals.Add($( $hashPrePropName["Max"]   + "$val"), [decimal] 0)
+        $hashStatVals.Add($( $hashPrePropName["Min"]   + "$val"), [decimal] 0)
         if ( $StandardDeviation -or $AllStats ){
-            $hashCalcVals.Add($( $hashPrePropName["DivAndSqr"] + "$val"), [decimal] 0.0)
+            $hashCalcVals.Add($( $hashPrePropName["DivAndSqr"] + "$val"), [decimal] 0)
 
-            $hashStatVals.Add($( $hashPrePropName["Var"]  + "$val"), [decimal] 0.0)
-            $hashStatVals.Add($( $hashPrePropName["Sd"]   + "$val"), [decimal] 0.0)
+            $hashStatVals.Add($( $hashPrePropName["Var"]  + "$val"), [decimal] 0)
+            $hashStatVals.Add($( $hashPrePropName["Sd"]   + "$val"), [decimal] 0)
         }
         if ( $Rs ){
             $hashStatVals.Add($( $hashPrePropName["RsCnt"] + "$val"), [int] 0)
-            $hashStatVals.Add($( $hashPrePropName["RsSum"] + "$val"), [decimal] 0.0)
-            $hashStatVals.Add($( $hashPrePropName["RsBar"] + "$val"), [decimal] 0.0)
+            $hashStatVals.Add($( $hashPrePropName["RsSum"] + "$val"), [decimal] 0)
+            $hashStatVals.Add($( $hashPrePropName["RsBar"] + "$val"), [decimal] 0)
         }
     }
     # 1st pass : get sum, count
