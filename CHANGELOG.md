@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - NA
 
+## [6.2.0] - 2023-10-14
+
+- Added [Measure-Quartile] function
+- Added [Add-Quartile] function
+
 ## [6.1.1] - 2023-10-14
 
 - Fixed [Add-Stats] an object variable input into the pipeline were overwritten
@@ -493,8 +498,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Replace-ForEach]: src/Replace-ForEach_function.ps1
 
+[Measure-Quartile]: src/Measure-Quartile_function.ps1
+[Add-Quartile]: src/Add-Quartile_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.1.1..HEAD
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.2.0..HEAD
+[6.2.0]: https://github.com/btklab/posh-mocks/releases/tag/6.2.0
 [6.1.1]: https://github.com/btklab/posh-mocks/releases/tag/6.1.1
 [6.1.0]: https://github.com/btklab/posh-mocks/releases/tag/6.1.0
 [6.0.0]: https://github.com/btklab/posh-mocks/releases/tag/6.0.0
