@@ -99,7 +99,7 @@ function GroupBy-Object
         [Parameter(Mandatory=$False, ValueFromPipeline=$True)]
         [PSObject] $InputObject
     )
-    foreach ( $obj in @($input | Group-Object $Key)){
+    foreach ( $obj in @($input | Select-Object * | Group-Object $Key)){
         $groupAry = New-Object System.Collections.ArrayList
         [string] $keyStr = $obj.Name
         foreach ( $g in @($obj.Group) ){

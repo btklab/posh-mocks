@@ -6,7 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [6.1.0] - 2023-10-04
+## [unreleased]
+
+- NA
+
+## [6.1.1] - 2023-10-14
+
+- Fixed [Add-Stats] an object variable input into the pipeline were overwritten
+- Fixed [Apply-Function] an object variable input into the pipeline were overwritten
+- Fixed [Detect-XrsAnomaly] an object variable input into the pipeline were overwritten
+- Fixed [Get-First] an object variable input into the pipeline were overwritten
+- Fixed [Get-Last] an object variable input into the pipeline were overwritten
+- Fixed [GroupBy-Object] an object variable input into the pipeline were overwritten
+- Fixed [Measure-Stats] an object variable input into the pipeline were overwritten
+- Fixed [Plot-BarChart] an object variable input into the pipeline were overwritten
+- Fixed [Replace-ForEach] an object variable input into the pipeline were overwritten
+
+## [6.1.0] - 2023-10-05
 
 - Added [Replace-ForEach] function
 - Added [Detect-XrsAnomaly] `-Median` option
@@ -478,7 +494,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Replace-ForEach]: src/Replace-ForEach_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.0.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.1.1..HEAD
+[6.1.1]: https://github.com/btklab/posh-mocks/releases/tag/6.1.1
+[6.1.0]: https://github.com/btklab/posh-mocks/releases/tag/6.1.0
 [6.0.0]: https://github.com/btklab/posh-mocks/releases/tag/6.0.0
 [5.0.3]: https://github.com/btklab/posh-mocks/releases/tag/5.0.3
 [5.0.2]: https://github.com/btklab/posh-mocks/releases/tag/5.0.2

@@ -430,7 +430,7 @@ function Plot-BarChart {
         Minimum = $True
         Average = $True
     }
-    [object] $mObj = $input | Measure-Object @HashArguments
+    [object[]] $mObj = $input | Select-Object * | Measure-Object @HashArguments
     if ( $MaxValue ){
         # Manually set max value of value property
         [decimal] $PropertyMaxValue = $MaxValue

@@ -4239,8 +4239,8 @@ Example:
 
 ```powershell
 Import-Csv iris.csv `
-    | sort species -Stable `
-    | Measure-Stats sepal_length species -Sum -Average `
+    | sort "species" -Stable `
+    | Measure-Stats "sepal_length" species -Sum -Average `
     | ft
 
 species    Average    Sum Property
@@ -4252,9 +4252,9 @@ virginica     6.59 329.40 sepal_length
 
 ```powershell
 Import-Csv iris.csv `
-    | sort species -Stable `
-    | Apply-Function species {
-        Measure-Stats sepal_length species -Sum -Average } `
+    | sort "species" -Stable `
+    | Apply-Function "species" {
+        Measure-Stats "sepal_length" "species" -Sum -Average } `
     | ft
 
 species    Average    Sum Property
@@ -4337,7 +4337,7 @@ Import-Csv iris.csv `
 
 s_l s_w p_l p_w species    xrs row
 --- --- --- --- -------    --- ---
-4.3 3.0 1.1 0.1 setosa       1  14
+4.3 3.0 1.1 0.1 setosa       4  14
 7.0 3.2 4.7 1.4 versicolor   2  51
 7.6 3.0 6.6 2.1 virginica    1 106
 4.9 2.5 4.5 1.7 virginica    2 107
@@ -4514,14 +4514,14 @@ Index  lowerBound  upperBound Count BarChart
     7 31457280.00 36700160.00     5 |||
     8 36700160.00 41943040.00     5 |||
     9 41943040.00 47185920.00     3 |
-    10 47185920.00 52428800.00     1 |
+   10 47185920.00 52428800.00     1 |
 ```
 
 ```powershell
 Import-Excel iris.xlsx `
     | Shorten-PropertyName `
-    | Get-Histogram p_l -w 0.3 `
-    | Plot-BarChart count -w 40 -m "|" `
+    | Get-Histogram "p_l" -w 0.3 `
+    | Plot-BarChart "count" -w 40 -m "|" `
     | ft
 
 Index lowerBound upperBound Count BarChart
@@ -4535,17 +4535,17 @@ Index lowerBound upperBound Count BarChart
     7       2.80       3.10     1 |
     8       3.10       3.40     2 ||
     9       3.40       3.70     4 ||||
-    10       3.70       4.00     9 ||||||||||
-    11       4.00       4.30     9 ||||||||||
-    12       4.30       4.60    15 ||||||||||||||||||
-    13       4.60       4.90    14 ||||||||||||||||
-    14       4.90       5.20    14 ||||||||||||||||
-    15       5.20       5.50     7 ||||||||
-    16       5.50       5.80    12 ||||||||||||||
-    17       5.80       6.10     7 ||||||||
-    18       6.10       6.40     2 ||
-    19       6.40       6.70     3 |||
-    20       6.70       7.00     1 |
+   10       3.70       4.00     9 ||||||||||
+   11       4.00       4.30     9 ||||||||||
+   12       4.30       4.60    15 ||||||||||||||||||
+   13       4.60       4.90    14 ||||||||||||||||
+   14       4.90       5.20    14 ||||||||||||||||
+   15       5.20       5.50     7 ||||||||
+   16       5.50       5.80    12 ||||||||||||||
+   17       5.80       6.10     7 ||||||||
+   18       6.10       6.40     2 ||
+   19       6.40       6.70     3 |||
+   20       6.70       7.00     1 |
 ```
 
 ```powershell
@@ -4555,11 +4555,11 @@ Index lowerBound upperBound Count BarChart
 
 Import-Excel iris.xlsx `
     | Shorten-PropertyName -v `
-    | sort species -Stable `
-    | Apply-Function species { `
+    | sort "species" -Stable `
+    | Apply-Function "species" { `
         MovingWindow-Approach -v sl `
-        | Get-Histogram rolling -BucketWidth .7 -Maximum 8 -Minimum 4 -Key species `
-        | Plot-BarChart count -m "|" } `
+        | Get-Histogram "rolling" -BucketWidth .7 -Maximum 8 -Minimum 4 -Key "species" `
+        | Plot-BarChart "count" -m "|" } `
     | ft
 
 species    Index lowerBound upperBound Count BarChart

@@ -78,7 +78,7 @@
 
     s_l s_w p_l p_w species    xrs row
     --- --- --- --- -------    --- ---
-    4.3 3.0 1.1 0.1 setosa       1  14
+    4.3 3.0 1.1 0.1 setosa       4  14
     7.0 3.2 4.7 1.4 versicolor   2  51
     7.6 3.0 6.6 2.1 virginica    1 106
     4.9 2.5 4.5 1.7 virginica    2 107
@@ -188,6 +188,7 @@ function Detect-XrsAnomaly
         [PSObject] $InputObject
     )
     # get statistic values of X
+    [object[]] $inputData = $input | Select-Object *
     $HashArguments = @{
         Property = $Value
         StandardDeviation = $True
@@ -196,52 +197,52 @@ function Detect-XrsAnomaly
     if ( $Median ){
         # calculate median
         [string] $mPropName = "X_Median"
-        if ( $input.Count % 2 -eq 0){
+        if ( $inputData.Count % 2 -eq 0){
             # count even
-            [int] $MedianIndex = ($input.Count / 2) - 1
-            [double] $LowerMedian = $input[$MedianIndex]     | Select-Object -ExpandProperty $Value
-            [double] $UpperMedian = $input[$MedianIndex + 1] | Select-Object -ExpandProperty $Value
+            [int] $MedianIndex = ($inputData.Count / 2) - 1
+            [double] $LowerMedian = $inputData[$MedianIndex]     | Select-Object -ExpandProperty $Value
+            [double] $UpperMedian = $inputData[$MedianIndex + 1] | Select-Object -ExpandProperty $Value
             [double] $XMedian = ([double]$LowerMedian + [double]$UpperMedian) / 2
         } else {
             # count odd
-            [int] $MedianIndex = [math]::Ceiling(($input.Count - 1) / 2)
-            $XMedian = $input[$MedianIndex] | Select-Object -ExpandProperty $Value
+            [int] $MedianIndex = [math]::Ceiling(($inputData.Count - 1) / 2)
+            $XMedian = $inputData[$MedianIndex] | Select-Object -ExpandProperty $Value
         }
-        [decimal] $XBar = $XMedian
-        [decimal] $XCount = $input.Count
+        [double] $XBar = $XMedian
+        [double] $XCount = $inputData.Count
     } else {
         [string] $mPropName = "X_Bar"
-        [object] $MeasuredData = $input | Measure-Object @HashArguments
-        [decimal] $XBar = $MeasuredData.Average
-        [decimal] $XCount = $MeasuredData.Count
+        [object] $MeasuredData = $inputData | Measure-Object @HashArguments
+        [double] $XBar = $MeasuredData.Average
+        [double] $XCount = $MeasuredData.Count
     }
     # 1st pass
     [bool] $isFirstItem = $True
-    [decimal] $oldVal = $Null
-    [decimal] $newVal = $Null
+    [double] $oldVal = $Null
+    [double] $newVal = $Null
     [int] $RsCount = $XCount - 1
-    $listRs = New-Object 'System.Collections.Generic.List[System.decimal]'
-    foreach ( $obj in $input){
-        [decimal] $newVal = $obj.$Value
+    $listRs = New-Object 'System.Collections.Generic.List[System.double]'
+    foreach ( $obj in $inputData){
+        [double] $newVal = $obj.$Value
         if ( $isFirstItem ){
             $isFirstItem = $False
         } else {
-            $listRs.Add([math]::Abs( [decimal]($newVal) - [decimal]($oldVal) ))
+            $listRs.Add([math]::Abs( [double]($newVal) - [double]($oldVal) ))
         }
-        [decimal] $oldVal = $newVal
+        [double] $oldVal = $newVal
     }
-    [decimal[]] $aryRs = $listRs.ToArray()
+    [double[]] $aryRs = $listRs.ToArray()
     [object] $RsBarAndMean = $aryRs | Measure-Object -Average -StandardDeviation
-    [decimal] $RsBar = $RsBarAndMean.Average
+    [double] $RsBar = $RsBarAndMean.Average
 
     # 2nd pass
     [bool] $isFirstItem = $True
-    [decimal] $oldVal = $Null
-    [decimal] $newVal = $Null
+    [double] $oldVal = $Null
+    [double] $newVal = $Null
     [int] $rowCnt = 0
-    foreach ( $obj in $input){
+    foreach ( $obj in $inputData){
         $rowCnt++
-        [decimal] $newVal = $obj.$Value
+        [double] $newVal = $obj.$Value
         if ( $isFirstItem ){
             $isFirstItem = $False
             if ( $Detail -or $ChartX -or $ChartRs ){
@@ -273,10 +274,10 @@ function Detect-XrsAnomaly
                 }
             }
         } else {
-            [decimal] $duration = [math]::Abs( [decimal]($newVal) - [decimal]($oldVal) )
-            [decimal] $X_UCL  = $XBar + 2.659 * $RsBar
-            [decimal] $X_LCL  = $XBar - 2.659 * $RsBar
-            [decimal] $Rs_UCL = 3.267 * $RsBar
+            [double] $duration = [math]::Abs( [double]($newVal) - [double]($oldVal) )
+            [double] $X_UCL  = $XBar + 2.659 * $RsBar
+            [double] $X_LCL  = $XBar - 2.659 * $RsBar
+            [double] $Rs_UCL = 3.267 * $RsBar
             [int] $Result = 0
             if ( $newVal -gt $X_UCL ){
                 $Result = $Result + 1
@@ -309,7 +310,7 @@ function Detect-XrsAnomaly
                 }
             }
         }
-        [decimal] $oldVal = $newVal
+        [double] $oldVal = $newVal
         # output
         if ( $OnlyDeviationRecord ){
             $obj | Where-Object {

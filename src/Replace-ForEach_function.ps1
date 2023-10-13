@@ -76,7 +76,7 @@ function Replace-ForEach
         }
     }
     # exec replace foreach object
-    foreach ( $obj in $input ){
+    foreach ( $obj in @($input | Select-Object *) ){
         foreach ( $p in $Property ){
             switch -Exact ($Cast) {
                 "string" {
