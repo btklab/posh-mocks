@@ -245,8 +245,9 @@ function Add-Stats
         }
     }
     # 1st pass : get sum, count
+    [object[]] $inputData = $input | Select-Object *
     [int] $rowCounter = 0
-    foreach ( $obj in $input ){
+    foreach ( $obj in $inputData ){
         $rowCounter++
         foreach ( $val in $Value ){
             if ( ($obj.$val -ne $Null) -and ($obj.$val -notmatch '^NA$|^NaN$') ){
@@ -332,7 +333,7 @@ function Add-Stats
         Write-Debug "Sum, Cnt, Bar: $tSum, $tCnt, $tMean"
     }
     if ( $StandardDeviation -or $AllStats ){
-        foreach ( $obj in $input ){
+        foreach ( $obj in $inputData ){
             foreach ( $val in $Value ){
                 if ( ($obj.$val -ne $Null) -and ($obj.$val -notmatch '^NA$|^NaN$') ){
                     # calculate the deviations of each data point from the mean,
@@ -360,8 +361,8 @@ function Add-Stats
             Write-Debug "Cnt, Variance, Stdev: $sdCnt, $sdVariance, $sdStdev"
         }
     }
-    # 2nd pass : output each object
-    foreach ( $obj in $input ){
+    # 2nd pass : output each object    
+    foreach ( $obj in $inputData ){
         foreach ( $k in @($hashStatVals.Keys | Sort-Object)  ){
             #Write-Debug "$k, $($hashStatVals[$k])"
             $obj | Add-Member -NotePropertyName $k -NotePropertyValue $hashStatVals[$k]

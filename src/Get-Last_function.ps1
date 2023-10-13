@@ -72,7 +72,7 @@ function Get-Last
     [bool] $isFirstItem = $True
     [string] $oldVal = $Null
     [string] $newVal = $Null
-    foreach ( $obj in $input ){
+    foreach ( $obj in @($input | Select-Object * ) ){
         [string] $propKeyStr = ''
         foreach ($p in $Property){
             $propKeyStr += $obj.$p

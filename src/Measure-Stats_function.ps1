@@ -112,7 +112,7 @@ function Measure-Stats
     [string] $oldVal = $Null
     [string] $newVal = $Null
     [int] $cnt = 0
-    foreach ( $obj in $input){
+    foreach ( $obj in @($input | Select-Object *) ){
         # set key strings
         if ( $Key ){
             [string] $propKeyStr = ''

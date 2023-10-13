@@ -173,7 +173,7 @@ function Apply-Function
     [string] $oldVal = $Null
     [string] $newVal = $Null
     [string] $KeyPropertyName = "key"
-    foreach ( $obj in $input ){
+    foreach ( $obj in @( $input | Select-Object * ) ){
         [string[]] $propKeyAry = @()
         foreach ($k in $Key){
             $propKeyAry += ,@([string]($obj.$k))
