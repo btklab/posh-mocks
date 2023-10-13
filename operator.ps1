@@ -174,6 +174,8 @@ if ( $IsWindows ){
 . $pwshSrcDir/GroupBy-Object_function.ps1
 . $pwshSrcDir/Measure-Stats_function.ps1
 . $pwshSrcDir/Add-Stats_function.ps1
+. $pwshSrcDir/Measure-Quartile_function.ps1
+. $pwshSrcDir/Add-Quartile_function.ps1
 . $pwshSrcDir/Detect-XrsAnomaly_function.ps1
 
 . $pwshSrcDir/Get-Histogram_function.ps1

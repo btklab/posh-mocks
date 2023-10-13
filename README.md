@@ -4215,7 +4215,6 @@ sl  sw  pl  pw  species    Mean_Of_sl Sum_Of_sl DevFromMean xrs
 7.7 3.0 6.1 2.3 virginica        5.84    876.50        1.86   1
 ```
 
-
 #### [Measure-Stats] (Alias: mstats) - Apply first record's key to each output
 
 [Measure-Stats]: src/Measure-Stats_function.ps1
@@ -4225,7 +4224,7 @@ Pre `sort -Stable` needed.
 - Usage
     - `man2 Measure-Stats`
 - Syntax
-    - ` Measure-Stats [-v|-Value] <String[]> [[-k|-Key] <String[]>]`
+    - `Measure-Stats [-v|-Value] <String[]> [[-k|-Key] <String[]>]`
 - Params
     - `[-SD|-StandardDeviation]`
     - `[-Sum]`
@@ -4262,6 +4261,220 @@ species    Average    Sum Property
 setosa        5.01 250.30 sepal_length
 versicolor    5.94 296.80 sepal_length
 virginica     6.59 329.40 sepal_length
+```
+
+#### [Add-Quartile] (Alias: aquart) - Add quartile columns to each record
+
+[Add-Quartile]: src/Add-Quartile_function.ps1
+
+For categorical data analysis of time series data.
+Automatically exclude NA, NaN, Null from the specified column.
+Multiple columns can be specified at once.
+
+- Usage
+    - `man2 Add-Quartile`
+- Syntax
+    - `Add-Quartile [-v] <col> <params>`
+- Params
+    - `[-v|-Value] <String>`
+    - `[-OutlierMultiple <Double>]`
+    - `[-All|-AllStats]`
+    - `[-AddPropertyName]`
+    - `[-Delimiter <String>]`
+- Output
+    - Default output:
+        - `Count`
+        - `Sum`
+        - `Mean`
+        - `Sd`
+        - `Min`
+        - `Qt25`
+        - `Median`
+        - `Qt75`
+        - `Max`
+        - `Outlier`
+    - If `-AllStats` specified, the following columns are added:
+        - `IQR`
+        - `HiIQR`
+        - `LoIQR`
+        - `Confidence95`
+
+Result of Outlier detection with IQR is expressed as an integer from 0 to 7 in Property="Outlier":
+
+    - `0` ... Not outlier
+    - `1` ... Detected as Outlier from the Hi-IQR line
+    - `2` ... Detected as Outlier from the Lo-IQR line
+
+Example:
+
+```powershell
+Import-Csv iris.csv `
+    | Shorten-PropertyName `
+    | Add-Quartile "s_l" `
+    | select -First 1
+
+s_l     : 5.1
+s_w     : 3.5
+p_l     : 1.4
+p_w     : 0.2
+species : setosa
+Count   : 150
+Sum     : 876.5
+Mean    : 5.84333333333333
+Sd      : 0.828066127977863
+Min     : 4.3
+Qt25    : 5.1
+Median  : 5.8
+Qt75    : 6.4
+Max     : 7.9
+```
+
+```powershell
+Import-Csv iris.csv `
+    | Shorten-PropertyName `
+    | Add-Quartile "s_l" -AllStats `
+    | select -First 1
+
+s_l          : 5.1
+s_w          : 3.5
+p_l          : 1.4
+p_w          : 0.2
+species      : setosa
+Count        : 150
+Sum          : 876.5
+Mean         : 5.84333333333333
+Sd           : 0.828066127977863
+Min          : 4.3
+Qt25         : 5.1
+Median       : 5.8
+Qt75         : 6.4
+Max          : 7.9
+IQR          : 1.3
+HiIQR        : 8.35
+LoIQR        : 3.15
+Confidence95 : 0
+```
+
+```powershell
+Import-Csv iris.csv `
+    | Shorten-PropertyName `
+    | Add-Quartile "s_l" -AddPropertyName `
+    | select -First 1
+
+s_l           : 5.1
+s_w           : 3.5
+p_l           : 1.4
+p_w           : 0.2
+species       : setosa
+Count_Of_s_l  : 150
+Sum_Of_s_l    : 876.5
+Mean_Of_s_l   : 5.84333333333333
+Sd_Of_s_l     : 0.828066127977863
+Min_Of_s_l    : 4.3
+Qt25_Of_s_l   : 5.1
+Median_Of_s_l : 5.8
+Qt75_Of_s_l   : 6.4
+Max_Of_s_l    : 7.9
+```
+
+```powershell
+# Detect outlier
+Import-Csv iris.csv `
+    | Shorten-PropertyName `
+    | Add-Quartile "s_w" -AllStats `
+    | ? outlier -gt 0 `
+    | ft "s_w", "LoIQR", "HiIQR", "Outlier"
+
+s_w LoIQR HiIQR Outlier
+--- ----- ----- -------
+4.4  1.90  4.30       1
+```
+
+#### [Measure-Quartile] (Alias: mquart) - Calc quartile
+
+[Measure-Quartile]: src/Measure-Quartile_function.ps1
+
+Pre `sort -Stable` needed.
+
+- Usage
+    - `man2 Measure-Quartile`
+- Syntax
+    - `Measure-Quartile [-v|-Value] <String[]> [[-k|-Key] <String[]>] [-OutlierMultiple <Double>] [-Detail] [-ExcludeOutlier]`
+
+Example:
+
+```powershell
+Import-Csv iris.csv `
+    | Shorten-PropertyName `
+    | Measure-Quartile "s_w"
+
+Property : s_w
+Count    : 150
+Sum      : 458.6
+Mean     : 3.05733333333333
+SD       : 0.435866284936699
+Min      : 2
+Qt25     : 2.8
+Median   : 3
+Qt75     : 3.4
+Max      : 4.4
+Outlier  : 1
+```
+
+```powershell
+Import-Csv iris.csv `
+    | Shorten-PropertyName `
+    | Measure-Quartile "s_w" -Detail
+
+Property     : s_w
+Count        : 150
+Sum          : 458.6
+Mean         : 3.05733333333333
+SD           : 0.435866284936699
+Min          : 2
+Qt25         : 2.8
+Median       : 3
+Qt75         : 3.4
+Max          : 4.4
+IQR          : 0.6
+HiIQR        : 4.3
+LoIQR        : 1.9
+TukeysRange  : 0.9
+Confidence95 : 0
+Outlier      : 1
+OutlierHi    : 1
+OutlierLo    : 0
+```
+
+```powershell
+# Detect outliers
+Import-Csv iris.csv `
+    | Shorten-PropertyName `
+    | Measure-Quartile "s_w", "p_l"
+
+Property : s_w
+Count    : 150
+Sum      : 458.6
+Mean     : 3.05733333333333
+SD       : 0.435866284936699
+Min      : 2
+Qt25     : 2.8
+Median   : 3
+Qt75     : 3.4
+Max      : 4.4
+Outlier  : 1
+
+Property : p_l
+Count    : 150
+Sum      : 563.7
+Mean     : 3.758
+SD       : 1.76529823325947
+Min      : 1
+Qt25     : 1.6
+Median   : 4.35
+Qt75     : 5.1
+Max      : 6.9
+Outlier  : 0
 ```
 
 
@@ -4467,6 +4680,7 @@ Import-Csv penguins.csv `
     | sls "deviated" -Context 3
 
   count species xrs detect   b_l_m BarChart
+
   ----- ------- --- ------   ----- --------
     183 Gentoo    0           47.3 |||||||||||||||
     184 Gentoo    0           42.8 ||||||||||||||
@@ -9898,6 +10112,16 @@ Windows OS           Magnifying glass          Win +
 
 - Original code:
     - GitHub - nicholasdille/PowerShell-Statistics/Get-Histogram.ps1
+        - <https://github.com/nicholasdille/PowerShell-Statistics>
+- License:
+    - Apache License 2.0 (c) 2017 Nicholas Dille
+        - <http://www.apache.org/licenses/LICENSE-2.0>
+        - A copy of the Apache license 2.0 is written in the script file
+
+### [Measure-Quartile]
+
+- Original code:
+    - GitHub - nicholasdille/PowerShell-Statistics/Measure-Object.ps1
         - <https://github.com/nicholasdille/PowerShell-Statistics>
 - License:
     - Apache License 2.0 (c) 2017 Nicholas Dille
