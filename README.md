@@ -27,7 +27,7 @@ cat README.md `
     | Set-Clipboard
 ```
 
-- [Add-LineBreakEndOfFile], [Add-LineBreak], [Add-Quartile], [Add-Stats], [Apply-Function], [ConvImage], [Delete-Field], [Detect-XrsAnomaly], [Drop-NA], [Get-AppShortcut], [Get-Histogram], [Get-OGP], [GroupBy-Object], [Invoke-Link], [Measure-Quartile], [Measure-Stats], [Override-Yaml], [Plot-BarChart], [Rename-Normalize], [Replace-ForEach], [Replace-NA], [Select-Field], [Shorten-PropertyName], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [getfirst], [getlast], [grep], [gyo], [han], [head], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [map2], [mdfocus], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [retu], [rev2], [rev], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-LineBreakEndOfFile], [Add-LineBreak], [Add-Quartile], [Add-Stats], [Apply-Function], [ConvImage], [Delete-Field], [Detect-XrsAnomaly], [Drop-NA], [Get-AppShortcut], [Get-Histogram], [Get-OGP], [GroupBy-Object], [Invoke-Link], [Join2-Object], [Measure-Quartile], [Measure-Stats], [Override-Yaml], [Plot-BarChart], [Rename-Normalize], [Replace-ForEach], [Replace-NA], [Select-Field], [Shorten-PropertyName], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [getfirst], [getlast], [grep], [gyo], [han], [head], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [map2], [mdfocus], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [retu], [rev2], [rev], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 Inspired by:
 
@@ -4842,6 +4842,146 @@ Import-Csv planets.csv `
     | select -First 3 `
     | %{ $_.method = $_.method -replace ' ', '_'; $_ } `
     | ft
+```
+
+#### [Join2-Object] (Alias: join2o) - INNER/OUTER Join records
+
+[Join2-Object]: src/Join2-Object_function.ps1
+
+- Usage
+    - `man2 Join2-Object`
+- Syntax
+    - `$tran | Join2-Object $master -On Id [-Where {<scriptblock>}]`
+    - `Import-Csv tran.csv | Join2-Object master.csv -On Id [-Where {<scriptblock>}]`
+    - `Import-Csv tran.csv | Join2-Object (Import-Csv master.csv) -On Id [-Where {<scriptblock>}]`
+- Params
+    - `[-m|-Master] <Object[]>`
+    - `[-On|-MasterKey] <String[]>`
+    - `[-tkey|-TransKey <String[]>]`
+    - `[-Where <ScriptBlock>]`
+    - `[-s|-AddSuffixToMasterProperty <String>]`
+    - `[-p|-AddPrefixToMasterProperty <String>]`
+    - `[-d|-MasterDelimiter <String>]`
+    - `[-mh|-MasterHeader <String[]>]`
+    - `[-Dummy <String>]`
+    - `[-o|-OnlyIfInBoth]`
+    - `[-PreSortedMasterKey]`
+    - `[-IncludeMasterKey]`
+- Thanks
+    - Join-Object - PowerShell Team
+        - <https://devblogs.microsoft.com/powershell/join-object/>
+
+Examples:
+
+```powershell
+# read from objects
+
+## master
+@(
+"Id,Name"
+"1,John"
+"2,Mark"
+"3,Hanna"
+) | ConvertFrom-Csv `
+    | Set-Variable -Name master
+
+## transaction
+@(
+"EmployeeId,When"
+"1,6/12/2012 08:05:01 AM"
+"1,6/13/2012 07:59:12 AM"
+"1,6/14/2012 07:49:10 AM"
+"2,6/12/2012 10:33:00 AM"
+"2,6/13/2012 10:15:00 AM"
+"44,2/29/2012 01:00:00 AM"
+) | ConvertFrom-Csv `
+    | Set-Variable -Name tran
+
+## main
+$tran `
+    | Join2-Object $master `
+        -On id `
+        -TransKey EmployeeId `
+        -Dummy "@@@" `
+        -IncludeMasterKey `
+        -PreSortedMasterKey `
+    | ft
+
+EmployeeId When                  m_Id m_Name
+---------- ----                  ---- ------
+1          6/12/2012 08:05:01 AM 1    John
+1          6/13/2012 07:59:12 AM 1    John
+1          6/14/2012 07:49:10 AM 1    John
+2          6/12/2012 10:33:00 AM 2    Mark
+2          6/13/2012 10:15:00 AM 2    Mark
+44         2/29/2012 01:00:00 AM @@@  @@@
+```
+
+```powershell
+# read from csv files
+
+cat tran.csv
+    id,v1,v2,v3,v4,v5
+    0000005,82,79,16,21,80
+    0000001,46,39,8,5,21
+    0000004,58,71,20,10,6
+    0000009,60,89,33,18,6
+    0000003,30,50,71,36,30
+    0000007,50,2,33,15,62
+
+cat master.csv
+    id,name,val,class
+    0000003,John,26,F
+    0000005,Mark,50,F
+    0000007,Bob,42,F
+
+Import-Csv tran.csv `
+    | Join2-Object master.csv -On id `
+    | ft
+
+id      v1 v2 v3 v4 v5 m_name m_val m_class
+--      -- -- -- -- -- ------ ----- -------
+0000005 82 79 16 21 80 Mark   50    F
+0000001 46 39 8  5  21
+0000004 58 71 20 10 6
+0000009 60 89 33 18 6
+0000003 30 50 71 36 30 John   26    F
+0000007 50 2  33 15 62 Bob    42    F
+```
+
+```powershell
+# Filtering record with -OnlyIfInBoth switch
+
+Import-Csv tran.csv `
+    | Join2-Object `
+        -Master master.csv `
+        -On id `
+        -OnlyIfInBoth `
+    | ft
+
+id      v1 v2 v3 v4 v5 m_name m_val m_class
+--      -- -- -- -- -- ------ ----- -------
+0000005 82 79 16 21 80 Mark   50    F
+0000003 30 50 71 36 30 John   26    F
+0000007 50 2  33 15 62 Bob    42    F
+```
+
+```powershell
+# Filtering record with -Where statement
+
+Import-Csv tran.csv `
+    | Join2-Object `
+        -Master master.csv `
+        -On id `
+        -Where { [double]($_.v2) -gt 39 } `
+    | ft
+
+id      v1 v2 v3 v4 v5 m_name m_val m_class
+--      -- -- -- -- -- ------ ----- -------
+0000005 82 79 16 21 80 Mark   50    F
+0000004 58 71 20 10 6
+0000009 60 89 33 18 6
+0000003 30 50 71 36 30 John   26    F
 ```
 
 ### Plot chart and graph
