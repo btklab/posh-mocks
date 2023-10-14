@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - NA
 
+## [6.3.0] - 2023-10-14
+
+- Added [Join2-Object] function
+
 ## [6.2.1] - 2023-10-14
 
 - Changed [Add-Quartile] Use hashtable instead of Add-Member
@@ -514,8 +518,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Measure-Quartile]: src/Measure-Quartile_function.ps1
 [Add-Quartile]: src/Add-Quartile_function.ps1
 
+[Join2-Object]: src/Join2-Object_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.2.1..HEAD
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.3.0..HEAD
+[6.3.0]: https://github.com/btklab/posh-mocks/releases/tag/6.3.0
 [6.2.1]: https://github.com/btklab/posh-mocks/releases/tag/6.2.1
 [6.2.0]: https://github.com/btklab/posh-mocks/releases/tag/6.2.0
 [6.1.1]: https://github.com/btklab/posh-mocks/releases/tag/6.1.1
