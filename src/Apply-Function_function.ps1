@@ -12,6 +12,7 @@
         # Exapmle: Get the minimum Id per processName
 
          ps `
+            | Select-Object -First 40 `
             | Sort-Object ProcessName, Id -Stable `
             | Apply-Function ProcessName { select -First 1 } `
             | ft
@@ -180,21 +181,28 @@ function Apply-Function
         }
         [string] $propKeyStr = $propKeyAry -join ", "
         [string] $newVal = $propKeyStr
+        # convert psobject to hash
+        $hash = [ordered] @{}
+        foreach ($item in $obj.psobject.properties){
+            $hash[$item.Name] = $item.Value
+        }
         if ( $isFirstItem ){
             $isFirstItem = $False
             $groupAry = New-Object System.Collections.ArrayList
             if ( -not $ExcludeKey ){
                 # if multiple keys are specified, Add key property
-                $obj | Add-Member -NotePropertyName $KeyPropertyName -NotePropertyValue $propKeyStr
+                $hash["$KeyPropertyName"] = $propKeyStr
             }
-            $groupAry.Add($obj) > $Null
+            # convert hash to psobject
+            $groupAry.Add($(New-Object psobject -Property $hash)) > $Null
         } else {
             if ( $newVal -eq $oldVal){
                 if ( -not $ExcludeKey ){
                     # if multiple keys are specified, Add key property
-                    $obj | Add-Member -NotePropertyName $KeyPropertyName -NotePropertyValue $propKeyStr
+                    $hash["$KeyPropertyName"] = $propKeyStr
                 }
-                $groupAry.Add($obj) > $Null
+                # convert hash to psobject
+                $groupAry.Add($(New-Object psobject -Property $hash)) > $Null
             } else {
                 if ( $Function ){
                     [string] $com = '$groupAry' + " | " + $function.ToString().Trim()
@@ -206,9 +214,10 @@ function Apply-Function
                 $groupAry = New-Object System.Collections.ArrayList
                 if ( -not $ExcludeKey){
                     # if multiple keys are specified, Add key property
-                    $obj | Add-Member -NotePropertyName $KeyPropertyName -NotePropertyValue $propKeyStr
+                    $hash["$KeyPropertyName"] = $propKeyStr
                 }
-                $groupAry.Add($obj) > $Null
+                # convert hash to psobject
+                $groupAry.Add($(New-Object psobject -Property $hash)) > $Null
             }
         }
         [string] $oldVal = $newVal

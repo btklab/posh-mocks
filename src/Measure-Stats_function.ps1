@@ -112,7 +112,7 @@ function Measure-Stats
     [string] $oldVal = $Null
     [string] $newVal = $Null
     [int] $cnt = 0
-    foreach ( $obj in @($input | Select-Object *) ){
+    foreach ( $obj in $input){
         # set key strings
         if ( $Key ){
             [string] $propKeyStr = ''
@@ -137,12 +137,19 @@ function Measure-Stats
                 $groupAry.Add($obj) > $Null
             } else {
                 foreach ($gObj in @( $groupAry | Measure-Object @splatting )){
+                    # convert psobject to hash
+                    $hash = [ordered] @{}
+                    foreach ($item in $gObj.psobject.properties){
+                        $hash[$item.Name] = $item.Value
+                    }
                     if ( $Key ){
                         foreach ( $k in $Key){
-                            $gObj | Add-Member -NotePropertyName $k -NotePropertyValue $outPropNames[$k]
+                            $hash["$k"] = $outPropNames[$k]
                         }
                     }
-                    $gObj | Select-Object -ExcludeProperty $ExcludeProperties
+                    # convert hash to psobject
+                    New-Object psobject -Property $hash `
+                        | Select-Object -ExcludeProperty $ExcludeProperties
                 }
                 # Get Key property names
                 $outPropNames = @{}
@@ -157,12 +164,19 @@ function Measure-Stats
         $cnt++
     }
     foreach ( $gObj in @( $groupAry | Measure-Object @splatting )){
-            if ( $Key ){
-                foreach ( $k in $Key){
-                    $gObj | Add-Member -NotePropertyName $k -NotePropertyValue $outPropNames[$k]
-                }
+        # convert psobject to hash
+        $hash = [ordered] @{}
+        foreach ($item in $gObj.psobject.properties){
+            $hash[$item.Name] = $item.Value
+        }
+        if ( $Key ){
+            foreach ( $k in $Key){
+                $hash["$k"] = $outPropNames[$k]
             }
-            $gObj | Select-Object -ExcludeProperty $ExcludeProperties
+        }
+        # convert hash to psobject
+        New-Object psobject -Property $hash `
+            | Select-Object -ExcludeProperty $ExcludeProperties
     }
 }
 Set-Alias -Name mstats -Value Measure-Stats
