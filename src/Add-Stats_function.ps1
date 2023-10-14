@@ -245,10 +245,15 @@ function Add-Stats
         }
     }
     # 1st pass : get sum, count
-    [object[]] $inputData = $input | Select-Object *
     [int] $rowCounter = 0
-    foreach ( $obj in $inputData ){
+    [object[]] $iObj = $input | Select-Object *
+    $iObj = foreach ( $obj in $iObj ){
         $rowCounter++
+        # convert psobject to hash
+        $hash = [ordered] @{}
+        foreach ($item in $obj.psobject.properties){
+            $hash[$item.Name] = $item.Value
+        }
         foreach ( $val in $Value ){
             if ( ($obj.$val -ne $Null) -and ($obj.$val -notmatch '^NA$|^NaN$') ){
                 [decimal] $newVal = $obj.$val
@@ -284,14 +289,14 @@ function Add-Stats
                     # Rs abs(new - pre)
                     if ( $isFirstItem ){
                         [string] $hKey = $($hashPrePropName["Rs"] + "$val")
-                        $obj | Add-Member -NotePropertyName $hKey -NotePropertyValue $Null
+                        $hash["$hKey"] = $Null
                     } else {
                         $hashStatVals[$($hashPrePropName["RsCnt"] + "$val")] += 1
                         [decimal] $subVal = $newVal - $oldVal
                         [decimal] $subAbs = [math]::Abs($subVal)
                         $hashStatVals[$($hashPrePropName["RsSum"] + "$val")] += $subAbs
                         [string] $hKey = $($hashPrePropName["Rs"] + "$val")
-                        $obj | Add-Member -NotePropertyName $hKey -NotePropertyValue $subAbs
+                        $hash["$hKey"] = $subAbs
                     }
                 }
                 # set $oldVal = $newVal
@@ -303,6 +308,8 @@ function Add-Stats
                 #Write-Error "Detected NaN:$rowCounter : $val : $($obj.$val)" -ErrorAction Stop
             }
         }
+        # convert hash to psobject
+        New-Object psobject -Property $hash
     }
     # calculate mean, stdev
     foreach ( $val in $Value ){
@@ -333,7 +340,7 @@ function Add-Stats
         Write-Debug "Sum, Cnt, Bar: $tSum, $tCnt, $tMean"
     }
     if ( $StandardDeviation -or $AllStats ){
-        foreach ( $obj in $inputData ){
+        foreach ( $obj in $iObj ){
             foreach ( $val in $Value ){
                 if ( ($obj.$val -ne $Null) -and ($obj.$val -notmatch '^NA$|^NaN$') ){
                     # calculate the deviations of each data point from the mean,
@@ -361,14 +368,19 @@ function Add-Stats
             Write-Debug "Cnt, Variance, Stdev: $sdCnt, $sdVariance, $sdStdev"
         }
     }
-    # 2nd pass : output each object    
-    foreach ( $obj in $inputData ){
+    # 2nd pass : output each object
+    foreach ( $obj in $iObj ){
+        # convert psobject to hash
+        $hash = [ordered] @{}
+        foreach ($item in $obj.psobject.properties){
+            $hash[$item.Name] = $item.Value
+        }
         foreach ( $k in @($hashStatVals.Keys | Sort-Object)  ){
             #Write-Debug "$k, $($hashStatVals[$k])"
-            $obj | Add-Member -NotePropertyName $k -NotePropertyValue $hashStatVals[$k]
+            $hash["$k"] = $hashStatVals[$k]
         }
-        $obj | Select-Object -ExcludeProperty $ExcludeProperties
-        #$obj
+        New-Object psobject -Property $hash `
+            | Select-Object -ExcludeProperty $ExcludeProperties
     }
 }
 Set-Alias -Name astat -Value Add-Stats

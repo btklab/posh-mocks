@@ -242,35 +242,32 @@ function Detect-XrsAnomaly
     [int] $rowCnt = 0
     foreach ( $obj in $inputData){
         $rowCnt++
+        # convert psobject to hash
+        $hash = [ordered] @{}
+        foreach ($item in $obj.psobject.properties){
+            $hash[$item.Name] = $item.Value
+        }
         [double] $newVal = $obj.$Value
         if ( $isFirstItem ){
             $isFirstItem = $False
             if ( $Detail -or $ChartX -or $ChartRs ){
-                $obj | Add-Member -NotePropertyName $mPropName -NotePropertyValue $XBar
-                $obj | Add-Member -NotePropertyName "Rs"       -NotePropertyValue $Null
-                $obj | Add-Member -NotePropertyName "Rs_Bar"   -NotePropertyValue $RsBar
-                $obj | Add-Member -NotePropertyName "X_UCL"    -NotePropertyValue $Null
-                $obj | Add-Member -NotePropertyName "X_LCL"    -NotePropertyValue $Null
-                $obj | Add-Member -NotePropertyName "Rs_UCL"   -NotePropertyValue $Null
+                $hash["$mPropName"] = $XBar
+                $hash["Rs"]         = $Null
+                $hash["Rs_Bar"]     = $RsBar
+                $hash["X_UCL"]      = $Null
+                $hash["X_LCL"]      = $Null
+                $hash["Rs_UCL"]     = $Null
             }
-            $obj | Add-Member `
-                -NotePropertyName $ResultPropertyName `
-                -NotePropertyValue $Null
+            $hash["$ResultPropertyName"] = $Null
             if ( $RowCounter ){
-                $obj | Add-Member `
-                    -NotePropertyName $RowCounterPropertyName `
-                    -NotePropertyValue $rowCnt
+                $hash["$RowCounterPropertyName"] = $rowCnt
             }
             if ( $Detect ){
                 # Add detect mark property
-                if ($obj."$ResultPropertyName" -ne 0 -and $obj."$ResultPropertyName" -ne $Null){
-                    $obj | Add-Member `
-                        -NotePropertyName "detect" `
-                        -NotePropertyValue "deviated"
+                if ($hash["$ResultPropertyName"] -ne 0 -and $hash["$ResultPropertyName"] -ne $Null){
+                    $hash["detect"] = "deviated"
                 } else {
-                    $obj | Add-Member `
-                        -NotePropertyName "detect" `
-                        -NotePropertyValue $Null
+                    $hash["detect"] = $Null
                 }
             }
         } else {
@@ -289,32 +286,35 @@ function Detect-XrsAnomaly
                 $Result = $Result + 4
             }
             if ( $Detail -or $ChartX -or $ChartRs ){
-                $obj | Add-Member -NotePropertyName $mPropName -NotePropertyValue $XBar
-                $obj | Add-Member -NotePropertyName "Rs"       -NotePropertyValue $Duration
-                $obj | Add-Member -NotePropertyName "Rs_Bar"   -NotePropertyValue $RsBar
-                $obj | Add-Member -NotePropertyName "X_UCL"    -NotePropertyValue $X_UCL
-                $obj | Add-Member -NotePropertyName "X_LCL"    -NotePropertyValue $X_LCL
-                $obj | Add-Member -NotePropertyName "Rs_UCL"   -NotePropertyValue $Rs_UCL
+                $hash["$mPropName"] = $XBar
+                $hash["Rs"]         = $Duration
+                $hash["Rs_Bar"]     = $RsBar
+                $hash["X_UCL"]      = $X_UCL
+                $hash["X_LCL"]      = $X_LCL
+                $hash["Rs_UCL"]     = $Rs_UCL
             }
-            $obj | Add-Member -NotePropertyName $ResultPropertyName -NotePropertyValue $Result
+            $hash["$ResultPropertyName"] = $Result
             if ( $RowCounter ){
                 # Add row counter property
-                $obj | Add-Member -NotePropertyName $RowCounterPropertyName -NotePropertyValue $rowCnt
+                $hash["$RowCounterPropertyName"] = $rowCnt
             }
             if ( $Detect ){
                 # Add detect mark property
-                if ($obj."$ResultPropertyName" -ne 0 -and $obj."$ResultPropertyName" -ne $Null){
-                    $obj | Add-Member -NotePropertyName "detect" -NotePropertyValue "deviated"
+                if ($hash["$ResultPropertyName"] -ne 0 -and $hash["$ResultPropertyName"] -ne $Null){
+                    $hash["detect"] = "deviated"
                 } else {
-                    $obj | Add-Member -NotePropertyName "detect" -NotePropertyValue $Null
+                    $hash["detect"] = $Null
                 }
             }
         }
         [double] $oldVal = $newVal
         # output
         if ( $OnlyDeviationRecord ){
-            $obj | Where-Object {
-                    $_."$ResultPropertyName" -ne 0 -and $_."$ResultPropertyName" -ne $Null }
+            # convert hash to psobject
+            New-Object psobject -Property $hash `
+                | Where-Object {
+                    $_."$ResultPropertyName" -ne 0 -and $_."$ResultPropertyName" -ne $Null
+                }
         } elseif ( $ChartX ){
             [string[]] $outputProperties = @(
                 "$Value"
@@ -323,7 +323,9 @@ function Detect-XrsAnomaly
                 , "X_LCL"
                 , $ResultPropertyName
             )
-            $obj | Select-Object -Property $outputProperties
+            # convert hash to psobject
+            New-Object psobject -Property $hash `
+                | Select-Object -Property $outputProperties
         } elseif ( $ChartRs ){
             [string[]] $outputProperties = @(
                 "Rs"
@@ -331,9 +333,12 @@ function Detect-XrsAnomaly
                 , "Rs_UCL"
                 , $ResultPropertyName
             )
-            $obj | Select-Object -Property $outputProperties
+            # convert hash to psobject
+            New-Object psobject -Property $hash `
+                | Select-Object -Property $outputProperties
         } else {
-            Write-Output $obj
+            # convert hash to psobject
+            New-Object psobject -Property $hash
         }
     }
     Write-Debug "X-UCL    : $X_UCL"

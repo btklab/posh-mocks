@@ -99,14 +99,19 @@ function GroupBy-Object
         [Parameter(Mandatory=$False, ValueFromPipeline=$True)]
         [PSObject] $InputObject
     )
-    foreach ( $obj in @($input | Select-Object * | Group-Object $Key)){
+    foreach ( $obj in @($input | Group-Object $Key)){
         $groupAry = New-Object System.Collections.ArrayList
         [string] $keyStr = $obj.Name
         foreach ( $g in @($obj.Group) ){
-            if ( -not $ExcludeKey ){
-                $g | Add-Member -NotePropertyName $KeyPropertyName -NotePropertyValue $keyStr
+            $hash = [ordered] @{}
+            foreach ($item in $g.psobject.properties){
+                $hash[$item.Name] = $item.Value
             }
-            $groupAry.Add($g) > $Null
+            if ( -not $ExcludeKey ){
+                $hash["$KeyPropertyName"] = $keyStr
+            }
+            # convert hash to psobject
+            $groupAry.Add($(New-Object psobject -Property $hash)) > $Null
         }
         if ( $Function ){
             [string] $com = '$groupAry' + " | " + $function.ToString().Trim()

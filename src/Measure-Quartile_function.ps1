@@ -15,6 +15,7 @@
                 - Specify the quartile when the number of
                   data is 0 to 8
                 - Add Outlier property
+                - Use hashtable instead of Add-Member
 
             Original software Licensed under the Apache License, Version 2.0
             https://www.apache.org/licenses/LICENSE-2.0.html
@@ -303,6 +304,11 @@ function Measure-Quartile {
         #region Grab basic measurements from upstream Measure-Object
         $Stats = $Data `
             | Measure-Object -Property $v -Minimum -Maximum -Sum -Average -StandardDeviation
+        # convert psobject to hash
+        $hash = [ordered] @{}
+        foreach ($item in $Stats.psobject.properties){
+            $hash[$item.Name] = $item.Value
+        }
         #endregion
 
         # set key strings
@@ -313,7 +319,7 @@ function Measure-Quartile {
             }
             [string] $propKeyStr = $propKeyAry -join ", "
             Write-Debug "Key: $propKeyStr"
-            Add-Member -InputObject $Stats -MemberType NoteProperty -Name 'Key' -Value $propKeyStr
+            $hash["Key"] = $propKeyStr
         }
         
         #region Calculate median
@@ -340,22 +346,20 @@ function Measure-Quartile {
             $Median = $Data[$MedianIndex] | Select-Object -ExpandProperty $v
             Write-Debug ('[{0}] Median is <{1}>' -f $MyInvocation.MyCommand.Name, $Median)
         }
-        Add-Member -InputObject $Stats -MemberType NoteProperty -Name 'Median' -Value $Median
+        $hash["Median"] = $Median
         #endregion
 
         #region Calculate variance
         $Variance = 0
         foreach ($_ in $Data) {
-            #$Variance += [math]::Pow($_.$v - $Stats.Average, 2) / $Stats.Count
             $Variance += [math]::Pow( [double]($_.$v) - $Stats.Average, 2)
         }
         [double] $Variance /= $Stats.Count
-        #Add-Member -InputObject $Stats -MemberType NoteProperty -Name 'Variance' -Value $Variance
         #endregion
 
         #region Calculate standard deviation
-        [double] $StandardDeviation = [math]::Sqrt($Stats.Variance)
-        #Add-Member -InputObject $Stats -MemberType NoteProperty -Name 'StandardDeviation2' -Value $StandardDeviation
+        #[double] $StandardDeviation = [math]::Sqrt($Variance)
+        [double] $StandardDeviation = $Stats.StandardDeviation
         #endregion
 
         #region Calculate percentiles
@@ -387,20 +391,20 @@ function Measure-Quartile {
             [int] $Percentile25Index = [math]::Ceiling(25 / 100 * $Data.Count)
             [int] $Percentile75Index = [math]::Ceiling(75 / 100 * $Data.Count)
         }
-        Add-Member -InputObject $Stats -MemberType NoteProperty -Name 'Qt25' -Value $([double]($Data[$Percentile25Index].$v))
-        Add-Member -InputObject $Stats -MemberType NoteProperty -Name 'Qt75' -Value $([double]($Data[$Percentile75Index].$v))
-        [double] $IQR = $Stats.Qt75 - $Stats.Qt25
-        Add-Member -InputObject $Stats -MemberType NoteProperty -Name 'IQR' -Value $IQR
-        [double] $HiIQR = $Stats.Qt75 + $OutlierMultiple * $IQR
-        Add-Member -InputObject $Stats -MemberType NoteProperty -Name 'HiIQR' -Value $HiIQR
-        [double] $LoIQR = $Stats.Qt25 - $OutlierMultiple * $IQR
-        Add-Member -InputObject $Stats -MemberType NoteProperty -Name 'LoIQR' -Value $LoIQR
+        $hash["Qt25"] = $([double]($Data[$Percentile25Index].$v))
+        $hash["Qt75"] = $([double]($Data[$Percentile75Index].$v))
+        [double] $IQR = $hash["Qt75"] - $hash["Qt25"]
+        $hash["IQR"] = $IQR
+        [double] $HiIQR = $hash["Qt75"] + $OutlierMultiple * $IQR
+        $hash["HiIQR"] = $HiIQR
+        [double] $LoIQR = $hash["Qt25"] - $OutlierMultiple * $IQR
+        $hash["LoIQR"] = $LoIQR
         #endregion
 
         #region Calculate Tukey's range for outliers
         [double] $TukeysOutlier = $OutlierMultiple
-        [double] $TukeysRange = $TukeysOutlier * ($Stats.Qt75 - $Stats.Qt25)
-        Add-Member -InputObject $Stats -MemberType NoteProperty -Name TukeysRange -Value $TukeysRange
+        [double] $TukeysRange = $TukeysOutlier * ($hash["Qt75"] - $hash["Qt25"])
+        $hash["TukeysRange"] = $TukeysRange
         #endregion
 
         #region Calculate confidence intervals
@@ -411,7 +415,7 @@ function Measure-Quartile {
             '99' = 2.576
         }
         [double] $Confidence95 = $z.95 * $Stats.StandardDeviation / [math]::Sqrt($Stats.Count)
-        Add-Member -InputObject $Stats -MemberType NoteProperty -Name 'Confidence95' -Value $Confidence95
+        $hash["Confidence95"] = $Confidence95
         #endregion
 
         #region Detect outliers
@@ -431,16 +435,17 @@ function Measure-Quartile {
                     # pass
                 }
             }
-            Add-Member -InputObject $Stats -MemberType NoteProperty -Name 'Outlier' -Value $countOutlier
-            Add-Member -InputObject $Stats -MemberType NoteProperty -Name 'OutlierHi' -Value $countOutlierHi
-            Add-Member -InputObject $Stats -MemberType NoteProperty -Name 'OutlierLo' -Value $countOutlierLo
+            $hash["Outlier"]   = $countOutlier
+            $hash["OutlierHi"] = $countOutlierHi
+            $hash["OutlierLo"] = $countOutlierLo
         }
         #endregion
 
         #region Return measurements
+        # convert hash to psobject
         if ( $Key ){
             if ( $Detail ){
-                $Stats `
+                New-Object psobject -Property $hash `
                     | Select-Object -Property `
                         Key, `
                         Property, `
@@ -462,7 +467,7 @@ function Measure-Quartile {
                         OutlierHi,
                         OutlierLo
             } else {
-                $Stats `
+                New-Object psobject -Property $hash `
                     | Select-Object -Property `
                         Key, `
                         Property, `
@@ -479,7 +484,7 @@ function Measure-Quartile {
             }
         } else {
             if ( $Detail ){
-                $Stats `
+                New-Object psobject -Property $hash `
                     | Select-Object -Property `
                         Property, `
                         Count, `
@@ -500,7 +505,7 @@ function Measure-Quartile {
                         OutlierHi,
                         OutlierLo
             } else {
-                $Stats `
+                New-Object psobject -Property $hash `
                     | Select-Object -Property `
                         Property, `
                         Count, `

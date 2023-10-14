@@ -293,9 +293,14 @@ function Add-Quartile
 
     foreach ( $obj in @($input | Select-Object *) ){
         if ( $obj.$Value -ne $Null -and $obj.$Value -notmatch '^NA$|^NaN$'){
+            # convert psobject to hash
+            $hash = [ordered] @{}
+            foreach ($item in $obj.psobject.properties){
+                $hash[$item.Name] = $item.Value
+            }
             foreach ( $k in $PropAry ){
                 #Write-Debug "$k, $($hashStatVals[$k])"
-                $obj | Add-Member -NotePropertyName $k -NotePropertyValue $hashStatVals[$k]
+                $hash[$k] = $hashStatVals[$k]
             }
             # is value outlier?
             if ( [double]($obj.$Value) -gt $HiIQR ){
@@ -308,10 +313,9 @@ function Add-Quartile
                 # Not Outlier
                 [int] $outlierIndex = 0
             }
-            $obj | Add-Member `
-                -NotePropertyName "$strOutlier" `
-                -NotePropertyValue $outlierIndex
-            Write-Output $obj
+            $hash["$strOutlier"] = $outlierIndex
+            # convert hash to psobject
+            New-Object psobject -Property $hash
         }
     }
 }

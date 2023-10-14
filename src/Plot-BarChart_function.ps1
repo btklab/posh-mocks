@@ -48,6 +48,7 @@
         
             - Newly written with reference only to the concept
             - Changed Function name, Options, Script
+            - Use hashtable instead of Add-Member
 
         Original software Licensed under the Apache License, Version 2.0
         https://www.apache.org/licenses/LICENSE-2.0.html
@@ -430,7 +431,9 @@ function Plot-BarChart {
         Minimum = $True
         Average = $True
     }
-    [object[]] $mObj = $input | Select-Object * | Measure-Object @HashArguments
+    [object[]] $mObj = $input `
+        | Select-Object * `
+        | Measure-Object @HashArguments
     if ( $MaxValue ){
         # Manually set max value of value property
         [decimal] $PropertyMaxValue = $MaxValue
@@ -542,24 +545,22 @@ function Plot-BarChart {
         Write-Debug "$BarLength / $MaxRange"
         [string] $BarStrings = $BarCharactor * $BarLength
         #[string] $BarStrings = " " * ($BarLength - 1) + $BarCharactor
+        # convert psobject to hash
+        $hash = [ordered] @{}
+        foreach ($item in $obj.psobject.properties){
+            $hash[$item.Name] = $item.Value
+        }
         if ( $Percentile ){
-            $obj | Add-Member `
-                -NotePropertyName "$PercentilePropName" `
-                -NotePropertyValue $("{0:0.0000}" -f $Ratio)
+            $hash["$PercentilePropName"] = $("{0:0.0000}" -f $Ratio)
         } elseif ( $PercentileFromBar ){
-            $obj | Add-Member `
-                -NotePropertyName "$PercentilePropName" `
-                -NotePropertyValue $("{0:0.0000}" -f $($obj.$Value / $PropertyMeanValue))
+            $hash["$PercentilePropName"] = $("{0:0.0000}" -f $($obj.$Value / $PropertyMeanValue))
         } elseif ( $PercentileFromMin ){
-            $obj | Add-Member `
-                -NotePropertyName "$PercentilePropName" `
-                -NotePropertyValue $("{0:0.0000}" -f $($obj.$Value / $PropertyMinValue))
+            $hash["$PercentilePropName"] = $("{0:0.0000}" -f $($obj.$Value / $PropertyMinValue))
         }
         if ( $True ){
-            $obj | Add-Member `
-                -NotePropertyName $Name `
-                -NotePropertyValue $BarStrings
+            $hash["$Name"] = $BarStrings
         }
-        $obj
+        # convert hash to psobject
+        New-Object psobject -Property $hash
     }
 }

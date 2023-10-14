@@ -10,10 +10,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - NA
 
+## [6.2.1] - 2023-10-14
+
+- Changed [Add-Quartile] Use hashtable instead of Add-Member
+- Changed [Add-Stats] Use hashtable instead of Add-Member
+- Changed [Apply-Function] Use hashtable instead of Add-Member
+- Changed [Detect-XrsAnomaly] Use hashtable instead of Add-Member
+- Changed [GroupBy-Object] Use hashtable instead of Add-Member
+- Changed [Join2-Object] Use hashtable instead of Add-Member
+- Changed [Measure-Quartile] Use hashtable instead of Add-Member
+- Changed [Measure-Stats] Use hashtable instead of Add-Member
+- Changed [Plot-BarChart] Use hashtable instead of Add-Member
+
 ## [6.2.0] - 2023-10-14
 
 - Added [Measure-Quartile] function
 - Added [Add-Quartile] function
+
 
 ## [6.1.1] - 2023-10-14
 
@@ -502,7 +515,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Add-Quartile]: src/Add-Quartile_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.2.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.2.1..HEAD
+[6.2.1]: https://github.com/btklab/posh-mocks/releases/tag/6.2.1
 [6.2.0]: https://github.com/btklab/posh-mocks/releases/tag/6.2.0
 [6.1.1]: https://github.com/btklab/posh-mocks/releases/tag/6.1.1
 [6.1.0]: https://github.com/btklab/posh-mocks/releases/tag/6.1.0
