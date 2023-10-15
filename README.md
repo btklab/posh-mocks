@@ -4872,7 +4872,8 @@ Import-Csv planets.csv `
     - `[-d|-MasterDelimiter <String>]`
     - `[-mh|-MasterHeader <String[]>]`
     - `[-Dummy <String>]`
-    - `[-o|-OnlyIfInBoth]`
+    - `[-OnlyIfInBoth]`
+    - `[-OnlyIfInTransaction]`
     - `[-PreSortedMasterKey]`
     - `[-IncludeMasterKey]`
 - Thanks

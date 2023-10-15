@@ -35,7 +35,8 @@
             [-d|-MasterDelimiter <String>]
             [-mh|-MasterHeader <String[]>]
             [-Dummy <String>]
-            [-o|-OnlyIfInBoth]
+            [-OnlyIfInBoth]
+            [-OnlyIfInTransaction]
             [-PreSortedMasterKey]
             [-IncludeMasterKey]
 
@@ -78,6 +79,9 @@
 .Parameter OnlyIfInBoth
     Output only data that exists in both
     master and transaction.
+
+.Parameter OnlyIfInTransaction
+    Output only data that exists in transaction.
 
 .Parameter PreSortedMasterKey
     If you specify this when inputting pre-sorted master
@@ -251,8 +255,10 @@ function Join2-Object
         [string] $Dummy = $Null,
         
         [Parameter(Mandatory=$False)]
-        [Alias('o')]
         [switch] $OnlyIfInBoth,
+        
+        [Parameter(Mandatory=$False)]
+        [switch] $OnlyIfInTransaction,
         
         [Parameter(Mandatory=$False)]
         [switch] $PreSortedMasterKey,
@@ -415,8 +421,13 @@ function Join2-Object
         $mKeyIndex = $mKeyAry.IndexOf("$tKey")
         Write-Debug "Index of $tKey : $mKeyIndex"
         # skip if tkey not exists in mkey list
-        if ( $mKeyIndex -lt 0 -and $OnlyIfInBoth ){
-            continue
+
+        if ( $OnlyIfInBoth){
+            if ( $mKeyIndex -lt 0 ){
+                continue
+            } else {
+                # pass
+            }
         }
         # join
         # convert psobject to hash
@@ -431,6 +442,13 @@ function Join2-Object
             } else {
                 # set master columns
                 $hash["$mk"] = $masterData[$mKeyIndex].$mk
+            }
+        }
+        if( $OnlyIfInTransaction){
+            if ( $mKeyIndex -lt 0 ){
+                # pass
+            } else {
+                continue
             }
         }
         # where statement: convert hash to psobject
