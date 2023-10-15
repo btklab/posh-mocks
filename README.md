@@ -3820,6 +3820,11 @@ Procedure:
     - `Import-Excel` (external module)
 1. **Shorten** long column names to make data exploration easier (Optional):
     - `Shorten-PropertyName`
+1. **Replace** record with (Optional):
+    - `Replace-ForEach`
+1. **Join** datasets with:
+    - `Join-Object` (external module)
+    - `Join2-Object`
 1. **Select** the required columns with:
     - `Select-Object` (built-in Cmdlet)
     - `Select-Field`
@@ -3835,12 +3840,15 @@ Procedure:
     - `Apply-Function`
     - `GroupBy-Object`
 1. **Calculate** and add basic statistics and add to each record with:
-    - `Add-Stats`
-    - `Measure-Stats`
     - `Measure-Object` (built-in Cmdlet)
+    - `Add-Stats`
+    - `Add-Quartile`
+    - `Measure-Stats`
+    - `Measure-Quartile`
 1. **Detect** anomaly record (using X-Rs control method) with:
     - `Detect-XrsAnomaly`
 1. **Visualize** the results in charts with:
+    - `Get-Histogram`
     - `Plot-BarChart`
 
 
@@ -4864,7 +4872,8 @@ Import-Csv planets.csv `
     - `[-d|-MasterDelimiter <String>]`
     - `[-mh|-MasterHeader <String[]>]`
     - `[-Dummy <String>]`
-    - `[-o|-OnlyIfInBoth]`
+    - `[-OnlyIfInBoth]`
+    - `[-OnlyIfInTransaction]`
     - `[-PreSortedMasterKey]`
     - `[-IncludeMasterKey]`
 - Thanks
