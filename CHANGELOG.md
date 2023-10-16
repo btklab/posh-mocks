@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated [README.md]
 - Added [Join2-Object] `-OnlyIfInTransaction` switch
+- Added [list2table] `-Header` option
 
 ## [6.3.0] - 2023-10-14
 

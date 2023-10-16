@@ -244,6 +244,9 @@ function list2table {
         [Parameter( Mandatory=$False)]
         [string] $NA = "-",
         
+        [Parameter( Mandatory=$False)]
+        [string[]] $Header,
+        
         [Parameter( Mandatory=$False,
             ValueFromPipeline=$True)]
         [string[]] $Text
@@ -466,12 +469,20 @@ function list2table {
             ## Tag output
             [string[]] $headers = @()
             [string[]] $headers += "Tag"
-            [string[]] $headers += 1..$depthOfList | ForEach-Object {
-                Write-Output "F$_"
+            if ( $Header ){
+                [string[]] $headers += $Header
+            } else {
+                [string[]] $headers += 1..$depthOfList | ForEach-Object {
+                    Write-Output "F$_"
+                }
             }
         } else {
-            [string[]] $headers = 1..$depthOfList | ForEach-Object {
-                Write-Output "F$_"
+            if ( $Header ){
+                [string[]] $headers += $Header
+            } else {
+                [string[]] $headers = 1..$depthOfList | ForEach-Object {
+                    Write-Output "F$_"
+                }
             }
         }
         $oAry += $headers -join $Delimiter
