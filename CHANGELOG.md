@@ -8,10 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [6.4.0] - 2023-10-16
+
+- Added [lcalc2] function
 - Updated [README.md]
 - Added [Join2-Object] `-OnlyIfInTransaction` switch
 - Added [list2table] `-Header` option
-- Added [lcalc2] function
 
 ## [6.3.0] - 2023-10-14
 
@@ -525,7 +529,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [lcalc2]: src/lcalc2_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.3.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.4.0..HEAD
+[6.4.0]: https://github.com/btklab/posh-mocks/releases/tag/6.4.0
 [6.3.0]: https://github.com/btklab/posh-mocks/releases/tag/6.3.0
 [6.2.1]: https://github.com/btklab/posh-mocks/releases/tag/6.2.1
 [6.2.0]: https://github.com/btklab/posh-mocks/releases/tag/6.2.0
