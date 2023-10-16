@@ -74,6 +74,7 @@ if ($IsWindows){
 . $pwshSrcDir/Add-LineBreakEndOfFile_function.ps1
 
 . $pwshSrcDir/lcalc_function.ps1
+. $pwshSrcDir/lcalc2_function.ps1
 . $pwshSrcDir/pawk_function.ps1
 
 . $pwshSrcDir/han_function.ps1

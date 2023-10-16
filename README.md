@@ -13,7 +13,14 @@ A mock-up set of [PowerShell](https://github.com/PowerShell/PowerShell) 7 functi
     - Insufficient tests and error handlings.
     - Processing speed is slow.
 
-function list:
+Use Cases:
+
+- See
+    [UseCases_en.md]
+
+[UseCases_en.md]: UseCases_en.md
+
+Function list:
 
 ```powershell
 # one-liner to create function list
@@ -27,7 +34,7 @@ cat README.md `
     | Set-Clipboard
 ```
 
-- [Add-LineBreakEndOfFile], [Add-LineBreak], [Add-Quartile], [Add-Stats], [Apply-Function], [ConvImage], [Delete-Field], [Detect-XrsAnomaly], [Drop-NA], [Get-AppShortcut], [Get-Histogram], [Get-OGP], [GroupBy-Object], [Invoke-Link], [Join2-Object], [Measure-Quartile], [Measure-Stats], [Override-Yaml], [Plot-BarChart], [Rename-Normalize], [Replace-ForEach], [Replace-NA], [Select-Field], [Shorten-PropertyName], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [getfirst], [getlast], [grep], [gyo], [han], [head], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [map2], [mdfocus], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [retu], [rev2], [rev], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-LineBreakEndOfFile], [Add-LineBreak], [Add-Quartile], [Add-Stats], [Apply-Function], [ConvImage], [Delete-Field], [Detect-XrsAnomaly], [Drop-NA], [Get-AppShortcut], [Get-Histogram], [Get-OGP], [GroupBy-Object], [Invoke-Link], [Join2-Object], [Measure-Quartile], [Measure-Stats], [Override-Yaml], [Plot-BarChart], [Rename-Normalize], [Replace-ForEach], [Replace-NA], [Select-Field], [Shorten-PropertyName], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [getfirst], [getlast], [grep], [gyo], [han], [head], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [lcalc2], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [map2], [mdfocus], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [retu], [rev2], [rev], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 Inspired by:
 
@@ -1441,6 +1448,131 @@ C 1 10
 
 ## calc average
 "A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3 | lcalc '$0;$NF/$1'
+2 A 1 20 10
+1 B 1 10 10
+1 C 1 10 10
+```
+
+#### [lcalc2] - Column-to-column calculator
+
+[lcalc2]: src/lcalc2_function.ps1
+
+Column-to-column calcurations with **script block** on space delimited stdin.
+
+Auto-Skip empty row.
+Multiple expr with ";" in scriptblock.
+Built-in variables:
+
+    $1,$2,... : Column indexes starting with 1
+    $NF       : Rightmost column
+    $NR       : Row number of each records
+
+- Usage
+    - `man2 lcalc2`
+    - `lcalc2 {expr; expr;...} [-d "delim"] [-c|-Calculator]`
+- Options
+    - `-c|-Calculator`: calculator mode
+- Inspired by [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Command: `lcalc`
+
+Examples:
+
+```powershell
+# Multiple expr using ";" in scriptblock
+
+# data
+"8.3 70","8.6 65","8.8 63"
+8.3 70
+8.6 65
+8.8 63
+
+# calc
+"8.3 70","8.6 65","8.8 63" `
+    | lcalc2 {$1+1;$2+10}
+8.3 70 9.3 80
+8.6 65 9.6 75
+8.8 63 9.8 73
+
+```powershell
+# Output only result
+
+# input
+"8.3 70","8.6 65","8.8 63"
+8.3 70
+8.6 65
+8.8 63
+
+# output 1
+"8.3 70","8.6 65","8.8 63" `
+    | lcalc2 {$1+1; $2+10} -OnlyOutputResult
+9.3 80
+9.6 75
+9.8 73
+
+# output 2
+#   Put result on the left,
+#   put original field on the right,
+#   with -OnlyOutputResult and $0
+"8.3 70","8.6 65","8.8 63" `
+    | lcalc2 {$1+1; $2+10; $0} -OnlyOutputResult
+9.3 80 8.3 70
+9.6 75 8.6 65
+9.8 73 8.8 63
+```
+
+```powershell
+# Get row number of record
+1..5 | lcalc2 {$NR}
+1 1
+2 2
+3 3
+4 4
+5 5
+```
+
+```powershell
+# Calculator mode
+
+lcalc2 -Calculator {1+1}
+2
+
+# calculator mode does not require
+# standard input (from pipline)
+
+lcalc2 -c {1+[math]::sqrt(4)}
+3
+
+lcalc2 -c {[math]::pi}
+3.14159265358979
+
+lcalc2 -c {[math]::Ceiling(1.1)}
+2
+```
+
+```powershell
+# Calculate average with sm2 and lcalc2 command
+
+## input
+"A 1 10","B 1 10","A 1 10","C 1 10"
+A 1 10
+B 1 10
+A 1 10
+C 1 10
+
+## sum up
+"A 1 10","B 1 10","A 1 10","C 1 10" `
+    | sort `
+    | sm2 +count 1 2 3 3
+2 A 1 20
+1 B 1 10
+1 C 1 10
+
+## calc average
+"A 1 10","B 1 10","A 1 10","C 1 10" `
+    | sort `
+    | sm2 +count 1 2 3 3 `
+    | lcalc2 {$NF/$1}
 2 A 1 20 10
 1 B 1 10 10
 1 C 1 10 10
@@ -9881,31 +10013,31 @@ i ./link/rmarkdown_site.txt -l
 ```
 
 ```powershell
-    ## execute if *.ps1 file specified
+## execute if *.ps1 file specified
 
-    cat .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
-    # MSRC - Microsoft Security Response Center
-    rssfeed https://api.msrc.microsoft.com/update-guide/rss -MaxResults 30
+cat .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+# MSRC - Microsoft Security Response Center
+rssfeed https://api.msrc.microsoft.com/update-guide/rss -MaxResults 30
 
-    ## execute .ps1 function
-    ## able to use dot sourcing functions in current process
-    i .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+## execute .ps1 function
+## able to use dot sourcing functions in current process
+i .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
 
-    channel                    date       item
-    -------                    ----       ----
-    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4900...
-    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4901...
-    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4902...
-    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4903...
-    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4904...
-    MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4905...
+channel                    date       item
+-------                    ----       ----
+MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4900...
+MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4901...
+MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4902...
+MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4903...
+MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4904...
+MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4905...
 ```
 
 #### [pwsync] - Invoke Robocopy.exe
 
 [pwsync]: src/pwsync_function.ps1
 
-`Robocopy.exe`のラッパースクリプト。フォルダ間で**多量のファイルを安定して同期できる**`Robocopy`は毎日なにかと活躍する。たとえばバックアップ・サーバへのファイルアップロード・データのサルベージなど。
+`Robocopy.exe`のラッパースクリプト。フォルダ間で**多数のファイルを安定して同期できる**`Robocopy`は毎日なにかと活躍する。たとえばバックアップ・サーバへのファイルアップロード・データのサルベージなど。
 
 筆者は`Robocopy`を毎日手動で使っているので、`robocopy src dst *.* /MIR /COPY:DAT /DCOPY:DAT /R:5 /W:5 /L`などは手が覚えている。したがって[pwsync]コマンドはとくに必要ないのだが、メモがわりにスクリプトにした。
 
@@ -10094,7 +10226,7 @@ Examples:
 
 [tenki]: src/tenki_function.ps1
 
-日本・兵庫県の天気情報webページをブラウザで開く。毎日天気予報を確認するのは製造業のマネジメントの基本。
+日本・兵庫県の天気情報webページをブラウザで開く。
 
 Open Hyogo/Japan weather reports in browser (on windows).
 
