@@ -345,7 +345,7 @@ function grep {
         ($input | Select-String @splatting).Matches.Value; return
     }
     if ($Context){
-            $input | Select-String @splatting | Out-String -Stream ; return
+        $input | Select-String @splatting | Out-String -Stream ; return
     }
     if ( $LeaveHeader ){ $input[0] }
     ($input | Select-String @splatting).Line ; return
