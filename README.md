@@ -13,12 +13,6 @@ A mock-up set of [PowerShell](https://github.com/PowerShell/PowerShell) 7 functi
     - Insufficient tests and error handlings.
     - Processing speed is slow.
 
-Use Cases:
-
-- See
-    [UseCases_en.md]
-
-[UseCases_en.md]: UseCases_en.md
 
 Function list:
 
@@ -447,8 +441,8 @@ Linux環境で使う`grep`のような使用感で文字列を検索するが、
 - Usage
     - `man2 grep`
     - `grep '<regex>' -H file1,file2,...`
-    - `cat file1,file2,... | grep '<regex>' [-v][-f][-s][-C <int>[,<int>]]`
-    - `cat file1,file2,... | grep '<regex>' [-o]`
+    - `cat file1,file2,... | grep '<regex>' [-v][-f][-s][-C <int>[,<int>]][-l]`
+    - `cat file1,file2,... | grep '<regex>' [-o][-l]`
 - Inspired by Unix/Linux Commands
     - Command: `grep`
 - Learn
@@ -676,7 +670,6 @@ PowerShell
 …(以下略)
 ```
 
-
 ```powershell
 # Convert pipeline objects to strings using Out-String -Stream
 
@@ -700,6 +693,29 @@ Category       bar
 $hash | Out-String -Stream | grep 'foo'
 
 Name           foo
+```
+
+```powershell
+# Leave header line
+
+grep 'virginica' iris.csv -LeaveHeader `
+    | head -n 5
+
+sepal_length,sepal_width,petal_length,petal_width,species
+6.3,3.3,6.0,2.5,virginica
+5.8,2.7,5.1,1.9,virginica
+7.1,3.0,5.9,2.1,virginica
+6.3,2.9,5.6,1.8,virginica
+
+cat iris.csv `
+    | grep 'virginica' -LeaveHeader `
+    | head -n 5
+
+sepal_length,sepal_width,petal_length,petal_width,species
+6.3,3.3,6.0,2.5,virginica
+5.8,2.7,5.1,1.9,virginica
+7.1,3.0,5.9,2.1,virginica
+6.3,2.9,5.6,1.8,virginica
 ```
 
 #### [head], [tail] - Output the first/last part of files
