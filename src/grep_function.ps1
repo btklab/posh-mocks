@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    grep - Searches for regex patterns
+    Grep-Object (alias: grep) - Searches for regex patterns
 
     Output lines that match pattern.
 
@@ -248,7 +248,7 @@
     6.3,2.9,5.6,1.8,virginica
 
 #>
-function grep {
+function Grep-Object {
     Param(
         [Parameter(Mandatory=$False,Position=0)]
         [string[]] $Pattern,
@@ -350,3 +350,4 @@ function grep {
     if ( $LeaveHeader ){ $input[0] }
     ($input | Select-String @splatting).Line ; return
 }
+Set-Alias -Name grep -Value Grep-Object
