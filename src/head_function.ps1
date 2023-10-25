@@ -1,147 +1,83 @@
 <#
 .SYNOPSIS
-    head - Output the first part of files
+    Head-Object (Alias: head) - Output the first part of files
 
-    Output only the specified number of lines
-    from the beginning of lines.
+    Output only the specified number of lines from the beginning
+    of lines.
 
     Defaults to 10 lines of output.
     
-    head [-n num] [file]...
-
-    If file is not specified, it is read from
-    the pipeline input.
-
-    If file is specified, outputs the specified
-    number of lines along with the file name.
+    If file is not specified, it is read from the pipeline input.
 
 .LINK
-    head, tail, chead, ctail, tail-f
+    head, tail
 
 .EXAMPLE
-    1..20 | head
-    1
-    2
-    3
-    4
-    5
-    6
-    7
-    8
-    9
-    10
-    
-    PS > 1..20 | head -n 5
-    1
-    2
-    3
-    4
-    5
+    head *.* -n 3
 
-.EXAMPLE
-    head head*.ps1
-    ==> .\head_function.ps1 <==
-    <#
-        head - Output the first part of files
-    
-        Output only the specified number of lines
-        from the beginning of lines.
-    
-        Defaults to 10 lines of output.
-    
-        head [-n num] [file]...
-    
-    
-    PS> head -n 5 head*.ps1
-    ==> .\head_function.ps1 <==
-    <#
-        head - Output the first part of files
-    
-        Output only the specified number of lines
-    
+    ==> timeline-date-val.txt <==
+    date val1 val2
+    2018-01 107.3 272.1
+    2018-02 98.1 262.1
+
+    ==> tips.csv <==
+    "total_bill","tip","sex","smoker","day","time","size"
+    16.99,1.01,"Female","No","Sun","Dinner",2
+    10.34,1.66,"Male","No","Sun","Dinner",3
+
+    ==> titanic.csv <==
+    survived,pclass,sex,age,sibsp,parch,fare,embarked,class,who,adult_male,deck,embark_town,alive,alone
+    0,3,male,22.0,1,0,7.25,S,Third,man,True,,Southampton,no,False
+    1,1,female,38.0,1,0,71.2833,C,First,woman,False,C,Cherbourg,yes,False
 #>
-function head {
+function Head-Object {
+    Param(
+        [Parameter(Mandatory=$False,Position=0)]
+        [alias('p')]
+        [string[]] $Path,
+        
+        [Parameter(Mandatory=$False)]
+        [alias('n')]
+        [int] $Num = 10,
+        
+        [parameter(Mandatory=$False,ValueFromPipeline=$True)]
+        [string[]] $InputObject
+    )
+    # main
+    ## If file paths specified as an argument
+    if ( $Path ){
+        [object[]] $PathObjects = Get-ChildItem -Path $Path
+        Write-Debug $PathObjects.Count
+        if ( $PathObjects.Count -eq 1 ){
+            # output contents
+            $splatting = @{
+                Path       = $Path
+                TotalCount = $Num
+                Encoding   = "utf8"
+            }
+            Get-Content @splatting
+        } else {
+            # output contents with file name
+            foreach ( $p in $PathObjects ){
+                [string] $fileName = $p.Name
+                $splatting = @{
+                    Path       = $p.FullName
+                    TotalCount = $Num
+                    Encoding   = "utf8"
+                }
+                Write-Host ""
+                Write-Host "==> $fileName <==" -ForegroundColor Green
+                Get-Content @splatting
+            }
 
-  begin
-  {
-    [int] $readRowCounter  = 0
-    [bool] $stdinFlag      = $False
-    [bool] $readFileFlag   = $False
-    [bool] $setNumFlag     = $False
-    [bool] $oldVersionFlag = $False
-
-    # get PowerShell version
-    # Get-Content -LiteralPath file -Head <n> is only available after v5.0
-    [int] $ver = $PSVersionTable.PSVersion.Major
-    if($ver -le 2){ $oldVersionFlag = $True }
-
-    # get input format and number of output lines from args
-    if( $args.Count -eq 0 ){
-      # without args: get input from pipeline
-      [bool] $stdinFlag = $True
-      [int] $dispRowNum = 10
-    } elseif ( [string]($args[0]) -eq '-n' ){
-      # "-n <n>" if the number of rows is specified
-      if($args.Count -lt 2){
-        Write-Error "Insufficient args." -ErrorAction Stop
-      }
-      [bool] $setNumFlag = $True
-      [int] $dispRowNum = [int]($args[1])
-    } else {
-      # If no not specified number of rows,
-      # all args treat as files.
-      [bool] $readFileFlag = $True
-      [int] $dispRowNum = 10
-      [int] $fileArryStartCounter = 0
-    }
-    # Input format for "-n <n>"
-    if( $setNumFlag ){
-      if( $args.Count -eq 2 ){
-        # If args.count -eq 2,
-        # get data from pipeline
-        $stdinFlag = $True
-      } else {
-        # If args.count -gt 2,
-        # remaining args treat as files.
-        $readFileFlag = $True
-        $fileArryStartCounter = 2
-      }
-    }
-  } # end of begin block
-
-  process
-  {
-    if( $stdinFlag ){
-      $readRowCounter++
-      if( $readRowCounter -le $dispRowNum ){
-        Write-Output $_
-      }
-    }
-  } # end of process block
-
-  end
-  {
-    if($readFileFlag){
-      for($i = $fileArryStartCounter; $i -lt $args.Count; $i++){
-        $fileList = (Get-ChildItem -Path $args[$i] | ForEach-Object { $_.FullName } )
-        foreach($f in $fileList){
-          # output file name
-          [string] $dispFileName = Resolve-Path $f -Relative
-          Write-Output ('==> ' + "$dispFileName" + ' <==')
-          # output lines according to PowerShell version
-          if($oldVersionFlag){
-            # -le v2.0
-            $tmpDispRowNum = $dispRowNum - 1
-            #@(Get-Content -LiteralPath "$f" -Encoding oem)[0..$tmpDispRowNum]
-            @(Get-Content -LiteralPath "$f" -Encoding UTF8)[0..$tmpDispRowNum]
-          }else{
-            #Get-Content -LiteralPath "$f" -Encoding oem -Head $dispRowNum
-            Get-Content -LiteralPath "$f" -Encoding UTF8 -Head $dispRowNum
-          }
-          # Output empty line as a display separator
-          Write-Output ''
         }
-      }
+        return
     }
-  } # end of end block
+    ## If a text object is input from the pipeline
+    $splatting = @{
+        First = $Num
+    }
+    $input | Select-Object @splatting
+    return
 }
+Set-Alias -Name head -Value Head-Object
