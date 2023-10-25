@@ -337,7 +337,7 @@ function grep {
         } elseif ($Context){
             Select-String @splatting | Out-String -Stream  ; return
         } else {
-            if ( $LeaveHeader ){ Get-Content -Path $Path -TotalCount 1 }
+            if ( $LeaveHeader ){ Get-Content -Path $Path -TotalCount 1 -Encoding utf8 }
             (Select-String @splatting).Line; return
         }
     }
