@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    grep - Searches for regex patterns
+    Grep-Object (alias: grep) - Searches for regex patterns
 
     Output lines that match pattern.
 
@@ -8,11 +8,11 @@
     Case-sensitive with the "-CaseSensitive" switch.
 
     Interprets pattern as regular expressions by default.
-    [-s|-SimpleMatch] switch recognizes the pattern 
-    as a string.
+    [-s|-SimpleMatch] switch recognizes the pattern as a
+    string.
 
-    cat file1,file2,... | grep '<regex>' [-v][-f][-s][-C <int>]
-    cat file1,file2,... | grep '<regex>' [-o]
+    cat file1,file2,... | grep '<regex>' [-v][-f][-s][-C <int>][-l]
+    cat file1,file2,... | grep '<regex>' [-o][-l]
     grep '<regex>' -H file1,file2,...
 
         -v: output not-match line (invert match)
@@ -24,6 +24,7 @@
                 that contain lines matching the pattern
             -FileNameAndLineNumber: output filename, number
                 of lines, and match lines
+        -l: Leave header line
     
     The search speed is slow because of the wrapping
     of Select-String commandlet.
@@ -73,75 +74,75 @@
 
 
 .EXAMPLE
-# Find a case-sensitive match (grep 'regex' -CaseSensitive)
+    # Find a case-sensitive match (grep 'regex' -CaseSensitive)
 
-'Hello', 'HELLO' | grep 'HELLO' -CaseSensitive -SimpleMatch
+    'Hello', 'HELLO' | grep 'HELLO' -CaseSensitive -SimpleMatch
 
-HELLO
-
-.EXAMPLE
-# Find a pattern match (grep 'regex')
-
-grep '\?' -H "$PSHOME\en-US\*.txt"
-    https://go.microsoft.com/fwlink/?LinkID=108518.
-    or go to: https://go.microsoft.com/fwlink/?LinkID=210614
-    or go to: https://go.microsoft.com/fwlink/?LinkID=113316
-      Get-Process -?         : Displays help about the Get-Process cmdlet.
+    HELLO
 
 .EXAMPLE
-# Skip blank lines (grep ".")
+    # Find a pattern match (grep 'regex')
 
-PS> "aaa","","bbb","ccc"
-aaa
-
-bbb
-ccc
-
-PS> "aaa","","bbb","ccc" | grep .
-aaa
-bbb
-ccc
+    grep '\?' -H "$PSHOME\en-US\*.txt"
+        https://go.microsoft.com/fwlink/?LinkID=108518.
+        or go to: https://go.microsoft.com/fwlink/?LinkID=210614
+        or go to: https://go.microsoft.com/fwlink/?LinkID=113316
+          Get-Process -?         : Displays help about the Get-Process cmdlet.
 
 .EXAMPLE
-# Find matches in text files (grep 'regex' -H file,file,...)
+    # Skip blank lines (grep ".")
 
-Get-Alias   | Out-File -FilePath .\Alias.txt   -Encoding UTF8
-Get-Command | Out-File -FilePath .\Command.txt -Encoding UTF8
-grep 'Get\-' -H .\*.txt | Select-Object -First 5
+    PS> "aaa","","bbb","ccc"
+    aaa
 
-Alias.txt:7:Alias           cal2 -> Get-OLCalendar
-Alias.txt:8:Alias           cat -> Get-Content
-Alias.txt:28:Alias           dir -> Get-ChildItem
-Alias.txt:44:Alias           gal -> Get-Alias
-Alias.txt:46:Alias           gbp -> Get-PSBreakpoint
+    bbb
+    ccc
 
-.EXAMPLE
-# Find a string in subdirectories (grep 'regex' -H file,file,... [-r|Recurse])
-
-grep 'tab' -H '*.md' -r [-FileNameOnly|-FileNameAndLineNumber]
-
-Table: caption
-:::{.table2col}
-| table |
-
-The following commands are also approximately equivalent
-
-ls *.md -Recurse | grep "table"
-
-table2col.md:10:Table: caption
-table2col.md:12::::{.table2col}
-table2col.md:66:| table |
+    PS> "aaa","","bbb","ccc" | grep .
+    aaa
+    bbb
+    ccc
 
 .EXAMPLE
-# Find strings that do not match a pattern (grep 'regex' [-v|-NotMatch])
+    # Find matches in text files (grep 'regex' -H file,file,...)
 
-Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
-cat .\Command.txt | grep "Get\-", "Set\-" -NotMatch | Select-Object -Last 5
+    Get-Alias   | Out-File -FilePath .\Alias.txt   -Encoding UTF8
+    Get-Command | Out-File -FilePath .\Command.txt -Encoding UTF8
+    grep 'Get\-' -H .\*.txt | Select-Object -First 5
 
-Cmdlet          Write-Output                                       7.0.0.0    Microsoft.PowerShell.Utility
-Cmdlet          Write-Progress                                     7.0.0.0    Microsoft.PowerShell.Utility
-Cmdlet          Write-Verbose                                      7.0.0.0    Microsoft.PowerShell.Utility
-Cmdlet          Write-Warning                                      7.0.0.0    Microsoft.PowerShell.Utility
+    Alias.txt:7:Alias           cal2 -> Get-OLCalendar
+    Alias.txt:8:Alias           cat -> Get-Content
+    Alias.txt:28:Alias           dir -> Get-ChildItem
+    Alias.txt:44:Alias           gal -> Get-Alias
+    Alias.txt:46:Alias           gbp -> Get-PSBreakpoint
+
+.EXAMPLE
+    # Find a string in subdirectories (grep 'regex' -H file,file,... [-r|Recurse])
+
+    grep 'tab' -H '*.md' -r [-FileNameOnly|-FileNameAndLineNumber]
+
+    Table: caption
+    :::{.table2col}
+    | table |
+
+    The following commands are also approximately equivalent
+
+    ls *.md -Recurse | grep "table"
+
+    table2col.md:10:Table: caption
+    table2col.md:12::::{.table2col}
+    table2col.md:66:| table |
+
+.EXAMPLE
+    # Find strings that do not match a pattern (grep 'regex' [-v|-NotMatch])
+
+    Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
+    cat .\Command.txt | grep "Get\-", "Set\-" -NotMatch | Select-Object -Last 5
+
+    Cmdlet          Write-Output                                       7.0.0.0    Microsoft.PowerShell.Utility
+    Cmdlet          Write-Progress                                     7.0.0.0    Microsoft.PowerShell.Utility
+    Cmdlet          Write-Verbose                                      7.0.0.0    Microsoft.PowerShell.Utility
+    Cmdlet          Write-Warning                                      7.0.0.0    Microsoft.PowerShell.Utility
 
 .EXAMPLE
 # Use double quotes when searching for tab characters (grep "`t")
@@ -152,121 +153,147 @@ Cmdlet          Write-Warning                                      7.0.0.0    Mi
 7       8       9
 
 .EXAMPLE
-# Find lines before and after a match (grep "regex" -C <int>,<int> )
+    # Find lines before and after a match (grep "regex" -C <int>,<int> )
 
-Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
-cat .\Command.txt | grep 'Get\-Computer' -C 2, 3
+    Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
+    cat .\Command.txt | grep 'Get\-Computer' -C 2, 3
 
-  Cmdlet          Get-Command                                        7.3.1.500  Microsoft.PowerShell.Core
-  Cmdlet          Get-ComputeProcess                                 1.0.0.0    HostComputeService
-> Cmdlet          Get-ComputerInfo                                   7.0.0.0    Microsoft.PowerShell.Management
-  Cmdlet          Get-Content                                        7.0.0.0    Microsoft.PowerShell.Management
-  Cmdlet          Get-Counter                                        7.0.0.0    Microsoft.PowerShell.Diagnostics
-  Cmdlet          Get-Credential                                     7.0.0.0    Microsoft.PowerShell.Security
+      Cmdlet          Get-Command                                        7.3.1.500  Microsoft.PowerShell.Core
+      Cmdlet          Get-ComputeProcess                                 1.0.0.0    HostComputeService
+    > Cmdlet          Get-ComputerInfo                                   7.0.0.0    Microsoft.PowerShell.Management
+      Cmdlet          Get-Content                                        7.0.0.0    Microsoft.PowerShell.Management
+      Cmdlet          Get-Counter                                        7.0.0.0    Microsoft.PowerShell.Diagnostics
+      Cmdlet          Get-Credential                                     7.0.0.0    Microsoft.PowerShell.Security
 
-Tips: use Out-String -Stream (alias:oss) to greppable
+    Tips: use Out-String -Stream (alias:oss) to greppable
 
-cat .\Command.txt | grep 'Get\-Computer' -C 2, 3 | oss | grep '>'
+    cat .\Command.txt | grep 'Get\-Computer' -C 2, 3 | oss | grep '>'
 
-> Cmdlet          Get-ComputerInfo                                   7.0.0.0    Microsoft.PowerShell.Management
-
-.EXAMPLE
-# Find all pattern matches (grep 'regex' -o)
-cat "$PSHOME\en-US\*.txt" | grep "PowerShell"
-
-    PowerShell Help System
-    Displays help about PowerShell cmdlets and concepts.
-    PowerShell Help describes PowerShell cmdlets, functions, scripts, and
-    modules, and explains concepts, including the elements of the PowerShell
-    PowerShell does not include help files, but you can read the help topics
-    You can find help for PowerShell online at
-       1. Start PowerShell with the "Run as administrator" option.
-      Get-Help About_Modules : Displays help about PowerShell modules.
-
-
-cat "$PSHOME\en-US\*.txt" | grep -o "PowerShell"
-PowerShell
-PowerShell
-PowerShell
-PowerShell
-PowerShell
-PowerShell
-PowerShell
-PowerShell
-PowerShell
+    > Cmdlet          Get-ComputerInfo                                   7.0.0.0    Microsoft.PowerShell.Management
 
 .EXAMPLE
-# Convert pipeline objects to strings using Out-String -Stream
-$hash = @{
-    Name = 'foo'
-    Category = 'bar'
-}
+    # Find all pattern matches (grep 'regex' -o)
+    cat "$PSHOME\en-US\*.txt" | grep "PowerShell"
 
-# !! NO output, due to .ToString() conversion
-$hash | grep 'foo'
+        PowerShell Help System
+        Displays help about PowerShell cmdlets and concepts.
+        PowerShell Help describes PowerShell cmdlets, functions, scripts, and
+        modules, and explains concepts, including the elements of the PowerShell
+        PowerShell does not include help files, but you can read the help topics
+        You can find help for PowerShell online at
+           1. Start PowerShell with the "Run as administrator" option.
+          Get-Help About_Modules : Displays help about PowerShell modules.
 
-# Out-String converts the output to a single multi-line string object
-$hash | Out-String | grep 'foo'
 
-Name                           Value
-----                           -----
-Name                           foo
-Category                       bar
-
-# Out-String -Stream converts the output to a multiple single-line string objects
-$hash | Out-String -Stream | grep 'foo'
-
-Name                           foo
+    cat "$PSHOME\en-US\*.txt" | grep -o "PowerShell"
+    PowerShell
+    PowerShell
+    PowerShell
+    PowerShell
+    PowerShell
+    PowerShell
+    PowerShell
+    PowerShell
+    PowerShell
 
 .EXAMPLE
-# Read regex pattern from file (grep -f <file> [-SimpleMatch])
+    # Convert pipeline objects to strings using Out-String -Stream
+    $hash = @{
+        Name = 'foo'
+        Category = 'bar'
+    }
 
-cat a.txt | grep -f regfile.txt
-cat a.txt | grep regfile.txt -f
+    # !! NO output, due to .ToString() conversion
+    $hash | grep 'foo'
+
+    # Out-String converts the output to a single multi-line string object
+    $hash | Out-String | grep 'foo'
+
+    Name                           Value
+    ----                           -----
+    Name                           foo
+    Category                       bar
+
+    # Out-String -Stream converts the output to a multiple single-line string objects
+    $hash | Out-String -Stream | grep 'foo'
+
+    Name                           foo
+
+.EXAMPLE
+    # Read regex pattern from file (grep -f <file> [-SimpleMatch])
+
+    cat a.txt | grep -f regfile.txt
+    cat a.txt | grep regfile.txt -f
+
+.EXAMPLE
+    # Leave header line
+
+    grep 'virginica' iris.csv -LeaveHeader `
+        | head -n 5
+
+    sepal_length,sepal_width,petal_length,petal_width,species
+    6.3,3.3,6.0,2.5,virginica
+    5.8,2.7,5.1,1.9,virginica
+    7.1,3.0,5.9,2.1,virginica
+    6.3,2.9,5.6,1.8,virginica
+
+    cat iris.csv `
+        | grep 'virginica' -LeaveHeader `
+        | head -n 5
+
+    sepal_length,sepal_width,petal_length,petal_width,species
+    6.3,3.3,6.0,2.5,virginica
+    5.8,2.7,5.1,1.9,virginica
+    7.1,3.0,5.9,2.1,virginica
+    6.3,2.9,5.6,1.8,virginica
 
 #>
-function grep {
+function Grep-Object {
     Param(
         [Parameter(Mandatory=$False,Position=0)]
         [string[]] $Pattern,
-
+        
         [Parameter(Mandatory=$False,Position=1)]
         [alias('H')]
         [string[]] $Path,
-
+        
         [Parameter(Mandatory=$False)]
         [alias('f')]
         [switch] $File,
-
+        
         [Parameter(Mandatory=$False)]
         [alias('v')]
         [switch] $NotMatch,
-
+        
         [Parameter(Mandatory=$False)]
         [alias('s')]
         [switch] $SimpleMatch,
-
+        
         [Parameter(Mandatory=$False)]
         [alias('o')]
         [switch] $AllMatches,
-
+        
         [Parameter(Mandatory=$False)]
         [alias('C')]
         [int[]] $Context,
-
+        
         [Parameter(Mandatory=$False)]
         [switch] $CaseSensitive,
-
+        
         [Parameter(Mandatory=$False)]
         [alias('r')]
         [switch] $Recurse,
-
+        
+        [Parameter(Mandatory=$False)]
+        [alias('l')]
+        [switch] $LeaveHeader,
+        
         [Parameter(Mandatory=$False)]
         [switch] $FileNameOnly,
-
+        
         [Parameter(Mandatory=$False)]
         [switch] $FileNameAndLineNumber,
-
+        
         [parameter(Mandatory=$False,ValueFromPipeline=$True)]
         [string[]] $Text
     )
@@ -310,6 +337,7 @@ function grep {
         } elseif ($Context){
             Select-String @splatting | Out-String -Stream  ; return
         } else {
+            if ( $LeaveHeader ){ Get-Content -Path $Path -TotalCount 1 -Encoding utf8 }
             (Select-String @splatting).Line; return
         }
     }
@@ -319,5 +347,7 @@ function grep {
     if ($Context){
         $input | Select-String @splatting | Out-String -Stream ; return
     }
+    if ( $LeaveHeader ){ $input[0] }
     ($input | Select-String @splatting).Line ; return
 }
+Set-Alias -Name grep -Value Grep-Object
