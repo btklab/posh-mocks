@@ -69,7 +69,6 @@ function Head-Object {
                 Write-Host "==> $fileName <==" -ForegroundColor Green
                 Get-Content @splatting
             }
-
         }
         return
     }
