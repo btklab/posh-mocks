@@ -2958,7 +2958,7 @@ Examples:
 ```powershell
 cat iris.csv `
     | percentile -v 1 -k 5 -fs "," `
-    | ft
+    | Format-Table
 
 field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
 -----        ---        -----    --- ---- -----  --- ---- ---- ----
@@ -3028,7 +3028,7 @@ LoIQR : -1
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s $_" } } `
     | percentile 2 -k 1 -NoHeader `
-    | ft
+    | Format-Table
 
 field key count   sum mean stdev  min Qt25 Qt50 Qt75
 ----- --- -----   --- ---- -----  --- ---- ---- ----
@@ -3041,7 +3041,7 @@ F2    d       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s $s $_" } } `
     | percentile 3 -k 1,2 -NoHeader `
-    | ft
+    | Format-Table
 
 field key count   sum mean stdev  min Qt25 Qt50 Qt75
 ----- --- -----   --- ---- -----  --- ---- ---- ----
@@ -3115,7 +3115,7 @@ Another example:
 ```powershell
 cat iris.csv `
     | percentile -fs "," 1 `
-    | ft
+    | Format-Table
 
 field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
 -----        -----    --- ---- -----  --- ---- ---- ----  ---
@@ -3124,7 +3124,7 @@ sepal_length   150 876.50 5.84  0.83 4.30 5.10 5.80 6.40 7.90
 
 cat iris.csv `
     | percentile -fs "," 1,2,3,4 `
-    | ft
+    | Format-Table
 
 field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
 -----        -----    --- ---- -----  --- ---- ---- ----  ---
@@ -3136,7 +3136,7 @@ petal_width    150 179.90 1.20  0.76 0.10 0.30 1.30 1.80 2.50
 
 cat iris.csv `
     | percentile -fs "," 1,2,3,4 -k 5 `
-    | ft
+    | Format-Table
 
 field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
 -----        ---        -----    --- ---- -----  --- ---- ---- ----
@@ -3407,7 +3407,7 @@ Another examples:
 ```powershell
 cat data.txt `
     | decil -NoHeader `
-    | ft
+    | Format-Table
 
 Name Seg Count          Sum       Mean Ratio Cumulative-Ratio
 ---- --- -----          ---       ---- ----- ----------------
@@ -3918,7 +3918,7 @@ Import-Csv iris.csv `
     | sort species -Stable `
     | Apply-Function species {
         Measure-Stats sepal_length species -Sum -Average } `
-    | ft
+    | Format-Table
 
 species    Property        Sum Average
 -------    --------        --- -------
@@ -3939,7 +3939,7 @@ Import-Csv penguins.csv `
     | Apply-Function species {
         Detect-XrsAnomaly b_l_m -Detect } `
     | Plot-BarChart b_l_m count,species,xrs,detect -w 20 -m "|" `
-    | ft `
+    | Format-Table `
     | oss `
     | sls "deviated" -Context 3
 
@@ -4086,7 +4086,7 @@ Specify the field numbers you want to **SELECT**, with the leftmost column as 1s
 Import-Csv penguins.csv `
     | Shorten-PropertyName `
     | head -n 1 `
-    | ft
+    | Format-Table
 
 count species island    b_l_m b_d_m f_l_m b_m_g sex    year
 ----- ------- ------    ----- ----- ----- ----- ---    ----
@@ -4100,7 +4100,7 @@ Import-Csv penguins.csv `
     | Shorten-PropertyName `
     | head -n 1 `
     | Select-Field 1,3,5,-2 `
-    | ft
+    | Format-Table
 
 count island    b_d_m sex
 ----- ------    ----- ---
@@ -4115,7 +4115,7 @@ Specify the field numbers you want to **DELETE**, with the leftmost column as 1s
 Import-Csv penguins.csv `
     | Shorten-PropertyName `
     | head -n 1 `
-    | ft
+    | Format-Table
 
 count species island    b_l_m b_d_m f_l_m b_m_g sex    year
 ----- ------- ------    ----- ----- ----- ----- ---    ----
@@ -4129,7 +4129,7 @@ Import-Csv penguins.csv `
     | Shorten-PropertyName `
     | head -n 1 `
     | Delete-Field 2,3,-2 `
-    | ft
+    | Format-Table
     
 count b_l_m b_d_m f_l_m b_m_g year
 ----- ----- ----- ----- ----- ----
@@ -4160,7 +4160,7 @@ Import-Csv penguins.csv `
 Import-Csv penguins.csv `
     | Replace-NA "bill_length_mm" -To "hoge" `
     | where "bill_length_mm" -eq "hoge" `
-    | ft
+    | Format-Table
 
 count species island    bill_length_mm bill_depth_mm sex year
 ----- ------- ------    -------------- ------------- --- ----
@@ -4174,7 +4174,7 @@ count species island    bill_length_mm bill_depth_mm sex year
 [Apply-Function]: src/Apply-Function_function.ps1
 
 Apply a script for each category in the specified column.
-Pre `sort -Stable` needed.
+Pre `Sort-Object -Stable` needed.
 
 - Usage
     - `man2 apply`
@@ -4191,9 +4191,9 @@ Get the minimum Id per processName
 
 ```powershell
 ps `
-    | Sort-Object ProcessName, Id -Stable `
+    | Sort-Object -Property ProcessName, Id -Stable `
     | Apply-Function ProcessName { select -First 1 } `
-    | ft
+    | Format-Table
 
  NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
  ------    -----      -----     ------      --  -- -----------
@@ -4210,10 +4210,10 @@ Multiple category properties can be specified.
 ```powershell
 # Example of specifying multiple category properties:
 Import-Csv penguins.csv `
-    | sort species, island -Stable `
+    | Sort-Object -Property species, island -Stable `
     | Shorten-PropertyName `
     | Apply-Function -key species,island {select -First 1} `
-    | ft
+    | Format-Table
 
 count species   island    b_l_m b_d_m f_l_m b_m_g sex    year key
 ----- -------   ------    ----- ----- ----- ----- ---    ---- ---
@@ -4245,7 +4245,7 @@ Example:
 Import-Csv penguins.csv `
     | Shorten-PropertyName `
     | GroupBy-Object species, island { select -First 1 } `
-    | ft species, island, b_l_m, sex, year, key
+    | Format-Table species, island, b_l_m, sex, year, key
 
 species   island    b_l_m sex    year key
 -------   ------    ----- ---    ---- ---
@@ -4264,7 +4264,7 @@ Import-Csv penguins.csv `
         Drop-NA bill_length_mm `
         | Measure-Stats bill_length_mm key -Average -Sum -Count
     } `
-    | ft
+    | Format-Table
 
 key               Count Average     Sum Property
 ---               ----- -------     --- --------
@@ -4306,7 +4306,7 @@ Example:
     | addt "v1,v2" `
     | ConvertFrom-Csv `
     | Add-Stats v1,v2 -Sum -Mean `
-    | ft
+    | Format-Table
 
 v1 v2 Mean_Of_v1 Mean_Of_v2 Sum_Of_v1 Sum_Of_v2
 -- -- ---------- ---------- --------- ---------
@@ -4323,11 +4323,11 @@ v1 v2 Mean_Of_v1 Mean_Of_v2 Sum_Of_v1 Sum_Of_v2
 Import-Csv iris.csv `
     | Shorten-PropertyName -v `
     | Drop-NA sl `
-    | sort species -Stable `
+    | Sort-Object -Property species -Stable `
     | Apply-Function species {
         Add-Stats sl -Sum -Mean `
-        | select -First 3 } `
-    | ft
+        | Select-Object -First 3 } `
+    | Format-Table
 
 sl  sw  pl  pw  species    key        Mean_Of_sl Sum_Of_sl
 --  --  --  --  -------    ---        ---------- ---------
@@ -4351,11 +4351,11 @@ sl  sw  pl  pw  species    key        Mean_Of_sl Sum_Of_sl
 Import-Csv iris.csv `
     | Shorten-PropertyName -v `
     | Drop-NA sl `
-    | sort species -Stable `
+    | Sort-Object -Property species -Stable `
     | Add-Stats sl -Sum -Mean `
-    | select *, @{N="DevFromMean";E={$_."sl" - $_."Mean_Of_sl"}} `
+    | Select-Object -Property *, @{N="DevFromMean";E={$_."sl" - $_."Mean_Of_sl"}} `
     | Detect-XrsAnomaly sl -OnlyDeviationRecord `
-    | ft
+    | Format-Table
     
 sl  sw  pl  pw  species    Mean_Of_sl Sum_Of_sl DevFromMean xrs
 --  --  --  --  -------    ---------- --------- ----------- ---
@@ -4376,7 +4376,7 @@ sl  sw  pl  pw  species    Mean_Of_sl Sum_Of_sl DevFromMean xrs
 
 [Measure-Stats]: src/Measure-Stats_function.ps1
 
-Pre `sort -Stable` needed.
+Pre `Sort-Object -Stable` needed.
 
 - Usage
     - `man2 Measure-Stats`
@@ -4395,9 +4395,9 @@ Example:
 
 ```powershell
 Import-Csv iris.csv `
-    | sort "species" -Stable `
+    | Sort-Object -Property "species" -Stable `
     | Measure-Stats "sepal_length" species -Sum -Average `
-    | ft
+    | Format-Table
 
 species    Average    Sum Property
 -------    -------    --- --------
@@ -4408,10 +4408,10 @@ virginica     6.59 329.40 sepal_length
 
 ```powershell
 Import-Csv iris.csv `
-    | sort "species" -Stable `
+    | Sort-Object -Property "species" -Stable `
     | Apply-Function "species" {
         Measure-Stats "sepal_length" "species" -Sum -Average } `
-    | ft
+    | Format-Table
 
 species    Average    Sum Property
 -------    -------    --- --------
@@ -4468,7 +4468,7 @@ Example:
 Import-Csv iris.csv `
     | Shorten-PropertyName `
     | Add-Quartile "s_l" `
-    | select -First 1
+    | Select-Object -First 1
 
 s_l     : 5.1
 s_w     : 3.5
@@ -4490,7 +4490,7 @@ Max     : 7.9
 Import-Csv iris.csv `
     | Shorten-PropertyName `
     | Add-Quartile "s_l" -AllStats `
-    | select -First 1
+    | Select-Object -First 1
 
 s_l          : 5.1
 s_w          : 3.5
@@ -4516,7 +4516,7 @@ Confidence95 : 0
 Import-Csv iris.csv `
     | Shorten-PropertyName `
     | Add-Quartile "s_l" -AddPropertyName `
-    | select -First 1
+    | Select-Object -First 1
 
 s_l           : 5.1
 s_w           : 3.5
@@ -4540,7 +4540,7 @@ Import-Csv iris.csv `
     | Shorten-PropertyName `
     | Add-Quartile "s_w" -AllStats `
     | ? outlier -gt 0 `
-    | ft "s_w", "LoIQR", "HiIQR", "Outlier"
+    | Format-Table -Property "s_w", "LoIQR", "HiIQR", "Outlier"
 
 s_w LoIQR HiIQR Outlier
 --- ----- ----- -------
@@ -4551,7 +4551,7 @@ s_w LoIQR HiIQR Outlier
 
 [Measure-Quartile]: src/Measure-Quartile_function.ps1
 
-Pre `sort -Stable` needed.
+Pre `Sort-Object -Stable` needed.
 
 - Usage
     - `man2 Measure-Quartile`
@@ -4703,7 +4703,7 @@ Import-Csv iris.csv `
     | Shorten-PropertyName `
     | Drop-NA "s_l" `
     | Detect-XrsAnomaly "s_l" -OnlyDeviationRecord -RowCounter `
-    | ft
+    | Format-Table
 
 s_l s_w p_l p_w species    xrs row
 --- --- --- --- -------    --- ---
@@ -4724,10 +4724,10 @@ s_l s_w p_l p_w species    xrs row
 Import-Csv iris.csv `
     | Shorten-PropertyName `
     | Drop-NA "p_w" `
-    | sort "species" -Stable `
-    | apply "species" {
+    | Sort-Object -Property "species" -Stable `
+    | Apply-Function "species" {
         Detect-XrsAnomaly "p_w" -Detect -OnlyDeviationRecord } `
-    | ft
+    | Format-Table
 
 s_l s_w p_l p_w species key    xrs detect
 --- --- --- --- ------- ---    --- ------
@@ -4739,13 +4739,13 @@ s_l s_w p_l p_w species key    xrs detect
 
 ```powershell
 # Detect anomaly values by category(species)
-Import-Csv penguins.csv `
-    | Drop-NA bill_length_mm `
+Import-Csv -Path penguins.csv `
+    | Drop-NA "bill_length_mm" `
     | Shorten-PropertyName `
-    | sort species, island -Stable `
-    | Apply-Function species, island {
-        Detect-XrsAnomaly b_l_m -OnlyDeviationRecord } `
-    |  ft count, key, b_l_m, sex, year, xrs
+    | Sort-Object -Property "species", "island" -Stable `
+    | Apply-Function "species", "island" {
+        Detect-XrsAnomaly "b_l_m" -OnlyDeviationRecord } `
+    | Format-Table -Property "count", "key", "b_l_m", "sex", "year", "xrs"
 
 count key            b_l_m sex  year xrs
 ----- ---            ----- ---  ---- ---
@@ -4776,9 +4776,9 @@ Examples:
 
 ```powershell
 1..10 `
-    | addt val `
+    | addt "val" `
     | ConvertFrom-Csv `
-    | Plot-BarChart val -w 10 -m "|"
+    | Plot-BarChart "val" -w 10 -m "|"
 
 val  BarChart
 -  --------
@@ -4795,11 +4795,11 @@ val  BarChart
 ```
 
 ```powershell
-Import-Csv iris.csv `
-    | Drop-NA sepal_length `
+Import-Csv -Path iris.csv `
+    | Drop-NA "sepal_length" `
     | Shorten-PropertyName `
-    | Plot-BarChart s_l -m "|" -w 20 `
-    | ft
+    | Plot-BarChart "s_l" -m "|" -w 20 `
+    | Format-Table
 
 s_w  p_l  p_w species  s_l BarChart
 ---  ---  --- -------  --- --------
@@ -4812,9 +4812,9 @@ s_w  p_l  p_w species  s_l BarChart
 ```
 
 ```powershell
-ls ./tmp/ -File `
-    | Plot-BarChart Length Name, Length -Mark "|" -w 40 `
-    | ft
+Get-ChildItem -Path ./tmp/ -File `
+    | Plot-BarChart "Length" "Name", "Length" -Mark "|" -w 40 `
+    | Format-Table
 
 Name  Length BarChart
 ----  ------ --------
@@ -4825,16 +4825,16 @@ a.svg   8842 ||||||||||||||||||||||||||||||||||||||||
 ```
 
 ```powershell
-Import-Csv penguins.csv `
-    | Drop-NA bill_length_mm `
+Import-Csv -Path penguins.csv `
+    | Drop-NA "bill_length_mm" `
     | Shorten-PropertyName `
-    | sort species -Stable `
-    | Apply-Function species {
-        Detect-XrsAnomaly b_l_m -Detect } `
-    | Plot-BarChart b_l_m count,species,xrs,detect -w 20 -m "|" `
-    | ft `
-    | oss `
-    | sls "deviated" -Context 3
+    | Sort-Object -Property "species" -Stable `
+    | Apply-Function "species" {
+        Detect-XrsAnomaly "b_l_m" -Detect } `
+    | Plot-BarChart "b_l_m" "count","species","xrs","detect" -w 20 -m "|" `
+    | Format-Table `
+    | Out-String -Stream `
+    | Select-String -Pattern "deviated" -Context 3
 
   count species xrs detect   b_l_m BarChart
 
@@ -4869,10 +4869,10 @@ Examples:
 
 ```powershell
 Get-Process `
-    | select Name,Id,WorkingSet `
-    | Get-Histogram -Value WorkingSet -BucketWidth 5mb -Minimum 0 -Maximum 50mb `
+    | Select-Object -Property "Name","Id","WorkingSet" `
+    | Get-Histogram -Value "WorkingSet" -BucketWidth 5mb -Minimum 0 -Maximum 50mb `
     | Plot-BarChart count -w 40 -m "|" `
-    | ft
+    | Format-Table
 
 Index  lowerBound  upperBound Count BarChart
 -----  ----------  ---------- ----- --------
@@ -4889,11 +4889,11 @@ Index  lowerBound  upperBound Count BarChart
 ```
 
 ```powershell
-Import-Excel iris.xlsx `
+Import-Excel -Path iris.xlsx `
     | Shorten-PropertyName `
     | Get-Histogram "p_l" -w 0.3 `
     | Plot-BarChart "count" -w 40 -m "|" `
-    | ft
+    | Format-Table
 
 Index lowerBound upperBound Count BarChart
 ----- ---------- ---------- ----- --------
@@ -4928,10 +4928,10 @@ Import-Excel iris.xlsx `
     | Shorten-PropertyName -v `
     | sort "species" -Stable `
     | Apply-Function "species" { `
-        MovingWindow-Approach -v sl `
+        MovingWindow-Approach -v "sl" `
         | Get-Histogram "rolling" -BucketWidth .7 -Maximum 8 -Minimum 4 -Key "species" `
         | Plot-BarChart "count" -m "|" } `
-    | ft
+    | Format-Table
 
 species    Index lowerBound upperBound Count BarChart
 -------    ----- ---------- ---------- ----- --------
@@ -4972,9 +4972,9 @@ Example:
 # replace method property's space to underscore
 
 # input
-Import-Csv planets.csv `
-    | select -First 3 `
-    | ft
+Import-Csv -Path planets.csv `
+    | Select-Object -First 3 `
+    | Format-Table
 
 method          number orbital_period mass distance year
 ------          ------ -------------- ---- -------- ----
@@ -4983,10 +4983,10 @@ Radial Velocity 1      874.774        2.21 56.95    2008
 Radial Velocity 1      763.0          2.6  19.84    2011
 
 # Use Replace-ForEach function
-Import-Csv planets.csv `
-    | select -First 3 `
-    | Replace-ForEach method -From ' ' -To '_' `
-    | ft
+Import-Csv -Path planets.csv `
+    | Select-Object -First 3 `
+    | Replace-ForEach "method" -From ' ' -To '_' `
+    | Format-Table
 
 method          number orbital_period mass distance year
 ------          ------ -------------- ---- -------- ----
@@ -4995,10 +4995,10 @@ Radial_Velocity 1      874.774        2.21 56.95    2008
 Radial_Velocity 1      763.0          2.6  19.84    2011
 
 # Equivalent to
-Import-Csv planets.csv `
-    | select -First 3 `
-    | %{ $_.method = $_.method -replace ' ', '_'; $_ } `
-    | ft
+Import-Csv -Path planets.csv `
+    | Select-Object -First 3 `
+    | ForEach-Object { $_.method = $_.method -replace ' ', '_'; $_ } `
+    | Format-Table
 ```
 
 #### [Join2-Object] (Alias: join2o) - INNER/OUTER Join records
@@ -5041,7 +5041,7 @@ Examples:
 "2,Mark"
 "3,Hanna"
 ) | ConvertFrom-Csv `
-    | Set-Variable -Name master
+  | Set-Variable -Name master
 
 ## transaction
 @(
@@ -5053,17 +5053,18 @@ Examples:
 "2,6/13/2012 10:15:00 AM"
 "44,2/29/2012 01:00:00 AM"
 ) | ConvertFrom-Csv `
-    | Set-Variable -Name tran
+  | Set-Variable -Name tran
 
 ## main
 $tran `
-    | Join2-Object $master `
+    | Join2-Object `
+        -Master $master `
         -On id `
         -TransKey EmployeeId `
         -Dummy "@@@" `
         -IncludeMasterKey `
         -PreSortedMasterKey `
-    | ft
+    | Format-Table
 
 EmployeeId When                  m_Id m_Name
 ---------- ----                  ---- ------
@@ -5094,8 +5095,8 @@ cat master.csv
     0000007,Bob,42,F
 
 Import-Csv tran.csv `
-    | Join2-Object master.csv -On id `
-    | ft
+    | Join2-Object -Master master.csv -On id `
+    | Format-Table
 
 id      v1 v2 v3 v4 v5 m_name m_val m_class
 --      -- -- -- -- -- ------ ----- -------
@@ -5115,7 +5116,7 @@ Import-Csv tran.csv `
         -Master master.csv `
         -On id `
         -OnlyIfInBoth `
-    | ft
+    | Format-Table
 
 id      v1 v2 v3 v4 v5 m_name m_val m_class
 --      -- -- -- -- -- ------ ----- -------
@@ -5132,7 +5133,7 @@ Import-Csv tran.csv `
         -Master master.csv `
         -On id `
         -Where { [double]($_.v2) -gt 39 } `
-    | ft
+    | Format-Table
 
 id      v1 v2 v3 v4 v5 m_name m_val m_class
 --      -- -- -- -- -- ------ ----- -------
