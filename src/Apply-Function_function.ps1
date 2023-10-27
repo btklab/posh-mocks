@@ -230,4 +230,4 @@ function Apply-Function
         Write-Output $groupAry
     }
 }
-Set-Alias -Name apply -Value Apply-Function
+Set-Alias -Name apply -Value Apply-Function -PassThru | Select-Object -Property "DisplayName"

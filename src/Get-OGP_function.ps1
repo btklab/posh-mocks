@@ -609,4 +609,4 @@ function Get-OGP {
         #$stream.Close()
     }
 }
-Set-Alias -name ml -value Get-OGP
+Set-Alias -name ml -value Get-OGP -PassThru | Select-Object "DisplayName"

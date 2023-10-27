@@ -79,4 +79,4 @@ function Head-Object {
     $input | Select-Object @splatting
     return
 }
-Set-Alias -Name head -Value Head-Object
+Set-Alias -Name head -Value Head-Object -PassThru | Select-Object -Property "DisplayName"

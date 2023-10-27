@@ -523,4 +523,4 @@ function Measure-Quartile {
         #endregion
     }
 }
-Set-Alias -Name mquart -Value Measure-Quartile
+Set-Alias -Name mquart -Value Measure-Quartile -PassThru | Select-Object -Property "DisplayName"

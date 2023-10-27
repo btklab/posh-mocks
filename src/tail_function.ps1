@@ -99,4 +99,4 @@ function Tail-Object {
     $input | Select-Object @splatting
     return
 }
-Set-Alias -Name tail -Value Tail-Object
+Set-Alias -Name tail -Value Tail-Object -PassThru | Select-Object -Property "DisplayName"

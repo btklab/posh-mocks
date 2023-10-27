@@ -25,8 +25,8 @@ function Fahrenheit2Celsius ( [float] $F ){
 if ($IsWindows){
     # Set-Alias
     if($PSVersionTable.PSVersion.Major -ge 5){
-        Set-Alias -name wzip   -value Compress-Archive
-        Set-Alias -name wunzip -value Expand-Archive
+        Set-Alias -Name wzip -Value Compress-Archive -PassThru | Select-Object -Property "DisplayName"
+        Set-Alias -Name wunzip -Value Expand-Archive -PassThru | Select-Object -Property "DisplayName"
     }
     function which($cmdname) {
         Get-Command $cmdname -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Definition
@@ -45,10 +45,10 @@ if ($IsLinux){
     if( Test-Path alias:wget ){ Remove-Alias wget }
     if( Test-Path alias:echo ){ Remove-Alias echo }
     # set-alias
-    Set-Alias -name ls -value Get-ChildItem
-    Set-Alias -name cp -value Copy-Item
-    Set-Alias -name mv -value Move-Item
-    Set-Alias -name rm -value Remove-Item
-    Set-Alias -name cat -value Get-Content
-    Set-Alias -name sort -value Sort-Object
+    Set-Alias -Name ls -Value Get-ChildItem -PassThru | Select-Object -Property "DisplayName"
+    Set-Alias -Name cp -Value Copy-Item -PassThru | Select-Object -Property "DisplayName"
+    Set-Alias -Name mv -Value Move-Item -PassThru | Select-Object -Property "DisplayName"
+    Set-Alias -Name rm -Value Remove-Item -PassThru | Select-Object -Property "DisplayName"
+    Set-Alias -Name cat -Value Get-Content -PassThru | Select-Object -Property "DisplayName"
+    Set-Alias -Name sort -Value Sort-Object -PassThru | Select-Object -Property "DisplayName"
 }
