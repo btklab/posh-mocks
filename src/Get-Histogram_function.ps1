@@ -16,6 +16,7 @@
                 - Add -AllProperty (output) option
                 - Add -Key option
                 - Allow value from pipeline
+                - Restrict from division by zero
 
             Original software Licensed under the Apache License, Version 2.0
             https://www.apache.org/licenses/LICENSE-2.0.html
@@ -308,6 +309,7 @@ function Get-Histogram {
         ,
         [Parameter()]
         [ValidateNotNullOrEmpty()]
+        [ValidateScript({ $_ -ne 0 })]        
         [Alias('w')]
         [float] $BucketWidth = 1
         ,
@@ -324,11 +326,26 @@ function Get-Histogram {
         [ValidateNotNullOrEmpty()]
         [array] $InputObject
     )
+    # Test property
+    [bool] $isPropertyExists = $False
+    [String[]] $AllPropertyNames = ($input[0].PSObject.Properties).Name
+    foreach ( $PropertyName in $AllPropertyNames ) {
+        if ( $PropertyName -eq $Value ){
+            $isPropertyExists = $True
+        }
+    }
+    if ( -not $isPropertyExists ){
+        Write-Error "Property: $Value is not exists." -ErrorAction Stop
+    }
     Write-Verbose ('[{0}] Building histogram' -f $MyInvocation.MyCommand)
     Write-Debug ('[{0}] Retrieving measurements from upstream cmdlet for {1} values' -f $MyInvocation.MyCommand, $input.Count)
     Write-Progress -Activity 'Measuring data'
     $Stats = $input | Measure-Object -Minimum -Maximum -Property $Value
     [int] $inputCount = $Stats.Count
+    if ( $inputCount -eq 0 ){
+        # test input count
+        Write-Error "InputCount = 0 detected. Attempted to divide by zero." -ErrorAction Stop
+    }
     if (-Not $PSBoundParameters.ContainsKey('Minimum')) {
         $Minimum = $Stats.Minimum
         Write-Debug ('[{0}] Minimum value not specified. Using smallest value ({1}) from input data.' -f $MyInvocation.MyCommand, $Minimum)
