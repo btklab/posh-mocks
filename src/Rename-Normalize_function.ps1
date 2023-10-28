@@ -226,4 +226,4 @@ function Rename-Normalize {
         }
     }
 }
-Set-Alias -name ren2norm -value Rename-Normalize
+Set-Alias -name ren2norm -value Rename-Normalize -PassThru | Select-Object -Property "DisplayName"

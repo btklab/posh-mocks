@@ -473,5 +473,4 @@ function Join2-Object
         }
     }    
 }
-Set-Alias -Name join2o -Value Join2-Object
-
+Set-Alias -Name join2o -Value Join2-Object -PassThru | Select-Object -Property "DisplayName"

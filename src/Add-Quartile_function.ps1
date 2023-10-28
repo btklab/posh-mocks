@@ -319,4 +319,4 @@ function Add-Quartile
         }
     }
 }
-Set-Alias -Name aquart -Value Add-Quartile
+Set-Alias -Name aquart -Value Add-Quartile -PassThru | Select-Object -Property "DisplayName"

@@ -122,4 +122,4 @@ function GroupBy-Object
         }
     }
 }
-Set-Alias -Name groupBy -Value GroupBy-Object
+Set-Alias -Name groupBy -Value GroupBy-Object -PassThru | Select-Object -Property "DisplayName"

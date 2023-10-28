@@ -179,4 +179,4 @@ function Measure-Stats
             | Select-Object -ExcludeProperty $ExcludeProperties
     }
 }
-Set-Alias -Name mstats -Value Measure-Stats
+Set-Alias -Name mstats -Value Measure-Stats -PassThru | Select-Object -Property "DisplayName"

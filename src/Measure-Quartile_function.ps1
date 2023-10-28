@@ -297,8 +297,8 @@ function Measure-Quartile {
     foreach ( $v in $Value ){
         #region Percentiles require sorted data
         $Data = $input `
-            | Select-Object * `
-            | Sort-Object -Property { [double]($_.$v) }
+            | Select-Object -Property * `
+            | Sort-Object -Property { [double]($_.$v) } -Stable
         #endregion
 
         #region Grab basic measurements from upstream Measure-Object
@@ -523,4 +523,4 @@ function Measure-Quartile {
         #endregion
     }
 }
-Set-Alias -Name mquart -Value Measure-Quartile
+Set-Alias -Name mquart -Value Measure-Quartile -PassThru | Select-Object -Property "DisplayName"

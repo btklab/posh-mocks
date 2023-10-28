@@ -350,4 +350,4 @@ function Grep-Object {
     if ( $LeaveHeader ){ $input[0] }
     ($input | Select-String @splatting).Line ; return
 }
-Set-Alias -Name grep -Value Grep-Object
+Set-Alias -Name grep -Value Grep-Object -PassThru | Select-Object -Property "DisplayName"

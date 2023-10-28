@@ -49,6 +49,7 @@
             - Newly written with reference only to the concept
             - Changed Function name, Options, Script
             - Use hashtable instead of Add-Member
+            - Restrict from division by zero
 
         Original software Licensed under the Apache License, Version 2.0
         https://www.apache.org/licenses/LICENSE-2.0.html
@@ -421,6 +422,17 @@ function Plot-BarChart {
         [int] $lineWidth = $enc.GetByteCount($Line)
         return $lineWidth
     }
+    # Test property
+    [bool] $isPropertyExists = $False
+    [String[]] $AllPropertyNames = ($input[0].PSObject.Properties).Name
+    foreach ( $PropertyName in $AllPropertyNames ) {
+        if ( $PropertyName -eq $Value ){
+            $isPropertyExists = $True
+        }
+    }
+    if ( -not $isPropertyExists ){
+        Write-Error "Property: $Value is not exists." -ErrorAction Stop
+    }
     # Get console width
     [int] $ConsoleWidth = (Get-UIBufferSize).Width
     Write-Debug "Console width = $ConsoleWidth"
@@ -439,6 +451,10 @@ function Plot-BarChart {
         [decimal] $PropertyMaxValue = $MaxValue
     } else {
         [decimal] $PropertyMaxValue = $mObj.Maximum
+    }
+    # test MaxValue
+    if ( $PropertyMaxValue -eq 0 ){
+        Write-Error "The maximum value is zero. Attempted to divide by zero." -ErrorAction Stop
     }
     Write-Debug "Property Max = $PropertyMaxValue"
     if ( $PercentileFromBar ){

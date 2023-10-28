@@ -361,4 +361,4 @@ function Invoke-Link {
         }
     }
 }
-Set-Alias -name i -value Invoke-Link
+Set-Alias -name i -value Invoke-Link -PassThru | Select-Object -Property "DisplayName"

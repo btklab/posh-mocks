@@ -383,4 +383,4 @@ function Add-Stats
             | Select-Object -ExcludeProperty $ExcludeProperties
     }
 }
-Set-Alias -Name astat -Value Add-Stats
+Set-Alias -Name astat -Value Add-Stats -PassThru | Select-Object -Property "DisplayName"
