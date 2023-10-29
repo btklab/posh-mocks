@@ -3654,7 +3654,7 @@ s_l AcceptableLevel MaxLimit MaxFrequency WindowSize Res
 
 [ysort]: src/ysort_function.ps1
 
-水平方向の値ソート。任意のキーフィールドを無視して並び変えることもできる。
+水平方向の値ソート。任意のキーフィールドを無視して並び替えることもできる。
 
 ```powerhshell
 "key1 key2 2 4 7 1 3" | ysort -n 2
@@ -3926,10 +3926,10 @@ Example script to calculate basic statistics by category:
 ```powershell
 # Code example 1
 # Categorical analysis with this section's toolset
-Import-Csv iris.csv `
-    | sort species -Stable `
-    | Apply-Function species {
-        Measure-Stats sepal_length species -Sum -Average } `
+Import-Csv -Path iris.csv `
+    | Sort-Object -Propert "species" -Stable `
+    | Apply-Function -Key "species" {
+        Measure-Stats -Value "sepal_length" -Key "species" -Sum -Average } `
     | Format-Table
 
 species    Property        Sum Average
@@ -3944,16 +3944,16 @@ The anomaly detection procedure implemented in this section is as follows:
 ```powershell
 # Code example 2
 # Anomaly detection with this section's toolset
-Import-Csv penguins.csv `
-    | Drop-NA bill_length_mm `
+Import-Csv -Path penguins.csv `
+    | Drop-NA -Property "bill_length_mm" `
     | Shorten-PropertyName `
-    | sort species -Stable `
-    | Apply-Function species {
-        Detect-XrsAnomaly b_l_m -Detect } `
-    | Plot-BarChart b_l_m count,species,xrs,detect -w 20 -m "|" `
+    | Sort-Object -Property "species" -Stable `
+    | Apply-Function -Key "species" {
+        Detect-XrsAnomaly -Value "b_l_m" -Detect } `
+    | Plot-BarChart -Value "b_l_m" -Key "count", "species", "xrs", "detect" -Width 20 -Mark "|" `
     | Format-Table `
-    | oss `
-    | sls "deviated" -Context 3
+    | Out-String -Stream `
+    | Select-String -Pattern "deviated" -Context 3
 
 count species xrs detect   b_l_m BarChart
 ----- ------- --- ------   ----- --------
