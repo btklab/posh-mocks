@@ -27,6 +27,7 @@
     Options
         -SkipHeader: skip first record
         -Cast <datatype>: any data type can be specified.
+        -Ordinal: ordinal sort
 
 .PARAMETER Delimiter
     Input/Output field separator.
@@ -147,6 +148,14 @@
     "ABC321" | ysort -n 3 -fs ""
     ABC123
 
+.EXAMPLE
+    # ordinal sort
+
+    "abc1 Abc2 abc3 Abc4" | ysort
+    abc1 Abc2 abc3 Abc4
+
+    "abc1 Abc2 abc3 Abc4" | ysort -Ordinal
+    Abc2 Abc4 abc1 abc3
 
 .LINK
     ysort, ycalc
@@ -182,6 +191,9 @@ function ysort {
         
         [Parameter( Mandatory=$False )]
         [switch] $SkipHeader,
+        
+        [Parameter( Mandatory=$False )]
+        [switch] $Ordinal,
         
         [Parameter( Mandatory=$False )]
         [Alias('fs')]
@@ -256,6 +268,17 @@ function ysort {
                     break
                 }
             }
+        }
+        function sortByStringOrdinal ( [string[]] $splitReadLine ){
+            [string] $sortedVals = @($splitReadLine `
+                | Sort-Object {
+                    -join ( [int[]] $_.ToCharArray()).ForEach('ToString', 'x4')
+                } `
+                -Descending:$Descending `
+                -CaseSensitive:$CaseSensitive `
+                -Unique:$Unique `
+                ) -join $oDelim
+            return $sortedVals
         }
         function sortByString ( [string[]] $splitReadLine ){
             [string] $sortedVals = @($splitReadLine `
@@ -365,7 +388,11 @@ function ysort {
                     [string] $sortedVals = sortByDecimal $splitReadLine; break
                 }
                 "string" {
-                    [string] $sortedVals = sortByString $splitReadLine; break
+                    if ( $Ordinal ){
+                        [string] $sortedVals = sortByStringOrdinal $splitReadLine; break
+                    } else {
+                        [string] $sortedVals = sortByString $splitReadLine; break
+                    }
                 }
                 default {
                     Write-Error "Parse error value field: $($splitReadLine[0])" -ErrorAction Stop
@@ -388,7 +415,11 @@ function ysort {
                 }
                 "string" {
                     Write-Debug 'val type: string'
-                    [string] $sortedVals = sortByString $splitReadLine; break
+                    if ( $Ordinal ){
+                        [string] $sortedVals = sortByStringOrdinal $splitReadLine; break
+                    } else {
+                        [string] $sortedVals = sortByString $splitReadLine; break
+                    }
                 }
                 default {
                     Write-Error "Parse error value field: $($splitReadLine[0])" -ErrorAction Stop

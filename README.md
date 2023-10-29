@@ -3682,6 +3682,7 @@ Roughly equivalent to the script below:
 - Options
     - `-SkipHeader`: skip first record
     - `-Cast <datatype>`: any data type can be specified.
+    - `-Ordinal`: ordinal sort
 - Notes
     - Auto detect types:
         - double   `[System.Double]`
@@ -3815,6 +3816,17 @@ Miscellaneous
 ABC123
 ```
 
+Ordinal sort
+
+```powershell
+# ordinal sort
+
+"abc1 Abc2 abc3 Abc4" | ysort
+abc1 Abc2 abc3 Abc4
+
+"abc1 Abc2 abc3 Abc4" | ysort -Ordinal
+Abc2 Abc4 abc1 abc3
+```
 
 #### [ycalc] - Calculates the numeric properties horizontally ignoring key fields
 
