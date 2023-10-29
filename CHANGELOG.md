@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rewrite [head], [tail] code
 - Output Aliases when dot-sourcing function files
 - Restricted [Get-Histogram], [Plot-BarChart] from division by zero
+- Added [ysort] `-Ordinal` option
 
 ## [6.4.0] - 2023-10-16
 
