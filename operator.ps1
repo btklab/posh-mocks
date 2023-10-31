@@ -178,6 +178,8 @@ if ( $IsWindows ){
 . $pwshSrcDir/Measure-Quartile_function.ps1
 . $pwshSrcDir/Add-Quartile_function.ps1
 . $pwshSrcDir/Detect-XrsAnomaly_function.ps1
+. $pwshSrcDir/Measure-Summary_function.ps1
+. $pwshSrcDir/Transpose-Property_function.ps1
 
 . $pwshSrcDir/Get-Histogram_function.ps1
 . $pwshSrcDir/Plot-BarChart_function.ps1
@@ -186,6 +188,7 @@ if ( $IsWindows ){
 . $pwshSrcDir/Get-Last_function.ps1
 . $pwshSrcDir/Select-Field_function.ps1
 . $pwshSrcDir/Delete-Field_function.ps1
+. $pwshSrcDir/Unique-Object_function.ps1
 
 . $pwshSrcDir/Replace-ForEach_function.ps1
 

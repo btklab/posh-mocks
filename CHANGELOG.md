@@ -8,12 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [6.5.0] - 2023-10-31
+
 - Updated [README.md]
 - Added [grep] `-l|-LeaveHeader` option
 - Rewrite [head], [tail] code
 - Output Aliases when dot-sourcing function files
 - Restricted [Get-Histogram], [Plot-BarChart] from division by zero
 - Added [ysort] `-Ordinal` option
+- Added [Unique-Object] function
+- Added [Measure-Summary] function
+- Added [Transpose-Property] function
 
 ## [6.4.0] - 2023-10-16
 
@@ -534,7 +541,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [lcalc2]: src/lcalc2_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.4.0..HEAD
+[Unique-Object]: src/Unique-Object_function.ps1
+[Measure-Summary]: src/Measure-Summary_function.ps1
+[Transpose-Property]: src/Transpose-Property_function.ps1
+
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.5.0..HEAD
+[6.5.0]: https://github.com/btklab/posh-mocks/releases/tag/6.5.0
 [6.4.0]: https://github.com/btklab/posh-mocks/releases/tag/6.4.0
 [6.3.0]: https://github.com/btklab/posh-mocks/releases/tag/6.3.0
 [6.2.1]: https://github.com/btklab/posh-mocks/releases/tag/6.2.1
