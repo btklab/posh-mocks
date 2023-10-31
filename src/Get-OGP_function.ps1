@@ -156,7 +156,7 @@
 
     Description
     ============
-    -Cardで、Card形式
+    Card format
 
 .EXAMPLE
     Get-OGP "https://www.maff.go.jp/j/shokusan/sdgs/" -ImagePathOverwrite '/img/2022/' -Card

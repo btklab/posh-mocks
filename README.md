@@ -24,11 +24,11 @@ cat README.md `
     | sort {
         -join ( [int[]] $_.ToCharArray()).ForEach('ToString', 'x4')
     } -Unique `
-    | Format-Listat -ofs ", " `
+    | flat -ofs ", " `
     | Set-Clipboard
 ```
 
-- [Add-LineBreakEndOfFile], [Add-LineBreak], [Add-Quartile], [Add-Stats], [Apply-Function], [ConvImage], [Delete-Field], [Detect-XrsAnomaly], [Drop-NA], [Get-AppShortcut], [Get-Histogram], [Get-OGP], [GroupBy-Object], [Invoke-Link], [Join2-Object], [Measure-Quartile], [Measure-Stats], [Override-Yaml], [Plot-BarChart], [Rename-Normalize], [Replace-ForEach], [Replace-NA], [Select-Field], [Shorten-PropertyName], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [getfirst], [getlast], [grep], [gyo], [han], [head], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [lcalc2], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [map2], [mdfocus], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [retu], [rev2], [rev], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-LineBreakEndOfFile], [Add-LineBreak], [Add-Quartile], [Add-Stats], [Apply-Function], [ConvImage], [Delete-Field], [Detect-XrsAnomaly], [Drop-NA], [Get-AppShortcut], [Get-Histogram], [Get-OGP], [GroupBy-Object], [Invoke-Link], [Join2-Object], [Measure-Quartile], [Measure-Stats], [Measure-Summary], [Override-Yaml], [Plot-BarChart], [Rename-Normalize], [Replace-ForEach], [Replace-NA], [Select-Field], [Shorten-PropertyName], [Transpose-Property], [Unique-Object], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [getfirst], [getlast], [grep], [gyo], [han], [head], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc2], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [map2], [mdfocus], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [retu], [rev2], [rev], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 Inspired by:
 
@@ -252,7 +252,7 @@ ls src/*.ps1 -File -Name `
         -join ( [int[]] $_.ToCharArray()).ForEach('ToString', 'x4')
     } `
     | %{ $_.Replace('_function.ps1','') } `
-    | Format-Listat 30 `
+    | flat 30 `
     | tateyoko `
     | keta -l
 
@@ -3654,7 +3654,7 @@ s_l AcceptableLevel MaxLimit MaxFrequency WindowSize Res
 
 [ysort]: src/ysort_function.ps1
 
-水平方向の値ソート。任意のキーフィールドを無視して並び変えることもできる。
+水平方向の値ソート。任意のキーフィールドを無視して並び替えることもできる。
 
 ```powerhshell
 "key1 key2 2 4 7 1 3" | ysort -n 2
@@ -3926,10 +3926,10 @@ Example script to calculate basic statistics by category:
 ```powershell
 # Code example 1
 # Categorical analysis with this section's toolset
-Import-Csv iris.csv `
-    | sort species -Stable `
-    | Apply-Function species {
-        Measure-Stats sepal_length species -Sum -Average } `
+Import-Csv -Path iris.csv `
+    | Sort-Object -Propert "species" -Stable `
+    | Apply-Function -Key "species" {
+        Measure-Stats -Value "sepal_length" -Key "species" -Sum -Average } `
     | Format-Table
 
 species    Property        Sum Average
@@ -3944,16 +3944,16 @@ The anomaly detection procedure implemented in this section is as follows:
 ```powershell
 # Code example 2
 # Anomaly detection with this section's toolset
-Import-Csv penguins.csv `
-    | Drop-NA bill_length_mm `
+Import-Csv -Path penguins.csv `
+    | Drop-NA -Property "bill_length_mm" `
     | Shorten-PropertyName `
-    | sort species -Stable `
-    | Apply-Function species {
-        Detect-XrsAnomaly b_l_m -Detect } `
-    | Plot-BarChart b_l_m count,species,xrs,detect -w 20 -m "|" `
+    | Sort-Object -Property "species" -Stable `
+    | Apply-Function -Key "species" {
+        Detect-XrsAnomaly -Value "b_l_m" -Detect } `
+    | Plot-BarChart -Value "b_l_m" -Key "count", "species", "xrs", "detect" -Width 20 -Mark "|" `
     | Format-Table `
-    | oss `
-    | sls "deviated" -Context 3
+    | Out-String -Stream `
+    | Select-String -Pattern "deviated" -Context 3
 
 count species xrs detect   b_l_m BarChart
 ----- ------- --- ------   ----- --------
@@ -3997,11 +3997,15 @@ Procedure:
     - `Replace-NA`
 1. **Sort** data stably by category with:
     - `Sort-Object <property> -Stable`
+1. **Arrange** data
+    - `Unique-Object`
+    - `Transpose-Property`
 1. **GroupBy** category and add to each record with:
     - `Apply-Function`
     - `GroupBy-Object`
 1. **Calculate** and add basic statistics and add to each record with:
     - `Measure-Object` (built-in Cmdlet)
+    - `Measure-Summary`
     - `Add-Stats`
     - `Add-Quartile`
     - `Measure-Stats`
@@ -4646,6 +4650,228 @@ Max      : 6.9
 Outlier  : 0
 ```
 
+#### [Measure-Summary] (Alias: msummary) - Calculate summary
+
+[Measure-Summary]: src/Measure-Summary_function.ps1
+
+Pre `Sort-Object -Stable` is no needed.
+
+- Usage
+    - `man2 Measure-Summary`
+- Syntax
+    - `Measure-Summary`
+        - `[[-Property] <String[]>]`
+        - `[[-Key] <String[]>]`
+        - `[[-OutlierMultiple] <Double>]`
+        - `[-Detail]`
+        - `[-ExcludeOutlier]`
+
+Example:
+
+```powershell
+Import-Csv -Path iris.csv `
+    | Shorten-PropertyName `
+    | Measure-Summary -Property "s_w"
+```
+
+```
+Property : s_w
+Count    : 150
+Sum      : 458.6
+Mean     : 3.05733333333333
+SD       : 0.435866284936699
+Min      : 2
+Qt25     : 2.8
+Median   : 3
+Qt75     : 3.4
+Max      : 4.4
+Outlier  : 1
+```
+
+```powershell
+Import-Csv -Path iris.csv `
+    | Shorten-PropertyName `
+    | Measure-Summary -Property "s_w" -Detail
+```
+
+```
+Property     : s_w
+Count        : 150
+Sum          : 458.6
+Mean         : 3.05733333333333
+SD           : 0.435866284936699
+Min          : 2
+Qt25         : 2.8
+Median       : 3
+Qt75         : 3.4
+Max          : 4.4
+IQR          : 0.6
+HiIQR        : 4.3
+LoIQR        : 1.9
+TukeysRange  : 0.9
+Confidence95 : 0
+Outlier      : 1
+OutlierHi    : 1
+OutlierLo    : 0
+```
+
+```powershell
+# Detect outliers
+Import-Csv -Path iris.csv `
+    | Shorten-PropertyName `
+    | Measure-Summary -Property "s_w", "p_l" `
+    | Format-List
+```
+
+```
+Property : s_w
+Count    : 150
+Sum      : 458.6
+Mean     : 3.05733333333333
+SD       : 0.435866284936699
+Min      : 2
+Qt25     : 2.8
+Median   : 3
+Qt75     : 3.4
+Max      : 4.4
+Outlier  : 1
+
+Property : p_l
+Count    : 150
+Sum      : 563.7
+Mean     : 3.758
+SD       : 1.76529823325947
+Min      : 1
+Qt25     : 1.6
+Median   : 4.35
+Qt75     : 5.1
+Max      : 6.9
+Outlier  : 0
+```
+
+```powershell
+# Summary with Format-Table
+Import-Csv -Path iris.csv `
+    | Shorten-PropertyName `
+    | Measure-Summary -Property "s_w", "p_l" `
+    | Format-Table
+```
+
+```markdown
+Property Count    Sum Mean   SD  Min Qt25 Median Qt75  Max
+-------- -----    --- ----   --  --- ---- ------ ----  ---
+s_w        150 458.60 3.06 0.44 2.00 2.80   3.00 3.40 4.40
+p_l        150 563.70 3.76 1.77 1.00 1.60   4.35 5.10 6.90
+```
+
+```powershell
+# With Transpose-Property function
+Import-Csv -Path iris.csv `
+    | Shorten-PropertyName `
+    | Measure-Summary -Property "s_w", "p_l" `
+    | Transpose-Property -Property "Property" `
+    | Format-Table
+```
+
+```markdown
+Property    s_w    p_l
+--------    ---    ---
+Count       150    150
+Sum      458.60 563.70
+Mean       3.06   3.76
+SD         0.44   1.77
+Min        2.00   1.00
+Qt25       2.80   1.60
+Median     3.00   4.35
+Qt75       3.40   5.10
+Max        4.40   6.90
+Outlier       1      0
+```
+
+#### [Transpose-Property] - Transpose Property name and value
+
+[Transpose-Property]: src/Transpose-Property_function.ps1
+
+- Usage
+    - `man2 Transpose-Property`
+- Syntax
+    - `Transpose-Property`
+        - `[[-Property] <String>]`
+
+Example:
+
+```powershell
+# input
+Import-Excel -Path iris.xlsx `
+    | Measure-Object "sepal_length", "petal_length" -AllStats `
+    | Format-Table -AutoSize
+```
+
+```markdown
+Count Average    Sum Maximum Minimum StandardDeviation Property
+----- -------    --- ------- ------- ----------------- --------
+    150    5.84 876.50    7.90    4.30              0.83 sepal_length
+    150    3.76 563.70    6.90    1.00              1.77 petal_length
+```
+
+```powershell
+# Transpose object
+Import-Excel -Path iris.xlsx `
+    | Measure-Object "sepal_length", "petal_length" -AllStats `
+    | Transpose-Property -Property "Property" `
+    | Format-Table -AutoSize
+```
+
+```markdown
+Property          sepal_length petal_length
+--------          ------------ ------------
+Count                      150          150
+Average                   5.84         3.76
+Sum                     876.50       563.70
+Maximum                   7.90         6.90
+Minimum                   4.30         1.00
+StandardDeviation         0.83         1.77
+```
+
+```powershell
+# input
+Import-Csv -Path planets.csv `
+    | Measure-Summary `
+    | Format-Table -AutoSize
+```
+
+```markdown
+Property       Count        Sum    Mean       SD     Min    Qt25 Median    Qt75       Max
+--------       -----        ---    ----       --     ---    ---- ------    ----       ---
+number          1035    1848.00    1.79     1.24    1.00    1.00 1         2.00      7.00
+orbital_period   992 1986894.26 2002.92 26014.73    0.09    5.45 39.98   526.62 730000.00
+mass             513    1353.38    2.64     3.82    0.00    0.23 1.26      3.06     25.00
+distance         808  213367.98  264.07   733.12    1.35   32.56 55.25   180.00   8500.00
+year            1035 2079388.00 2009.07     3.97 1989.00 2007.00 2010   2012.00   2014.00
+```
+
+```powershell
+# Transpose object
+Import-Csv -Path planets.csv `
+    | Measure-Summary `
+    | Transpose-Property -Property "Property" `
+    | Format-Table -AutoSize
+```
+
+```markdown
+Property  number orbital_period    mass  distance       year
+--------  ------ --------------    ----  --------       ----
+Count       1035            992     513       808       1035
+Sum      1848.00     1986894.26 1353.38 213367.98 2079388.00
+Mean        1.79        2002.92    2.64    264.07    2009.07
+SD          1.24       26014.73    3.82    733.12       3.97
+Min         1.00           0.09    0.00      1.35    1989.00
+Qt25        1.00           5.45    0.23     32.56    2007.00
+Median         1          39.98    1.26     55.25       2010
+Qt75        2.00         526.62    3.06    180.00    2012.00
+Max         7.00      730000.00   25.00   8500.00    2014.00
+Outlier       93            126      52       106         32
+```
 
 #### [Detect-XrsAnomaly] - Detect anomaly values with X-Rs control
 
@@ -4965,6 +5191,96 @@ virginica      3       5.40       6.10     0
 virginica      4       6.10       6.80    36 ||||||||||||||||||||
 virginica      5       6.80       7.50    10 |||||
 virginica      6       7.50       8.20     0
+```
+
+#### [Unique-Object] - Get unique category
+
+[Unique-Object]: src/Unique-Object_function.ps1
+
+Pre-Sorted property needed.
+
+- Usage
+    - `man2 Unique-Object`
+- Syntax
+    - `Unique-Object [-Property] <String[]> [-Count]`
+
+
+Example:
+
+```powershell
+# input
+"str","a","b","c","d","d","e","f","a"  `
+    | ConvertFrom-Csv
+```
+
+```markdown
+str
+---
+a
+b
+c
+d
+d
+e
+f
+a
+```
+
+```powershell
+# uniq
+"str","a","b","c","d","d","e","f","a" `
+    | ConvertFrom-Csv `
+    | Sort-Object -Property "str" -Stable `
+    | Unique-Object -Property "str"
+```
+
+```markdown
+str
+---
+a
+b
+c
+d
+e
+f
+```
+
+```powershell
+# uniq -Count option
+"str","a","b","c","d","d","e","f","a" `
+    | ConvertFrom-Csv `
+    | Sort-Object -Property "str" -Stable `
+    | Unique-Object -Property "str" -Count
+```
+
+```markdown
+str Count
+--- -----
+a       2
+b       1
+c       1
+d       2
+e       1
+f       1
+```
+
+```powershell
+# Oops! forgot to pre-sort property
+"str","a","b","c","d","d","e","f","a" `
+    | ConvertFrom-Csv `
+    | Unique-Object -Property "str" -Count
+```
+
+```markdown
+str Count
+--- -----
+a       1
+b       1
+c       1
+d       2
+e       1
+f       1
+a       1 <--- Undesired result
 ```
 
 #### [Replace-ForEach] - Replace specified property string
@@ -10430,6 +10746,16 @@ Windows OS           Magnifying glass          Win +
         - A copy of the Apache license 2.0 is written in the script file
 
 ### [Measure-Quartile]
+
+- Original code:
+    - GitHub - nicholasdille/PowerShell-Statistics/Measure-Object.ps1
+        - <https://github.com/nicholasdille/PowerShell-Statistics>
+- License:
+    - Apache License 2.0 (c) 2017 Nicholas Dille
+        - <http://www.apache.org/licenses/LICENSE-2.0>
+        - A copy of the Apache license 2.0 is written in the script file
+
+### [Measure-Summary]
 
 - Original code:
     - GitHub - nicholasdille/PowerShell-Statistics/Measure-Object.ps1
