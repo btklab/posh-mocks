@@ -252,7 +252,7 @@ ls src/*.ps1 -File -Name `
         -join ( [int[]] $_.ToCharArray()).ForEach('ToString', 'x4')
     } `
     | %{ $_.Replace('_function.ps1','') } `
-    | Format-Listat 30 `
+    | flat 30 `
     | tateyoko `
     | keta -l
 
