@@ -167,7 +167,9 @@ The reason for depending on [flat], [tateyoko] and [keta] is to obtain this outp
 ```powershell
 man2 -Column 4
 man2 -c 4
+```
 
+```
 Add-LineBreakEndOfFile clip2file      head        say
 Add-LineBreak          clip2hyperlink image2md    sed-i
 Add-Stats              clip2img       jl          sed
@@ -211,7 +213,9 @@ ls src/*_function.ps1 -File `
     } `
     | select @{L="Name";E={$_.Name.Replace('_function.ps1','')}} `
     | Format-Wide -Column 4
+```
 
+```
 Add-LineBreakEndOfFi… Add-LineBreak        Add-Stats            Apply-Function
 ConvImage             Delete-Field         Detect-XrsAnomaly    Drop-NA
 Get-AppShortcut       Get-First            Get-Histogram        Get-Last
@@ -255,7 +259,9 @@ ls src/*.ps1 -File -Name `
     | flat 30 `
     | tateyoko `
     | keta -l
+```
 
+```
 Add-LineBreakEndOfFile clip2hyperlink jl          self
 Add-LineBreak          clip2img       json2txt    seq2pu
 Add-Stats              clip2normalize juni        sleepy
@@ -317,13 +323,23 @@ Examples:
 ```powershell
 # g flag - replace all strings matching a pattern
 'a1b1c1' | sed 's;1;2;g'
-a2b2c2
+```
 
+```
+a2b2c2
+```
+
+```powershell
 # replace only first match 
 # (Note that this mode is case sensitive)
 'a1b1c1' | sed 's;1;2;'
-a2b1c1
+```
 
+```
+a2b1c1
+```
+
+```powershell
 # delete tab (use double quote)
 cat a.txt | sed "s;`t;;g"
 
@@ -336,14 +352,23 @@ cat a.txt | sed "s;`t;;g"
 
 # input data
 $dat = "aaa", "bbb", "ccc", "ddd", "eee"
+$dat
+```
+
+```
 aaa
 bbb
 ccc
 ddd
 eee
+```
 
+```powershell
 # Output between "bbb" and "ddd"
 $dat | sed 'p;^bbb;^ddd;'
+```
+
+```
 bbb
 ccc
 ddd
@@ -354,14 +379,23 @@ ddd
 
 # input data
 $dat = "aaa", "bbb", "ccc", "ddd", "eee"
+$dat
+```
+
+```
 aaa
 bbb
 ccc
 ddd
 eee
+```
 
+```powershell
 # Delete between "bbb" and "ddd"
 $dat | sed 'd;^bbb;^ddd;'
+```
+
+```
 aaa
 eee
 ```
@@ -391,20 +425,31 @@ Linuxでいう`sed -i`（の劣化コピー）。ただし誤爆防止のため`
 Examples:
 
 ```powershell
-PS > "abcde" > a.txt; sed-i 's;abc;def;g' a.txt
+"abcde" > a.txt; sed-i 's;abc;def;g' a.txt
+```
+
+```
 ifile: ./a.txt
 ofile: ./a.txt.bak
 defde
 ```
 
 ```powershell
-PS > ls *.txt
+ls *.txt
+```
+
+```markdown
 Mode                 LastWriteTime         Length Name
 ----                 -------------         ------ ----
 -a---          2022/09/29    21:41              7 a.txt
 -a---          2022/09/29    21:41              7 b.txt
+```
 
-PS > ls *.txt | %{ sed-i 's;abc;def;g' $_.FullName }
+```powershell
+ls *.txt | %{ sed-i 's;abc;def;g' $_.FullName }
+```
+
+```
 ifile: a.txt
 ofile: a.txt.bak
 defde
@@ -412,12 +457,20 @@ defde
 
 ```powershell
 # Replace and overwrite original file and create backup
-PS > ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute }
+ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute }
+```
+
+```
 ./a.txt > ./a.txt.bak
 ./b.txt > ./b.txt.bak
+```
 
+```powershell
 # Replace and overwrite original file and *do not* create backup
-PS > ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute -DoNotCreateBackup }
+ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute -DoNotCreateBackup }
+```
+
+```
 ./a.txt > ./a.txt
 ./b.txt > ./b.txt
 ```
@@ -460,7 +513,9 @@ Linux環境で使う`grep`のような使用感で文字列を検索するが、
 ```powershell
 # Select-String (fast)
 1..10 | %{ Measure-Command{ 1..100000 | sls 99999 }} | ft
+```
 
+```markdown
 Days Hours Minutes Seconds Milliseconds
 ---- ----- ------- ------- ------------
 0    0     0       0       437
@@ -478,7 +533,9 @@ Days Hours Minutes Seconds Milliseconds
 ```powershell
 # grep (slow)
 1..10 | %{ Measure-Command{ 1..100000 | grep 99999 }} | ft
+```
 
+```markdown
 Days Hours Minutes Seconds Milliseconds
 ---- ----- ------- ------- ------------
 0    0     0       1       84
@@ -513,29 +570,33 @@ Examples
 
 ```powershell
 # Find a case-sensitive match (grep 'regex' -CaseSensitive)
-
 'Hello', 'HELLO' | grep 'HELLO' -CaseSensitive -SimpleMatch
+```
 
+```
 HELLO
 ```
 
 ```powershell
 # Find a pattern match (grep 'regex')
-
 grep '\?' -H "$PSHOME\en-US\*.txt"
-    https://go.microsoft.com/fwlink/?LinkID=108518.
-    or go to: https://go.microsoft.com/fwlink/?LinkID=210614
-    or go to: https://go.microsoft.com/fwlink/?LinkID=113316
-      Get-Process -?         : Displays help about the Get-Process cmdlet.
+```
+
+```
+https://go.microsoft.com/fwlink/?LinkID=108518.
+or go to: https://go.microsoft.com/fwlink/?LinkID=210614
+or go to: https://go.microsoft.com/fwlink/?LinkID=113316
+    Get-Process -?         : Displays help about the Get-Process cmdlet.
 ```
 
 ```powershell
 # Find matches in text files (grep 'regex' -H file,file,...)
-
 Get-Alias   | Out-File -FilePath .\Alias.txt   -Encoding UTF8
 Get-Command | Out-File -FilePath .\Command.txt -Encoding UTF8
 grep 'Get\-' -H .\*.txt | Select-Object -First 5
+```
 
+```
 Alias.txt:7:Alias       cal2 -> Get-OLCalendar
 Alias.txt:8:Alias       cat  -> Get-Content
 Alias.txt:28:Alias      dir  -> Get-ChildItem
@@ -545,14 +606,21 @@ Alias.txt:46:Alias      gbp  -> Get-PSBreakpoint
 
 ```powershell
 # Skip blank lines (grep ".")
+"aaa","","bbb","ccc"
+```
 
-PS> "aaa","","bbb","ccc"
+```
 aaa
 
 bbb
 ccc
+```
 
-PS> "aaa","","bbb","ccc" | grep .
+```powershell
+"aaa","","bbb","ccc" | grep .
+```
+
+```
 aaa
 bbb
 ccc
@@ -561,14 +629,20 @@ ccc
 ```powershell
 # Find a string in subdirectories (grep 'regex' -H file,file,... [-r|Recurse])
 grep 'tab' -H '*.md' -r [-FileNameOnly|-FileNameAndLineNumber]
+```
 
+```markdown
 Table: caption
 {.table2col}
 | table |
+```
 
+```powershell
 # The following commands are also approximately equivalent
 ls *.md -Recurse | grep "table"
+```
 
+```
 table2col.md:10:Table: caption
 table2col.md:12:{.table2col}
 table2col.md:66:| table |
@@ -576,10 +650,11 @@ table2col.md:66:| table |
 
 ```powershell
 # Find strings that do not match a pattern (grep 'regex' [-v|-NotMatch])
-
 Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
 cat .\Command.txt | grep "Get\-", "Set\-" -NotMatch | Select-Object -Last 5
+```
 
+```
 Cmdlet Write-Output   7.0.0.0  Microsoft.PowerShell.Utility
 Cmdlet Write-Progress 7.0.0.0  Microsoft.PowerShell.Utility
 Cmdlet Write-Verbose  7.0.0.0  Microsoft.PowerShell.Utility
@@ -588,7 +663,10 @@ Cmdlet Write-Warning  7.0.0.0  Microsoft.PowerShell.Utility
 
 ```powershell
 # Use double quotes when searching for tab characters (grep "`t")
- "1,2,3", "4,5,6", "7,8,9", "" | %{ $_ -replace ',', "`t" } | grep "`t[28]"
+"1,2,3", "4,5,6", "7,8,9", "" | %{ $_ -replace ',', "`t" } | grep "`t[28]"
+```
+ 
+```
 1       2       3
 7       8       9
 ```
@@ -597,7 +675,9 @@ Cmdlet Write-Warning  7.0.0.0  Microsoft.PowerShell.Utility
 # Find lines before and after a match (grep "regex" -C <int>,<int> )
 Get-Command | Out-File -FilePath .\Command.txt -Encoding utf8
 cat .\Command.txt | grep 'Get\-Computer' -C 2, 3
+```
 
+```
   Cmdlet   Get-Command        7.3.1.500  Microsoft.PowerShell.Core
   Cmdlet   Get-ComputeProcess 1.0.0.0    HostComputeService
 > Cmdlet   Get-ComputerInfo   7.0.0.0    Microsoft.PowerShell.Management
@@ -609,25 +689,33 @@ cat .\Command.txt | grep 'Get\-Computer' -C 2, 3
 ```powershell
 # Tips: use Out-String -Stream (alias:oss) to greppable
 cat .\Command.txt | grep 'Get\-Computer' -C 2, 3 | oss | grep '>'
+```
 
+```
 > Cmdlet   Get-ComputerInfo   7.0.0.0    Microsoft.PowerShell.Management
 ```
 
 ```powershell
 # Find all pattern matches (grep 'regex' -o)
-
 cat "$PSHOME\en-US\*.txt" | grep "PowerShell"
+```
 
-    PowerShell Help System
-    Displays help about PowerShell cmdlets and concepts.
-    PowerShell Help describes PowerShell cmdlets, functions, scripts, and
-    modules, and explains concepts, including the elements of the PowerShell
-    PowerShell does not include help files, but you can read the help topics
-    You can find help for PowerShell online at
-       1. Start PowerShell with the "Run as administrator" option.
-      Get-Help About_Modules : Displays help about PowerShell modules.
+```
+PowerShell Help System
+Displays help about PowerShell cmdlets and concepts.
+PowerShell Help describes PowerShell cmdlets, functions, scripts, and
+modules, and explains concepts, including the elements of the PowerShell
+PowerShell does not include help files, but you can read the help topics
+You can find help for PowerShell online at
+    1. Start PowerShell with the "Run as administrator" option.
+    Get-Help About_Modules : Displays help about PowerShell modules.
+```
 
+```powershell
 cat "$PSHOME\en-US\*.txt" | grep "PowerShell" -o
+```
+
+```
 PowerShell
 PowerShell
 PowerShell
@@ -646,7 +734,9 @@ PowerShell
 # パイプラインをつなげているときに
 # カッコ()を追加するのは手戻りがあって面倒
 (cat "$PSHOME\en-US\*.txt" | sls "PowerShell" -AllMatches).Matches.Value
+```
 
+```
 PowerShell
 …(以下略)
 ```
@@ -665,52 +755,68 @@ cat "$PSHOME\en-US\*.txt" `
     | sls "PowerShell" -AllMatches `
     | select -ExpandProperty Matches `
     | select -ExpandProperty Value
+```
 
+```
 PowerShell
 …(以下略)
 ```
 
 ```powershell
 # Convert pipeline objects to strings using Out-String -Stream
-
 $hash = @{
     Name     = 'foo'
     Category = 'bar'
 }
+```
 
+```powershell
 # !! NO output, due to .ToString() conversion
 $hash | grep 'foo'
+```
 
+```powershell
 # Out-String converts the output to a single multi-line string object
 $hash | Out-String | grep 'foo'
+```
 
+```markdown
 Name           Value
 ----           -----
 Name           foo
 Category       bar
+```
 
+```powershell
 # Out-String -Stream converts the output to a multiple single-line string objects
 $hash | Out-String -Stream | grep 'foo'
+```
 
+```markdown
 Name           foo
 ```
 
 ```powershell
 # Leave header line
-
 grep 'virginica' iris.csv -LeaveHeader `
     | head -n 5
+```
 
+```
 sepal_length,sepal_width,petal_length,petal_width,species
 6.3,3.3,6.0,2.5,virginica
 5.8,2.7,5.1,1.9,virginica
 7.1,3.0,5.9,2.1,virginica
 6.3,2.9,5.6,1.8,virginica
+```
 
+```powershell
 cat iris.csv `
     | grep 'virginica' -LeaveHeader `
     | head -n 5
+```
 
+```
 sepal_length,sepal_width,petal_length,petal_width,species
 6.3,3.3,6.0,2.5,virginica
 5.8,2.7,5.1,1.9,virginica
@@ -759,11 +865,13 @@ Example:
 1..100 | %{ (Get-Date).ToString('yyyy-MM-dd HH:mm:ss') >> a.txt; sleep 1 }
 ("another process")
 tail-f a.txt
+```
 
-    2023-04-07 05:33:29
-    2023-04-07 05:33:30
-    2023-04-07 05:33:31
-    ...
+```
+2023-04-07 05:33:29
+2023-04-07 05:33:30
+2023-04-07 05:33:31
+...
 ```
 
 
@@ -794,14 +902,21 @@ Examples:
 
 ```powershell
 # read from stdin
-
 1..5 | chead
+```
+
+```
 2
 3
 4
 5
+```
 
+```powershell
 1..5 | chead -n 2
+```
+
+```
 3
 4
 5
@@ -809,14 +924,21 @@ Examples:
 
 ```powershell
 # read from file
-
 1..5 > a.txt; chead a.txt
+```
+
+```
 2
 3
 4
 5
+```
 
+```powershell
 1..5 > a.txt; chead -n 2 a.txt
+```
+
+```
 3
 4
 5
@@ -826,14 +948,21 @@ Examples:
 
 ```powershell
 # read from stdin
-
 1..5 | ctail
+```
+
+```
 1
 2
 3
 4
+```
 
+```powershell
 1..5 | ctail -n 2
+```
+
+```
 1
 2
 3
@@ -841,13 +970,17 @@ Examples:
 
 ```powershell
 # read from file
-
 1..5 > a.txt; ctail a.txt
+```
+
+```
 1
 2
 3
 4
+```
 
+```powershell
 1..5 > a.txt; ctail -n 2 a.txt
 1
 2
@@ -903,6 +1036,9 @@ Examples:
 
 ```powoershell
 1..5 | tac
+```
+
+```
 5
 4
 3
@@ -927,6 +1063,9 @@ Examples:
 
 ```powershell
 "aiueo" | rev
+```
+
+```
 oeuia
 ```
 
@@ -949,12 +1088,18 @@ oeuia
 Examples:
 
 ```powershell
-.EXAMPLE
 Write-Output "01 02 03" | rev2
-03 02 01
+```
 
-.EXAMPLE
+```
+03 02 01
+```
+
+```powershell
 Write-Output "01 02 03" | rev2 -e
+```
+
+```
 01 02 03
 03 02 01
 ```
@@ -981,11 +1126,19 @@ Examples:
 
 ```powershell
 "1 2 3","4 5 6","7 8 9"
+```
+
+```
 1 2 3
 4 5 6
 7 8 9
+```
 
+```powershell
 "1 2 3","4 5 6","7 8 9" | tateyoko
+```
+
+```
 1 4 7
 2 5 8
 3 6 9
@@ -1007,29 +1160,47 @@ Examples:
 Input:
 
 ```powershell
-PS > cat dat.txt
-2018 3
-2018 3
-2018 3
-2017 1
-2017 1
-2017 1
-2017 1
-2017 1
-2022 5
-2022 5
+cat dat.txt
+```
 
-PS > cat dat.txt | grep . | yarr
+```
+2018 3
+2018 3
+2018 3
+2017 1
+2017 1
+2017 1
+2017 1
+2017 1
+2022 5
+2022 5
+```
+
+```powershell
+cat dat.txt | grep . | yarr
+```
+
+```
 2018 3 3 3
 2017 1 1 1 1 1
 2022 5 5
+```
 
-PS > cat dat.txt | grep . | yarr | fillretu
+```powershell
+cat dat.txt | grep . | yarr | fillretu
+```
+
+```
 2018 3 3 3 _ _
 2017 1 1 1 1 1
 2022 5 5 _ _ _
+```
 
-PS > cat dat.txt | grep . | yarr | fillretu -NaN 0
+```powershell
+cat dat.txt | grep . | yarr | fillretu -NaN 0
+```
+
+```
 2018 3 3 3 0 0
 2017 1 1 1 1 1
 2022 5 5 0 0 0
@@ -1038,7 +1209,10 @@ PS > cat dat.txt | grep . | yarr | fillretu -NaN 0
 `tateyoko`とのコンビネーション。
 
 ```powershell
-PS > cat dat.txt | yarr | fillretu | tateyoko | keta
+cat dat.txt | yarr | fillretu | tateyoko | keta
+```
+
+```
 2018 2017 2022
    3    1    5
    3    1    5
@@ -1066,6 +1240,9 @@ Output:
 
 ```powershell
 "a".."d" | juni
+```
+
+```
 1 a
 2 b
 3 c
@@ -1098,11 +1275,19 @@ Examples:
 ```powershell
 # select field 1 and 3
 "1 2 3","4 5 6","7 8 9"
+```
+
+```
 1 2 3
 4 5 6
 7 8 9
+```
 
+```powershell
 "1 2 3","4 5 6","7 8 9" | self 1 3
+```
+
+```
 1 3
 4 6
 7 9
@@ -1112,16 +1297,29 @@ Examples:
 # select 2nd field and and
 # cut out 2 characters from the 2nd character
 "123 456 789","223 523 823"
+```
+
+```
 123 456 789
 223 523 823
+```
 
+```powershell
 "123 456 789","223 523 823" | self 2.2.2
+```
+
+```
 56
 23
+```
 
+```powershell
 # select entire line and add 2nd field,
 # and cut out 2 characters from the 2nd character in the 2nd field
 "123 456 789","223 523 823" | self 0 2.2.2
+```
+
+```
 123 456 789 56
 223 523 823 23
 ```
@@ -1130,10 +1328,18 @@ Examples:
 # select the 1st field from the leftmost field and
 # select the 2nd field from the rightmost field(=NF)
 "1 2 3 4 5","6 7 8 9 10"
+```
+
+```
 1 2 3 4 5
 6 7 8 9 10
+```
 
+```powershell
 "1 2 3 4 5","6 7 8 9 10" | self 1 NF-1
+```
+
+```
 1 4
 6 9
 ```
@@ -1161,12 +1367,20 @@ Examples:
 
 ```powershell
 # delete field 1 and 2
-"1 2 3","4 5 6","7 8 9"
+"1 2 3", "4 5 6", "7 8 9"
+```
+
+```
 1 2 3
 4 5 6
 7 8 9
+```
 
-"1 2 3","4 5 6","7 8 9" | delf 1 2
+```powershell
+"1 2 3", "4 5 6", "7 8 9" | delf 1 2
+```
+
+```
 3
 6
 9
@@ -1174,11 +1388,19 @@ Examples:
 
 ```powershell
 # delete field 1 and 2nd field from right
-"1 2 3 4 5","6 7 8 9 10"
+"1 2 3 4 5", "6 7 8 9 10"
+```
+
+```
 1 2 3 4 5
 6 7 8 9 10
+```
 
-"1 2 3 4 5","6 7 8 9 10" | delf 1 NF-1
+```powershell
+"1 2 3 4 5", "6 7 8 9 10" | delf 1 NF-1
+```
+
+```
 2 3 5
 7 8 10
 ```
@@ -1215,19 +1437,32 @@ Examples:
 ```powershell
 # input
 "A 1 10","B 1 10","A 1 10","C 1 10"
+```
+
+```
 A 1 10
 B 1 10
 A 1 10
 C 1 10
+```
 
+```powershell
 # Sort by key column before connecting pipeline to sm2 command
 "A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 1 2 3 3
+```
+
+```
 A 1 20
 B 1 10
 C 1 10
+```
 
+```powershell
 # Result if you forget to sort
 "A 1 10","B 1 10","A 1 10","C 1 10" | sm2 1 2 3 3
+```
+
+```
 A 1 10
 B 1 10
 A 1 10
@@ -1237,13 +1472,21 @@ C 1 10
 ```powershell
 # input
 "A 1 10","B 1 10","A 1 10","C 1 10"
+```
+
+```
 A 1 10
 B 1 10
 A 1 10
 C 1 10
+```
 
+```powershell
 # +count option
 "A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3
+```
+
+```
 2 A 1 20
 1 B 1 10
 1 C 1 10
@@ -1252,34 +1495,54 @@ C 1 10
 ```powershell
 # input
 "A 1 10","B 1 10","A 1 10","C 1 10"
+```
+
+```
 A 1 10
 B 1 10
 A 1 10
 C 1 10
+```
 
+```powershell
 # calculator mode
 "A 1 10","B 1 10","A 1 10","C 1 10" | sm2 0 0 2 2
+```
+
+```
 4
 ```
 
 ```powershell
 # calc average with sm2 and lcalc command
-
 ## input
 "A 1 10","B 1 10","A 1 10","C 1 10"
+```
+
+```
 A 1 10
 B 1 10
 A 1 10
 C 1 10
+```
 
+```powershell
 ## sum up
 "A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3
+```
+
+```
 2 A 1 20
 1 B 1 10
 1 C 1 10
+```
 
+```powershell
 ## calc average
 "A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3 | lcalc '$0;$NF/$1'
+```
+
+```
 2 A 1 20 10
 1 B 1 10 10
 1 C 1 10 10
@@ -1308,8 +1571,10 @@ Examples:
 ```powershell
 # Input data example1:
 # (Case: vkey1, vkey2, hkey, value)
-
 cat data.txt
+```
+
+```
 location-A store-A target-A 1
 location-A store-B target-B 2
 location-A store-C target-C 3
@@ -1319,8 +1584,13 @@ location-B store-C target-C 6
 location-C store-A target-A 7
 location-C store-B target-B 8
 location-C store-C target-C 9
+```
 
+```powershell
 cat data.txt | map2 -n 2,1 | keta
+```
+
+```
          *       * target-A target-B target-C
 location-A store-A        1        0        0
 location-A store-B        0        2        0
@@ -1331,8 +1601,13 @@ location-B store-C        0        0        6
 location-C store-A        7        0        0
 location-C store-B        0        8        0
 location-C store-C        0        0        9
+```
 
+```powershell
 cat data.txt | map2 -n 1,2 | keta
+```
+
+```
          *  store-A  store-B  store-C
          * target-A target-B target-C
 location-A        1        2        3
@@ -1345,8 +1620,10 @@ location-C        7        8        9
 ```powershell
 # Input data example2:
 # (Case: vkey, hkey, value1, value2)
-
 cat data.txt
+```
+
+```
 loc-1 tar-1 1 10
 loc-1 tar-2 2 20
 loc-1 tar-3 3 30
@@ -1356,9 +1633,14 @@ loc-2 tar-3 6 60
 loc-3 tar-1 7 70
 loc-3 tar-2 8 80
 loc-3 tar-3 9 90
+```
 
+```powershell
 # ("A".."Z" is given according to the number of value-columns)
 cat data.txt | map2 -n 1,1 -ifs " " -ofs "`t"
+```
+
+```
 *       *       tar-1   tar-2   tar-3
 loc-1   A       1       2       3
 loc-1   B       10      20      30
@@ -1366,9 +1648,14 @@ loc-2   A       4       5       6
 loc-2   B       40      50      60
 loc-3   A       7       8       9
 loc-3   B       70      80      90
+```
 
+```powershell
 # -yarr switch
 cat data.txt | map2 -n 1,1 -ifs " " -ofs "`t" -yarr
+```
+
+```
 *       tar-1   tar-1   tar-2   tar-2   tar-3   tar-3
 *       a       b       a       b       a       b
 loc-1   1       10      2       20      3       30
@@ -1418,12 +1705,20 @@ Examples:
 ```powershell
 # input
 "8.3 70","8.6 65","8.8 63"
+```
+
+```
 8.3 70
 8.6 65
 8.8 63
+```
 
+```powershell
 # lcalc
 "8.3 70","8.6 65","8.8 63" | lcalc '$1+1;$2/10'
+```
+
+```
 9.3 7
 9.6 6.5
 9.8 6.3
@@ -1433,37 +1728,67 @@ Examples:
 # calculator mode does not require
 # standard input (from pipline)
 lcalc -d '1+1'
+```
+
+```
 2
+```
 
+```powershell
 lcalc -d '1+sqrt(4)'
+```
+
+```
 3
+```
 
+```powershell
 lcalc -d 'pi'
-3.14159265358979
+```
 
+```
+3.14159265358979
+```
+
+```powershell
 # 短縮形で使用できる関数以外の関数も使用できる
 lcalc -d '[math]::Ceiling(1.1)'
+```
+
+```
 2
 ```
 
 ```powershell
 # calc average with sm2 and lcalc command
-
 ## input
 "A 1 10","B 1 10","A 1 10","C 1 10"
+```
+
+```
 A 1 10
 B 1 10
 A 1 10
 C 1 10
+```
 
+```powershell
 ## sum up
 "A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3
+```
+
+```
 2 A 1 20
 1 B 1 10
 1 C 1 10
+```
 
+```powershell
 ## calc average
 "A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 +count 1 2 3 3 | lcalc '$0;$NF/$1'
+```
+
+```
 2 A 1 20 10
 1 B 1 10 10
 1 C 1 10 10
@@ -1496,16 +1821,23 @@ Examples:
 
 ```powershell
 # Multiple expr using ";" in scriptblock
-
 # data
 "8.3 70","8.6 65","8.8 63"
+```
+
+```
 8.3 70
 8.6 65
 8.8 63
+```
 
+```powershell
 # calc
 "8.3 70","8.6 65","8.8 63" `
     | lcalc2 {$1+1;$2+10}
+```
+
+```
 8.3 70 9.3 80
 8.6 65 9.6 75
 8.8 63 9.8 73
@@ -1513,26 +1845,38 @@ Examples:
 
 ```powershell
 # Output only result
-
 # input
 "8.3 70","8.6 65","8.8 63"
+```
+
+```
 8.3 70
 8.6 65
 8.8 63
+```
 
+```powershell
 # output 1
 "8.3 70","8.6 65","8.8 63" `
     | lcalc2 {$1+1; $2+10} -OnlyOutputResult
+```
+
+```
 9.3 80
 9.6 75
 9.8 73
+```
 
+```powershell
 # output 2
 #   Put result on the left,
 #   put original field on the right,
 #   with -OnlyOutputResult and $0
 "8.3 70","8.6 65","8.8 63" `
     | lcalc2 {$1+1; $2+10; $0} -OnlyOutputResult
+```
+
+```
 9.3 80 8.3 70
 9.6 75 8.6 65
 9.8 73 8.8 63
@@ -1541,6 +1885,9 @@ Examples:
 ```powershell
 # Get row number of record
 1..5 | lcalc2 {$NR}
+```
+
+```
 1 1
 2 2
 3 3
@@ -1550,46 +1897,74 @@ Examples:
 
 ```powershell
 # Calculator mode
-
 lcalc2 -Calculator {1+1}
-2
+```
 
+```
+2
+```
+
+```powershell
 # calculator mode does not require
 # standard input (from pipline)
-
 lcalc2 -c {1+[math]::sqrt(4)}
+```
+
+```
 3
+```
 
+```powershell
 lcalc2 -c {[math]::pi}
-3.14159265358979
+```
 
+```
+3.14159265358979
+```
+
+```powershell
 lcalc2 -c {[math]::Ceiling(1.1)}
+```
+
+```
 2
 ```
 
 ```powershell
 # Calculate average with sm2 and lcalc2 command
-
 ## input
 "A 1 10","B 1 10","A 1 10","C 1 10"
+```
+
+```
 A 1 10
 B 1 10
 A 1 10
 C 1 10
+```
 
+```powershell
 ## sum up
 "A 1 10","B 1 10","A 1 10","C 1 10" `
     | sort `
     | sm2 +count 1 2 3 3
+```
+
+```
 2 A 1 20
 1 B 1 10
 1 C 1 10
+```
 
+```powershell
 ## calc average
 "A 1 10","B 1 10","A 1 10","C 1 10" `
     | sort `
     | sm2 +count 1 2 3 3 `
     | lcalc2 {$NF/$1}
+```
+
+```
 2 A 1 20 10
 1 B 1 10 10
 1 C 1 10 10
@@ -1613,17 +1988,30 @@ specific columns for multiple column inputs.
 
 ```powershell
 # input line (csv: comma separated values)
-PS> $dat = "abc,def,ghi","jkl,mno,pqr","stu,vwz,012"
+$dat = "abc,def,ghi","jkl,mno,pqr","stu,vwz,012"
+```
+
+```
 abc,def,ghi
 jkl,mno,pqr
 stu,vwz,012
+```
 
+```powershell
 # apply rev commnand only 2nd columns
 PS> $dat | pawk -fs "," -Pattern {$1 -match "^j"} -Action { $2=$2|rev;$0 }
-jkl,onm,pqr
+```
 
+```
+jkl,onm,pqr
+```
+
+```powershell
 # -Begin, -Process and -End block like AWK
 PS> 1..10 | pawk -Begin { $sum=0 } -Action { $sum+=$1 } -End { $sum }
+```
+
+```
 55
 ```
 
@@ -1660,11 +2048,19 @@ Examples:
 
 ```powershell
 # sum from 1 to 10 and output the result
-PS> 1..10 | pawk -Begin {$sum=0} -Action {$sum+=$1} -End {$sum}
-55
+1..10 | pawk -Begin {$sum=0} -Action {$sum+=$1} -End {$sum}
+```
 
+```
+55
+```
+
+```powershell
 # output all line using $0 in -Action script block
-PS> 1..10 | pawk -Begin {$sum=0} -Action {$sum+=$1;$0} -End {"=====","sum: $sum"}
+1..10 | pawk -Begin {$sum=0} -Action {$sum+=$1;$0} -End {"=====","sum: $sum"}
+```
+
+```
 1
 2
 3
@@ -1682,7 +2078,10 @@ sum: 55
 ```powershell
 # If both -Action {$0} and -AllLine switch are
 # used at the same time, the outputs are duplicated.
-PS> 1..3 | pawk -Begin {$sum=0} -Action {$sum+=$1;$0} -End {"=====","sum: $sum"} -AllLine
+1..3 | pawk -Begin {$sum=0} -Action {$sum+=$1;$0} -End {"=====","sum: $sum"} -AllLine
+```
+
+```
 1
 1
 2
@@ -1691,36 +2090,53 @@ PS> 1..3 | pawk -Begin {$sum=0} -Action {$sum+=$1;$0} -End {"=====","sum: $sum"}
 3
 =====
 sum: 6
+```
 
+```powershell
 # All of the following get all line output
-PS> 1..3 | pawk -Begin {$sum=0} -Action {$sum+=$1} -End {"=====","sum: $sum"} -AllLine
-PS> 1..3 | pawk -Begin {$sum=0} -Action {$sum+=$1;$0} -End {"=====","sum: $sum"}
+1..3 | pawk -Begin {$sum=0} -Action {$sum+=$1} -End {"=====","sum: $sum"} -AllLine
+1..3 | pawk -Begin {$sum=0} -Action {$sum+=$1;$0} -End {"=====","sum: $sum"}
+```
+
+```
 1
 2
 3
 =====
 sum: 6
+```
 
+```powershell
 # Although -Action {$0} and -AllLine switch have different outputs, 
 # there is no difference in that the action
 # is executed only pattern-mathed rows.
 
 ## Case1: -Action {$0} 
-PS> 1..3 | pawk -Begin {$sum=0} -Action {$sum+=$1 ; $0} -End {"=====","sum: $sum"} -Pattern {$1 % 2 -eq 1}
+1..3 | pawk -Begin {$sum=0} -Action {$sum+=$1 ; $0} -End {"=====","sum: $sum"} -Pattern {$1 % 2 -eq 1}
+```
+
+```
 1
 3
 =====
 sum: 4
+```
 
+```powershell
 ## Case2: -AllLine switch. Total value is the same as above. (sum=4)
 ## (Action skipped not mathed rows)
-PS> 1..3 | pawk -Begin {$sum=0} -Action {$sum+=$1} -End {"=====","sum: $sum"} -Pattern {$1 % 2 -eq 1} -AllLine
+1..3 | pawk -Begin {$sum=0} -Action {$sum+=$1} -End {"=====","sum: $sum"} -Pattern {$1 % 2 -eq 1} -AllLine
+```
+
+```
 1
 2
 3
 =====
 sum: 4
+```
 
+```powershell
 # Note that if -AllLine switch is used,
 # it duplicates the output if there is
 # an output with -Action {action}
@@ -1730,56 +2146,101 @@ sum: 4
 # notes on interpreting numbers and strings
 
 # input data (zero padding numbers)
-PS> $dat = 1..5 | %{ "{0:d3}" -f $_ }
+$dat = 1..5 | %{ "{0:d3}" -f $_ }
+$dat
+```
+
+```
 001
 002
 003
 004
 005
+```
 
-PS> $dat | pawk -Pattern {$1 -eq 1}
+```powershell
+$dat | pawk -Pattern {$1 -eq 1}
+```
+
+```
 match nothing.
 because numbers starting with zero are considered strings.
+```
 
+```powershell
 # Cast [string]"001" to [int]"001"       
-PS> $dat | pawk -Pattern {[int]$1 -eq 1}
+$dat | pawk -Pattern {[int]$1 -eq 1}
+$dat
+```
+
+```
 001   # matched!
+```
 
+```powershell
 # Match if you compare a zero-filled number as a string
-PS> $dat | pawk -Pattern {$1 -eq "001"}
-001
+$dat | pawk -Pattern {$1 -eq "001"}
+```
 
+```
+001
+```
+
+```powershell
 # Inversion of the above criteria ( -eq to -ne )
-PS> $dat | pawk -Pattern {$1 -ne "001"}
+$dat | pawk -Pattern {$1 -ne "001"}
+```
+
+```
 002
 003
 004
 005
+```
 
+```powershell
 # Zero-filled numbers are strings,
 # so their sum with a number is a
 # concatenation of strings.
-PS> $dat | pawk -Pattern {$1 -eq "001"} -Action {$1+1}
-0011
+$dat | pawk -Pattern {$1 -eq "001"} -Action {$1+1}
+```
 
+```
+0011
+```
+
+```powershell
 # -AllLine switch outputs all lines that
 #  do not match the pattern. However, 
 # the action is executed only on lines that
 # match the pattern
-PS> $dat | pawk -Pattern {$1 -eq "001"} -Action {$1=$1+1} -AllLine
+$dat | pawk -Pattern {$1 -eq "001"} -Action {$1=$1+1} -AllLine
+```
+
+```
 0011
 002
 003
 004
 005
+```
 
+```powershell
 # Cast 1st column of zero-filled numbers to an integer
 # and then takeing the numeric sum gives the expected behaviour.
-PS> $dat | pawk -Pattern {$1 -eq "001"} -Action {[int]$1+1}
-2
+$dat | pawk -Pattern {$1 -eq "001"} -Action {[int]$1+1}
+```
 
+```
+2
+```
+
+```powershell
 # -AllLine switch
-PS> $dat | pawk -Pattern {$1 -eq "001"} -Action {$1=[int]$1+1} -AllLine
+$dat | pawk -Pattern {$1 -eq "001"} -Action {$1=[int]$1+1} -AllLine
+```
+
+```
 2
 002
 003
@@ -1790,19 +2251,34 @@ PS> $dat | pawk -Pattern {$1 -eq "001"} -Action {$1=[int]$1+1} -AllLine
 ```powershell
 # Column specification using $0
 
-PS> $dat = "a b c 1","d e f 2","g h i 3"
+$dat = "a b c 1","d e f 2","g h i 3"
+$dat
+```
+
+```
 a b c 1
 d e f 2
 g h i 3
+```
 
-PS> $dat | pawk -Action {$0 + " zzz"}
+```powershell
+$dat | pawk -Action {$0 + " zzz"}
+```
+
+```
 a b c 1 zzz
 d e f 2 zzz
 g h i 3 zzz
+```
 
+```powershell
 # Replace 2nd column
-PS> $dat | pawk -Action {$2="zzz" ; $0}
-PS> $dat | pawk -Action {$2="zzz"} -AllLine
+$dat | pawk -Action {$2="zzz" ; $0}
+$dat | pawk -Action {$2="zzz"} -AllLine
+$dat
+```
+
+```
 a zzz c 1
 d zzz f 2
 g zzz i 3
@@ -1811,18 +2287,32 @@ g zzz i 3
 ```powershell
 # Read csv data
 
-PS> $dat = "a b c 1","d e f 2","g h i 3" | %{ $_ -replace " ",","}
+$dat = "a b c 1","d e f 2","g h i 3" | %{ $_ -replace " ",","}
+$dat
+```
+
+```
 a,b,c,1
 d,e,f,2
 g,h,i,3
+```
 
-PS> $dat | pawk -fs "," -Action {$2=$2*3 ; $0}
+```powershell
+$dat | pawk -fs "," -Action {$2=$2*3 ; $0}
+```
+
+```
 a,bbb,c,1
 d,eee,f,2
 g,hhh,i,3
+```
 
+```powershell
 # Convert csv to tsv
-PS> $dat | pawk -fs "," -Action {$0} -ofs "`t"
+$dat | pawk -fs "," -Action {$0} -ofs "`t"
+```
+
+```
 a       b       c       1
 d       e       f       2
 g       h       i       3
@@ -1831,30 +2321,60 @@ g       h       i       3
 ```powershell
 # Pattern match and execute Action
 
-PS> $dat = "a b c 1","d e f 2","g h i 3" | %{ $_ -replace " ",","}
+$dat = "a b c 1","d e f 2","g h i 3" | %{ $_ -replace " ",","}
+$dat
+```
+
+```
 a,b,c,1
 d,e,f,2
 g,h,i,3
+```
 
+```powershell
 # Pattern match
-PS> $dat | pawk -fs "," -Pattern {$NF -gt 1}
+$dat | pawk -fs "," -Pattern {$NF -gt 1}
+$dat
+```
+
+```
 d,e,f,2
 g,h,i,3
+```
 
-PS> $dat | pawk -fs "," -Pattern {$NF -gt 1 -and $2 -match 'e'}
+```powershell
+$dat | pawk -fs "," -Pattern {$NF -gt 1 -and $2 -match 'e'}
+```
+
+```
 d,e,f,2
+```
 
-PS> $dat | pawk -fs "," -Pattern {$NF -le 1}
+```powershell
+$dat | pawk -fs "," -Pattern {$NF -le 1}
+```
+
+```
 a,b,c,1
+```
 
+```powershell
 # Pattern match and replace 1st field
-PS> $dat | pawk -fs "," -Pattern {$NF -gt 1} -Action {$1="aaa";$0}
+$dat | pawk -fs "," -Pattern {$NF -gt 1} -Action {$1="aaa";$0}
+```
+
+```
 aaa,e,f,2
 aaa,h,i,3
+```
 
+```powershell
 # Pattern match and replace 1st field and output all rows,
 # but -Action script is applied only pattern matched rows.
-PS> $dat | pawk -fs "," -Pattern {$NF -gt 1} -Action {$1="aaa"} -AllLine
+$dat | pawk -fs "," -Pattern {$NF -gt 1} -Action {$1="aaa"} -AllLine
+```
+
+```
 a,b,c,1
 aaa,e,f,2
 aaa,h,i,3
@@ -1863,38 +2383,76 @@ aaa,h,i,3
 ```powershell
 # Handling zero padding numbers
 
-PS> $dat = "001,aaa,1","002,bbb,2","003,ccc,4","005,ddd,5"
+$dat = "001,aaa,1","002,bbb,2","003,ccc,4","005,ddd,5"
+$dat
+```
+
+```
 001,aaa,1
 002,bbb,2
 003,ccc,4
 005,ddd,5
+```
 
+```powershell
 # Zero padding numbers are not double but string
-PS> $dat | pawk -fs "," -Pattern {$1 -eq 2}
+$dat | pawk -fs "," -Pattern {$1 -eq 2}
+```
+
+```
 # not match
+```
 
-PS> $dat | pawk -fs "," -Pattern {$1 -eq "002"}
+```powershell
+$dat | pawk -fs "," -Pattern {$1 -eq "002"}
+```
+
+```
 002,bbb,2
+```
 
+```powershell
 # Cast as double
-PS> $dat | pawk -fs "," -Pattern {[int]$1 -eq 2}
+$dat | pawk -fs "," -Pattern {[int]$1 -eq 2}
+```
+
+```
 002,bbb,2
 ```
 
 ```powershell
 # Use -begin -end example
 
-PS> $dat = "001,aaa,1","002,bbb,2","003,ccc,4","005,ddd,5"
+$dat = "001,aaa,1","002,bbb,2","003,ccc,4","005,ddd,5"
+$dat
+```
+
+```
 001,aaa,1
 002,bbb,2
 003,ccc,4
 005,ddd,5
+```
 
+```powershell
 # Add 3rd field values and output result
-PS> $dat | pawk -fs "," -Begin {$sum=0} -Action {$sum+=$3} -End {$sum}
-12
+$dat | pawk -fs "," -Begin {$sum=0} -Action {$sum+=$3} -End {$sum}
+```
 
-PS> $dat | pawk -fs "," -Begin {$sum=0} -Action {$sum+=[math]::Pow($3,2);$0+","+[math]::Pow($3,2)} -End {$sum}
+```
+12
+```
+
+```powershell
+$dat `
+    | pawk `
+        -fs "," `
+        -Begin {$sum=0} `
+        -Action {$sum+=[math]::Pow($3,2);$0+","+[math]::Pow($3,2)} `
+        -End {$sum}
+```
+
+```
 001,aaa,1,1
 002,bbb,2,4
 003,ccc,4,16
@@ -1907,20 +2465,34 @@ PS> $dat | pawk -fs "," -Begin {$sum=0} -Action {$sum+=[math]::Pow($3,2);$0+","+
 # specific columns for multiple column inputs, like below.
 
 # Input
-PS> $dat = "abc,def,ghi","jkl,mno,pqr","stu,vwz,012"
+$dat = "abc,def,ghi","jkl,mno,pqr","stu,vwz,012"
+$dat
+```
+
+```
 abc,def,ghi
 jkl,mno,pqr
 stu,vwz,012
+```
 
+```powershell
 # Apply rev commnand only 2nd columns
-PS> $dat | pawk -fs "," -Action {$2=$2|rev;$0}
-PS> $dat | pawk -fs "," -Action {$2=$2|rev} -AllLine
+$dat | pawk -fs "," -Action {$2=$2|rev;$0}
+$dat | pawk -fs "," -Action {$2=$2|rev} -AllLine
+```
+
+```
 abc,fed,ghi # reverse 2nd column
 jkl,onm,pqr # reverse 2nd column
 stu,zwv,012 # reverse 2nd column
+```
 
+```powershell
 # Apply rev commnand only 2nd columns and only pattern matched rows
-PS> $dat | pawk -fs "," -Action {$2=$2|rev} -Pattern {$1 -match '^j'} -AllLine
+$dat | pawk -fs "," -Action {$2=$2|rev} -Pattern {$1 -match '^j'} -AllLine
+```
+
+```
 abc,def,ghi  # not match
 jkl,onm,pqr  # reverse 2nd column
 stu,vwz,012  # not match
@@ -1930,36 +2502,60 @@ stu,vwz,012  # not match
 # Select column
 
 # Input data
-PS> $dat = "abc,def,ghi","jkl,mno,pqr","stu,vwz,012"
+$dat = "abc,def,ghi","jkl,mno,pqr","stu,vwz,012"
+$dat
+```
+
+```
 abc,def,ghi
 jkl,mno,pqr
 stu,vwz,012
+```
 
+```powershell
 # The following is probably not expected behavior
-PS> $dat | pawk -fs "," -Action {$1,$2}
+$dat | pawk -fs "," -Action {$1,$2}
+```
+
+```
 abc
 def
 jkl
 mno
 stu
 vwz
+```
 
+```powershell
 # Use -join operator
-PS> $dat | pawk -fs "," -Action {$1,$2 -join ","}
+$dat | pawk -fs "," -Action {$1,$2 -join ","}
+```
+
+```
 abc,def
 jkl,mno
 stu,vwz
+```
 
+```powershell
 # Use @() to specify an array
-PS> $dat | pawk -fs "," -Action {@($1,$2) -join ","}
+$dat | pawk -fs "," -Action {@($1,$2) -join ","}
+```
+
+```
 abc,def
 jkl,mno
 stu,vwz
+```
 
+```powershell
 # Equivalent alternate solution.Using the fact that input rows　are
 # separated by delimiters and stored in a variable of array named "$self".
 # note that the index is zero start in this case.
-PS> $dat | pawk -fs "," -Action {$self[0..1] -join ","}
+$dat | pawk -fs "," -Action {$self[0..1] -join ","}
+```
+
+```
 abc,def
 jkl,mno
 stu,vwz
@@ -1969,36 +2565,65 @@ stu,vwz
 # Various column selections
 
 # Input data
-PS> $dat = "abc,def,ghi","jkl,mno,pqr","stu,vwz,012"
+$dat = "abc,def,ghi","jkl,mno,pqr","stu,vwz,012"
+$dat
+```
+
+```
 abc,def,ghi
 jkl,mno,pqr
 stu,vwz,012
+```
 
+```powershell
 # Duplicate columns
-PS> $dat | pawk -fs "," -Action {$1,$1,$1,$1 -join ","}
+$dat | pawk -fs "," -Action {$1,$1,$1,$1 -join ","}
+```
+
+```
 abc,abc,abc,abc
 jkl,jkl,jkl,jkl
 stu,stu,stu,stu
+```
 
+```powershell
 # Select max Number of field(column)
-PS> $dat | pawk -fs "," -Action {$NF}
+$dat | pawk -fs "," -Action {$NF}
+```
+
+```
 ghi
 pqr
 012
+```
 
+```powershell
 # Select max Number -1 of field(column)
-PS> $dat | pawk -fs "," -Action {$self[-2]}
+$dat | pawk -fs "," -Action {$self[-2]}
+```
+
+```
 def
 mno
 vwz
+```
 
-PS> $dat | pawk -fs "," -Action {$self[$self.count-2]}
+```powershell
+$dat | pawk -fs "," -Action {$self[$self.count-2]}
+```
+
+```
 def
 mno
 vwz
+```
 
+```powershell
 # Select n to last columns
-PS> $dat |pawk -fs "," -Action {$self[1..($self.count-1)] -join ","}
+$dat | pawk -fs "," -Action {$self[1..($self.count-1)] -join ","}
+```
+
+```
 def,ghi
 mno,pqr
 vwz,012
@@ -2008,14 +2633,23 @@ vwz,012
 # Manipulation of specific columns
 
 # Input
-PS> $dat = "001,aaa,2022-01-01","002,bbb,2022-01-02","003,ccc,2022-01-03","005,ddd,2022-01-04"
+$dat = "001,aaa,2022-01-01","002,bbb,2022-01-02","003,ccc,2022-01-03","005,ddd,2022-01-04"
+$dat
+```
+
+```
 001,aaa,2022-01-01
 002,bbb,2022-01-02
 003,ccc,2022-01-03
 005,ddd,2022-01-04
+```
 
+```powershell
 # Add days -10 to 3rd column (cast [datetime])
-PS> $dat | pawk -fs "," -Action {$3=(Get-Date $3).AddDays(-10).ToString('yyyy-MM-dd')} -AllLine
+$dat | pawk -fs "," -Action {$3=(Get-Date $3).AddDays(-10).ToString('yyyy-MM-dd')} -AllLine
+```
+
+```
 001,aaa,2021-12-22
 002,bbb,2021-12-23
 003,ccc,2021-12-24
@@ -2026,23 +2660,37 @@ PS> $dat | pawk -fs "," -Action {$3=(Get-Date $3).AddDays(-10).ToString('yyyy-MM
 # Manipulation of specific columns using pipe
 
 # Input
-PS> $dat = "001,aaa,20220101","002,bbb,20220102","003,ccc,20220103","005,ddd,20220104"
+$dat = "001,aaa,20220101","002,bbb,20220102","003,ccc,20220103","005,ddd,20220104"
+$dat
+```
+
+```
 001,aaa,20220101
 002,bbb,20220102
 003,ccc,20220103
 005,ddd,20220104
+```
 
+```powershell
 # Format date for 3rd column.
 # (Column symbols ($1,$2,...) in single quotes are escaped.
 # so that $1,$2,... symbols in the ForEach-Object command has the expected behavior.)
 $dat | pawk -fs "," -Action {$3=$3|ForEach-Object{$_ -replace '([0-9]{4})([0-9]{2})([0-9]{2})','$1-$2-$3'}; $0}
+```
+
+```
 001,aaa,2022-01-01
 002,bbb,2022-01-02
 003,ccc,2022-01-03
 005,ddd,2022-01-04
+```
 
+```powershell
 # Equivalent alternative solution using [datetime]::ParseExact
-PS> $dat | pawk -fs "," -Action {$3=([datetime]::ParseExact($3,"yyyyMMdd",$null)).ToString('yyyy-MM-dd'); $0}
+$dat | pawk -fs "," -Action {$3=([datetime]::ParseExact($3,"yyyyMMdd",$null)).ToString('yyyy-MM-dd'); $0}
+```
+
+```
 001,aaa,2022-01-01
 002,bbb,2022-01-02
 003,ccc,2022-01-03
@@ -2053,16 +2701,30 @@ PS> $dat | pawk -fs "," -Action {$3=([datetime]::ParseExact($3,"yyyyMMdd",$null)
 # Usage of build-in variables ($NF, $NR)
 
 # Input
-PS> $dat = "1,aaa,111","2,bbb,222","3,ccc,333"
+$dat = "1,aaa,111","2,bbb,222","3,ccc,333"
+$dat
+```
+
+```
 1,aaa,111
 2,bbb,222
 3,ccc,333
+```
 
-PS> $dat | pawk -fs "," -Pattern {$NF -ge 222}
+```powershell
+$dat | pawk -fs "," -Pattern {$NF -ge 222}
+```
+
+```
 2,bbb,222
 3,ccc,333
+```
 
-PS> $dat | pawk -fs "," -Pattern {$NR -ge 1}
+```powershell
+$dat | pawk -fs "," -Pattern {$NR -ge 1}
+```
+
+```
 1,aaa,111
 2,bbb,222
 3,ccc,333
@@ -2072,23 +2734,38 @@ PS> $dat | pawk -fs "," -Pattern {$NR -ge 1}
 # Re-arrange 2-4 characters of an undelimited strings.
 
 # Input
-PS> "aiueo","12345","abcde"
+"aiueo","12345","abcde"
+```
+
+```
 aiueo
 12345
 abcde
+```
 
+```powershell
 # Re-arrange 2-4 chars of each row.
-PS> "aiueo","12345","abcde" | pawk -fs '' -Action {$self[0,3,2,1,4] -join ''}
+"aiueo","12345","abcde" | pawk -fs '' -Action {$self[0,3,2,1,4] -join ''}
+```
+
+```
 aeuio
 14325
 adcbe
+```
 
+```powershell
 # Equivalent to the above
-PS> "aiueo","12345","abcde" | pawk -fs '' -Action {@($1,$4,$3,$2,$5) -join ''}
+"aiueo","12345","abcde" | pawk -fs '' -Action {@($1,$4,$3,$2,$5) -join ''}
+```
+
+```
 aeuio
 14325
 adcbe
+```
 
+```powershell
 # If an empty string is specified as the delimiter,
 # the first and last elements are dropped from the array.
 ```
@@ -2122,24 +2799,42 @@ Output:
 # duplicates are removed and
 # only one column numbers is output.
 "a".."z" | retu
-1
+```
 
+```
+1
+```
+
+```powershell
 # Output for each change in the
 # number of columns.
 "a a","b b b","c c c","d d"
+```
+
+```
 a a
 b b b
 c c c
 d d
+```
 
+```powershell
 "a a","b b b","c c c","d d" | retu
+```
+
+```
 2
 3
 2
+```
 
+```powershell
 # With the "-c" switch, all rows
 # are output with column numbers.
 "a a","b b b","c c c","d d" | retu -c
+```
+
+```
 2 a a
 3 b b b
 3 c c c
@@ -2168,7 +2863,10 @@ d d
 Input:
 
 ```powershell
-PS> cat a.txt
+cat a.txt
+```
+
+```
 01 埼玉県 01 さいたま市 100
 01 埼玉県 02 川越市 100
 01 埼玉県 03 熊谷市 100
@@ -2190,7 +2888,10 @@ PS> cat a.txt
 Output:
 
 ```powershell
-PS> cat a.txt | grep . | sort | count 1 2
+cat a.txt | grep . | sort | count 1 2
+```
+
+```
 3 01 埼玉県
 6 02 東京都
 3 03 千葉県
@@ -2198,7 +2899,10 @@ PS> cat a.txt | grep . | sort | count 1 2
 ```
 
 ```powershell
-PS> cat a.txt | grep . | sort | count -c 1 2
+cat a.txt | grep . | sort | count -c 1 2
+```
+
+```
 1 01 埼玉県 01 さいたま市 100
 2 01 埼玉県 02 川越市 100
 3 01 埼玉県 03 熊谷市 100
@@ -2240,6 +2944,9 @@ Output:
 
 ```powershell
 cat a.txt
+```
+
+```
 01 埼玉県 01 さいたま市 100
 01 埼玉県 02 川越市 100
 01 埼玉県 03 熊谷市 100
@@ -2256,8 +2963,13 @@ cat a.txt
 04 神奈川県 14 川崎市 100
 04 神奈川県 15 厚木市 100
 04 神奈川県 16 小田原市 100
+```
 
+```powershell
 cat a.txt | getfirst 1 2
+```
+
+```
 01 埼玉県 01 さいたま市 100
 02 東京都 04 新宿区 100
 03 千葉県 10 千葉市 100
@@ -2287,6 +2999,9 @@ Output:
 
 ```powershell
 cat a.txt
+```
+
+```
 01 埼玉県 01 さいたま市 100
 01 埼玉県 02 川越市 100
 01 埼玉県 03 熊谷市 100
@@ -2303,8 +3018,13 @@ cat a.txt
 04 神奈川県 14 川崎市 100
 04 神奈川県 15 厚木市 100
 04 神奈川県 16 小田原市 100
+```
 
+```powershell
 cat a.txt | getlast 1 2
+```
+
+```
 01 埼玉県 03 熊谷市 100
 02 東京都 09 立川市 100
 03 千葉県 12 柏市 100
@@ -2330,6 +3050,9 @@ Input(long type data):
 
 ```powershell
 cat a.txt
+```
+
+```
 2018 1
 2018 2 9
 2018 3
@@ -2347,6 +3070,9 @@ Output(wide type data):
 ```powershell
 # num=1で左から1列目をkeyとしてロング型をワイド型に変換。
 cat a.txt | grep . | yarr -n 1
+```
+
+```
 2018 1 2 9 3
 2017 1 2 3 4 5 6
 2022 1 2
@@ -2358,6 +3084,9 @@ Equivalent in PowerShell
 
 ```powershell
 cat a.txt | grep . | ForEach-Object -begin{$h=@{}} -process{$a=$_ -split " ", 2; $h[$($a[0])]+=" $($a[1])"} -end {foreach($k in $h.keys){$k+$h[$k]}}
+```
+
+```
 2022 1 2
 2018 1 2 9 3
 2017 1 2 3 4 5 6
@@ -2382,6 +3111,9 @@ Input(wide type data):
 
 ```powershell
 cat a.txt
+```
+
+```
 2018 1 2 3
 2017 1 2 3 4
 2022 1 2
@@ -2392,6 +3124,9 @@ Output(long type data):
 ```powershell
 # num=1で左から1列目をkeyとしてワイド型をロング型に変換。
 cat a.txt | grep . | tarr -n 1
+```
+
+```
 2018 1
 2018 2
 2018 3
@@ -2429,11 +3164,17 @@ Examples
 
 ```powershell
 1..9 | flat
+```
+
+```
 1 2 3 4 5 6 7 8 9
 ```
 
 ```powershell
 1..9 | flat 4
+```
+
+```
 1 2 3 4
 5 6 7 8
 9
@@ -2441,6 +3182,9 @@ Examples
 
 ```powershell
 "aiueo" | flat 3 -ifs "" -ofs ""
+```
+
+```
 aiu
 eo
 ```
@@ -2470,20 +3214,41 @@ Examples
 
 ```powershell
 "A B C D" | wrap '[*]'
-[A] [B] [C] [D]
+```
 
+```
+[A] [B] [C] [D]
+```
+
+```powershell
 "A B C D" | wrap '[?]' -Placeholder '?'
+```
+
+```
 [A] [B] [C] [D]
+```
 
+```powershell
 "A B C D" | wrap '[*]' -fs "_"
-[A B C D]
+```
 
+```
+[A B C D]
+```
+
+```powershell
 "ABCD" | wrap '[*]' -fs ""
+```
+
+```
 [A][B][C][D]
 ```
 
 ```powershell
 "A B C D","E F G H" | wrap '<td>*</td>' | addt '<table>','<tr>' | addb '</tr>','</table>'
+```
+
+```html
 <table>
 <tr>
 <td>A</td> <td>B</td> <td>C</td> <td>D</td>
@@ -2576,6 +3341,9 @@ convolution operation
 ```powershell
 @(1..10) -join " " | conv 3
 # or 1..10 | flat | conv 3
+```
+
+```
 1 2 3
 2 3 4
 3 4 5
@@ -2590,6 +3358,9 @@ N-gram of text
 
 ```powershell
 Write-Output "にわにはにわにわとりがいる" | conv -fs '' 2
+```
+
+```
 にわ
 わに
 には
@@ -2602,9 +3373,14 @@ Write-Output "にわにはにわにわとりがいる" | conv -fs '' 2
 りが
 がい
 いる
+```
 
+```powershell
 # output -n (NumOfRecord), and -f (NumOfField)
 Write-Output "にわにはにわにわとりがいる" | conv -fs '' 2 -r -f
+```
+
+```
 1 1 にわ
 1 2 わに
 1 3 には
@@ -2644,16 +3420,29 @@ Examples:
 ```powershell
 # input
 "aaa bbb ccc","dddddd eeee ffff"
+```
+
+```
 aaa bbb ccc
 dddddd eeee ffff
+```
 
+```powershell
 # right padding (default)
 "aaa bbb ccc","dddddd eeee ffff" | keta
+```
+
+```
    aaa  bbb  ccc
 dddddd eeee ffff
+```
 
+```powershell
 # left padding (-l switch)
 "aaa bbb ccc","dddddd eeee ffff" | keta -l
+```
+
+```
 aaa    bbb  ccc 
 dddddd eeee ffff
 ```
@@ -2680,11 +3469,19 @@ Examples:
 ```powershell
 # simple usage
 1..20 | gyo
-20
+```
 
+```
+20
+```
+
+```powershell
 # output row numbers for each text files
 # in current directory
 gyo *.*
+```
+
+```
 11 .textlintrc
 16 a.md
 76 b.md
@@ -2725,6 +3522,9 @@ Examples:
 
 ```powershell
 "パピプペポ１２３４５６７８９＝Ａ" | han | zen -k
+```
+
+```
 パピプペポ0123456789=A
 
 説明
@@ -2734,18 +3534,41 @@ Examples:
 
 ```powershell
 "パピプペポ０１２３４５６７８９＝Ａ" | han
+```
+
+```
 ﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟ0123456789=A
+```
 
+```powershell
 "パピプペポ０１２３４５６７８９＝Ａ" | han -k
+```
+
+```
 パピプペポ0123456789=A
+```
 
+```powershell
 "パピプペポ０１２３４５６７８９＝Ａ" | han -k | zen
-パピプペポ０１２３４５６７８９＝Ａ
+```
 
+```
+パピプペポ０１２３４５６７８９＝Ａ
+```
+
+```powershell
 "パピプペポ０１２３４５６７８９＝Ａ" | han | zen
-パピプペポ０１２３４５６７８９＝Ａ
+```
 
+```
+パピプペポ０１２３４５６７８９＝Ａ
+```
+
+```powershell
 "パピプペポ０１２３４５６７８９＝Ａ" | han | zen -k
+```
+
+```
 パピプペポ0123456789=A
 ```
 
@@ -2777,6 +3600,9 @@ Examples:
 
 ```powershell
 "パピプペポ０１２３４５６７８９＝Ａ" | han | zen -k
+```
+
+```
 パピプペポ0123456789=A
 
 説明
@@ -2786,18 +3612,41 @@ Examples:
 
 ```powershell
 "パピプペポ０１２３４５６７８９＝Ａ" | han
+```
+
+```
 ﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟ0123456789=A
+```
 
+```powershell
 "パピプペポ０１２３４５６７８９＝Ａ" | han -k
+```
+
+```
 パピプペポ0123456789=A
+```
 
+```powershell
 "パピプペポ０１２３４５６７８９＝Ａ" | han -k | zen
-パピプペポ０１２３４５６７８９＝Ａ
+```
 
+```
+パピプペポ０１２３４５６７８９＝Ａ
+```
+
+```powershell
 "パピプペポ０１２３４５６７８９＝Ａ" | han | zen
-パピプペポ０１２３４５６７８９＝Ａ
+```
 
+```
+パピプペポ０１２３４５６７８９＝Ａ
+```
+
+```powershell
 "パピプペポ０１２３４５６７８９＝Ａ" | han | zen -k
+```
+
+```
 パピプペポ0123456789=A
 ```
 
@@ -2825,6 +3674,9 @@ Examples:
 
 ```powershell
 "input" | vbStrConv -ProperCase
+```
+
+```
 Input
 ```
 
@@ -2848,12 +3700,25 @@ with `-stdout` switch, output only to stdout.
 # Result of execution on a certain day in **2023**.
 
 thisyear 2/28
+```
+
+```
 2023-02-28
+```
 
+```powershell
 nextyear 2/29
-2024-02-29
+```
 
+```
+2024-02-29
+```
+
+```powershell
 lastyear 2/28
+```
+
+```
 2022-02-28
 ```
 
@@ -2893,12 +3758,25 @@ Examples:
 # Result of execution on a certain day in **2023**.
 
 thisyear 2/28 -s "_this_year"
+```
+
+```
 2023-02-28_this_year
+```
 
+```powershell
 nextyear 2/29 -s "_next_year"
-2024-02-29_next_year
+```
 
+```
+2024-02-29_next_year
+```
+
+```powershell
 lastyear 2/28 -s "_last_year"
+```
+
+```
 2022-02-28_last_year
 ```
 
@@ -2925,6 +3803,9 @@ Example:
 
 ```powershell
 "1111 2222 3333" | fval '#,0.0' 2, 3
+```
+
+```
 1111 2,222.0 3,333.0
 ```
 
@@ -2959,7 +3840,9 @@ Examples:
 cat iris.csv `
     | percentile -v 1 -k 5 -fs "," `
     | Format-Table
+```
 
+```markdown
 field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
 -----        ---        -----    --- ---- -----  --- ---- ---- ----
 sepal_length setosa        50 250.30 5.01  0.35 4.30 4.80 5.00 5.20
@@ -2973,7 +3856,9 @@ Input
 ## Input
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s $_" } }
+```
 
+```
 a 1
 a 2
 a 3
@@ -3003,7 +3888,9 @@ Output
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s $_" } } `
     | percentile 2 -NoHeader
+```
 
+```
 field : F2
 count : 20
 sum   : 60
@@ -3017,32 +3904,42 @@ max   : 5
 IQR   : 2
 HiIQR : 7
 LoIQR : -1
+```
 
+```powershell
 ## same as below (calc rightmost field by default)
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s $_" } } `
     | percentile -NoHeader
+```
 
+```powershell
 ## percentile 2 -k 1 :
 ##  means summary 2nd field using 1st field as key
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s $_" } } `
     | percentile 2 -k 1 -NoHeader `
     | Format-Table
+```
 
+```markdown
 field key count   sum mean stdev  min Qt25 Qt50 Qt75
 ----- --- -----   --- ---- -----  --- ---- ---- ----
 F2    a       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
 F2    b       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
 F2    c       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
 F2    d       5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
+```
 
+```powershell
 ## -k 1,2 means fields from 1st to 2nd are considered keys
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s $s $_" } } `
     | percentile 3 -k 1,2 -NoHeader `
     | Format-Table
+```
 
+```markdown
 field key count   sum mean stdev  min Qt25 Qt50 Qt75
 ----- --- -----   --- ---- -----  --- ---- ---- ----
 F3    a a     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
@@ -3058,7 +3955,9 @@ F3    d d     5 15.00 3.00  1.58 1.00 1.50 3.00 4.50
     | %{ $s=$_; 1..5 | %{ "$s $_" } } `
     | percentile 2 -Rank -NoHeader `
     | keta
+```
 
+```markdown
 F1 F2 percentile label
  a  1     0.0167   Qt1
  b  1     0.0333   Qt1
@@ -3080,13 +3979,17 @@ F1 F2 percentile label
  a  5     0.8333   Qt4
  c  5     0.9167   Qt4
  d  5     1.0000   Qt4
+```
 
+```powershell
 ## -Level5 means ranking by 20% cumurative ratio
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s $_" } } `
     | percentile 2 -Level5 -Rank -NoHeader `
     | keta
+```
 
+```markdown
 F1 F2 percentile label
  a  1     0.0167     E
  b  1     0.0333     E
@@ -3116,28 +4019,36 @@ Another example:
 cat iris.csv `
     | percentile -fs "," 1 `
     | Format-Table
+```
 
+```markdown
 field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
 -----        -----    --- ---- -----  --- ---- ---- ----  ---
 sepal_length   150 876.50 5.84  0.83 4.30 5.10 5.80 6.40 7.90
+```
 
-
+```powershell
 cat iris.csv `
     | percentile -fs "," 1,2,3,4 `
     | Format-Table
+```
 
+```markdown
 field        count    sum mean stdev  min Qt25 Qt50 Qt75  max
 -----        -----    --- ---- -----  --- ---- ---- ----  ---
 sepal_length   150 876.50 5.84  0.83 4.30 5.10 5.80 6.40 7.90
 sepal_width    150 458.60 3.06  0.44 2.00 2.80 3.00 3.35 4.40
 petal_length   150 563.70 3.76  1.77 1.00 1.55 4.35 5.10 6.90
 petal_width    150 179.90 1.20  0.76 0.10 0.30 1.30 1.80 2.50
+```
 
-
+```powershell
 cat iris.csv `
     | percentile -fs "," 1,2,3,4 -k 5 `
     | Format-Table
+```
 
+```markdown
 field        key        count    sum mean stdev  min Qt25 Qt50 Qt75
 -----        ---        -----    --- ---- -----  --- ---- ---- ----
 sepal_length setosa        50 250.30 5.01  0.35 4.30 4.80 5.00 5.20
@@ -3163,7 +4074,9 @@ Missing/Empty value detection/removal/replacement examples
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s,$_" } } `
     | %{ $_ -replace ',5$',',' }
+```
 
+```
 a,1
 a,2
 a,3
@@ -3184,21 +4097,29 @@ d,2
 d,3
 d,4
 d,
+```
 
+```powershell
 # detect empty line and stop processing (use -isEmpty option)
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s,$_" } } `
     | %{ $_ -replace ',5$',',' } `
     | percentile -fs "," -NoHeader -isEmpty
+```
 
+```
 percentile: Detect "Empty" : a,
+```
 
+```powershell
 # fill empty values with "NaN" (use -FillNaN option)
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s,$_" } } `
     | %{ $_ -replace ',5$',',' } `
     | percentile -fs "," -NoHeader -FillNaN
+```
 
+```
 field : F2
 count : 20
 sum   : NaN
@@ -3217,7 +4138,9 @@ max   : 4
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s $_" } } `
     | %{ $_ -replace '5$','NaN' }
+```
 
+```
 a 1
 a 2
 a 3
@@ -3238,13 +4161,16 @@ d 2
 d 3
 d 4
 d NaN
+```
 
-
+```powershell
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s $_" } } `
     | %{ $_ -replace '5$','NaN' } `
     | percentile 2 -NoHeader
+```
 
+```
 field : F2
 count : 20
 sum   : NaN
@@ -3255,14 +4181,17 @@ Qt25  : 1
 Qt50  : 2
 Qt75  : 3
 max   : 4
+```
 
-
+```powershell
 # Output "NaN" information (use -Detail option)
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s $_" } } `
     | %{ $_ -replace '5$','NaN' } `
     | percentile 2 -NoHeader -Detail
+```
 
+```
 field      : F2
 count      : 20
 sum        : NaN
@@ -3280,23 +4209,29 @@ NaN        : 4
 DropNaN    : 0
 FillNaN    : 0
 ReplaceNaN : 0
+```
 
-
+```powershell
 # Detect "NaN" and stop processing (use -isNaN option)
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s $_" } } `
     | %{ $_ -replace '5$','NaN' } `
     | percentile 2 -NoHeader -isNaN
+```
 
+```
 percentile: Detect "NaN" : a NaN
+```
 
-
+```powershell
 # Drop "NaN" (use -DropNaN option)
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s $_" } } `
     | %{ $_ -replace '5$','NaN' } `
     | percentile 2 -NoHeader -DropNaN -Detail
+```
 
+```
 field      : F2
 count      : 16
 sum        : 40
@@ -3314,14 +4249,17 @@ NaN        : 4
 DropNaN    : 4
 FillNaN    : 0
 ReplaceNaN : 0
+```
 
-
+```powershell
 # Replace "NaN" (use -ReplaceNaN option)
 "a".."d" `
     | %{ $s=$_; 1..5 | %{ "$s $_" } } `
     | %{ $_ -replace '5$','NaN' } `
     | percentile 2 -NoHeader -ReplaceNaN 0 -Detail
+```
 
+```
 field      : F2
 count      : 20
 sum        : 40
@@ -3371,6 +4309,9 @@ Input:
 
 ```powershell
 cat data.txt
+```
+
+```
 Customers Sales
 AC01 6340834
 AC02 6340834
@@ -3387,7 +4328,9 @@ Output:
 cat data.txt `
     | decil `
     | Format-Table
+```
 
+```markdown
 Name  Seg Count          Sum       Mean Ratio Cumulative-Ratio
 ----  --- -----          ---       ---- ----- ----------------
 Sales D01    57 431538439.00 7570849.81  0.14             0.14
@@ -3408,7 +4351,9 @@ Another examples:
 cat data.txt `
     | decil -NoHeader `
     | Format-Table
+```
 
+```markdown
 Name Seg Count          Sum       Mean Ratio Cumulative-Ratio
 ---- --- -----          ---       ---- ----- ----------------
 H2   D01    57 431538439.00 7570849.81  0.14             0.14
@@ -3429,6 +4374,9 @@ NoHeader input
 
 ```powershell
 cat data.txt
+```
+
+```
 Customers Salse
 AC01 6340834
 AC02 6340834
@@ -3437,11 +4385,15 @@ AC03 6340834
 U036 6158245
 U040 6500047
 U041 6751113
+```
 
-
+```powershell
 cat data.txt `
     | decil -Rank `
     | head
+```
+
+```markdown
 Seg Customers Sales
 D01 BZ30 9830001
 D01 CZ31 9600101
@@ -3460,6 +4412,9 @@ description
 
 ```powershell
 cat data.txt
+```
+
+```
 AC01 6340834
 AC02 6340834
 AC03 6340834
@@ -3467,14 +4422,17 @@ AC03 6340834
 U036 6158245
 U040 6500047
 U041 6751113
+```
 
-
+```powershell
 cat data.txt `
     | decil -Rank `
     | chead `
     | ratio 3 `
     | head
+```
 
+```
 D01 BZ30 9830001 0.0030872127736867039417159664
 D01 CZ31 9600101 0.0030150103174844539891268974
 D01 GZ96 9500965 0.0029838756385019996555041486
@@ -3506,7 +4464,9 @@ D01 CZ84 8470022 0.0026600974009877927269611624
 
 ```powershell
 cat iris.csv | summary 1 -d ","
+```
 
+```
 Name        : sepal_length
 Count       : 150
 Mean        : 5.84333333333333
@@ -3540,7 +4500,9 @@ Examples:
 
 ```powershell
 cat iris.csv | summary 1 -d ","
+```
 
+```
 Name        : sepal_length
 Count       : 150
 Mean        : 5.84333333333333
@@ -3560,7 +4522,9 @@ Count-Total : 150
 
 ```powershell
 1..4 | %{ cat iris.csv | summary $_ -d "," } | ft
+```
 
+```markdown
 Name         Count Mean  Min Qt25% Qt50% Qt75%  Max  IQR  IQD
 ----         ----- ----  --- ----- ----- -----  ---  ---  ---
 sepal_length   150 5.84 4.30  5.10  5.80  6.40 7.90 1.30 0.65
@@ -3633,7 +4597,9 @@ cat iris.txt `
         -AcceptableLevel 4.7 `
         -MaxLimit 5.5 `
         -MaxFrequency 3
+```
 
+```markdown
 s_l AcceptableLevel MaxLimit MaxFrequency WindowSize Res
 --- --------------- -------- ------------ ---------- ---
 5.1 NaN             NaN      NaN          NaN        NaN
@@ -3658,6 +4624,9 @@ s_l AcceptableLevel MaxLimit MaxFrequency WindowSize Res
 
 ```powerhshell
 "key1 key2 2 4 7 1 3" | ysort -n 2
+```
+
+```
 key1 key2 1 2 3 4 7
 ```
 
@@ -3697,6 +4666,9 @@ simple usage
 
 ```powershell
 "C B A" | ysort
+```
+
+```
 A B C
 ```
 
@@ -3705,33 +4677,60 @@ basic usage (sort value fields as `System.Double`)
 ```powershell
 # input
 $dat = @("3 2 2 1 12 22", "123 75 12 12 22 01 87 26", "98 21 21 67 59 1")
-
 $dat
+```
+
+```
 3 2 2 1 12 22
 123 75 12 12 22 01 87 26
 98 21 21 67 59 1
+```
 
+```powershell
 $dat | ysort
+```
+
+```
 1 2 2 3 12 22
 01 12 12 22 26 75 87 123
 1 21 21 59 67 98
+```
 
+```powershell
 $dat | ysort -Unique
+```
+
+```
 1 2 3 12 22
 01 12 22 26 75 87 123
 1 21 59 67 98
+```
 
+```powershell
 $dat | ysort -Descending
+```
+
+```
 22 12 3 2 2 1
 123 87 75 26 22 12 12 01
 98 67 59 21 21 1
+```
 
+```powershell
 $dat | ysort -Cast double
+```
+
+```
 1 2 2 3 12 22
 01 12 12 22 26 75 87 123
 1 21 21 59 67 98
+```
 
+```powershell
 $dat | ysort -Cast string
+```
+
+```
 1 12 2 2 22 3
 01 12 12 123 22 26 75 87
 1 21 21 59 67 98
@@ -3742,22 +4741,34 @@ sort key-value fields (`-n <n>` option)
 ```powershell
 # input (leftmost value is key string)
 $dat = @("ABC 2 2 3 12 22", "DEF 123 75 12 22 01", "XYZ 98 21 67 59 1")
-
 $dat
+```
+
+```
 ABC 2 2 3 12 22
 DEF 123 75 12 22 01
 XYZ 98 21 67 59 1
+```
 
+```powershell
 # "-n 1" means key fields from 1 to 1, others are value fields
 # or "-n <n>" means sort by ignoring 1 to <n> fields
 $dat | ysort -n 1
+```
+
+```
 ABC 2 2 3 12 22
 DEF 01 12 22 75 123
 XYZ 1 21 59 67 98
+```
 
+```powershell
 # If the key string is in the leftmost column,
 # it will be sorted as a string if no key field is specified.
 $dat | ysort  ## Oops! forgot to specify a key field (-n 1)!
+```
+
+```
 12 2 2 22 3 ABC
 01 12 123 22 75 DEF
 1 21 59 67 98 XYZ
@@ -3771,14 +4782,21 @@ If detect different data type, raise error and stop processing
 # sort data type detected from first record
 # input (second record type (string) is different fron first (double))
 $dat = @("3 2 2 1 12 22", "ABC 75 12 12 22 01 87 26", "98 21 21 67 59 1")
-
 $dat
+```
+
+```
 3 2 2 1 12 22
 ABC 75 12 12 22 01 87 26 ## leftmost field is different data type to 1st record
 98 21 21 67 59 1
+```
 
+```powershell
 # so the following raises an error and stop processing
 $dat | ysort
+```
+
+```
 1 2 2 3 12 22
 Sort-Object: ysort_function.ps1:152
 Line |
@@ -3793,8 +4811,10 @@ Version-sort example
 ```powershell
 # version sort example
 "192.1.3.2 192.11.3.1 192.2.3.5" | ysort
-
 "192.1.3.2 192.11.3.1 192.2.3.5" | ysort -Cast version
+```
+
+```
 192.1.3.2 192.2.3.5 192.11.3.1
 ```
 Datetime-sort example
@@ -3802,9 +4822,17 @@ Datetime-sort example
 ```powershell
 # datetime sort example
 "2021-4-10 2021-4-1 2021-4-5" | ysort
-2021-4-1 2021-4-5 2021-4-10
+```
 
+```
+2021-4-1 2021-4-5 2021-4-10
+```
+
+```powershell
 "2021/4/10 2021/4/1 2021/4/5" | ysort -Cast datetime
+```
+
+```
 2021-4-1 2021-4-5 2021-4-10
 ```
 
@@ -3813,6 +4841,9 @@ Miscellaneous
 ```powershell
 # specified delimiter
 "ABC321" | ysort -n 3 -fs ""
+```
+
+```
 ABC123
 ```
 
@@ -3822,9 +4853,17 @@ Ordinal sort
 # ordinal sort
 
 "abc1 Abc2 abc3 Abc4" | ysort
-abc1 Abc2 abc3 Abc4
+```
 
+```
+abc1 Abc2 abc3 Abc4
+```
+
+```powershell
 "abc1 Abc2 abc3 Abc4" | ysort -Ordinal
+```
+
+```
 Abc2 Abc4 abc1 abc3
 ```
 
@@ -3838,11 +4877,19 @@ Abc2 Abc4 abc1 abc3
 ```powerhshell
 # non-key data
 "11 12 33" | ycalc -NoHeader -Sum
+```
+
+```
 F1 F2 F3 sum
 11 12 33 56
+```
 
+```powershell
 # key-value data
 "k1 k2 12 24 37 11 23" | ycalc -n 2 -NoHeader -Sum -Average -Minimum -Maximum
+```
+
+```
 F1 F2 F3 F4 F5 F6 F7 sum ave max min
 k1 k2 12 24 37 11 23 107 21.4 37 11
 
@@ -3875,6 +4922,9 @@ Examples
 ```powershell
 # non-key data
 "11 12 33" | ycalc -NoHeader -Sum
+```
+
+```
 F1 F2 F3 sum
 11 12 33 56
 ```
@@ -3883,6 +4933,9 @@ F1 F2 F3 sum
 # key-value data
 "k1 k2 12 24 37 11 23" `
     | ycalc -n 2 -NoHeader -Sum -Average -Minimum -Maximum
+```
+
+```
 F1 F2 F3 F4 F5 F6 F7 sum ave max min
 k1 k2 12 24 37 11 23 107 21.4 37 11
 
@@ -3931,7 +4984,9 @@ Import-Csv -Path iris.csv `
     | Apply-Function -Key "species" {
         Measure-Stats -Value "sepal_length" -Key "species" -Sum -Average } `
     | Format-Table
+```
 
+```markdown
 species    Property        Sum Average
 -------    --------        --- -------
 setosa     sepal_length 250.30    5.01
@@ -3954,7 +5009,9 @@ Import-Csv -Path penguins.csv `
     | Format-Table `
     | Out-String -Stream `
     | Select-String -Pattern "deviated" -Context 3
+```
 
+```markdown
 count species xrs detect   b_l_m BarChart
 ----- ------- --- ------   ----- --------
   183 Gentoo    0           47.3 |||||||||||||||
@@ -4037,7 +5094,9 @@ The aim is to reduce the number of characters input for long property name when 
 Import-Csv -Path iris.csv `
     | Select-Object -First 1 `
     | Format-List
+```
 
+```
 sepal_length : 5.1
 sepal_width  : 3.5
 petal_length : 1.4
@@ -4053,7 +5112,9 @@ Import-Csv -Path iris.csv `
     | Shorten-PropertyName `
     | Select-Object -First 1 `
     | Format-List
+```
 
+```
 s_l     : 5.1
 s_w     : 3.5
 p_l     : 1.4
@@ -4067,7 +5128,9 @@ Import-Csv -Path iris.csv `
     | Shorten-PropertyName -VeryShorten `
     | Select-Object -First 1 `
     | Format-List
+```
 
+```
 sl      : 5.1
 sw      : 3.5
 pl      : 1.4
@@ -4103,7 +5166,9 @@ Import-Csv penguins.csv `
     | Shorten-PropertyName `
     | head -n 1 `
     | Format-Table
+```
 
+```markdown
 count species island    b_l_m b_d_m f_l_m b_m_g sex    year
 ----- ------- ------    ----- ----- ----- ----- ---    ----
 1     Adelie  Torgersen 39.1  18.7  181   3750  male   2007
@@ -4117,7 +5182,9 @@ Import-Csv penguins.csv `
     | head -n 1 `
     | Select-Field 1,3,5,-2 `
     | Format-Table
+```
 
+```markdown
 count island    b_d_m sex
 ----- ------    ----- ---
 1     Torgersen 18.7  male
@@ -4132,7 +5199,9 @@ Import-Csv penguins.csv `
     | Shorten-PropertyName `
     | head -n 1 `
     | Format-Table
+```
 
+```markdown
 count species island    b_l_m b_d_m f_l_m b_m_g sex    year
 ----- ------- ------    ----- ----- ----- ----- ---    ----
 1     Adelie  Torgersen 39.1  18.7  181   3750  male   2007
@@ -4146,7 +5215,9 @@ Import-Csv penguins.csv `
     | head -n 1 `
     | Delete-Field 2,3,-2 `
     | Format-Table
-    
+```
+
+```markdown
 count b_l_m b_d_m f_l_m b_m_g year
 ----- ----- ----- ----- ----- ----
 1     39.1  18.7  181   3750  2007
@@ -4177,7 +5248,9 @@ Import-Csv -Path penguins.csv `
     | Replace-NA -Property "bill_length_mm" -To "hoge" `
     | Where-Object -Property "bill_length_mm" -eq "hoge" `
     | Format-Table
+```
 
+```markdown
 count species island    bill_length_mm bill_depth_mm sex year
 ----- ------- ------    -------------- ------------- --- ----
 4     Adelie  Torgersen hoge           NA            NA  2007
@@ -4210,14 +5283,16 @@ ps `
     | Sort-Object -Property "ProcessName", "Id" -Stable `
     | Apply-Function "ProcessName" { Select-Object -First 1 } `
     | Format-Table
+```
 
- NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
- ------    -----      -----     ------      --  -- -----------
-     10     2.88       8.89       0.00    5816   0 AggregatorHost
-     26    16.09      33.21       0.84    7276   1 ApplicationFrameHost
-      9     1.61       6.76       0.00    4300   0 armsvc
-     17    17.21      17.87       3.47    3624   0 audiodg
-    817   382.38     198.16       0.00    4336   0 avp
+```markdown
+NPM(K)    PM(M)      WS(M)     CPU(s)      Id  SI ProcessName
+------    -----      -----     ------      --  -- -----------
+    10     2.88       8.89       0.00    5816   0 AggregatorHost
+    26    16.09      33.21       0.84    7276   1 ApplicationFrameHost
+     9     1.61       6.76       0.00    4300   0 armsvc
+    17    17.21      17.87       3.47    3624   0 audiodg
+   817   382.38     198.16       0.00    4336   0 avp
 ...
 ```
 
@@ -4230,7 +5305,9 @@ Import-Csv -Path penguins.csv `
     | Shorten-PropertyName `
     | Apply-Function -key "species","island" {Select-Object -First 1} `
     | Format-Table
+```
 
+```markdown
 count species   island    b_l_m b_d_m f_l_m b_m_g sex    year key
 ----- -------   ------    ----- ----- ----- ----- ---    ---- ---
 21    Adelie    Biscoe    37.8  18.3  174   3400  female 2007 Adelie, Biscoe
@@ -4262,7 +5339,9 @@ Import-Csv -Path penguins.csv `
     | Shorten-PropertyName `
     | GroupBy-Object "species", "island" { Select-Object -First 1 } `
     | Format-Table "species", "island", "b_l_m", "sex", "year", "key"
+```
 
+```markdown
 species   island    b_l_m sex    year key
 -------   ------    ----- ---    ---- ---
 Adelie    Biscoe    37.8  female 2007 Adelie, Biscoe
@@ -4281,7 +5360,9 @@ Import-Csv -Path penguins.csv `
         | Measure-Stats -Value "bill_length_mm" -Key "key" -Average -Sum -Count
     } `
     | Format-Table
+```
 
+```markdown
 key               Count Average     Sum Property
 ---               ----- -------     --- --------
 Adelie, Biscoe       44   38.98 1714.90 bill_length_mm
@@ -4323,7 +5404,9 @@ Example:
     | ConvertFrom-Csv `
     | Add-Stats -Value "v1","v2" -Sum -Mean `
     | Format-Table
+```
 
+```markdown
 v1 v2 Mean_Of_v1 Mean_Of_v2 Sum_Of_v1 Sum_Of_v2
 -- -- ---------- ---------- --------- ---------
 1  1        3.00       3.00     15.00     15.00
@@ -4337,14 +5420,16 @@ v1 v2 Mean_Of_v1 Mean_Of_v2 Sum_Of_v1 Sum_Of_v2
 # Adds the sum and average value for each category (species)
 # of the values in the specified column (sl = sepal_length)
 Import-Csv -Path iris.csv `
-    | Shorten-PropertyName -v `
+    | Shorten-PropertyName -VeryShorten `
     | Drop-NA "sl" `
     | Sort-Object -Property "species" -Stable `
     | Apply-Function -Key "species" {
         Add-Stats -Value "sl" -Sum -Mean `
         | Select-Object -First 3 } `
     | Format-Table
+```
 
+```markdown
 sl  sw  pl  pw  species    key        Mean_Of_sl Sum_Of_sl
 --  --  --  --  -------    ---        ---------- ---------
 5.1 3.5 1.4 0.2 setosa     setosa           5.01    250.30
@@ -4365,14 +5450,16 @@ sl  sw  pl  pw  species    key        Mean_Of_sl Sum_Of_sl
 # For each record
 
 Import-Csv iris.csv `
-    | Shorten-PropertyName -v `
+    | Shorten-PropertyName -VeryShorten `
     | Drop-NA -Property "sl" `
     | Sort-Object -Property "species" -Stable `
     | Add-Stats -Value "sl" -Sum -Mean `
     | Select-Object -Property *, @{N="DevFromMean";E={$_."sl" - $_."Mean_Of_sl"}} `
     | Detect-XrsAnomaly -Value "sl" -OnlyDeviationRecord `
     | Format-Table
-    
+```
+
+```markdown
 sl  sw  pl  pw  species    Mean_Of_sl Sum_Of_sl DevFromMean xrs
 --  --  --  --  -------    ---------- --------- ----------- ---
 4.3 3.0 1.1 0.1 setosa           5.84    876.50       -1.54   4
@@ -4414,7 +5501,9 @@ Import-Csv -Path iris.csv `
     | Sort-Object -Property "species" -Stable `
     | Measure-Stats -Value "sepal_length" -Key "species" -Sum -Average `
     | Format-Table
+```
 
+```markdown
 species    Average    Sum Property
 -------    -------    --- --------
 setosa        5.01 250.30 sepal_length
@@ -4428,7 +5517,9 @@ Import-Csv -Path iris.csv `
     | Apply-Function -Key "species" {
         Measure-Stats -Value "sepal_length" -Key "species" -Sum -Average } `
     | Format-Table
+```
 
+```markdown
 species    Average    Sum Property
 -------    -------    --- --------
 setosa        5.01 250.30 sepal_length
@@ -4485,7 +5576,9 @@ Import-Csv -Path iris.csv `
     | Shorten-PropertyName `
     | Add-Quartile -Value "s_l" `
     | Select-Object -First 1
+```
 
+```
 s_l     : 5.1
 s_w     : 3.5
 p_l     : 1.4
@@ -4507,7 +5600,9 @@ Import-Csv -Path iris.csv `
     | Shorten-PropertyName `
     | Add-Quartile -Value "s_l" -AllStats `
     | Select-Object -First 1
+```
 
+```
 s_l          : 5.1
 s_w          : 3.5
 p_l          : 1.4
@@ -4533,7 +5628,9 @@ Import-Csv -Path iris.csv `
     | Shorten-PropertyName `
     | Add-Quartile -Value "s_l" -AddPropertyName `
     | Select-Object -First 1
+```
 
+```
 s_l           : 5.1
 s_w           : 3.5
 p_l           : 1.4
@@ -4557,7 +5654,9 @@ Import-Csv -Path iris.csv `
     | Add-Quartile -Value "s_w" -AllStats `
     | Where-Object -Property "outlier" -gt 0 `
     | Format-Table -Property "s_w", "LoIQR", "HiIQR", "Outlier"
+```
 
+```markdown
 s_w LoIQR HiIQR Outlier
 --- ----- ----- -------
 4.4  1.90  4.30       1
@@ -4580,10 +5679,11 @@ Example:
 Import-Csv -Path iris.csv `
     | Shorten-PropertyName `
     | Measure-Quartile -Value "s_w"
+```
 
+```
 Property : s_w
 Count    : 150
-Sum      : 458.6
 Mean     : 3.05733333333333
 SD       : 0.435866284936699
 Min      : 2
@@ -4598,7 +5698,9 @@ Outlier  : 1
 Import-Csv -Path iris.csv `
     | Shorten-PropertyName `
     | Measure-Quartile -Value "s_w" -Detail
+```
 
+```
 Property     : s_w
 Count        : 150
 Sum          : 458.6
@@ -4624,10 +5726,11 @@ OutlierLo    : 0
 Import-Csv -Path iris.csv `
     | Shorten-PropertyName `
     | Measure-Quartile -Value "s_w", "p_l"
+```
 
+```
 Property : s_w
 Count    : 150
-Sum      : 458.6
 Mean     : 3.05733333333333
 SD       : 0.435866284936699
 Min      : 2
@@ -4639,7 +5742,6 @@ Outlier  : 1
 
 Property : p_l
 Count    : 150
-Sum      : 563.7
 Mean     : 3.758
 SD       : 1.76529823325947
 Min      : 1
@@ -4677,7 +5779,6 @@ Import-Csv -Path iris.csv `
 ```
 Property : s_w
 Count    : 150
-Sum      : 458.6
 Mean     : 3.05733333333333
 SD       : 0.435866284936699
 Min      : 2
@@ -4726,7 +5827,6 @@ Import-Csv -Path iris.csv `
 ```
 Property : s_w
 Count    : 150
-Sum      : 458.6
 Mean     : 3.05733333333333
 SD       : 0.435866284936699
 Min      : 2
@@ -4738,7 +5838,6 @@ Outlier  : 1
 
 Property : p_l
 Count    : 150
-Sum      : 563.7
 Mean     : 3.758
 SD       : 1.76529823325947
 Min      : 1
@@ -4758,10 +5857,10 @@ Import-Csv -Path iris.csv `
 ```
 
 ```markdown
-Property Count    Sum Mean   SD  Min Qt25 Median Qt75  Max
--------- -----    --- ----   --  --- ---- ------ ----  ---
-s_w        150 458.60 3.06 0.44 2.00 2.80   3.00 3.40 4.40
-p_l        150 563.70 3.76 1.77 1.00 1.60   4.35 5.10 6.90
+Property  Count Mean   SD  Min Qt25 Median Qt75  Max Outlier
+--------  ----- ----   --  --- ---- ------ ----  --- -------
+s_w      150.00 3.06 0.44 2.00 2.80   3.00 3.40 4.40    1.00
+p_l      150.00 3.76 1.77 1.00 1.60   4.35 5.10 6.90    0.00
 ```
 
 ```powershell
@@ -4776,8 +5875,7 @@ Import-Csv -Path iris.csv `
 ```markdown
 Property    s_w    p_l
 --------    ---    ---
-Count       150    150
-Sum      458.60 563.70
+Count    150.00 150.00
 Mean       3.06   3.76
 SD         0.44   1.77
 Min        2.00   1.00
@@ -4785,7 +5883,7 @@ Qt25       2.80   1.60
 Median     3.00   4.35
 Qt75       3.40   5.10
 Max        4.40   6.90
-Outlier       1      0
+Outlier    1.00   0.00
 ```
 
 #### [Transpose-Property] - Transpose Property name and value
@@ -4841,13 +5939,13 @@ Import-Csv -Path planets.csv `
 ```
 
 ```markdown
-Property       Count        Sum    Mean       SD     Min    Qt25 Median    Qt75       Max
---------       -----        ---    ----       --     ---    ---- ------    ----       ---
-number          1035    1848.00    1.79     1.24    1.00    1.00 1         2.00      7.00
-orbital_period   992 1986894.26 2002.92 26014.73    0.09    5.45 39.98   526.62 730000.00
-mass             513    1353.38    2.64     3.82    0.00    0.23 1.26      3.06     25.00
-distance         808  213367.98  264.07   733.12    1.35   32.56 55.25   180.00   8500.00
-year            1035 2079388.00 2009.07     3.97 1989.00 2007.00 2010   2012.00   2014.00
+Property         Count    Mean       SD     Min    Qt25  Median    Qt75       Max Outlier
+--------         -----    ----       --     ---    ----  ------    ----       --- -------
+number         1035.00    1.79     1.24    1.00    1.00    1.00    2.00      7.00   93.00
+orbital_period  992.00 2002.92 26014.73    0.09    5.45   39.98  526.62 730000.00  126.00
+mass            513.00    2.64     3.82    0.00    0.23    1.26    3.06     25.00   52.00
+distance        808.00  264.07   733.12    1.35   32.56   55.25  180.00   8500.00  106.00
+year           1035.00 2009.07     3.97 1989.00 2007.00 2010.00 2012.00   2014.00   32.00
 ```
 
 ```powershell
@@ -4859,18 +5957,17 @@ Import-Csv -Path planets.csv `
 ```
 
 ```markdown
-Property  number orbital_period    mass  distance       year
---------  ------ --------------    ----  --------       ----
-Count       1035            992     513       808       1035
-Sum      1848.00     1986894.26 1353.38 213367.98 2079388.00
-Mean        1.79        2002.92    2.64    264.07    2009.07
-SD          1.24       26014.73    3.82    733.12       3.97
-Min         1.00           0.09    0.00      1.35    1989.00
-Qt25        1.00           5.45    0.23     32.56    2007.00
-Median         1          39.98    1.26     55.25       2010
-Qt75        2.00         526.62    3.06    180.00    2012.00
-Max         7.00      730000.00   25.00   8500.00    2014.00
-Outlier       93            126      52       106         32
+Property  number orbital_period   mass distance    year
+--------  ------ --------------   ---- --------    ----
+Count    1035.00         992.00 513.00   808.00 1035.00
+Mean        1.79        2002.92   2.64   264.07 2009.07
+SD          1.24       26014.73   3.82   733.12    3.97
+Min         1.00           0.09   0.00     1.35 1989.00
+Qt25        1.00           5.45   0.23    32.56 2007.00
+Median      1.00          39.98   1.26    55.25 2010.00
+Qt75        2.00         526.62   3.06   180.00 2012.00
+Max         7.00      730000.00  25.00  8500.00 2014.00
+Outlier    93.00         126.00  52.00   106.00   32.00
 ```
 
 #### [Detect-XrsAnomaly] - Detect anomaly values with X-Rs control
@@ -4942,7 +6039,9 @@ Import-Csv -Path iris.csv `
     | Drop-NA "s_l" `
     | Detect-XrsAnomaly -Value "s_l" -OnlyDeviationRecord -RowCounter `
     | Format-Table
+```
 
+```markdown
 s_l s_w p_l p_w species    xrs row
 --- --- --- --- -------    --- ---
 4.3 3.0 1.1 0.1 setosa       4  14
@@ -4966,7 +6065,9 @@ Import-Csv -Path iris.csv `
     | Apply-Function -Key "species" {
         Detect-XrsAnomaly -Value "p_w" -Detect -OnlyDeviationRecord } `
     | Format-Table
+```
 
+```markdown
 s_l s_w p_l p_w species key    xrs detect
 --- --- --- --- ------- ---    --- ------
 5.1 3.3 1.7 0.5 setosa  setosa   3 deviated
@@ -4984,7 +6085,9 @@ Import-Csv -Path penguins.csv `
     | Apply-Function -Key "species", "island" {
         Detect-XrsAnomaly -Value "b_l_m" -OnlyDeviationRecord } `
     | Format-Table -Property "count", "key", "b_l_m", "sex", "year", "xrs"
+```
 
+```markdown
 count key            b_l_m sex  year xrs
 ----- ---            ----- ---  ---- ---
 186   Gentoo, Biscoe 59.6  male 2007   3
@@ -5017,7 +6120,9 @@ Examples:
     | addt "val" `
     | ConvertFrom-Csv `
     | Plot-BarChart -Value "val" -Width 10 -Mark "|"
+```
 
+```markdown
 val  BarChart
 -  --------
 1  |
@@ -5038,7 +6143,9 @@ Import-Csv -Path iris.csv `
     | Shorten-PropertyName `
     | Plot-BarChart -Value "s_l" -Mark "|" -Width 20 `
     | Format-Table
+```
 
+```markdown
 s_w  p_l  p_w species  s_l BarChart
 ---  ---  --- -------  --- --------
 3.50 1.40 0.20 setosa  5.10 ||||||||||||
@@ -5053,7 +6160,9 @@ s_w  p_l  p_w species  s_l BarChart
 Get-ChildItem -Path ./tmp/ -File `
     | Plot-BarChart -Value "Length" -Key "Name", "Length" -Mark "|" -Width 40 `
     | Format-Table
+```
 
+```markdown
 Name  Length BarChart
 ----  ------ --------
 a.dot   2178 |||||||||
@@ -5073,9 +6182,10 @@ Import-Csv -Path penguins.csv `
     | Format-Table `
     | Out-String -Stream `
     | Select-String -Pattern "deviated" -Context 3
+```
 
+```markdown
   count species xrs detect   b_l_m BarChart
-
   ----- ------- --- ------   ----- --------
     183 Gentoo    0           47.3 |||||||||||||||
     184 Gentoo    0           42.8 ||||||||||||||
@@ -5111,7 +6221,9 @@ Get-Process `
     | Get-Histogram -Value "WorkingSet" -BucketWidth 5mb -Minimum 0 -Maximum 50mb `
     | Plot-BarChart "count" -Width 40 -Mark "|" `
     | Format-Table
+```
 
+```markdown
 Index  lowerBound  upperBound Count BarChart
 -----  ----------  ---------- ----- --------
     1        0.00  5242880.00    13 ||||||||
@@ -5132,7 +6244,9 @@ Import-Excel -Path iris.xlsx `
     | Get-Histogram -Value "p_l" -BucketWidth 0.3 `
     | Plot-BarChart "count" -Width 40 -Mark "|" `
     | Format-Table
+```
 
+```markdown
 Index lowerBound upperBound Count BarChart
 ----- ---------- ---------- ----- --------
     1       1.00       1.30    11 |||||||||||||
@@ -5163,34 +6277,36 @@ Index lowerBound upperBound Count BarChart
 # aggregate by group in advance.
 
 Import-Excel iris.xlsx `
-    | Shorten-PropertyName -v `
+    | Shorten-PropertyName -VeryShorten `
     | sort "species" -Stable `
     | Apply-Function -Key "species" { `
         MovingWindow-Approach -Value "sl" `
         | Get-Histogram -Value "rolling" -BucketWidth .7 -Maximum 8 -Minimum 4 -Key "species" `
-        | Plot-BarChart -Value "count" -Mark "|" } `
+        | Plot-BarChart -Value "count" -Mark "|" -Width 20 } `
     | Format-Table
+```
 
-species    Index lowerBound upperBound Count BarChart
--------    ----- ---------- ---------- ----- --------
-setosa         1       4.00       4.70     1
-setosa         2       4.70       5.40    43 ||||||||||||||||||||
-setosa         3       5.40       6.10     2
-setosa         4       6.10       6.80     0
-setosa         5       6.80       7.50     0
-setosa         6       7.50       8.20     0
-versicolor     1       4.00       4.70     0
-versicolor     2       4.70       5.40     0
-versicolor     3       5.40       6.10    36 ||||||||||||||||||||
-versicolor     4       6.10       6.80    10 |||||
-versicolor     5       6.80       7.50     0
-versicolor     6       7.50       8.20     0
-virginica      1       4.00       4.70     0
-virginica      2       4.70       5.40     0
-virginica      3       5.40       6.10     0
-virginica      4       6.10       6.80    36 ||||||||||||||||||||
-virginica      5       6.80       7.50    10 |||||
-virginica      6       7.50       8.20     0
+```markdown
+species    Index lower_bound upper_bound Count BarChart
+-------    ----- ----------- ----------- ----- --------
+setosa         1        4.00        4.70     1
+setosa         2        4.70        5.40    43 ||||||||||||||||||||
+setosa         3        5.40        6.10     2
+setosa         4        6.10        6.80     0
+setosa         5        6.80        7.50     0
+setosa         6        7.50        8.20     0
+versicolor     1        4.00        4.70     0
+versicolor     2        4.70        5.40     0
+versicolor     3        5.40        6.10    36 ||||||||||||||||||||
+versicolor     4        6.10        6.80    10 |||||
+versicolor     5        6.80        7.50     0
+versicolor     6        7.50        8.20     0
+virginica      1        4.00        4.70     0
+virginica      2        4.70        5.40     0
+virginica      3        5.40        6.10     0
+virginica      4        6.10        6.80    36 ||||||||||||||||||||
+virginica      5        6.80        7.50    10 |||||
+virginica      6        7.50        8.20     0
 ```
 
 #### [Unique-Object] - Get unique category
@@ -5274,7 +6390,7 @@ f       1
 ```markdown
 str Count
 --- -----
-a       1
+a       1 <--- Undesired result
 b       1
 c       1
 d       2
@@ -5303,25 +6419,33 @@ Example:
 Import-Csv -Path planets.csv `
     | Select-Object -First 3 `
     | Format-Table
+```
 
+```markdown
 method          number orbital_period mass distance year
 ------          ------ -------------- ---- -------- ----
 Radial Velocity 1      269.3          7.1  77.4     2006
 Radial Velocity 1      874.774        2.21 56.95    2008
 Radial Velocity 1      763.0          2.6  19.84    2011
+```
 
+```powershell
 # Use Replace-ForEach function
 Import-Csv -Path planets.csv `
     | Select-Object -First 3 `
     | Replace-ForEach "method" -From ' ' -To '_' `
     | Format-Table
+```
 
+```markdown
 method          number orbital_period mass distance year
 ------          ------ -------------- ---- -------- ----
 Radial_Velocity 1      269.3          7.1  77.4     2006
 Radial_Velocity 1      874.774        2.21 56.95    2008
 Radial_Velocity 1      763.0          2.6  19.84    2011
+```
 
+```powershell
 # Equivalent to
 Import-Csv -Path planets.csv `
     | Select-Object -First 3 `
@@ -5370,7 +6494,9 @@ Examples:
 "3,Hanna"
 ) | ConvertFrom-Csv `
   | Set-Variable -Name master
+```
 
+```powershell
 ## transaction
 @(
 "EmployeeId,When"
@@ -5382,7 +6508,9 @@ Examples:
 "44,2/29/2012 01:00:00 AM"
 ) | ConvertFrom-Csv `
   | Set-Variable -Name tran
+```
 
+```powershell
 ## main
 $tran `
     | Join2-Object `
@@ -5393,7 +6521,9 @@ $tran `
         -IncludeMasterKey `
         -PreSortedMasterKey `
     | Format-Table
+```
 
+```markdown
 EmployeeId When                  m_Id m_Name
 ---------- ----                  ---- ------
 1          6/12/2012 08:05:01 AM 1    John
@@ -5408,24 +6538,36 @@ EmployeeId When                  m_Id m_Name
 # read from csv files
 
 cat tran.csv
-    id,v1,v2,v3,v4,v5
-    0000005,82,79,16,21,80
-    0000001,46,39,8,5,21
-    0000004,58,71,20,10,6
-    0000009,60,89,33,18,6
-    0000003,30,50,71,36,30
-    0000007,50,2,33,15,62
+```
 
+```markdown
+id,v1,v2,v3,v4,v5
+0000005,82,79,16,21,80
+0000001,46,39,8,5,21
+0000004,58,71,20,10,6
+0000009,60,89,33,18,6
+0000003,30,50,71,36,30
+0000007,50,2,33,15,62
+```
+
+```powershell
 cat master.csv
-    id,name,val,class
-    0000003,John,26,F
-    0000005,Mark,50,F
-    0000007,Bob,42,F
+```
 
+```
+id,name,val,class
+0000003,John,26,F
+0000005,Mark,50,F
+0000007,Bob,42,F
+```
+
+```powershell
 Import-Csv tran.csv `
     | Join2-Object -Master master.csv -On id `
     | Format-Table
+```
 
+```markdown
 id      v1 v2 v3 v4 v5 m_name m_val m_class
 --      -- -- -- -- -- ------ ----- -------
 0000005 82 79 16 21 80 Mark   50    F
@@ -5445,7 +6587,9 @@ Import-Csv tran.csv `
         -On id `
         -OnlyIfInBoth `
     | Format-Table
+```
 
+```markdown
 id      v1 v2 v3 v4 v5 m_name m_val m_class
 --      -- -- -- -- -- ------ ----- -------
 0000005 82 79 16 21 80 Mark   50    F
@@ -5462,7 +6606,9 @@ Import-Csv tran.csv `
         -On id `
         -Where { [double]($_.v2) -gt 39 } `
     | Format-Table
+```
 
+```markdown
 id      v1 v2 v3 v4 v5 m_name m_val m_class
 --      -- -- -- -- -- ------ ----- -------
 0000005 82 79 16 21 80 Mark   50    F
@@ -5658,6 +6804,9 @@ Input:
 
 ```powershell
 cat input.txt
+```
+
+```markdown
 # title
 
 ## project name [2023-03-01]
@@ -5677,14 +6826,16 @@ cat input.txt
 
 Output:
 
-```
+```powershell
 cat input.txt `
     | gantt2pu `
         -CloseSatSun `
         -Today `
         -StartDate 2023-1-18 > a.pu;
 pu2java a.pu png | ii
+```
 
+```markdown
 @startgantt
 
 <style>
@@ -5802,6 +6953,9 @@ Examples:
 # 4 single-byte spaces plus a hyphen
 
 cat a.md
+```
+
+```markdown
 # What flavor would you like?
 
 - Flavors
@@ -5945,6 +7099,9 @@ cat a.md | mind2dot -FirstNodeFillColor orange > a.dot; dot2gviz a.dot | ii
 ```powershell
 # input
 cat a.md
+```
+
+```markdown
 # kinsoku test
 
 - 日本語文字列の、禁則処理テスト
@@ -6027,6 +7184,9 @@ Examples:
 # 4 single-byte spaces plus a hyphen
 
 cat a.md
+```
+
+```markdown
 # What flavor would you like?
 
 - Flavors
@@ -6050,7 +7210,9 @@ end legend
 # Note that fontname="meiryo" is specified by default
 
 cat a.md | mind2pu
+```
 
+```
 @startmindmap
 
 title "What flavor would you like?"
@@ -6097,6 +7259,9 @@ cat a.md | mind2pu -Theme blueprint > a.pu; pu2java a.pu | ii
 ```powershell
 # input
 cat a.md
+```
+
+```markdown
 # kinsoku test
 
 - 日本語文字列の、禁則処理テスト
@@ -6153,8 +7318,9 @@ cat wbs.md `
     | mind2pu -WBS `
     | Tee-Object -FilePath a.pu ;
 pu2java a.pu -OutputFileType svg | ii
+```
 
-
+```
 @startwbs
 
 title "WBS"
@@ -6250,6 +7416,9 @@ Input:
 
 ```powershell
 cat input.txt
+```
+
+```markdown
 # how to cook curry
 
 -- rice --
@@ -6397,7 +7566,10 @@ strict digraph logictree {
 Input2:
 
 ```powershell
-PS> cat input.txt
+cat input.txt
+```
+
+```markdown
 # logic tree
 
 Goal Making a profit for the company  [ReqA, ReqB]
@@ -6558,7 +7730,10 @@ C task-C [A,B]
 Input:
 
 ```powershell
-PS> cat input.txt
+cat input.txt
+```
+
+```markdown
 # how to cook curry
 
 -- rice --
@@ -6654,7 +7829,9 @@ Input2:
 
 ```powershell
 cat input.txt
+```
 
+```markdown
 # logic tree
 
 Goal Making a profit for the company [ReqA, ReqB]
@@ -7000,7 +8177,7 @@ end
 描画コマンド例：
 
 ```powershell
-## output activity-diagram
+# output activity-diagram
 cat a.md `
     | Format-Listow2pu -Kinsoku 16 -KinsokuNote 20 > a.pu;
 pu2java a.pu svg | ii
@@ -7056,7 +8233,9 @@ Examples:
 
 ```powershell
 ConvImage before.jpg after.png
+```
 
+```markdown
 説明
 ========================
 最も簡単な例。
@@ -7065,7 +8244,9 @@ before.jpg を after.png に形式変換する。
 
 ```powershell
 ConvImage before.jpg after.png -resize 500x500
+```
 
+```markdown
 説明
 ========================
 最も簡単な例その2。
@@ -7076,7 +8257,9 @@ before.jpg を after.png に形式変換し、かつ、
 
 ```powershell
 ConvImage -inputFile before.jpg -outputFile after.png -resize 100x100
+```
 
+```markdown
 説明
 ========================
 オプションを正確に記述した例。上記「簡単な例その2」と同じ結果を得る。
@@ -7087,7 +8270,9 @@ before.jpg を after.png に形式変換し、かつ、
 
 ```powershell
 ConvImage -inputFile before.jpg -outputFile after.png -resize 100x100 -notOverWrite
+```
 
+```markdown
 説明
 ========================
 before.jpg を after.png に形式変換し、かつ、
@@ -7099,7 +8284,9 @@ before.jpg を after.png に形式変換し、かつ、
 
 ```powershell
 ConvImage before.jpg after.png -resize 10%
+```
 
+```markdown
 説明
 ========================
 before.jpg を after.png に形式変換し、かつ、
@@ -7109,7 +8296,9 @@ before.jpg を after.png に形式変換し、かつ、
 
 ```powershell
 ConvImage before.jpg after.png -resize 100
+```
 
+```markdown
 説明
 ========================
 before.jpg を after.png に形式変換し、かつ、
@@ -7119,7 +8308,9 @@ before.jpg を after.png に形式変換し、かつ、
 
 ```powershell
 ConvImage before.jpg after.png -rotate 90
+```
 
+```markdown
 説明
 ========================
 before.jpg を after.png に形式変換し、かつ、
@@ -7128,7 +8319,9 @@ before.jpg を after.png に形式変換し、かつ、
 
 ```powershell
 ConvImage before.jpg after.png -rotate 90 -flip
+```
 
+```markdown
 説明
 ========================
 before.jpg を after.png に形式変換し、かつ、
@@ -7138,7 +8331,9 @@ before.jpg を after.png に形式変換し、かつ、
 
 ```powershell
 ConvImage before.jpg after.png -rotate 90 -flop
+```
 
+```markdown
 説明
 ========================
 before.jpg を after.png に形式変換し、かつ、
@@ -7162,11 +8357,15 @@ Markdownファイルの処理に特化した行指向ならぬブロック指向
 cat README.md `
     | mdgrep man2 -Level 4 -MatchOnlyTitle -Expand `
     | head
+```
 
 or
 
+```powershell
 cat README.md | mdgrep man2 -l 4 -t -e | head
+```
 
+```markdown
 #### [man2] - Formats filelist as a wide table and gets manual
 
 [man2]: src/man2_function.ps1
@@ -7215,6 +8414,9 @@ mdgrep this [README.md] file.
 ```powershell
 # grep level 3 header and its contents
 cat README.md | mdgrep seq2pu -Level 3
+```
+
+```markdown
     ### Plot chart and graph
     #### [dot2gviz] - Wrapper for Graphviz:dot command
     #### [pu2java] - Wrapper for plantuml.jar command
@@ -7225,14 +8427,24 @@ cat README.md | mdgrep seq2pu -Level 3
     #### [logi2pu] - Generate data for PlantUML (usecase diagram) with simple format
     #### [seq2pu] - Generate sequence-diagram from markdown-like list format
     #### [flow2pu] - Generate activity-diagram (flowchart) from markdown-like list format
+```
 
+```powershell
 # grep level 4 header and its contents
 cat README.md | mdgrep seq2pu -Level 4
-    #### [seq2pu] - Generate sequence-diagram from markdown-like list format
+```
 
+```markdown
+#### [seq2pu] - Generate sequence-diagram from markdown-like list format
+```
+
+```powershell
 # get(expand) title and contents of "seq2pu function"
 cat README.md | mdgrep seq2pu -Level 4 -e
-    # output contents in "#### seq2pu section"
+```
+
+```markdown
+# output contents in "#### seq2pu section"
 ```
 
 Another examples:
@@ -7265,111 +8477,148 @@ Outputs
 # Search section title and contents, and output matched section titles.
 # Sections below heading level 2 are searched by default
 
-PS > $markdown | mdgrep .
-    ## HACCP
-    ### Books
-    ### Articles
-    ## Computer
-    ### Books
-    ### Articles
+$markdown | mdgrep .
+```
 
-PS > $markdown | mdgrep . -Expand
-PS > $markdown | mdgrep . -e
-    ## HACCP
-    hoge1
-    ### Books
-    fuga1
-    ### Articles
-    piyo1
-    ## Computer
-    hoge2
-    ### Books
-    fuga2
-    ### Articles
-    piyo2
+```markdown
+## HACCP
+### Books
+### Articles
+## Computer
+### Books
+### Articles
+```
+
+```powershell
+$markdown | mdgrep . -Expand
+$markdown | mdgrep . -e
+```
+
+```markdown
+## HACCP
+hoge1
+### Books
+fuga1
+### Articles
+piyo1
+## Computer
+hoge2
+### Books
+fuga2
+### Articles
+piyo2
 ```
 
 ```powershell
 # grep section title and paragraph
 
-PS > $markdown | mdgrep hoge1 -e
-    ## HACCP
-    hoge1
-    ### Books
-    fuga1
-    ### Articles
-    piyo1
+$markdown | mdgrep hoge1 -e
+```
 
+```markdown
+## HACCP
+hoge1
+### Books
+fuga1
+### Articles
+piyo1
+```
 
-PS > $markdown | mdgrep hoge1 -NotMatch -e
-PS > $markdown | mdgrep hoge1 -v -e
-    ## Computer
-    hoge2
-    ### Books
-    fuga2
-    ### Articles
-    piyo2
+```powershell
+$markdown | mdgrep hoge1 -NotMatch -e
+$markdown | mdgrep hoge1 -v -e
+```
 
+```markdown
+## Computer
+hoge2
+### Books
+fuga2
+### Articles
+piyo2
+```
 
-PS > $markdown | mdgrep haccp -MatchOnlyTitle -e
-PS > $markdown | mdgrep haccp -t -e
-    ## HACCP
-    hoge1
-    ### Books
-    fuga1
-    ### Articles
-    piyo1
+```powershell
+$markdown | mdgrep haccp -MatchOnlyTitle -e
+$markdown | mdgrep haccp -t -e
+```
+
+```markdown
+## HACCP
+hoge1
+### Books
+fuga1
+### Articles
+piyo1
 ```
 
 ```powershell
 # invert match
-PS > $markdown | mdgrep haccp -MatchOnlyTitle -NotMatch -e
-PS > $markdown | mdgrep haccp -t -v -e
-    ## Computer
-    hoge2
-    ### Books
-    fuga2
-    ### Articles
-    piyo2
+$markdown | mdgrep haccp -MatchOnlyTitle -NotMatch -e
+$markdown | mdgrep haccp -t -v -e
+```
 
-PS > $markdown | mdgrep Books -MatchOnlyTitle
-PS > $markdown | mdgrep Books -t
-    # not match because of grep only level2 section
+```markdown
+## Computer
+hoge2
+### Books
+fuga2
+### Articles
+piyo2
+```
+
+```powershell
+$markdown | mdgrep Books -MatchOnlyTitle
+$markdown | mdgrep Books -t
+```
+
+```markdown
+# not match because of grep only level2 section
 ```
 
 ```powershell
 # change section level to grep
 
-PS > $markdown | mdgrep fuga -Level 3 -e
-PS > $markdown | mdgrep fuga -l 3 -e
-    ### Books
-    fuga1
-    ### Books
-    fuga2
+$markdown | mdgrep fuga -Level 3 -e
+$markdown | mdgrep fuga -l 3 -e
+```
+
+```markdown
+### Books
+fuga1
+### Books
+fuga2
 ```
 
 ```powershell
 # Output parent sections
 
-PS > $markdown | mdgrep fuga -Level 3 -OutputParentSection -e
-PS > $markdown | mdgrep fuga -l 3 -p -e
-    # My favorite links
-    ## HACCP
-    ### Books
-    fuga1
-    ## Computer
-    ### Books
-    fuga2
+$markdown | mdgrep fuga -Level 3 -OutputParentSection -e
+$markdown | mdgrep fuga -l 3 -p -e
+```
 
+```markdown
+# My favorite links
+## HACCP
+### Books
+fuga1
+## Computer
+### Books
+fuga2
+```
 
+```powershell
 # Note that the "-p|OutputParentSection" option
 #   outputs the titles regardless of matches.
-PS > $markdown | mdgrep fuga2 -Level 3 -p -e
-    # My favorite links
-    ## HACCP
-    ## Computer
-    ### Books
-    fuga2
+$markdown | mdgrep fuga2 -Level 3 -p -e
+```
+
+```markdown
+# My favorite links
+## HACCP
+## Computer
+### Books
+fuga2
 ```
 
 マークダウンファイルだけではなく、マークダウンスタイルで記述された見出し行（`#`）を含むテキストファイルならばなんでも適用できる。
@@ -7377,6 +8626,9 @@ PS > $markdown | mdgrep fuga2 -Level 3 -p -e
 
 ```powershell
 cat a.ps1
+```
+
+```markdown
     ## plus
     1+1
 
@@ -7392,6 +8644,9 @@ cat a.ps1
 
 ```powershell
 cat a.ps1 | mdgrep
+```
+
+```markdown
     ## plus
     ## sub
     ## mul
@@ -7401,9 +8656,11 @@ cat a.ps1 | mdgrep
 ```powershell
 cat a.ps1 | mdgrep div -MatchOnlyTitle -Expand
 cat a.ps1 | mdgrep div -t -e
+```
+
+```markdown
     ## div
     6/7
-
 ```
 
 PowerShellスクリプトファイルはコメントが`#`なので、コメントをマークダウンライクな見出し記法で記述しておくと、
@@ -7411,6 +8668,9 @@ PowerShellスクリプトファイルはコメントが`#`なので、コメン�
 
 ```powershell
 cat a.ps1
+```
+
+```markdown
     # private functions
     ## isFileExists - is file exists?
     function isFileExists ([string]$f){
@@ -7452,6 +8712,9 @@ cat a.ps1
 
 ```powershell
 cat a.ps1 | mdgrep
+```
+
+```markdown
     ## isFileExists - is file exists?
     ## isCommandExist - is command exists?
     ## Celsius2Fahrenheit - convert Celsius to Fahrenheit
@@ -7462,6 +8725,9 @@ cat a.ps1 | mdgrep
 ```powershell
 cat a.ps1 | mdgrep celsius2 -Expand -MatchOnlyTitle
 cat a.ps1 | mdgrep celsius2 -e -t
+```
+
+```markdown
     ## Celsius2Fahrenheit - convert Celsius to Fahrenheit
     function Celsius2Fahrenheit ( [float] $C ){
         ### calc
@@ -7475,8 +8741,11 @@ cat a.ps1 | mdgrep celsius2 -e -t
 
 ```powershell
 # IgnoreLeadingSpaces option treat '^space' + '## ...' as header
-PS > cat a.ps1 | mdgrep -IgnoreLeadingSpaces
-PS > cat a.ps1 | mdgrep -i
+cat a.ps1 | mdgrep -IgnoreLeadingSpaces
+cat a.ps1 | mdgrep -i
+```
+
+```markdown
     ## isCommandExist - is command exists?
         ### test command
     ## Celsius2Fahrenheit - convert Celsius to Fahrenheit
@@ -7485,20 +8754,35 @@ PS > cat a.ps1 | mdgrep -i
         ### calc
     ## Get-UIBufferSize - get terminal width
         ### calc
+```
 
-PS > cat a.ps1 | mdgrep -Level 3 -IgnoreLeadingSpaces
-PS > cat a.ps1 | mdgrep -l 3 -i
+```powershell
+cat a.ps1 | mdgrep -Level 3 -IgnoreLeadingSpaces
+cat a.ps1 | mdgrep -l 3 -i
+```
+
+```markdown
     ### test command
     ### calc
     ### calc
     ### calc
+```
 
-PS > cat a.ps1 | mdgrep -Level 3 -IgnoreLeadingSpaces test
-PS > cat a.ps1 | mdgrep -l 3 -i test
+```markdown
+cat a.ps1 | mdgrep -Level 3 -IgnoreLeadingSpaces test
+cat a.ps1 | mdgrep -l 3 -i test
+```
+
+```markdown
     ### test command
+```
 
-PS > cat a.ps1 | mdgrep -Level 3 -IgnoreLeadingSpaces test -Expand
-PS > cat a.ps1 | mdgrep -l 3 -i test -e
+```powershell
+cat a.ps1 | mdgrep -Level 3 -IgnoreLeadingSpaces test -Expand
+cat a.ps1 | mdgrep -l 3 -i test -e
+```
+
+```markdown
     ### test command
     try { Get-Command $cmd -ErrorAction Stop > $Null
         return $True
@@ -7517,7 +8801,10 @@ The `-List` switch parses the list structure instead of the header structure. An
 Input:
 
 ```powershell
-PS> cat a.md
+cat a.md
+```
+
+```markdown
 - title
     - Lv.1
         - Lv.1.1
@@ -7532,7 +8819,10 @@ PS> cat a.md
 Output:
 
 ```powershell
-PS> cat a.md | mdgrep -List .
+cat a.md | mdgrep -List .
+```
+
+```markdown
      - Lv.1
          - Lv.1.1
          - Lv.1.2
@@ -7580,10 +8870,18 @@ markdownの見出し形式で書かれたchangelogの検索例
 
 
 ```powershell
-PS > cat changelog.txt | mdgrep fuga
-## 2023-04-08 fuga
+cat changelog.txt | mdgrep fuga
+```
 
-PS > cat changelog.txt | mdgrep fuga -Expand
+```markdown
+## 2023-04-08 fuga
+```
+
+```powershell
+cat changelog.txt | mdgrep fuga -Expand
+```
+
+```markdown
 ## 2023-04-08 fuga
 
 - fuga1
@@ -7629,6 +8927,7 @@ Markdownのリストブロックに対するパターンマッチング。
 Examples:
 
 Input:
+
 ```markdown
 ---
 title: title
@@ -7651,7 +8950,10 @@ link: "https://github.com/btklab"
 Output:
 
 ```powershell
-PS> cat a.md | mdfocus 'Lv\.2'
+cat a.md | mdfocus 'Lv\.2'
+```
+
+```markdown
     - Lv.2
         - Lv.2.1
             - Lv.2.1.1
@@ -7662,7 +8964,10 @@ with [list2table] function
 
 
 ```powershell
-PS> cat a.md | mdfocus 'Lv\.2' | list2table
+cat a.md | mdfocus 'Lv\.2' | list2table
+```
+
+```markdown
 -       Lv.2    Lv.2.1  Lv.2.1.1
 -       Lv.2    Lv.2.2
 ```
@@ -7739,12 +9044,19 @@ Examples:
 # How to use kinsoku command
 "aa aa aa aaa aa aa, hoge fuga." | kinsoku 18
 "aa aa aa aaa aa aa, hoge fuga." | kinsoku -Width 18
+```
 
+```
 aa aa aa aaa aa
 aa, hoge fuga.
+```
 
+```powershell
 # How to use -Expamd
 "aa aa aa aaa aa aa, hoge fuga." | kinsoku 18 -Expand
+```
+
+```
 aa aa aa aaa aa aa,
 hoge fuga.
 ```
@@ -7752,18 +9064,36 @@ hoge fuga.
 ```powershell
 # How to use -Expand and -Join <str> option
 "あいうえおかきくけこ、さしすせそたち。" `| kinsoku 20
+```
+
+```
 あいうえおかきくけ
 こ、さしすせそたち。
+```
 
+```powershell
 "あいうえおかきくけこ、さしすせそたち。" | kinsoku 22
+```
+
+```
 あいうえおかきくけこ、
 さしすせそたち。
+```
 
+```powershell
 "あいうえおかきくけこ、さしすせそたち。" | kinsoku 20 -Expand
+```
+
+```
 あいうえおかきくけこ、
 さしすせそたち。
+```
 
+```powershell
 "あいうえおかきくけこ、さしすせそたち。" | kinsoku 22 -Expand -Join '\n'
+```
+
+```
 あいうえおかきくけこ、\nさしすせそたち。
 ```
 
@@ -7771,31 +9101,54 @@ hoge fuga.
 # How to use -SkipTop option
 "ID0001:あああああ、いいいいい、ううううう" `
     | kinsoku 10 -Expand
+```
+
+```
 ID0001:ああ
 あああ、い
 いいいい、
 ううううう
+```
 
+```powershell
 # -SkipTop 'ID....:'で、ID文字列はノーカウント。
 # 先頭にIDがあり、それをカウントしたくない場合などに使う。
 "ID0001:あああああ、いいいいい、ううううう" `
     | kinsoku 10 -Expand -SkipTop 'ID....:'
+```
+
+```
 ID0001:あああああ、
 いいいいい、
 ううううう
+```
 
+```powershell
 "ID0001:あああああ、いいいいい、ううううう" `
     | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n'
+```
+
+```
 ID0001:\nあああああ、
 いいいいい、
 ううううう
+```
 
+```powershell
 "ID0001:あああああ、いいいいい、ううううう" `
     | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n'
-ID0001:\nあああああ、\nいいいいい、\nううううう
+```
 
+```
+ID0001:\nあああああ、\nいいいいい、\nううううう
+```
+
+```powershell
 "ID0001:あああああ、いいいいい、ううううう" `
     | kinsoku 10 -Expand -SkipTop 'ID....:' -SkipTopJoinStr '\n' -Join '\n' -AddLastChar '\r\n'
+```
+
+```
 ID0001:\nあああああ、\nいいいいい、\nううううう\r\n
 ```
 
@@ -7935,6 +9288,9 @@ Examples:
 
 ```powershell
 "https://github.com/" | Get-OGP | fl
+```
+
+```
 curl https://github.com/
 200 OK
 
@@ -7947,6 +9303,9 @@ uri         : https://github.com/
 
 ```powershell
 Get-OGP "https://github.com/" | fl
+```
+
+```
 curl https://github.com/
 200 OK
 
@@ -7960,6 +9319,9 @@ uri         : https://github.com/
 
 ```powershell
 Get-OGP -m https://github.com/
+```
+
+```
 curl https://github.com/
 200 OK
 [GitHub: Let’s build from here](https://github.com/)
@@ -7969,7 +9331,9 @@ curl https://github.com/
 "https://github.com/" | Set-Clipboard
 Get-OGP -m | Set-Clipboard
 Get-Clipboard
+```
 
+```markdown
 [GitHub: Let’s build from here](https://github.com/)
 ```
 
@@ -8000,12 +9364,18 @@ fpath | Set-Clipboard
 ```powershell
 # get path from parameter
 fpath "C:\Users\hoge\fuga\piyo_function.ps1"
+```
+
+```
 C:/Users/hoge/fuga/piyo_function.ps1
 ```
 
 ```powershell
 # get path from stdin
 "C:\Users\hoge\fuga\piyo_function.ps1" | fpath
+```
+
+```
 C:/Users/hoge/fuga/piyo_function.ps1
 ```
 
@@ -8026,13 +9396,26 @@ a simple and beautiful CSS framework.
 たとえば出力をVSCodeのMarkdownにペーストすると、プレビューの見栄えがよくなる。
 
 ```powershell
-PS > watercss
+watercss
+```
+
+```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+```
 
-PS > watercss -Dark
+```powershell
+watercss -Dark
+```
+
+```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+```
 
-PS > watercss -Light
+```powershell
+watercss -Light
+```
+
+```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
 ```
 
@@ -8070,6 +9453,9 @@ PS > watercss -Light
 
 ```powershell
 "a.png alt text" | image2md
+```
+
+```markdown
 ![alt text](a.png)
 ```
 
@@ -8107,6 +9493,9 @@ Input:
 
 ```powershell
 cat a.txt
+```
+
+```
 path/to/img.png alt text
 path/to/img.png alt text
 path/to/img.png alt text
@@ -8186,7 +9575,9 @@ Examples:
 ```powershell
 # input: tab separated values
 cat iris.tsv | table2md -Caption "title" | keta -l
+```
 
+```markdown
 Table: title
 
 | s_l  | s_w  | p_l  | p_w  | species |
@@ -8201,7 +9592,9 @@ Table: title
 ```powershell
 # 単位つきcsvカラム（列）:-Units unit-name1,unit-name2,... 指定で右寄せ
 cat iris.csv | table2md -d "," -Units "CFU","kg" | head -n 7
+```
 
+```markdown
 | s_l  | s_w     | p_l    | p_w  | species |
 | ---: | ---:    | ---:   | ---: | :---    |
 | 5.1  | 3.5 CFU | 1.4 kg | 0.2  | setosa  |
@@ -8209,7 +9602,9 @@ cat iris.csv | table2md -d "," -Units "CFU","kg" | head -n 7
 | 4.7  | 3.2 CFU | 1.3 kg | 0.2  | setosa  |
 | 4.6  | 3.1 CFU | 1.5 kg | 0.2  | setosa  |
 | 5.0  | 3.6 CFU | 1.4 kg | 0.2  | setosa  |
+```
 
+```powershell
 # Some columns with units are also right aligned. Units can be
 # specified with -Units "unit1", "unit2",....
 # (Default -Units " kg"," ml", " CFU", "RLU", etc...)
@@ -8247,7 +9642,10 @@ Input:
 
 ```powershell
 # markdown list format
-PS> cat a.md
+cat a.md
+```
+
+```markdown
 ---
 title: title
 author: btklab
@@ -8268,7 +9666,10 @@ link: "https://github.com/btklab"
 Output:
 
 ```powershell
-PS> cat a.md | list2table
+cat a.md | list2table
+```
+
+```markdown
 F1  F2    F3
 --  --    --
 aaa
@@ -8279,7 +9680,10 @@ ccc ccc-2
 ```
 
 ```powershell
-PS> cat a.md | list2table -Table
+cat a.md | list2table -Table
+```
+
+```
 aaa
 bbb	bbb-2	bbb-3
 bbb	bbb-2
@@ -8292,7 +9696,10 @@ Markdown headers
 Input:
 
 ```powershell
-PS> cat a.md
+cat a.md
+```
+
+```markdown
 ---
 title: title
 author: btklab
@@ -8314,7 +9721,10 @@ link: "https://github.com/btklab"
 Output:
 
 ```powershell
-PS> cat a.md | list2table -MarkdownLv1
+cat a.md | list2table -MarkdownLv1
+```
+
+```markdown
 F1    F2   F3     F4
 --    --   --     --
 title Lv.1 Lv.1.1
@@ -8325,7 +9735,10 @@ title Lv.3
 ```
 
 ```powershell
-PS> cat a.md | list2table -Table -MarkdownLv1
+cat a.md | list2table -Table -MarkdownLv1
+```
+
+```
 title	Lv.1	Lv.1.1
 title	Lv.1	Lv.1.2
 title	Lv.2	Lv.2.1	Lv.2.1.1
@@ -8336,7 +9749,10 @@ title	Lv.3
 With `-AutoHeader` option
 
 ```powershell
-PS> cat a.md | list2table -Table -MarkdownLv1 -AutoHeader
+cat a.md | list2table -Table -MarkdownLv1 -AutoHeader
+```
+
+```markdown
 F1      F2      F3      F4
 title   Lv.1    Lv.1.1
 title   Lv.1    Lv.1.2
@@ -8348,7 +9764,7 @@ title   Lv.3
 With `ConvertTo-Json` command
 
 ```powershell
-PS> cat a.md | list2table -MarkdownLv1 | ConvertTo-Json
+cat a.md | list2table -MarkdownLv1 | ConvertTo-Json
 ```
 
 ```json
@@ -8403,27 +9819,33 @@ With the `-Tag` switch recognizes the strings inside the brackets at the end of 
 ```
 
 ```powershell
-PS> cat list-with-tag.md | list2table -Tag | ft
-    Tag          F1    F2   F3     F4
-    ---          --    --   --     --
-    #hashtag     title Lv.1 Lv.1.1
-    2023-07-20   title Lv.1 Lv.1.2
-                    title Lv.2 Lv.2.1 Lv.2.1.1
-    #life, #idea title Lv.2 Lv.2.2
-                    title Lv.3
+cat list-with-tag.md | list2table -Tag | ft
+```
+
+```markdown
+Tag          F1    F2   F3     F4
+---          --    --   --     --
+#hashtag     title Lv.1 Lv.1.1
+2023-07-20   title Lv.1 Lv.1.2
+                title Lv.2 Lv.2.1 Lv.2.1.1
+#life, #idea title Lv.2 Lv.2.2
+                title Lv.3
 ```
 
 With the `-TagOff` switch to treat the string inside the brackets at the end of the sentence as a tag and hide it.
 
 ```powershell
-PS> cat list-with-tag.md | list2table -TagOff | ft
-    F1    F2   F3     F4
-    --    --   --     --
-    title Lv.1 Lv.1.1
-    title Lv.1 Lv.1.2
-    title Lv.2 Lv.2.1 Lv.2.1.1
-    title Lv.2 Lv.2.2
-    title Lv.3
+cat list-with-tag.md | list2table -TagOff | ft
+```
+
+```markdown
+F1    F2   F3     F4
+--    --   --     --
+title Lv.1 Lv.1.1
+title Lv.1 Lv.1.2
+title Lv.2 Lv.2.1 Lv.2.1.1
+title Lv.2 Lv.2.2
+title Lv.3
 ```
 
 
@@ -8462,8 +9884,11 @@ ls docs/*.html | linkextract -AddUri | linkcheck -Header -VerboseOutput
 
 If you specify a directory, search for the "index.html" under it.
 
-```powreshell    
+```powreshell
 ls index.html -Recurse | Split-Path -Parent | linkextract -AddUri
+```
+
+```markdown
 ./docs/posts/haccp_7_principles https://pandoc.org/
 ```
 
@@ -8471,7 +9896,9 @@ Examples:
 
 ```powershell
 linkextract index.html
+```
 
+```
 https://www.google.com/
 https://translate.google.co.jp/?hl=ja
 https://www.deepl.com/translator
@@ -8480,7 +9907,9 @@ www.microsoft.com/unknownhost
 
 ```powershell
 linkextract index.html -AddUri
+```
 
+```
 index.html https://www.google.com/
 index.html https://translate.google.co.jp/?hl=ja
 index.html https://www.deepl.com/translator
@@ -8489,7 +9918,9 @@ index.html www.microsoft.com/unknownhost
 
 ```powershell
 linkextract ./docs/*.html
+```
 
+```
 https://www.google.com/
 https://translate.google.co.jp/?hl=ja
 https://www.deepl.com/translator
@@ -8498,12 +9929,17 @@ www.microsoft.com/unknownhost
 
 ```powershell
 ls docs/*.html | linkextract | linkcheck
+```
+
+```
 No broken links.
 ```
 
 ```powershell
 ls docs/index.html | linkextract
+```
 
+```
 https://www.google.com/
 https://translate.google.co.jp/?hl=ja
 https://www.deepl.com/translator
@@ -8511,7 +9947,9 @@ https://www.deepl.com/translator
 
 ```powershell
 ls docs/*.html | linkextract -AddUri
+```
 
+```
 ./docs/index.html https://www.google.com/
 ./docs/index.html https://translate.google.co.jp/?hl=ja
 ./docs/index.html https://www.deepl.com/translator
@@ -8521,7 +9959,9 @@ ls docs/*.html | linkextract -AddUri
 
 ```powershell
 ls docs/*.html | linkextract -AddUri | linkcheck -Header -VerboseOutput
+```
 
+```
 [ok] ./docs/index.html https://www.google.com/
 [ok] ./docs/index.html https://translate.google.co.jp/?hl=ja
 [ok] ./docs/index.html https://www.deepl.com/translator
@@ -8531,7 +9971,9 @@ ls docs/*.html | linkextract -AddUri | linkcheck -Header -VerboseOutput
 
 ```powershell
 linkcheck (linkextract index.html) -VerboseOutput
+```
 
+```
 [ok] https://www.google.com/
 [ok] https://translate.google.co.jp/?hl=ja
 [ok] https://www.deepl.com/translator
@@ -8541,7 +9983,9 @@ No broken links.
 
 ```powershell
 linkcheck (linkextract a.html | sed 's;tra;hoge;') -VerboseOutput
+```
 
+```
 [ok] https://www.google.com/
 [ng] https://hogenslate.google.co.jp/?hl=ja
 [ng] https://www.deepl.com/hogenslator
@@ -8575,18 +10019,31 @@ Examples:
 ```powershell
 # basic usage
 "https://www.example.com/", "www.microsoft.com/unknownhost" | linkcheck
+```
+
+```
 Detect broken links.
 [ng] www.microsoft.com/unknownhost
+```
 
+```powershell
 # verbose output
 "https://www.example.com/", "www.microsoft.com/unknownhost" | linkcheck -VerboseOutput
+```
+
+```
 [ok] https://www.example.com/
 [ng] www.microsoft.com/unknownhost
 Detect broken links.
 [ng] www.microsoft.com/unknownhost
+```
 
+```powershell
 # filename and uri
 "a.html https://www.example.com/", "m.html www.microsoft.com/unknownhost" | linkcheck -Header -VerboseOutput
+```
+
+```
 [ok] a.html https://www.example.com/
 [ng] m.html www.microsoft.com/unknownhost
 Detect broken links in m.html
@@ -8619,6 +10076,9 @@ Input:
 
 ```powershell
 Write-Output "あいう、","えお”,"かきくけ","こさし"
+```
+
+```
 あいう、
 えお
 かきくけ
@@ -8629,6 +10089,9 @@ Output:
 
 ```powershell
 Write-Output "あいう、","えお”,"かきくけ","こさし" | jl
+```
+
+```
 あいう、えお
 かきくけ
 こさし
@@ -8644,6 +10107,9 @@ Input
 
 ```powershell
 cat data.txt
+```
+
+```
 bumon-A
 filter
 17:45 2017/05/10
@@ -8667,6 +10133,9 @@ Output
 
 ```powershell
 cat data.txt | jl . -d "`t"
+```
+
+```
 bumon-A filter  17:45 2017/05/10        hoge    fuga
 bumon-B eva     17:46 2017/05/10        piyo    piyo
 bumon-C tank    17:46 2017/05/10        fuga    fuga
@@ -8745,6 +10214,9 @@ Output: Override markdown yaml with external yaml
 
 ```powreshell
 cat a.md | Override-Yaml a.yaml | head
+```
+
+```yaml
 ---
 subtitle: Override-Subtitle
 title: Override-Title
@@ -8782,7 +10254,7 @@ fuga
 cat a.md | Override-Yaml a.yaml -Settings chunk.R
 ```
 
-````
+````yaml
 ---
 subtitle: Override-Subtitle
 title: Override-Title
@@ -9018,7 +10490,9 @@ Output(PSObject):
 
 ```powershell
 cat a.toml | toml2psobject
+```
 
+```
 id    : aiue.o
 bumon : haccp
 cat   : "haccp"
@@ -9088,6 +10562,9 @@ Output(greppable!):
 
 ```powershell
 cat a.json | json2txt
+```
+
+```
 .widget.debug = on
 .widget.window.title = "Sample Konfabulator Widget"
 .widget.window.name = "main_window"
@@ -9125,7 +10602,10 @@ CSVを半角スペース区切りの1行1レコード形式（SSV）に変換す
 Example:
 
 ```powershell
-PS > cat dat.csv
+cat dat.csv
+```
+
+```
 id,main,id2,sub,val
 01,aaa,01,xxx,10
 01,aaa,02,yyy,10
@@ -9140,8 +10620,13 @@ id,main,id2,sub,val
 04,ddd,01,xxx,10
 04,ddd,02,yyy,10
 04,ddd,03,zzz,10
+```
 
-PS > cat dat.csv | csv2txt | keta
+```powershell
+cat dat.csv | csv2txt | keta
+```
+
+```
 id main id2 sub val
 01  aaa  01 xxx  10
 01  aaa  02 yyy  10
@@ -9157,6 +10642,7 @@ id main id2 sub val
 04  ddd  02 yyy  10
 04  ddd  03 zzz  10
 ```
+
 #### [catcsv] - Concatenate csv files
 
 [catcsv]: src/catcsv_function.ps1
@@ -9239,6 +10725,9 @@ Output:
 
 ```powershell
 csv2sqlite dat.csv -q "select main,sum(val) from dat group by main;" -OutputFile o.csv | cat
+```
+
+```markdown
 main  sum(val)
 ----  --------
 aaa   40
@@ -9253,6 +10742,9 @@ SQL from stdin:
 "select *,sum(val) from dat where main like '%b%' group by main;" `
     | csv2sqlite dat.csv -o o.csv `
     | cat
+```
+
+```markdown
 id  main  id2  sub  val  sum(val)
 --  ----  ---  ---  ---  --------
 02  bbb   01   xxx  10   30
@@ -9263,7 +10755,9 @@ Another examples:
 
 ```powershell
 csv2sqlite titanic.csv -q "select * from titanic limit 5;"
+```
 
+```markdown
 survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 --------  ------  ------  ----  -----  -----  -------  --------  -----
 0         3       male    22.0  1      0      7.25     S         Third
@@ -9275,7 +10769,9 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 
 ```powershell
 "select * from titanic limit 5;" | csv2sqlite titanic.csv
+```
 
+```markdown
 survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 --------  ------  ------  ----  -----  -----  -------  --------  -----
 0         3       male    22.0  1      0      7.25     S         Third
@@ -9368,13 +10864,15 @@ Examples:
 ## shows what would happen if the command runs.The command is not run.
 
 ls | Rename-Normalize
+```
 
-    clip2file_ function.ps1       => clip2file_function.ps1
-    clip2img -. ps1               => clip2img.ps1
-    ｃｌｉｐ２ｉｍｇ　.ps1        => clip2img.ps1
-    clip2img_ｱｶｻﾀﾅ_function.ps1   => clip2img_アカサタナ_function.ps1
-    clipwatch-function - Copy.ps1 => clipwatch-function-Copy.ps1
-    clipwatch-function.ps1        => clipwatch-function.ps1
+```
+clip2file_ function.ps1       => clip2file_function.ps1
+clip2img -. ps1               => clip2img.ps1
+ｃｌｉｐ２ｉｍｇ　.ps1        => clip2img.ps1
+clip2img_ｱｶｻﾀﾅ_function.ps1   => clip2img_アカサタナ_function.ps1
+clipwatch-function - Copy.ps1 => clipwatch-function-Copy.ps1
+clipwatch-function.ps1        => clipwatch-function.ps1
 ```
 
 ```powershell
@@ -9384,31 +10882,35 @@ ls | Rename-Normalize
 ## other files.
 
 ls | Rename-Normalize -Execute
+```
 
-    clip2file_ function.ps1       => clip2file_function.ps1
-    clip2img -. ps1               => clip2img.ps1
-    ｃｌｉｐ２ｉｍｇ　.ps1        => clip2img.ps1
-    Rename-Item: path\to\the\Rename-Normalize_function.ps1:182
-    Line |
-        182 |                  $f | Rename-Item -NewName { $newName }
-            |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            | Cannot create a file when that file already exists.
-    clip2img_ｱｶｻﾀﾅ_function.ps1   => clip2img_アカサタナ_function.ps1
-    clipwatch-function - Copy.ps1 => clipwatch-function-Copy.ps1
-    clipwatch-function.ps1        => clipwatch-function.ps1
+```
+clip2file_ function.ps1       => clip2file_function.ps1
+clip2img -. ps1               => clip2img.ps1
+ｃｌｉｐ２ｉｍｇ　.ps1        => clip2img.ps1
+Rename-Item: path\to\the\Rename-Normalize_function.ps1:182
+Line |
+    182 |                  $f | Rename-Item -NewName { $newName }
+        |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        | Cannot create a file when that file already exists.
+clip2img_ｱｶｻﾀﾅ_function.ps1   => clip2img_アカサタナ_function.ps1
+clipwatch-function - Copy.ps1 => clipwatch-function-Copy.ps1
+clipwatch-function.ps1        => clipwatch-function.ps1
 ```
 
 ```powershell
 ## Add date prefix in "yyyy-MM-dd" format
 
 ls | Rename-Normalize -AddDate
+```
 
-    clip2file_ function.ps1       => 2023-04-06-clip2file_function.ps1
-    clip2img -. ps1               => 2023-04-06-clip2img.ps1
-    ｃｌｉｐ２ｉｍｇ　.ps1        => 2023-04-06-clip2img.ps1
-    clip2img_ｱｶｻﾀﾅ_function.ps1   => 2023-04-06-clip2img_アカサタナ_function.ps1
-    clipwatch-function - Copy.ps1 => 2023-04-06-clipwatch-function-Copy.ps1
-    clipwatch-function.ps1        => 2023-04-06-clipwatch-function.ps1
+```
+clip2file_ function.ps1       => 2023-04-06-clip2file_function.ps1
+clip2img -. ps1               => 2023-04-06-clip2img.ps1
+ｃｌｉｐ２ｉｍｇ　.ps1        => 2023-04-06-clip2img.ps1
+clip2img_ｱｶｻﾀﾅ_function.ps1   => 2023-04-06-clip2img_アカサタナ_function.ps1
+clipwatch-function - Copy.ps1 => 2023-04-06-clipwatch-function-Copy.ps1
+clipwatch-function.ps1        => 2023-04-06-clipwatch-function.ps1
 ```
 
 ```powershell
@@ -9417,13 +10919,15 @@ ls | Rename-Normalize -AddDate
 ("copy files to clipboard and...")
 
 clip2file | Rename-Normalize
+```
 
-    clip2file_ function.ps1       => clip2file_function.ps1
-    clip2img -. ps1               => clip2img.ps1
-    ｃｌｉｐ２ｉｍｇ　.ps1        => clip2img.ps1
-    clip2img_ｱｶｻﾀﾅ_function.ps1   => clip2img_アカサタナ_function.ps1
-    clipwatch-function - Copy.ps1 => clipwatch-function-Copy.ps1
-    clipwatch-function.ps1        => clipwatch-function.ps1
+```
+clip2file_ function.ps1       => clip2file_function.ps1
+clip2img -. ps1               => clip2img.ps1
+ｃｌｉｐ２ｉｍｇ　.ps1        => clip2img.ps1
+clip2img_ｱｶｻﾀﾅ_function.ps1   => clip2img_アカサタナ_function.ps1
+clipwatch-function - Copy.ps1 => clipwatch-function-Copy.ps1
+clipwatch-function.ps1        => clipwatch-function.ps1
 ```
 
 #### [push2loc] - Push-Location and execute commands to clipped files
@@ -9465,36 +10969,57 @@ Examples
 # Simple usage: Combination with "clip2file" case to only pushd to clipped file location
 
 ("copy file to the clipboard on explorer and ...")
+```
 
-in ~/cms/drafts
-PS > clip2file
+in `~/cms/drafts`
 
+```powershell
+clip2file
+```
+
+```
         Directory: C:/path/to/the/location
 
     Mode                 LastWriteTime         Length Name
     ----                 -------------         ------ ----
     -a---          2023/02/17    23:45           8079 index.qmd
+```
 
+in `~/cms/drafts`
 
-in ~/cms/drafts
-PS > clip2file | push2loc
+```POWERSHELL
+clip2file | push2loc
+```
+
+```
     Push-Location -LiteralPath "C:/path/to/the/location"
+```
 
-in ~/cms/drafts
-PS > clip2file | push2loc -Execute
+in `~/cms/drafts`
 
-in C:/path/to/the/location
-PS > # pushd to clipped file location
+```powershell
+clip2file | push2loc -Execute
+```
+
+in `C:/path/to/the/location`
+
+```powershell
+# pushd to clipped file location
 ```
 
 
 ```powershell
 ("copy file to the clipboard and ..."), ("do not run")
 clip2file | push2loc -Action { cat a.md } -Pop
+```
+
+```
     Push-Location -LiteralPath "C:/path/to/the/location"
     cat a.md
     Pop-Location
+```
 
+```powershell
 ## execute command by using "-e|-Execute" switch
 clip2file | push2loc -Action { cat a.md } -Pop -Execute
 ```
@@ -9503,26 +11028,45 @@ clip2file | push2loc -Action { cat a.md } -Pop -Execute
 # Combination with "clip2file" case to pushd and execute command and popd
 
 ("copy file to the clipboard and ...")
+```
 
-in ~/cms/drafts
-PS > clip2file
+in `~/cms/drafts`
 
+```powershell
+clip2file
+```
+
+```
         Directory: C:/path/to/the/location
 
     Mode                 LastWriteTime         Length Name
     ----                 -------------         ------ ----
     -a---          2023/02/17    23:45           8079 index.qmd
+```
 
+```powershell
+clip2file | push2loc
+```
 
-PS >  clip2file | push2loc
+```
     Push-Location -LiteralPath "C:/path/to/the/location"
+```
 
-PS > clip2file | push2loc -Action { quarto render index.qmd --to html } -Pop
+```powershell
+clip2file | push2loc -Action { quarto render index.qmd --to html } -Pop
+```
+
+```
     Push-Location -LiteralPath "C:/path/to/the/location"
     quarto render index.qmd --to html
     Pop-Location
+```
 
-PS >  clip2file | push2loc -Action { quarto render index.qmd --to html } -Pop  -Execute
+```powershell
+clip2file | push2loc -Action { quarto render index.qmd --to html } -Pop  -Execute
+```
+
+```
     ("execute quarto command and popd")
 ```
 
@@ -9530,9 +11074,15 @@ PS >  clip2file | push2loc -Action { quarto render index.qmd --to html } -Pop  -
 # Combination with "clip2file" case to git status for each clipped git directory
 
 ("copy file to the clipboard and ...")
+```
 
-in ~/cms/drafts
-PS > clip2file
+in `~/cms/drafts`
+
+```powershell
+clip2file
+```
+
+```
 
         Directory: C:/path/to/the/git/repository
 
@@ -9541,10 +11091,15 @@ PS > clip2file
     d-r--          2023/03/21    14:06                rlang-mocks
     d-r--          2023/03/21    14:06                posh-mocks
     d-r--          2023/03/21    14:06                py-mocks
+```
 
+in `~/cms/drafts`
 
-in ~/cms/drafts
-PS > clip2file | push2loc -Action { git status } -Pop
+```powershell
+clip2file | push2loc -Action { git status } -Pop
+```
+
+```
     Push-Location -LiteralPath "C:/path/to/the/git/repository/rlang-mocks"
     git status
     Pop-Location
@@ -9554,11 +11109,16 @@ PS > clip2file | push2loc -Action { git status } -Pop
     Push-Location -LiteralPath "C:/path/to/the/git/repository/py-mocks"
     git status
     Pop-Location
+```
 
+in `~/cms/drafts`
 
+```powershell
 # execute command (git status foreach git repository)
-in ~/cms/drafts
-PS > clip2file | push2loc -Action { git status } -Pop -Execute
+clip2file | push2loc -Action { git status } -Pop -Execute
+```
+
+```
     in rlang-mocks
     On branch develop
     Your branch is up to date with 'origin/develop'.
@@ -9635,14 +11195,20 @@ clip2file | Rename-Item -NewName { $_.Name -replace '^', (Get-Date).ToString('yy
 ```powershell
 clip2file -Name
 clip2file -Name | Set-Clipboard
+```
 
+```
     clip2txt_function.ps1
     clipwatch_function.ps1
     clip2file_function.ps1
     clip2img_function.ps1
+```
 
+```powershell
 clip2file -Name -ReplaceDirectory "/img/2023/" -l
+```
 
+```
     /img/2023/clip2txt_function.ps1
     /img/2023/clipwatch_function.ps1
     /img/2023/clip2file_function.ps1
@@ -9653,7 +11219,9 @@ clip2file -Name -ReplaceDirectory "/img/2023/" -l
 ## combination with clip2file function
 ("copy files to clipboard and...")
 clip2file | Rename-Normalize
+```
 
+```
     clip2file_function.ps1 => clip2file_function.ps1
     clip2img_function.ps1  => clip2img_function.ps1
     clip2txt_function.ps1  => clip2txt_function.ps1
@@ -9705,7 +11273,10 @@ Examples
 
 ("copy file to the clipboard and ...")
 
-PS > clip2push
+clip2push
+```
+
+```
 Push-Location -LiteralPath "C:/path/to/the/git/repository/posh-mocks"
 ```
 
@@ -9715,18 +11286,24 @@ Push-Location -LiteralPath "C:/path/to/the/git/repository/posh-mocks"
 
 ("copy file to the clipboard and ...")
 
-PS > clip2push -Pop
+clip2push -Pop
+```
+
+```
 Push-Location -LiteralPath "C:/path/to/the/git/repository/posh-mocks"
 Pop-Location
 ```
 
+in `~/cms/drafts`
+
 ```powershell
 # Combination with "clip2file" case to git status for each clipped git directory
-
 ("copy file to the clipboard and ...")
 
-in ~/cms/drafts
-PS > clip2push -Action { git status } -Pop
+clip2push -Action { git status } -Pop
+```
+
+```
     Push-Location -LiteralPath "C:/path/to/the/git/repository/rlang-mocks"
     git status
     Pop-Location
@@ -9736,11 +11313,16 @@ PS > clip2push -Action { git status } -Pop
     Push-Location -LiteralPath "C:/path/to/the/git/repository/py-mocks"
     git status
     Pop-Location
+```
 
+in `~/cms/drafts`
 
+```powershell
 # execute command (git status foreach git repository)
-in ~/cms/drafts
-PS > clip2push -Action { git status } -Pop -Execute
+clip2push -Action { git status } -Pop -Execute
+```
+
+```
     in rlang-mocks
     On branch develop
     Your branch is up to date with 'origin/develop'.
@@ -9845,10 +11427,12 @@ Example:
 
 ```powershell
 clip2img -MSPaint -Clip -Directory ~/Pictures -DirView -AutoPrefix -Name "hoge"
+```
 
-    Mode        LastWriteTime   Length Name
-    ----        -------------   ------ ----
-    -a--- 2023/03/18    22:32   171680 2023-03-18___hoge.png
+```
+Mode        LastWriteTime   Length Name
+----        -------------   ------ ----
+-a--- 2023/03/18    22:32   171680 2023-03-18___hoge.png
 ```
 
 #### [clip2normalize] - Text normalizer for japanese on windows
@@ -9879,14 +11463,22 @@ clip2img -MSPaint -Clip -Directory ~/Pictures -DirView -AutoPrefix -Name "hoge"
 Examples
 
 ```powershell
-PS > cat a.txt
+cat a.txt
+```
+
+```
 ■　ｽﾏﾎ等から確認する場合
 １　あいうえお
 ２　かきくけこ
 ３　ａｂｃｄｅ
+```
 
+```powershell
 ("copy text to clipboard and...")
-PS > clip2normalize
+clip2normalize
+```
+
+```markdown
 ■ スマホ等から確認する場合
 1. あいうえお
 2. かきくけこ
@@ -9930,24 +11522,37 @@ Example:
 
 ```powershell
 ## Push-Location to the directory where you want to put shortcut
-PS > pushd 'where/you/want/to/put/shortcut'
-    or
+pushd 'where/you/want/to/put/shortcut'
+```
+
+or
+
+```powershell
 (clip 'where/you/want/to/put/shortcut')
-PS > clip2push -Execute
-PS > clip2file | push2loc -Execute
+clip2push -Execute
+clip2file | push2loc -Execute
 
 ## Clip files what you want to create shortcuts
 ## (able to multiple copies)
+```
 
+```powershell
 ## Create shortcuts
-PS > clip2shortcut
-    index.html.lnk    => ..\index.html
-    index.ltjruby.lnk => ..\index.ltjruby
-    index.pdf.lnk     => ..\index.pdf
+clip2shortcut
+```
 
+```
+index.html.lnk    => ..\index.html
+index.ltjruby.lnk => ..\index.ltjruby
+index.pdf.lnk     => ..\index.pdf
+```
+
+```powershell
 ## Pop-Location
-PS > popd
+popd
+```
 
+```
 ## Created shortcut property example
     Target Type: Application
     Target Location: %windir%
@@ -10095,9 +11700,11 @@ target: [dep dep ...] ## this is help message
 
 
 ```powershell
-PS > pwmake -f Makefile -Help
-PS > pwmake -Help # デフォルトでカレントディレクトリのMakefileを探す
+pwmake -f Makefile -Help
+pwmake -Help # デフォルトでカレントディレクトリのMakefileを探す
+```
 
+```markdown
 target synopsis
 ------ --------
 all    Generate pdf file and open.
@@ -10110,7 +11717,9 @@ clean  Remove cache files.
 
 ```powershell
 pwmake -DryRun
+```
 
+```
 ######## override args ##########
 None
 
@@ -10162,6 +11771,9 @@ dvipdfmx -o a.pdf a.dvi
 
 ```powershell
 pwmake
+```
+
+```
 > uplatex a.tex
 pwmake: The term 'uplatex' is not recognized as a name of a cmdlet, function, script file, or executable program.
 Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
@@ -10220,7 +11832,9 @@ pwsh: ${pwshdir} ${poshmock} ## update pwsh scripts
 
 ```powreshell
 pwmake -f ~/Documents/Makefile -Help
+```
 
+```markdown
 target synopsis
 ------ --------
 all    Add ".txt" to the extension of the script file and Zip archive
@@ -10314,6 +11928,9 @@ Input:
 
 ```powershell
 cat ./link/about_Invoke-Item.txt
+```
+
+```
 https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.management/invoke-item
 ```
 
@@ -10322,7 +11939,9 @@ Output:
 ```powershell
 # open link in default browser
 i ./link/about_Invoke-Item.txt
+```
 
+```powershell
 # open link in "firefox" browser
 i ./link/about_Invoke-Item.txt firefox
 ```
@@ -10332,28 +11951,46 @@ Examples:
 ```powershell
 # input text file
 cat ./link/rmarkdown_site.txt
-"C:/Users/path/to/the/index.html"
+```
 
+```
+"C:/Users/path/to/the/index.html"
+```
+
+```powershell
 # Get-ChildItem <dir>
 i ./link/
+```
 
+```markdown
 Mode         LastWriteTime Length Name
 ----         ------------- ------ ----
 -a---  2023/02/07    23:21    102 hoge.md
 -a---  2023/02/07    23:31     97 about_Invoke-Item.txt
 -a---  2023/02/07    20:58     25 google
+```
 
+```powershell
 # dry run
 i ./link/rmarkdown_site.txt -q
+```
+
+```
 .\link\rmarkdown.txt
 Invoke-Item "C:/Users/path/to/the/index.html"
+```
 
+```powershell
 # open index.html in default browser
 i ./link/rmarkdown_site.txt
+```
 
+```powershell
 # open index.html in VSCode
 i ./link/rmarkdown_site.txt code
+```
 
+```powershell
 # open linked file location in explorer
 i ./link/rmarkdown_site.txt -l
 ```
@@ -10362,13 +11999,20 @@ i ./link/rmarkdown_site.txt -l
 ## execute if *.ps1 file specified
 
 cat .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+```
+
+```
 # MSRC - Microsoft Security Response Center
 rssfeed https://api.msrc.microsoft.com/update-guide/rss -MaxResults 30
+```
 
+```powershell
 ## execute .ps1 function
 ## able to use dot sourcing functions in current process
 i .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+```
 
+```markdown
 channel                    date       item
 -------                    ----       ----
 MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4900...
@@ -10689,7 +12333,9 @@ Examples:
 
 ```powershell
 Get-AppShortcut  | ft
+```
 
+```markdown
 App                  Act                       Key                      Fn Esc     Ano
 ---                  ---                       ---                      -- ---     ---
 IME                  Zenkaku alphanumeric mode Shift <Mu-Henkan>
@@ -10707,7 +12353,9 @@ Windows OS           Magnifying glass          Win +                       Win E
 
 ```powershell
 Get-AppShortcut | Select-Object App,Act,Key
+```
 
+```markdown
 App                  Act                       Key
 ---                  ---                       ---
 IME                  Zenkaku alphanumeric mode Shift <Mu-Henkan>

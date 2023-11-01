@@ -24,7 +24,8 @@
                 that contain lines matching the pattern
             -FileNameAndLineNumber: output filename, number
                 of lines, and match lines
-        -l: Leave header line
+        -l: Leave header line (pipeline input only)
+        -l2: Leave header line and boarder line  (pipeline input only)
     
     The search speed is slow because of the wrapping
     of Select-String commandlet.
@@ -289,6 +290,10 @@ function Grep-Object {
         [switch] $LeaveHeader,
         
         [Parameter(Mandatory=$False)]
+        [alias('l2')]
+        [switch] $LeaveHeaderAndBoarder,
+        
+        [Parameter(Mandatory=$False)]
         [switch] $FileNameOnly,
         
         [Parameter(Mandatory=$False)]
@@ -337,7 +342,11 @@ function Grep-Object {
         } elseif ($Context){
             Select-String @splatting | Out-String -Stream  ; return
         } else {
-            if ( $LeaveHeader ){ Get-Content -Path $Path -TotalCount 1 -Encoding utf8 }
+            #if ( $LeaveHeaderAndBoarder ){
+            #    Get-Content -Path $Path -TotalCount 2 -Encoding utf8
+            #} elseif ( $LeaveHeader ){
+            #    Get-Content -Path $Path -TotalCount 1 -Encoding utf8
+            #}
             (Select-String @splatting).Line; return
         }
     }
@@ -347,7 +356,14 @@ function Grep-Object {
     if ($Context){
         $input | Select-String @splatting | Out-String -Stream ; return
     }
-    if ( $LeaveHeader ){ $input[0] }
-    ($input | Select-String @splatting).Line ; return
+    if ( $LeaveHeaderAndBoarder ){
+        $input[0..1]
+        ($input[(2..($input.Count))] | Select-String @splatting).Line ; return
+    } elseif ( $LeaveHeader ){
+        $input[0]
+        ($input[(1..($input.Count))] | Select-String @splatting).Line ; return
+    } else {
+        ($input | Select-String @splatting).Line ; return
+    }
 }
 Set-Alias -Name grep -Value Grep-Object -PassThru | Select-Object -Property "DisplayName"

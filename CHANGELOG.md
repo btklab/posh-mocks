@@ -8,7 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [6.5.2] - 2023-11-01
+
+- Added [grep] `-LeaveHeaderAndBoarder` option
+
+## [6.5.1] - 2023-11-01
+
 - Fixed [README.md]
+- Changed [Measure-Summary], [Measure-Quartile] Move sum calculation to `-Detail` option
+- Changed [Measure-Summary], [Measure-Quartile] Cast double
+- Added [Transpose-Property] property name existence test
 
 ## [6.5.0] - 2023-10-31
 
@@ -546,7 +557,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Transpose-Property]: src/Transpose-Property_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.5.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.5.2..HEAD
+[6.5.2]: https://github.com/btklab/posh-mocks/releases/tag/6.5.2
+[6.5.1]: https://github.com/btklab/posh-mocks/releases/tag/6.5.1
 [6.5.0]: https://github.com/btklab/posh-mocks/releases/tag/6.5.0
 [6.4.0]: https://github.com/btklab/posh-mocks/releases/tag/6.4.0
 [6.3.0]: https://github.com/btklab/posh-mocks/releases/tag/6.3.0
