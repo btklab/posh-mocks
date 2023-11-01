@@ -196,7 +196,7 @@
                of your accepting any such warranty or additional liability.
 
 .LINK
-    Measure-Object, Measure-Stats, Measure-Quartile
+    Measure-Object, Measure-Stats, Measure-Quartile, Measure-Summary, Transpose-Property
 
 .EXAMPLE
     Import-Csv iris.csv `
@@ -205,7 +205,6 @@
 
     Property : s_w
     Count    : 150
-    Sum      : 458.6
     Mean     : 3.05733333333333
     SD       : 0.435866284936699
     Min      : 2
@@ -247,7 +246,6 @@
 
     Property : s_w
     Count    : 150
-    Sum      : 458.6
     Mean     : 3.05733333333333
     SD       : 0.435866284936699
     Min      : 2
@@ -302,8 +300,13 @@ function Measure-Quartile {
         #endregion
 
         #region Grab basic measurements from upstream Measure-Object
-        $Stats = $Data `
-            | Measure-Object -Property $v -Minimum -Maximum -Sum -Average -StandardDeviation
+        if ( $Detail ){
+            $Stats = $Data `
+                | Measure-Object -Property $v -Minimum -Maximum -Sum -Average -StandardDeviation
+        } else {
+            $Stats = $Data `
+                | Measure-Object -Property $v -Minimum -Maximum -Average -StandardDeviation
+        }
         # convert psobject to hash
         $hash = [ordered] @{}
         foreach ($item in $Stats.psobject.properties){
@@ -472,7 +475,6 @@ function Measure-Quartile {
                         Key, `
                         Property, `
                         Count, `
-                        Sum, `
                         @{N="Mean" ;E={$_.Average}}, `
                         @{N="SD"   ;E={$_.StandardDeviation}}, `
                         @{N="Min"  ;E={$_.Minimum}}, `
@@ -509,7 +511,6 @@ function Measure-Quartile {
                     | Select-Object -Property `
                         Property, `
                         Count, `
-                        Sum, `
                         @{N="Mean" ;E={$_.Average}}, `
                         @{N="SD"   ;E={$_.StandardDeviation}}, `
                         @{N="Min"  ;E={$_.Minimum}}, `
