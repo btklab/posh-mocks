@@ -199,9 +199,9 @@
     Measure-Object, Measure-Stats, Measure-Quartile, Measure-Summary, Transpose-Property
 
 .EXAMPLE
-    Import-Csv iris.csv `
+    Import-Csv -Path iris.csv `
         | Shorten-PropertyName `
-        | Measure-Quartile "s_w"
+        | Measure-Quartile -Value "s_w"
 
     Property : s_w
     Count    : 150
@@ -215,9 +215,9 @@
     Outlier  : 1
 
 .EXAMPLE
-    Import-Csv iris.csv `
+    Import-Csv -Path iris.csv `
         | Shorten-PropertyName `
-        | Measure-Quartile "s_w" -Detail
+        | Measure-Quartile -Value "s_w" -Detail
 
     Property     : s_w
     Count        : 150
@@ -240,9 +240,9 @@
 
 .EXAMPLE
     # Detect outliers
-    Import-Csv iris.csv `
+    Import-Csv -Path iris.csv `
         | Shorten-PropertyName `
-        | Measure-Quartile "s_w", "p_l"
+        | Measure-Quartile -Value "s_w", "p_l"
 
     Property : s_w
     Count    : 150
@@ -450,75 +450,75 @@ function Measure-Quartile {
             if ( $Detail ){
                 New-Object psobject -Property $hash `
                     | Select-Object -Property `
-                        Key, `
-                        Property, `
-                        Count, `
-                        Sum, `
-                        @{N="Mean" ;E={$_.Average}}, `
-                        @{N="SD"   ;E={$_.StandardDeviation}}, `
-                        @{N="Min"  ;E={$_.Minimum}}, `
-                        Qt25, `
-                        Median, `
-                        Qt75, `
-                        @{N="Max"  ;E={$_.Maximum}}, `
-                        IQR, `
-                        HiIQR, `
-                        LoIQR, `
-                        TukeysRange, 
-                        Confidence95,
-                        Outlier,
-                        OutlierHi,
-                        OutlierLo
+                        "Key", `
+                        "Property", `
+                        @{N="Count"      ;E={[double]($_."Count")}}, `
+                        @{N="Sum"        ;E={[double]($_."Sum")}}, `
+                        @{N="Mean"       ;E={[double]($_."Average")}}, `
+                        @{N="SD"         ;E={[double]($_."StandardDeviation")}}, `
+                        @{N="Min"        ;E={[double]($_."Minimum")}}, `
+                        @{N="Qt25"       ;E={[double]($_."Qt25")}}, `
+                        @{N="Median"     ;E={[double]($_."Median")}}, `
+                        @{N="Qt75"       ;E={[double]($_."Max")}}, `
+                        @{N="Max"        ;E={[double]($_."Maximum")}}, `
+                        @{N="IQR"        ;E={[double]($_."IQR")}}, `
+                        @{N="HiIQR"      ;E={[double]($_."HiIQR")}}, `
+                        @{N="LoIQR"      ;E={[double]($_."LoIQR")}}, `
+                        @{N="TukeysRange"  ;E={[double]($_."TukeysRange")}}, `
+                        @{N="Confidence95" ;E={[double]($_."Confidence95")}}, `
+                        @{N="Outlier"    ;E={[double]($_."Outlier")}}, `
+                        @{N="OutlierHi"  ;E={[double]($_."OutlierHi")}}, `
+                        @{N="OutlierLo"  ;E={[double]($_."OutlierLo")}}
             } else {
                 New-Object psobject -Property $hash `
                     | Select-Object -Property `
-                        Key, `
-                        Property, `
-                        Count, `
-                        @{N="Mean" ;E={$_.Average}}, `
-                        @{N="SD"   ;E={$_.StandardDeviation}}, `
-                        @{N="Min"  ;E={$_.Minimum}}, `
-                        Qt25, `
-                        Median, `
-                        Qt75, `
-                        @{N="Max"  ;E={$_.Maximum}},
-                        Outlier
+                        "Key", `
+                        "Property", `
+                        @{N="Count"     ;E={[double]($_."Count")}}, `
+                        @{N="Mean"      ;E={[double]($_."Average")}}, `
+                        @{N="SD"        ;E={[double]($_."StandardDeviation")}}, `
+                        @{N="Min"       ;E={[double]($_."Minimum")}}, `
+                        @{N="Qt25"      ;E={[double]($_."Qt25")}}, `
+                        @{N="Median"    ;E={[double]($_."Median")}}, `
+                        @{N="Qt75"      ;E={[double]($_."Qt75")}}, `
+                        @{N="Max"       ;E={[double]($_."Maximum")}}, `
+                        @{N="Outlier"   ;E={[double]($_."Outlier")}}
             }
         } else {
             if ( $Detail ){
                 New-Object psobject -Property $hash `
                     | Select-Object -Property `
-                        Property, `
-                        Count, `
-                        Sum, `
-                        @{N="Mean" ;E={$_.Average}}, `
-                        @{N="SD"   ;E={$_.StandardDeviation}}, `
-                        @{N="Min"  ;E={$_.Minimum}}, `
-                        Qt25, `
-                        Median, `
-                        Qt75, `
-                        @{N="Max"  ;E={$_.Maximum}}, `
-                        IQR, `
-                        HiIQR, `
-                        LoIQR, `
-                        TukeysRange, 
-                        Confidence95,
-                        Outlier,
-                        OutlierHi,
-                        OutlierLo
+                        "Property", `
+                        @{N="Count"      ;E={[double]($_."Count")}}, `
+                        @{N="Sum"        ;E={[double]($_."Sum")}}, `
+                        @{N="Mean"       ;E={[double]($_."Average")}}, `
+                        @{N="SD"         ;E={[double]($_."StandardDeviation")}}, `
+                        @{N="Min"        ;E={[double]($_."Minimum")}}, `
+                        @{N="Qt25"       ;E={[double]($_."Qt25")}}, `
+                        @{N="Median"     ;E={[double]($_."Median")}}, `
+                        @{N="Qt75"       ;E={[double]($_."Max")}}, `
+                        @{N="Max"        ;E={[double]($_."Maximum")}}, `
+                        @{N="IQR"        ;E={[double]($_."IQR")}}, `
+                        @{N="HiIQR"      ;E={[double]($_."HiIQR")}}, `
+                        @{N="LoIQR"      ;E={[double]($_."LoIQR")}}, `
+                        @{N="TukeysRange"  ;E={[double]($_."TukeysRange")}}, `
+                        @{N="Confidence95" ;E={[double]($_."Confidence95")}}, `
+                        @{N="Outlier"    ;E={[double]($_."Outlier")}}, `
+                        @{N="OutlierHi"  ;E={[double]($_."OutlierHi")}}, `
+                        @{N="OutlierLo"  ;E={[double]($_."OutlierLo")}}
             } else {
                 New-Object psobject -Property $hash `
                     | Select-Object -Property `
-                        Property, `
-                        Count, `
-                        @{N="Mean" ;E={$_.Average}}, `
-                        @{N="SD"   ;E={$_.StandardDeviation}}, `
-                        @{N="Min"  ;E={$_.Minimum}}, `
-                        Qt25, `
-                        Median, `
-                        Qt75, `
-                        @{N="Max"  ;E={$_.Maximum}},
-                        Outlier
+                        "Property", `
+                        @{N="Count"     ;E={[double]($_."Count")}}, `
+                        @{N="Mean"      ;E={[double]($_."Average")}}, `
+                        @{N="SD"        ;E={[double]($_."StandardDeviation")}}, `
+                        @{N="Min"       ;E={[double]($_."Minimum")}}, `
+                        @{N="Qt25"      ;E={[double]($_."Qt25")}}, `
+                        @{N="Median"    ;E={[double]($_."Median")}}, `
+                        @{N="Qt75"      ;E={[double]($_."Qt75")}}, `
+                        @{N="Max"       ;E={[double]($_."Maximum")}}, `
+                        @{N="Outlier"   ;E={[double]($_."Outlier")}}
             }
         }
         #endregion
