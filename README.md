@@ -5752,9 +5752,13 @@ Max      : 6.9
 Outlier  : 0
 ```
 
-#### [Measure-Summary] (Alias: msummary) - Calculate summary
+#### [Measure-Summary] (Alias: msummary) - Generate summary statistics for dataset
 
 [Measure-Summary]: src/Measure-Summary_function.ps1
+
+Generate summary statistics for dataset.
+The numeric columns are automatically detected.
+`NaN` values are automatically excluded.
 
 Pre `Sort-Object -Stable` is no needed.
 
@@ -5771,6 +5775,45 @@ Pre `Sort-Object -Stable` is no needed.
 Example:
 
 ```powershell
+Import-Csv -Path iris.csv `
+    | Measure-Summary `
+    | Format-Table
+```
+
+```markdown
+Property      Count Mean   SD  Min Qt25 Median Qt75  Max Outlier
+--------      ----- ----   --  --- ---- ------ ----  --- -------
+sepal_length 150.00 5.84 0.83 4.30 5.10   5.80 6.40 7.90    0.00
+sepal_width  150.00 3.06 0.44 2.00 2.80   3.00 3.40 4.40    1.00
+petal_length 150.00 3.76 1.77 1.00 1.60   4.35 5.10 6.90    0.00
+petal_width  150.00 1.20 0.76 0.10 0.30   1.30 1.80 2.50    0.00
+```
+
+```powershell
+# with Transpose-Property
+Import-Csv -Path iris.csv `
+    | Measure-Summary `
+    | Transpose-Property -Property "Property" `
+    | Format-Table
+```
+
+```markdown
+Property sepal_length sepal_width petal_length petal_width
+-------- ------------ ----------- ------------ -----------
+Count          150.00      150.00       150.00      150.00
+Mean             5.84        3.06         3.76        1.20
+SD               0.83        0.44         1.77        0.76
+Min              4.30        2.00         1.00        0.10
+Qt25             5.10        2.80         1.60        0.30
+Median           5.80        3.00         4.35        1.30
+Qt75             6.40        3.40         5.10        1.80
+Max              7.90        4.40         6.90        2.50
+Outlier          0.00        1.00         0.00        0.00
+```
+
+
+```powershell
+# Column name specification
 Import-Csv -Path iris.csv `
     | Shorten-PropertyName `
     | Measure-Summary -Property "s_w"
@@ -5790,6 +5833,7 @@ Outlier  : 1
 ```
 
 ```powershell
+# with -Detail switch
 Import-Csv -Path iris.csv `
     | Shorten-PropertyName `
     | Measure-Summary -Property "s_w" -Detail
@@ -5817,7 +5861,7 @@ OutlierLo    : 0
 ```
 
 ```powershell
-# Detect outliers
+# Specify multiple properties
 Import-Csv -Path iris.csv `
     | Shorten-PropertyName `
     | Measure-Summary -Property "s_w", "p_l" `
@@ -5849,7 +5893,7 @@ Outlier  : 0
 ```
 
 ```powershell
-# Summary with Format-Table
+# With Format-Table
 Import-Csv -Path iris.csv `
     | Shorten-PropertyName `
     | Measure-Summary -Property "s_w", "p_l" `
