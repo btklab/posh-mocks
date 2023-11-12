@@ -354,7 +354,15 @@ function Grep-Object {
         ($input | Select-String @splatting).Matches.Value; return
     }
     if ($Context){
-        $input | Select-String @splatting | Out-String -Stream ; return
+        if ( $LeaveHeaderAndBoarder ){
+            $input[0..1] | ForEach-Object { "  $_" }
+            $input[(2..($input.Count))] | Select-String @splatting | Out-String -Stream ; return
+        } elseif ( $LeaveHeader ){
+            $input[0] | ForEach-Object { "  $_" }
+            $input[(1..($input.Count))] | Select-String @splatting | Out-String -Stream ; return
+        } else {
+            $input | Select-String @splatting | Out-String -Stream ; return
+        }
     }
     if ( $LeaveHeaderAndBoarder ){
         $input[0..1]
