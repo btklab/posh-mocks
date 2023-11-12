@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated [Measure-Summary] synopsis
 - Supported [grep] `-LeaveHeaderAndBoarder` option when used with `-Context` option
+- Fixed [Join2-Object] Synopsis
 
 ## [6.5.2] - 2023-11-01
 

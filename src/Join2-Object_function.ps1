@@ -64,7 +64,7 @@
     property name overlaps with transaction data.
     None is set by default.
 
-.Parameter MasterDelimiter = ","
+.Parameter MasterDelimiter
     Master file delimiter when specifying master data
     as a file. Comma separated by defalut.
 
