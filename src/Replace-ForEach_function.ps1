@@ -6,6 +6,7 @@
         [-p|-Property] <String[]>
         [-f|-From] <Regex>
         [-t|-To] <Regex>
+        [-OnlyIfPropertyExists]
 
 .LINK
     Shorten-PropertyName
@@ -15,8 +16,8 @@
 
     # Input
     Import-Csv planets.csv `
-        | select -First 3 `
-        | ft
+        | Select-Object -First 3 `
+        | Format-Table
 
     method          number orbital_period mass distance year
     ------          ------ -------------- ---- -------- ----
@@ -26,9 +27,9 @@
 
     # Use Replace-ForEach function
     Import-Csv planets.csv `
-        | select -First 3 `
+        | Select-Object -First 3 `
         | Replace-ForEach method -From ' ' -To '_' `
-        | ft
+        | Format-Table
 
     method          number orbital_period mass distance year
     ------          ------ -------------- ---- -------- ----
@@ -38,9 +39,9 @@
 
     # Equivalent to
     Import-Csv planets.csv `
-        | select -First 3 `
-        | %{ $_.method = $_.method -replace ' ', '_'; $_ } `
-        | ft
+        | Select-Object -First 3 `
+        | ForEach-Object { $_.method = $_.method -replace ' ', '_'; $_ } `
+        | Format-Table
 
 #>
 function Replace-ForEach
@@ -64,19 +65,33 @@ function Replace-ForEach
         [Alias('c')]
         [string] $Cast
         ,
+        [Parameter( Mandatory=$False )]
+        [switch] $OnlyIfPropertyExists
+        ,
         [Parameter(Mandatory=$False, ValueFromPipeline=$True)]
         [PSObject] $InputObject
     )
     # get all property names
     [String[]] $propNames = ($input[0].PSObject.Properties).Name
     # is specified property exists?
+    [bool] $isPropertyExists = $False
     foreach ( $p in $Property ){
-        if ( -not $propNames.Contains($p) ){
+        if ( $propNames.Contains($p) ){
+            $isPropertyExists = $True
+        }
+    }
+    if ( -not $isPropertyExists ){
+        if ( $OnlyIfPropertyExists ){
+            # Output as-is
+            $input | Select-Object -Property *
+            return
+        } else {
             Write-Error "Property: $p is not exists." -ErrorAction Stop
+            return
         }
     }
     # exec replace foreach object
-    foreach ( $obj in @($input | Select-Object *) ){
+    foreach ( $obj in @($input | Select-Object -Property *) ){
         foreach ( $p in $Property ){
             switch -Exact ($Cast) {
                 "string" {

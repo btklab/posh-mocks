@@ -982,6 +982,9 @@ Examples:
 
 ```powershell
 1..5 > a.txt; ctail -n 2 a.txt
+```
+
+```
 1
 2
 3
