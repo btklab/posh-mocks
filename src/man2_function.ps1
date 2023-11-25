@@ -186,15 +186,16 @@ function man2 {
     # get script dir
     $isPwshDir = $False
     if (($FunctionName) -and (Test-Path -Path $FunctionName -PathType Container)){
-        $dir = $FunctionName
-        $dir = Resolve-Path -Path $dir
-        $targetDir = Join-Path $dir '*'
-        $targetDir = Resolve-Path -Path $targetDir
+        # open with explorer
+        [string] $dir = $FunctionName
+        [string] $dir = (Resolve-Path -Path $dir).Path
+        [string] $targetDir = $dir
+        [string] $targetDir = (Resolve-Path -Path $targetDir).Path
     } else {
-        $dir = $PSScriptRoot
-        $dir = Resolve-Path -Path $dir
-        $targetDir = Join-Path $dir '*.ps1'
-        $isPwshDir = $True
+        [string] $dir = $PSScriptRoot
+        [string] $dir = (Resolve-Path -Path $dir).Path
+        [string] $targetDir = Join-Path $dir '*.ps1'
+        [bool] $isPwshDir = $True
     }
 
     # Do not use dependency files

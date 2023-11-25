@@ -43,8 +43,9 @@ if ($IsWindows){
     . $pwshSrcDir/teatimer_function.ps1
 }
 
-## get funcs
+## get/edit funcs
 . $pwshSrcDir/man2_function.ps1
+. $pwshSrcDir/Edit-Function_function.ps1
 
 
 ### pwsh implementation of gnu make command
