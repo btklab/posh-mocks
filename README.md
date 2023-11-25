@@ -28,7 +28,7 @@ cat README.md `
     | Set-Clipboard
 ```
 
-- [Add-LineBreakEndOfFile], [Add-LineBreak], [Add-Quartile], [Add-Stats], [Apply-Function], [ConvImage], [Delete-Field], [Detect-XrsAnomaly], [Drop-NA], [Get-AppShortcut], [Get-Histogram], [Get-OGP], [GroupBy-Object], [Invoke-Link], [Join2-Object], [Measure-Quartile], [Measure-Stats], [Measure-Summary], [Override-Yaml], [Plot-BarChart], [Rename-Normalize], [Replace-ForEach], [Replace-NA], [Select-Field], [Shorten-PropertyName], [Transpose-Property], [Unique-Object], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [getfirst], [getlast], [grep], [gyo], [han], [head], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc2], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [map2], [mdfocus], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [retu], [rev2], [rev], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-LineBreakEndOfFile], [Add-LineBreak], [Add-Quartile], [Add-Stats], [Apply-Function], [ConvImage], [Delete-Field], [Detect-XrsAnomaly], [Drop-NA], [Edit-Function], [Get-AppShortcut], [Get-Histogram], [Get-OGP], [GroupBy-Object], [Invoke-Link], [Join2-Object], [Measure-Quartile], [Measure-Stats], [Measure-Summary], [Override-Yaml], [Plot-BarChart], [Rename-Normalize], [Replace-ForEach], [Replace-NA], [Select-Field], [Shorten-PropertyName], [Transpose-Property], [Unique-Object], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [getfirst], [getlast], [grep], [gyo], [han], [head], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc2], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [map2], [mdfocus], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [retu], [rev2], [rev], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 Inspired by:
 
@@ -292,6 +292,107 @@ cat2                   gyo            rev
 catcsv                 han            say
 chead                  head           sed-i
 clip2file              image2md       sed
+```
+
+#### [Edit-Function] (Alias: edit) - Edit my function with editor
+
+[Edit-Function]: src/Edit-Function_function.ps1
+
+- Usage
+    - `man Edit-Function`
+    - `man edit`
+- Params
+    - `Edit-Function`
+        - `[[-f|-Function] <String>]` ...function name or alias
+        - `[[-e|-Editor] <String>]` ...specify editor
+        - `[-o|-AsObject]` ...output only object
+        - `[-q|-DryRun]` ...what-if
+
+exapmles
+
+Edit `man2` function with default text editor
+
+```powerhsell
+Edit-Function -Function man2
+```
+
+```powerhsell
+# or
+Edit-Function -f man2
+```
+
+```powerhsell
+# or
+Edit-Function man2
+```
+
+```powerhsell
+# or
+edit man2
+```
+
+output:
+
+```markdown
+Directory: path/to/the/posh-mocks/src
+
+Mode   LastWriteTime    Length Name
+----   -------------    ------ ----
+-a---  2023/11/25 8:44  12133 man2_function.ps1
+```
+
+Edit `man2` function with specified text editor
+
+```powerhsell
+Edit-Function -Function man2 -Editor notepad
+```
+
+```powerhsell
+# or
+Edit-Function -f man2 -e notepad
+```
+
+```powerhsell
+# or
+Edit-Function man2 notepad
+```
+
+```powerhsell
+# or
+edit man2 notepad
+```
+
+Output only Object (do not run editor)
+
+```powerhsell
+edit i -o
+```
+
+```markdown
+Directory: path/to/the/posh-mocks/src
+
+Mode  LastWriteTime 　 Length Name
+----  ------------- 　 ------ ----
+-a--- 2023/10/27 12:00 13459  Invoke-Link_function.ps1
+```
+
+If there are no arguments, return the function directory
+
+```powerhsell
+edit
+```
+
+```markdown
+Directory: path/to/the/posh-mocks
+
+Mode  LastWriteTime   Length Name
+----  -------------   ------ ----
+d-r-- 2023/11/25 8:17        src
+```
+open function directory with explorer
+
+```powerhsell
+edit | ii
 ```
 
 ### Unix-like text filters
@@ -985,6 +1086,7 @@ Examples:
 ```
 
 ```
+
 1
 2
 3

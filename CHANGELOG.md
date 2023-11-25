@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 
 - Fixed [man2] Resolve path
+- Added [Edit-Function] function
 
 ## [6.5.3] - 2023-11-17
 
@@ -563,6 +564,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Measure-Summary]: src/Measure-Summary_function.ps1
 [Transpose-Property]: src/Transpose-Property_function.ps1
 
+[Edit-Function]: src/Edit-Function_function.ps1
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/6.5.3..HEAD
 [6.5.3]: https://github.com/btklab/posh-mocks/releases/tag/6.5.3
