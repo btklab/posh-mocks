@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed [man2] Resolve path
 - Added [Edit-Function] function
 - Added [Edit-Function] behavior when specifying an existing file
+- Added test for existing alias before adding alias: [Add-Quartile], [Add-Stats], [Apply-Function], [Edit-Function], [Get-OGP], [grep], [GroupBy-Object], [head], [Invoke-Link], [Invoke-Logger], [Join2-Object], [Measure-Quartile], [Measure-Stats], [Measure-Summary], [Rename-Normalize], [Sort-Ordinal], [tail]
 
 ## [6.5.3] - 2023-11-17
 

@@ -298,6 +298,8 @@ clip2file              image2md       sed
 
 [Edit-Function]: src/Edit-Function_function.ps1
 
+`Edit-Function [func|alias] [editor]`
+
 - Usage
     - `man Edit-Function`
     - `man edit`
