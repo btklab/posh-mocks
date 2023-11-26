@@ -628,5 +628,29 @@ function Measure-Summary {
         #endregion
     }
 }
-Set-Alias -Name msummary -Value Measure-Summary -PassThru | Select-Object -Property "DisplayName"
-    
+# set alias
+[String] $tmpAliasName = "msummary"
+[String] $tmpCmdName   = "Measure-Summary"
+# is alias already exists?
+if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0){
+    try {
+        if ( (Get-Command -Name $tmpAliasName).CommandType -eq "Alias" ){
+            if ( (Get-Command -Name $tmpAliasName).ReferencedCommand.Name -eq $tmpCmdName ){
+                # pass
+            } else {
+                throw
+            }
+        } else {
+            throw
+        }
+    } catch {
+        Write-Error "Alias ""$tmpAliasName ($((Get-Command -Name $tmpAliasName).ReferencedCommand.Name))"" is already exists. Change alias needed." -ErrorAction Stop
+    } finally {
+        Remove-Variable -Name "tmpAliasName" -Force
+        Remove-Variable -Name "tmpCmdName" -Force
+    }
+} else {
+    Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru | Select-Object -Property "DisplayName"
+    Remove-Variable -Name "tmpAliasName" -Force
+    Remove-Variable -Name "tmpCmdName" -Force
+}

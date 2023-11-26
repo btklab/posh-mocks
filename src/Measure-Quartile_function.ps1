@@ -524,4 +524,29 @@ function Measure-Quartile {
         #endregion
     }
 }
-Set-Alias -Name mquart -Value Measure-Quartile -PassThru | Select-Object -Property "DisplayName"
+# set alias
+[String] $tmpAliasName = "mquart"
+[String] $tmpCmdName   = "Measure-Quartile"
+# is alias already exists?
+if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0){
+    try {
+        if ( (Get-Command -Name $tmpAliasName).CommandType -eq "Alias" ){
+            if ( (Get-Command -Name $tmpAliasName).ReferencedCommand.Name -eq $tmpCmdName ){
+                # pass
+            } else {
+                throw
+            }
+        } else {
+            throw
+        }
+    } catch {
+        Write-Error "Alias ""$tmpAliasName ($((Get-Command -Name $tmpAliasName).ReferencedCommand.Name))"" is already exists. Change alias needed." -ErrorAction Stop
+    } finally {
+        Remove-Variable -Name "tmpAliasName" -Force
+        Remove-Variable -Name "tmpCmdName" -Force
+    }
+} else {
+    Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru | Select-Object -Property "DisplayName"
+    Remove-Variable -Name "tmpAliasName" -Force
+    Remove-Variable -Name "tmpCmdName" -Force
+}

@@ -609,4 +609,29 @@ function Get-OGP {
         #$stream.Close()
     }
 }
-Set-Alias -name ml -value Get-OGP -PassThru | Select-Object "DisplayName"
+# set alias
+[String] $tmpAliasName = "ml"
+[String] $tmpCmdName   = "Get-OGP"
+# is alias already exists?
+if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0){
+    try {
+        if ( (Get-Command -Name $tmpAliasName).CommandType -eq "Alias" ){
+            if ( (Get-Command -Name $tmpAliasName).ReferencedCommand.Name -eq $tmpCmdName ){
+                # pass
+            } else {
+                throw
+            }
+        } else {
+            throw
+        }
+    } catch {
+        Write-Error "Alias ""$tmpAliasName ($((Get-Command -Name $tmpAliasName).ReferencedCommand.Name))"" is already exists. Change alias needed." -ErrorAction Stop
+    } finally {
+        Remove-Variable -Name "tmpAliasName" -Force
+        Remove-Variable -Name "tmpCmdName" -Force
+    }
+} else {
+    Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru | Select-Object -Property "DisplayName"
+    Remove-Variable -Name "tmpAliasName" -Force
+    Remove-Variable -Name "tmpCmdName" -Force
+}
