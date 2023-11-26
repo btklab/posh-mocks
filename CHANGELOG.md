@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed [man2] Resolve path
 - Added [Edit-Function] function
+- Added [Edit-Function] behavior when specifying an existing file
 
 ## [6.5.3] - 2023-11-17
 

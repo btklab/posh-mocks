@@ -389,11 +389,20 @@ Mode  LastWriteTime   Length Name
 ----  -------------   ------ ----
 d-r-- 2023/11/25 8:17        src
 ```
-open function directory with explorer
 
-```powerhsell
-edit | ii
+If there are no arguments, return the function list
+
+```powershell
+edit
 ```
+
+Open text with editor if an existing file is specified
+
+```powershell
+e ../bin/posh-mocks/operator.ps1
+```
+
+
 
 ### Unix-like text filters
 

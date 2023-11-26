@@ -8,6 +8,8 @@
         [-o|-AsObject] ...output only object
         [-q|-DryRun] ...what-if
 
+    If an existing file is specified, open it in the editor
+
 .EXAMPLE
     # Edit man2 function with default text editor
     Edit-Function -Function man2
@@ -20,9 +22,9 @@
 
     Directory: path/to/the/posh-mocks/src
 
-    Mode                 LastWriteTime         Length Name
-    ----                 -------------         ------ ----
-    -a---          2023/11/25     8:44          12133 man2_function.ps1
+    Mode          LastWriteTime    Length Name
+    ----          -------------    ------ ----
+    -a---   2023/11/25     8:44     12133 man2_function.ps1
 
 .EXAMPLE
     # Edit man2 function with specified text editor
@@ -45,18 +47,19 @@
     -a--- 2023/10/27    12:00  13459 Invoke-Link_function.ps1
 
 .EXAMPLE
-    # If there are no arguments, return the function directory
-    edit
+    # If there are no arguments, return the function list
+    edit Add-*
 
-    Directory: path/to/the/posh-mocks
+    Matched multiple files. Please specify a single file.
+    ------
 
-    Mode                 LastWriteTime         Length Name
-    ----                 -------------         ------ ----
-    d-r--          2023/11/25     8:17                src
+    Add-Duration           Add-LineBreakEndOfFile
+    Add-LineBreak          Add-Quartile
+    Add-Record             Add-Stats
 
 .EXAMPLE
-    # open function directory with explorer
-    edit | ii
+    # open text with editor If an existing file is specified
+    e ../bin/posh-mocks/operator.ps1
 
 .NOTES
     Author: btklab
@@ -94,30 +97,63 @@ function Edit-Function {
     # get script dir
     [string] $pwshDir = $PSScriptRoot
     [string] $pwshDir = (Resolve-Path -Path $pwshDir).Path
-    # Open directory when nothing specified
+    Write-Debug "$pwshDir"
+    # if no option, list pwsh scripts
     if ( -not $Function ){
-        Get-Item -LiteralPath $pwshDir
+        #Get-Item -LiteralPath $pwshDir
         #Invoke-Item -Path $pwshDir
+        [String] $srcFilePath = Join-Path -Path $pwshDir -ChildPath "*_function.ps1"
+        Get-ChildItem -Path $srcFilePath -File `
+            | Sort-Object {
+                -join ( [int[]] $_.Name.ToCharArray()).ForEach('ToString', 'x4')
+            } `
+            | select @{L="Name";E={$_.Name.Replace('_function.ps1','')}} `
+            | Format-Wide -AutoSize
         return
     }
+    # If an existing file is specified, open it in the editor
+    if ( Test-Path -LiteralPath $Function ){
+        if ( $Editor ){
+            [string] $comStr = $Editor
+            [string] $comStr = "$comStr ""$Function"""
+            if ( $DryRun ){
+                Write-Host "Invoke-Expression -Command $comStr -ErrorAction Stop" -ForegroundColor Yellow
+            } else {
+                Get-Item -LiteralPath $Function
+                if ( -not $AsObject ){
+                    Invoke-Expression -Command $comStr -ErrorAction Stop
+                }
+            }
+        } else {
+            if ( $DryRun ){
+                Write-Host "Invoke-Item -Path $Function" -ForegroundColor Yellow
+            } else {
+                Get-Item -LiteralPath $Function
+                if ( -not $AsObject ){
+                    Invoke-Item -Path $Function
+                }
+            }
+        }
+        return
+    }
+    # main
     if ( -not (isCommandExist $Function) ){
         Write-Error """$Function"" function is not exists." -ErrorAction Stop
         return
     }
     [object[]] $cmdAry = Get-Command -Name $Function
-    if ( $cmdAry.Count -ne 1 ){
+    if ( $cmdAry.Count -gt 1 ){
+        Write-Host ""
         Write-Host "Matched multiple files. Please specify a single file." -ForegroundColor Yellow
         Write-Host "------" -ForegroundColor Yellow
-        # get full name
-        foreach ($cmd in $cmdAry ){
-            if ( $cmd.CommandType -eq 'Alias' ){
-                # resolve alias
-                Write-Host "* $($cmd.ReferencedCommand.Name)" -ForegroundColor Yellow
-            } else {
-                # get commmand name
-                Write-Host "* $($cmd.Name)" -ForegroundColor Yellow
-            }
-        }
+        # list function
+        [String] $srcFilePath = Join-Path -Path $pwshDir -ChildPath "${Function}_function.ps1"
+        Get-ChildItem -Path $srcFilePath -File `
+            | Sort-Object {
+                -join ( [int[]] $_.Name.ToCharArray()).ForEach('ToString', 'x4')
+            } `
+            | select @{L="Name";E={$_.Name.Replace('_function.ps1','')}} `
+            | Format-Wide -AutoSize
     } else {
         if ( $cmdAry[0].CommandType -eq 'Alias' ){
             # resolve alias
@@ -159,3 +195,4 @@ function Edit-Function {
 
 }
 Set-Alias -Name "edit" -Value "Edit-Function" -PassThru | Select-Object "DisplayName"
+Set-Alias -Name "e" -Value "Edit-Function" -PassThru | Select-Object "DisplayName"
