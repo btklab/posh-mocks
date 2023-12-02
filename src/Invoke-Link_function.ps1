@@ -105,13 +105,13 @@
 .EXAMPLE
     ## execute if *.ps1 file specified
 
-    cat .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+    cat ./link/work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
     # MSRC - Microsoft Security Response Center
     rssfeed https://api.msrc.microsoft.com/update-guide/rss -MaxResults 30
 
     ## execute .ps1 function
     ## able to use dot sourcing functions in current process
-    i .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+    i ./link/\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
 
     channel                    date       item
     -------                    ----       ----

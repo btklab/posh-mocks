@@ -12158,7 +12158,7 @@ i ./link/rmarkdown_site.txt -l
 ```powershell
 ## execute if *.ps1 file specified
 
-cat .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+cat ./link/MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
 ```
 
 ```
@@ -12169,7 +12169,7 @@ rssfeed https://api.msrc.microsoft.com/update-guide/rss -MaxResults 30
 ```powershell
 ## execute .ps1 function
 ## able to use dot sourcing functions in current process
-i .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+i ./link/\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
 ```
 
 ```markdown

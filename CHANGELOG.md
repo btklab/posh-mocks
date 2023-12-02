@@ -5,8 +5,11 @@ All notable changes to "posh-mocks" project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 ## [unreleased]
+
+- NA
+
+## [6.5.4] - 2023-11-26
 
 - Fixed [man2] Resolve path
 - Added [Edit-Function] function
@@ -568,7 +571,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Edit-Function]: src/Edit-Function_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.5.3..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.5.4..HEAD
+[6.5.4]: https://github.com/btklab/posh-mocks/releases/tag/6.5.4
 [6.5.3]: https://github.com/btklab/posh-mocks/releases/tag/6.5.3
 [6.5.2]: https://github.com/btklab/posh-mocks/releases/tag/6.5.2
 [6.5.1]: https://github.com/btklab/posh-mocks/releases/tag/6.5.1
