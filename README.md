@@ -28,7 +28,7 @@ cat README.md `
     | Set-Clipboard
 ```
 
-- [Add-LineBreakEndOfFile], [Add-LineBreak], [Add-Quartile], [Add-Stats], [Apply-Function], [ConvImage], [Delete-Field], [Detect-XrsAnomaly], [Drop-NA], [Edit-Function], [Get-AppShortcut], [Get-Histogram], [Get-OGP], [GroupBy-Object], [Invoke-Link], [Join2-Object], [Measure-Quartile], [Measure-Stats], [Measure-Summary], [Override-Yaml], [Plot-BarChart], [Rename-Normalize], [Replace-ForEach], [Replace-NA], [Select-Field], [Shorten-PropertyName], [Transpose-Property], [Unique-Object], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [getfirst], [getlast], [grep], [gyo], [han], [head], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc2], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [map2], [mdfocus], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [retu], [rev2], [rev], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-LineBreakEndOfFile], [Add-LineBreak], [Add-Quartile], [Add-Stats], [Apply-Function], [ConvImage], [Delete-Field], [Detect-XrsAnomaly], [Drop-NA], [Edit-Function], [Get-AppShortcut], [Get-Histogram], [Get-OGP], [Get-Ticket], [GroupBy-Object], [Invoke-Link], [Join2-Object], [Measure-Quartile], [Measure-Stats], [Measure-Summary], [Override-Yaml], [Plot-BarChart], [Rename-Normalize], [Replace-ForEach], [Replace-NA], [Select-Field], [Shorten-PropertyName], [Transpose-Property], [Unique-Object], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [getfirst], [getlast], [grep], [gyo], [han], [head], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc2], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [map2], [mdfocus], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [retu], [rev2], [rev], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
 
 Inspired by:
 
@@ -59,6 +59,8 @@ Inspired by:
     - License: The MIT License (MIT) Copyright © 2019 Kognise
 - [nicholasdille/PowerShell-Statistics - GitHub](https://github.com/nicholasdille/PowerShell-Statistics/tree/master)
     - License: [The Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)
+- [todo.txt format](https://github.com/todotxt/todo.txt)
+    - License: GNU General Public License v3.0 (GPL-3.0 license)
 - Dataset
     - allisonhorst / palmerpenguins
         - [palmerpenguins R data package](https://allisonhorst.github.io/palmerpenguins/)
@@ -12038,7 +12040,6 @@ clean: ## Remove "*.txt" items in Documents directory
         }
 ```
 
-
 #### [Invoke-Link] (Alias: i) - Read and execute links written in a text file
 
 [Invoke-Link]: src/Invoke-Link_function.ps1
@@ -12158,7 +12159,7 @@ i ./link/rmarkdown_site.txt -l
 ```powershell
 ## execute if *.ps1 file specified
 
-cat .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+cat ./link/MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
 ```
 
 ```
@@ -12169,7 +12170,7 @@ rssfeed https://api.msrc.microsoft.com/update-guide/rss -MaxResults 30
 ```powershell
 ## execute .ps1 function
 ## able to use dot sourcing functions in current process
-i .\work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+i ./link/\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
 ```
 
 ```markdown
@@ -12181,6 +12182,556 @@ MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4902...
 MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4903...
 MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4904...
 MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4905...
+```
+
+#### [Get-Ticket] (Alias: t) - A parser for tickets written in one-liner text
+
+[Get-Ticket]: src/Get-Ticket_function.ps1
+
+Parse [todo.txt](https://github.com/todotxt/todo.txt) like format and output as Text/PsObject:
+
+    # Input format example
+    (B) 2023-12-01 +proj This is a [first ticket] @haccp #hashtag due:2023-12-31
+        link: https://github.com/todotxt/todo.txt
+    x 2023-12-02 2023-12-01 This is a completed ticket
+
+For todo / task / ticket management, alternatively as a changelog / book reference log / recipe consisting of title and body.
+
+The default behaviour is:
+
+1. read the `tickets.md` file in the current directory and
+2. return the active tickets as text line.
+
+The file name to be read by default is searched in the following order and the first match is read:
+
+- `ticket.txt`
+- `ticket.md`
+- `tickets.txt`
+- `tickets.md`
+
+Or input from pipeline allowed.
+
+    [-f|-File <path>] is the file specification.
+    [-o|-AsObject] is output as PsObject.
+    [-a|-AllData] is to output both incomplete and completed tickets.
+
+- Usage
+    - Long name
+        - `man Get-Ticket`
+        - `Get-Ticket -Where <regex> -id <id,id,...> [-a|-AllData] [-o|-AsObject] [-Gantt|-GanttNote]`
+    - Short name
+        - `man t`
+        - `t <regex> <id,id,...> [-a|-AllData] [-o|-AsObject] [-Gantt|-GanttNote]`
+
+Basic workflow:
+
+1. Write tickets in `[tickets.md]` with text editor
+
+```markdown
+(B) 2023-12-01 +Get-Ticket Add-Ticket [tickets.md] @pwsh
+(B) 2023-12-01 +Get-Ticket Register-Git [tickets.md] @pwsh
+```
+
+2. list active tickets as text line from `[tickets.md]`
+
+```powershell
+Get-Ticket
+t
+Get-Content tickets.md | Get-Ticket
+Get-Content tickets.md | t
+```
+
+`[-a|-AllData]` output both incomplete and completed tickets
+
+```powershell
+Get-Ticket -AllData
+t -a
+```
+
+The output is in text format by default. like this:
+
+```markdown
+1 (B) 2023-12-01 +Get-Ticket Add-Ticket [tickets.md] @pwsh
+2 (B) 2023-12-01 +Get-Ticket Register-Git [tickets.md] @pwsh
+```
+
+3. filter tickets with keyword (regex) (position=0)
+
+```powershell
+Get-Ticket -Where keyword
+t -w keyword
+t keyword
+```
+
+the regex `.` means wildcard (matches any character)
+
+```
+t .
+```
+
+4. select id and output body (position=1)
+
+```powershell
+Get-Ticket -Where keyword -Id 1,3
+t -w keyword -id 1,3
+t keyword 1,3
+```
+the regex `.` means wildcard (matches any character)
+
+```powershell
+t . 1,3
+```
+
+invoke link in body with `[-i|-InvokeLink]`.
+e.g. `link: https://example.com/`
+
+```powershell
+t . 1,3 -InvokeLink
+t . 1,3 -i
+```
+
+```markdown
+Read book [My book collection] +haccp @book
+    link: https://example.com/
+```
+
+5. (Loop)
+
+Output as Text line:
+
+    Default
+
+Output as PsObject with `[-o|-AsObject]`:
+
+- Sorting by tag, date, etc. is simpler with PsObject than with plain text.
+
+```powershell
+# full name
+Get-Ticket -Where keyword -Id 1,3 -AsObject
+# or
+t -w keyword -id 1,3 -o
+# or
+t keyword 1,3 -o
+```
+
+- add required Properties to PsObject output.
+(There are few default output properties as follows)
+(`Id`, `Done`, `Project`, `Act`, `Name`, `At`)
+
+```powershell
+Get-Ticket -Where keyword -id 1,3 -AsObject -FullProperty
+t -where keyword -id 1,3 -AsObject -full
+t keyword 1,3 -o -full
+```
+
+or
+
+```powershell
+Get-Ticket -Where keyword -id 1,3 -AsObject -Plus Age,Remain
+t keyword 1,3 -o -p Age,Remain
+```
+
+Output as plantUML Gantt Chart format with `[-Gantt|-GanttNote]`:
+
+- Ticket requires both Created and Due date.
+- plantUML: <https://plantuml.com/>
+
+```powershell
+Get-Ticket -Where keyword -Id 1,3 -Gantt
+t -w keyword -id 1,3 -Gantt
+t keyword 1,3 -Gantt
+```
+
+- Note style:
+
+```powershell
+Get-Ticket -Where keyword -Id 1,3 -GanttNote
+t -w keyword -id 1,3 -GanttNote
+t keyword 1,3 -GanttNote
+```
+
+Format pattern:
+
+Note:
+
+- ignore empty line and starging with `#` and space. lines with one or more spaces at the beginning of the line are also ignored, but are output when `-id [int[]]` option is specified, they can be used as body for tickets.
+
+Reference:
+
+- <https://github.com/todotxt/todo.txt>
+
+Format:
+
+    [tickets.md]
+
+    # Basic
+    A simple task
+    (B) A simple task with Priority
+
+    # Creation/Completion date
+    (A) 2023-12-01 Task with Created date and Priority
+    2023-12-01 Task with Created date 
+    x 2023-12-31 Task with Completed date
+    x 2023-12-31 2023-12-01 Task with Completed date
+
+    # Due date with "due:yyyy-mm-dd"
+    A task with due date. due:2023-12-01
+    2023-12-01 A task with created date and due date. due:2023-12-31
+
+    # Status with "status:<str>,<str>,..."
+    A task with status. status:daily
+    A task with status. status:daily,weekly,monthly,yearly,routine
+    A task with status. status:daily,active
+
+    # Project, Context, Tag with "+project", "@at", "#tag"
+    +proj Task with Project
+    +proj Task with Project and @context
+    +proj Task with Project and #tag #tag2
+
+    # Document name with "[name]"
+    Read-Book [book name with spaces]
+    A task with related [document name]
+
+    # Title and Body (for tasknote, changelog, book-reference)
+    A Task with multiple line note
+        Note have one or more spaces at the beginning of each line.
+        link: https://example.com/
+            -> with [-i] option, "link: <link>" opened by default app
+
+    # Misc
+    The double phyen -- is deleted from the "Act" property
+        when the "-AsObject" option is specified
+
+A quick demo:
+
+1. Create/Add `tickets.md` with text editor: `[Get-Ticket -e]`
+
+```markdown
+This is task1
+This is task2
+    body of task2
+x This is completed task
+```
+
+2. List active tickets: `[Get-Ticket [-a]]`
+
+```powershell
+Get-Ticket
+Get-Ticket .
+Get-Content tickets.md | Get-Ticket
+Get-Content tickets.md | Get-Ticket .
+t
+t .
+```
+
+```markdown
+1 This is task1
+2 This is task2
+```
+
+```powershell
+Get-Ticket -AllData
+t -a
+```
+
+```markdown
+1 This is task1
+2 This is task2
+3 x This is completed task
+```
+
+3. Filter tickets : `[Get-Ticket <regex>]`
+
+```powershell
+# get task contains "task2"
+Get-Ticket -Where task2
+t task2
+```
+
+```markdown
+1 This is task2
+```
+
+4. Show Title and Body: `[Get-Ticket <regex> <id,id,...>]`
+
+```powershell
+# get body of task2
+Get-Ticket -Wehre task2 -id 1
+t task2 1 
+```
+
+```markdown
+This is task2
+    body of task2
+```
+ 
+5. Mark the first ticket done with text editor: `[Get-Ticket -e]`
+
+```markdown
+x This is task1  <-- Add "x" to the beginning of the line
+This is task2
+    body of task2
+x This is completed task
+```
+
+6. List active tickets: `[Get-Ticket [-a]]`
+
+```powershell
+Get-Ticket
+t
+```
+
+```markdown
+1 This is task2
+```
+
+```powershell
+Get-Ticket -AllData
+t -a
+```
+
+```markdown
+1 x This is task1
+2 This is task2
+3 x This is completed task
+```
+
+Tips for Ticket writing:
+
+Tasks should be broken down concretely to a level where action can be imagined.
+Consider a vague task as a `+project` tag.
+
+```markdown
+# [tickets.md]
+
+## Bad. Vague task will remain long
+Keep house clean
+
+## Good. Tasks broken down into concrete
++HouseKeepingProject Dry the bedding in the sun. status:daily
++HouseKeepingProject Vacuum the floor in the north room. status:daily
++HouseKeepingProject Fold the laundry. status:daily
++HouseKeepingProject Repair tears in curtain. status:monthly
+```
+
+Option:
+
+- Get and Output
+    - `[-a|-AllData]` ...Get data including completed tickets
+    - `[-Id]` ...Show body (description)
+        - `[-i|-InvokeLink]` ...Invoke link in the body block
+        - `[-InvokeLinkWith <app>]` ...Invoke link with app
+- Output as PsObject
+    - `[-o|-AsObject]` ...Output as PsObject
+        - `[-sa|-ShortenAct]`
+        - `[-full|-FullProperty]`
+        - `[-p|-Plus <String[]>]`
+        - `[-d|-DeleteTagFromAct]`
+        - `[-sp|-ShortenProperty]`
+- Output as Gantt chart format for plantUML
+    - `[-Gantt]` ...Output as plantUML gantt chart format
+    - `[-GanttNote]` ...Output as plantUML gantt chart format
+        - `[-GanttPrint <String>]`
+        - `[-GanttFontSize<Int32>]`
+        - `[-GanttZoom <Double>]`
+        - `[-GanttAddDays <Int32>]`
+        - `[-GanttScale <Double>]`
+        - `[-GanttDateFormat <String>]`
+- Edit `[tickets.md]`
+    - `[-Edit]` ...Edit `[tickets.md]`
+    - `[-Editor <app>]` ...Edit `[tickets.md]` with app
+- Filter with status
+    - `[-Status <String[]>]` ...Filter tickets with `status:<string>`
+    - `[-Daily]` ...Filter tickets with `status:daily`
+    - `[-Weekly]` ...Filter tickets with `status:weekly`
+    - `[-Monthly]` ...Filter tickets with `status:monthly`
+    - `[-Yearly]` ...Filter tickets with `status:yearly`
+    - `[-Routine]`  ...Filter tickets with `status:routine`
+    - `[-NoRoutine]` ...Filter tickets that do not contain the above routine/recurse keywords
+- List file, property, section
+    - `[-lsFile]` ...List tickets file in current directory
+    - `[-lsProperty]` ...List property
+    - `[-lsSection]` ...List `[tickets.md]`'s section
+- Misc
+    - `[-f|-File <String>]` ...Read file specification
+    - `[-DefaultFileName <String>]` ...Set default file name
+    - `[-SkipTest]` ...Skip test `[isBracketClosed]`
+- Add ticket into `[tickets.md]`
+    - `[-AddEmpty]`
+    - `[-AddTailEmpty]`
+    - `[-Add <ticket>]`
+    - `[-AddTail <ticket>]`
+        - `[-NoBackup]` ...Do not create .bk when adding a task
+- Done ticket in `[tickets.md]`
+    - `[-Done <Int32[]>]`
+        - `[-WhatIf]` ...Shows what would happen if the cmdlet runs. **The cmdlet isn't run**.
+        - `[-NoBackup]` ...Do not create .bk when overwriting completion mark
+
+`[tickets.md]` example:
+
+```markdown
+# todo
+(B) 2023-12-01 +proj This is a first ticket  @todo due:2023-12-31
+(A) 2023-12-01 +proj This is a second ticket @todo status:monthly:25
+(B) 2023-12-01 +proj This is a third ticket  @todo status:routine
+x 2023-12-10 2023-12-01 +proj This is a completed ticket @todo
+
+# book
+Read book [The HACCP book] +haccp @book
+    this is body
+    link: https://example.com/
+Read book [My book collection] +haccp @book
+    link: https://example.com/
+
+# double hyphen behavior
+x This is done -- Delete the string after the double hyphen #tips #notice
+        ...The string after the double hyphen " -- " is deleted
+        from the "Act" property when the "-AsObject" option is specified
+x [the -- in the name] is ignored. #tips #notice
+        ...The double hyphen " -- " in the [name] is not delete anystring
+        after that.
+```
+
+Examples:
+
+- Sort By Project
+
+```powershell
+Get-Ticket -AsObject -ShortenAct -FullProperty | Sort-Object -Property "Project" | Format-Table
+t -o -sa -full | Sort "Project" | ft
+```
+
+```markdown
+Id Done Project     Act                          Name        
+-- ---- -------     ---                          ----        
+ 1 -    +Get-Ticket (B) 2023-12-01 Add-Ticket    [tickets.md]
+ 2 -    +Get-Ticket (B) 2023-12-01 Register-Git  [tickets.md]
+```
+
+- Group by Atmark
+
+```powershell
+Get-Ticket -AsObject | Group-Object -Property "At" -NoElement
+t -o | Group "At" -NoElement
+```
+
+```markdown
+Count Name
+----- ----
+    1 @haccp
+    1 @life
+```
+
+- Group by Project
+
+```powershell
+Get-Ticket -AsObject | Group-Object -Property "Project" -NoElement
+t -o | Group "Project" -NoElement
+```
+
+```markdown
+Count Name
+----- ----
+    2 +verification
+    1 +audit
+    1 +event
+```
+
+- Group by At and Project
+
+```powershell
+Get-Ticket | Group-Object "At", "Project" -NoElement
+```
+
+```markdown
+Count Name
+----- ----
+    1 @haccp, +verification
+    1 @haccp, +audit
+    1 @life, +event
+```
+
+- Open link with default browser / explorer app
+
+```powershell
+Get-Ticket -id 1 -InvokeLink
+Get-Ticket -id 1 -i
+```
+
+```markdown
+2023-11-28 Keep-Ledger [household ledger] @life status:monthly:25
+    link: https://www.google.com/
+```
+
+- Open `https` link with `firefox` browser
+
+```powershell
+Get-Ticket -id 1 -InvokeLinkWith firefox
+Get-Ticket -id 1 -iw firefox
+```
+
+```markdown
+2023-11-28 Keep-Ledger [household ledger] @life 
+status:monthly:25
+    link: https://www.google.com/
+```
+
+- List section written in markdown format
+
+```powershell
+Get-Ticket -lsSection
+```
+
+```markdown
+# family
+# books
+# computer
+# haccp
+```
+
+- Output as plantUML gantt chart and create gantt chart using [pu2java] function
+
+```powershell
+# Note:
+#  All tickets must contain both create and due date
+#  for output as gantt chart format
+Get-Ticket -Where '@haccp' -Gantt > a.pu; pu2java a.pu svg | ii
+```
+
+```plaintext
+@startgantt
+
+Project starts the 2023-11-30
+2023-12-03 is colored LightBlue
+saturday are closed
+sunday are closed
+printscale daily zoom 1
+scale 1.4
+
+<style>
+ganttDiagram {
+  task {
+    FontColor black
+    FontSize 12
+  }
+  note {
+    FontSize 12
+  }
+  separator {
+    FontSize 10
+  }
+}
+</style>
+
+-- @haccp --
+
+[+prj Take-Picture1] starts 2023-11-28 and ends 2023-12-09
+
+-- @haccp --
+
+[+prj Take-Picture2] starts 2023-11-28 and ends 2023-12-09
+
+@endgantt
 ```
 
 #### [pwsync] - Invoke Robocopy.exe

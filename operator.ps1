@@ -197,8 +197,11 @@ if ( $IsWindows ){
 
 ## math
 
-## misc
+## task/ticket management
+. $pwshSrcDir/Get-Ticket_function.ps1
 . $pwshSrcDir/Invoke-Link_function.ps1
+
+## misc
 . $pwshSrcDir/tenki_function.ps1
 . $pwshSrcDir/sleepy_function.ps1
 . $pwshSrcDir/Get-AppShortcut_function.ps1
