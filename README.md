@@ -12537,7 +12537,7 @@ Option:
     - `[-Gantt]` ...Output as plantUML gantt chart format
     - `[-GanttNote]` ...Output as plantUML gantt chart format
         - `[-GanttPrint <String>]`
-        - `[-GanttFontSize<Int32>]`
+        - `[-GanttFontSize <Int32>]`
         - `[-GanttZoom <Double>]`
         - `[-GanttAddDays <Int32>]`
         - `[-GanttScale <Double>]`
@@ -12671,13 +12671,12 @@ Get-Ticket -id 1 -i
 - Open `https` link with `firefox` browser
 
 ```powershell
-Get-Ticket -id 1 -InvokeLinkWith firefox
-Get-Ticket -id 1 -iw firefox
+Get-Ticket -id 1 -InvokeLinkWith "firefox"
+Get-Ticket -id 1 -iw "firefox"
 ```
 
 ```markdown
-2023-11-28 Keep-Ledger [household ledger] @life 
-status:monthly:25
+2023-11-28 Keep-Ledger [household ledger] @life status:monthly:25
     link: https://www.google.com/
 ```
 
