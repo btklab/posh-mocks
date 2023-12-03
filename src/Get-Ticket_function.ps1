@@ -276,7 +276,7 @@
         - [-Gantt] ...Output as plantUML gantt chart format
         - [-GanttNote] ...Output as plantUML gantt chart format
             - [-GanttPrint <String>]
-            - [-GanttFontSize<Int32>]
+            - [-GanttFontSize <Int32>]
             - [-GanttZoom <Double>]
             - [-GanttAddDays <Int32>]
             - [-GanttScale <Double>]
