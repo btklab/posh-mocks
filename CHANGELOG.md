@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed [README.md]
 - Fixed [Get-Ticket] synopsis
+- Added [Get-Ticket] `-ForceXonCreationDateBeforeToday` option
 
 ## [6.6.0] - 2023-12-03
 

@@ -337,6 +337,10 @@
              ...The double hyphen " -- " in the [name] is not delete anystring
                 after that.
 
+.LINK
+    Get-Ticket series:
+    Get-Ticket (t), Get-Book (b), Get-Note (n), Get-Recipe (re), Get-Diary (d)
+
 .EXAMPLE
     # Sort By Project
     PS > Get-Ticket -AsObject -ShortenAct -FullProperty | Sort-Object -Property "Project" | Format-Table
@@ -589,6 +593,10 @@ function Get-Ticket {
         [Alias('lss')]
         [Switch] $lsSection,
         
+        [Parameter( Mandatory=$False )]
+        [Alias('x')]
+        [Switch] $ForceXonCreationDateBeforeToday,
+
         [Parameter( Mandatory=$False )]
         [String] $HyphenPlaceHolder = '///@H@y@p@h@e@n@s@I@n@B@r@a@c@k@e@t@///',
         
@@ -1105,6 +1113,43 @@ function Get-Ticket {
             return $retAry
         }
     }
+    function addXonCreationDateBeforeToday {
+        param (
+            [String] $line
+        )
+        [String] $doneStr = 'x'
+        [String] $strToday = (Get-Date).ToString('yyyy-MM-dd')
+        # pattern: (A) <date>
+        [String] $reg = '^\([A-Z]\) ([-/0-9]{6,10}).*$'
+        if ( $line -cmatch $reg ){
+            [datetime] $dateCreate = Get-Date -Date $($line -creplace $reg, '$1')
+            [String] $strCreate = $dateCreate.ToString('yyyy-MM-dd')
+            if ( $strCreate -eq $strToday ){
+                return $line
+            } elseif ( $strCreate -gt $strToday ){
+                return $line
+            } else {
+                # put dune mark at beginning of the line
+                [String] $writeLine = "$doneStr $line"
+                return $writeLine
+            }
+        }
+        # pattern: <date>
+        [String] $reg = '^([-/0-9]{6,10}).*$'
+        if ( $line -cmatch $reg ){
+            [datetime] $dateCreate = Get-Date -Date $($line -creplace $reg, '$1')
+            [String] $strCreate = $dateCreate.ToString('yyyy-MM-dd')
+            if ( $strCreate -eq $strToday ){
+                return $line
+            } elseif ( $strCreate -gt $strToday ){
+                return $line
+            } else {
+                # put dune mark at beginning of the line
+                [String] $writeLine = "$doneStr $line"
+                return $writeLine
+            }
+        }
+    }
     ## read line
     if ( $File ){
         # test path
@@ -1294,6 +1339,9 @@ function Get-Ticket {
         # skip line beggining with "#" and space
         if ( isLineBeginningWithSharpMark $line ){
             continue
+        }
+        if ( $ForceXonCreationDateBeforeToday -and ( -not $AllData )){
+            $line = addXonCreationDateBeforeToday $line
         }
         # view mode
         if ( ($Id.Count -gt 0) -and (-not $Gantt) -and (-not $GanttNote) -and (-not $AsObject) ){
