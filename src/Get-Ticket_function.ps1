@@ -446,6 +446,19 @@
 
         @endgantt
 
+.EXAMPLE
+    # list Get-Ticket family (series)
+    PS> Get-Ticket -GetSeries
+
+    Alias Name
+    ----- ----
+    t     Get-Ticket
+    d     Get-Diary
+    b     Get-Book
+    re    Get-Recipe
+    n     Get-Note
+
+
 #>
 function Get-Ticket {
 
@@ -598,11 +611,38 @@ function Get-Ticket {
         [Switch] $ForceXonCreationDateBeforeToday,
 
         [Parameter( Mandatory=$False )]
+        [Switch] $GetSeries,
+
+        [Parameter( Mandatory=$False )]
         [String] $HyphenPlaceHolder = '///@H@y@p@h@e@n@s@I@n@B@r@a@c@k@e@t@///',
         
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
         [object[]] $InputObject
     )
+    # Output Get-Ticket series
+    if ( $GetSeries ){
+        [String[]] $serNames = @(
+            "Get-Ticket",
+            "Get-Diary",
+            "Get-Book",
+            "Get-Recipe",
+            "Get-Note"
+        )
+        [String[]] $serAliases = @(
+            "t",
+            "d",
+            "b",
+            "re",
+            "n"
+        )
+        $hash = [ordered] @{}
+        for ( $i = 0; $i -lt $serNames.Count; $i++ ){
+            $hash["Alias"] = $serAliases[$i]
+            $hash["Name"]  = $serNames[$i]
+            [pscustomobject] $hash
+        }
+        return
+    }
     # set output property names
     if ( $ShortenProperty ){
         [String[]] $splatProp = @(
