@@ -382,10 +382,18 @@ if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0)
     try {
         if ( (Get-Command -Name $tmpAliasName).CommandType -eq "Alias" ){
             if ( (Get-Command -Name $tmpAliasName).ReferencedCommand.Name -eq $tmpCmdName ){
-                # pass
+                Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru `
+                    | ForEach-Object{
+                        Write-Host "$($_.DisplayName)" -ForegroundColor Green
+                    }
             } else {
                 throw
             }
+        } elseif ( "$((Get-Command -Name $tmpAliasName).Name)" -match '\.exe$') {
+            Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru `
+                | ForEach-Object{
+                    Write-Host "$($_.DisplayName)" -ForegroundColor Green
+                }
         } else {
             throw
         }
@@ -396,7 +404,10 @@ if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0)
         Remove-Variable -Name "tmpCmdName" -Force
     }
 } else {
-    Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru | Select-Object -Property "DisplayName"
+    Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru `
+        | ForEach-Object {
+            Write-Host "$($_.DisplayName)" -ForegroundColor Green
+        }
     Remove-Variable -Name "tmpAliasName" -Force
     Remove-Variable -Name "tmpCmdName" -Force
 }

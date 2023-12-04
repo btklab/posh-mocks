@@ -16,7 +16,7 @@ if ($IsWindows){
     function Restart-Explorer {
         Stop-Process -ProcessName explorer -Force
     }
-    Set-Alias -Name rmExplorer -Value Restart-Explorer -PassThru | Select-Object -Property "DisplayName"
+    Set-Alias -Name rmExplorer -Value Restart-Explorer -PassThru | ForEach-Object{ Write-Host "$($_.DisplayName)" -ForegroundColor Green }
 
     ## unix-like commands
     . $pwshSrcDir/sed_function.ps1
@@ -50,7 +50,7 @@ if ($IsWindows){
 
 ### pwsh implementation of gnu make command
 . $pwshSrcDir/pwmake_function.ps1
-#Set-Alias -name make -value pwmake -PassThru | Select-Object -Property "DisplayName"
+#Set-Alias -name make -value pwmake -PassThru | ForEach-Object{ Write-Host "$($_.DisplayName)" -ForegroundColor Green }
 . $pwshSrcDir/pwsync_function.ps1
 
 ## text filter

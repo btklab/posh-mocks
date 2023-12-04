@@ -25,8 +25,8 @@ function Fahrenheit2Celsius ( [float] $F ){
 if ($IsWindows){
     # Set-Alias
     if($PSVersionTable.PSVersion.Major -ge 5){
-        Set-Alias -Name wzip -Value Compress-Archive -PassThru | Select-Object -Property "DisplayName"
-        Set-Alias -Name wunzip -Value Expand-Archive -PassThru | Select-Object -Property "DisplayName"
+        Set-Alias -Name wzip -Value Compress-Archive -PassThru | ForEach-Object{ Write-Host "$($_.DisplayName)" -ForegroundColor Green }
+        Set-Alias -Name wunzip -Value Expand-Archive -PassThru | ForEach-Object{ Write-Host "$($_.DisplayName)" -ForegroundColor Green }
     }
     function which($cmdname) {
         Get-Command $cmdname -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Definition
@@ -45,10 +45,10 @@ if ($IsLinux){
     if( Test-Path alias:wget ){ Remove-Alias wget }
     if( Test-Path alias:echo ){ Remove-Alias echo }
     # set-alias
-    Set-Alias -Name ls -Value Get-ChildItem -PassThru | Select-Object -Property "DisplayName"
-    Set-Alias -Name cp -Value Copy-Item -PassThru | Select-Object -Property "DisplayName"
-    Set-Alias -Name mv -Value Move-Item -PassThru | Select-Object -Property "DisplayName"
-    Set-Alias -Name rm -Value Remove-Item -PassThru | Select-Object -Property "DisplayName"
-    Set-Alias -Name cat -Value Get-Content -PassThru | Select-Object -Property "DisplayName"
-    Set-Alias -Name sort -Value Sort-Object -PassThru | Select-Object -Property "DisplayName"
+    Set-Alias -Name ls -Value Get-ChildItem -PassThru | ForEach-Object{ Write-Host "$($_.DisplayName)" -ForegroundColor Green }
+    Set-Alias -Name cp -Value Copy-Item -PassThru | ForEach-Object{ Write-Host "$($_.DisplayName)" -ForegroundColor Green }
+    Set-Alias -Name mv -Value Move-Item -PassThru | ForEach-Object{ Write-Host "$($_.DisplayName)" -ForegroundColor Green }
+    Set-Alias -Name rm -Value Remove-Item -PassThru | ForEach-Object{ Write-Host "$($_.DisplayName)" -ForegroundColor Green }
+    Set-Alias -Name cat -Value Get-Content -PassThru | ForEach-Object{ Write-Host "$($_.DisplayName)" -ForegroundColor Green }
+    Set-Alias -Name sort -Value Sort-Object -PassThru | ForEach-Object{ Write-Host "$($_.DisplayName)" -ForegroundColor Green }
 }
