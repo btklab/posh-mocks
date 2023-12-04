@@ -12190,10 +12190,12 @@ MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4905...
 
 Parse [todo.txt](https://github.com/todotxt/todo.txt) like format and output as Text/PsObject:
 
-    # Input format example
-    (B) 2023-12-01 +proj This is a [first ticket] @haccp #hashtag due:2023-12-31
-        link: https://github.com/todotxt/todo.txt
-    x 2023-12-02 2023-12-01 This is a completed ticket
+```markdown
+# Input format example
+(B) 2023-12-01 +proj This is a [first ticket] @haccp #hashtag due:2023-12-31
+    link: https://github.com/todotxt/todo.txt
+x 2023-12-02 2023-12-01 This is a completed ticket
+```
 
 For todo / task / ticket management, alternatively as a changelog / book reference log / recipe consisting of title and body.
 
@@ -12211,9 +12213,11 @@ The file name to be read by default is searched in the following order and the f
 
 Or input from pipeline allowed.
 
-    [-f|-File <path>] is the file specification.
-    [-o|-AsObject] is output as PsObject.
-    [-a|-AllData] is to output both incomplete and completed tickets.
+```markdown
+`[-f|-File <path>]` is the file specification.
+`[-o|-AsObject]` is output as PsObject.
+`[-a|-AllData]` is to output both incomplete and completed tickets.
+```
 
 - Usage
     - Long name
@@ -12232,7 +12236,7 @@ Basic workflow:
 (B) 2023-12-01 +Get-Ticket Register-Git [tickets.md] @pwsh
 ```
 
-2. list active tickets as text line from `[tickets.md]`
+2. List active tickets as text line from `[tickets.md]`
 
 ```powershell
 Get-Ticket
@@ -12241,21 +12245,21 @@ Get-Content tickets.md | Get-Ticket
 Get-Content tickets.md | t
 ```
 
-`[-a|-AllData]` output both incomplete and completed tickets
+- `[-a|-AllData]` output both incomplete and completed tickets
 
 ```powershell
 Get-Ticket -AllData
 t -a
 ```
 
-The output is in text format by default. like this:
+- The output is in text format by default. like this:
 
 ```markdown
 1 (B) 2023-12-01 +Get-Ticket Add-Ticket [tickets.md] @pwsh
 2 (B) 2023-12-01 +Get-Ticket Register-Git [tickets.md] @pwsh
 ```
 
-3. filter tickets with keyword (regex) (position=0)
+3. Filter tickets with keyword (regex) (position=0)
 
 ```powershell
 Get-Ticket -Where keyword
@@ -12263,26 +12267,27 @@ t -w keyword
 t keyword
 ```
 
-the regex `.` means wildcard (matches any character)
+- the regex `.` means wildcard (matches any character)
 
-```
+```powershell
 t .
 ```
 
-4. select id and output body (position=1)
+4. Select id and output body (position=1)
 
 ```powershell
 Get-Ticket -Where keyword -Id 1,3
 t -w keyword -id 1,3
 t keyword 1,3
 ```
-the regex `.` means wildcard (matches any character)
+
+- the regex `.` means wildcard (matches any character)
 
 ```powershell
 t . 1,3
 ```
 
-invoke link in body with `[-i|-InvokeLink]`.
+invoke link in body with `[-i|-InvokeLink]`.  
 e.g. `link: https://example.com/`
 
 ```powershell
@@ -12299,7 +12304,7 @@ Read book [My book collection] +haccp @book
 
 Output as Text line:
 
-    Default
+- Default
 
 Output as PsObject with `[-o|-AsObject]`:
 
@@ -12324,7 +12329,7 @@ t -where keyword -id 1,3 -AsObject -full
 t keyword 1,3 -o -full
 ```
 
-or
+- or
 
 ```powershell
 Get-Ticket -Where keyword -id 1,3 -AsObject -Plus Age,Remain
@@ -12360,47 +12365,47 @@ Reference:
 
 - <https://github.com/todotxt/todo.txt>
 
-Format:
+Format of `[tickets.md]`:
 
-    [tickets.md]
+```markdown
+# Basic
+A simple task
+(B) A simple task with Priority
 
-    # Basic
-    A simple task
-    (B) A simple task with Priority
+# Creation / Completion date
+(A) 2023-12-01 Task with Created date and Priority
+2023-12-01 Task with Created date 
+x 2023-12-31 Task with Completed date
+x 2023-12-31 2023-12-01 Task with Completed date
 
-    # Creation/Completion date
-    (A) 2023-12-01 Task with Created date and Priority
-    2023-12-01 Task with Created date 
-    x 2023-12-31 Task with Completed date
-    x 2023-12-31 2023-12-01 Task with Completed date
+# Due date with `due:yyyy-mm-dd`
+A task with due date. due:2023-12-01
+2023-12-01 A task with created date and due date. due:2023-12-31
 
-    # Due date with "due:yyyy-mm-dd"
-    A task with due date. due:2023-12-01
-    2023-12-01 A task with created date and due date. due:2023-12-31
+# Status with `status:<str>,<str>,...`
+A task with status. status:daily
+A task with status. status:daily,weekly,monthly,yearly,routine
+A task with status. status:daily,active
 
-    # Status with "status:<str>,<str>,..."
-    A task with status. status:daily
-    A task with status. status:daily,weekly,monthly,yearly,routine
-    A task with status. status:daily,active
+# Project, Context, Tag with `+project`, `@at`, `#tag`
++proj Task with Project
++proj Task with Project and @context
++proj Task with Project and #tag #tag2
 
-    # Project, Context, Tag with "+project", "@at", "#tag"
-    +proj Task with Project
-    +proj Task with Project and @context
-    +proj Task with Project and #tag #tag2
+# Document name with `[name]`
+Read-Book [book name with spaces]
+A task with related [document name]
 
-    # Document name with "[name]"
-    Read-Book [book name with spaces]
-    A task with related [document name]
+# Title and Body (for tasknote, changelog, book-reference)
+A Task with multiple line note
+    Note have one or more spaces at the beginning of each line.
+    link: https://example.com/
+        -> with [-i] option, "link: <link>" opened by default app
 
-    # Title and Body (for tasknote, changelog, book-reference)
-    A Task with multiple line note
-        Note have one or more spaces at the beginning of each line.
-        link: https://example.com/
-            -> with [-i] option, "link: <link>" opened by default app
-
-    # Misc
-    The double phyen -- is deleted from the "Act" property
-        when the "-AsObject" option is specified
+# Misc
+The double phyen -- is deleted from the "Act" property
+    when the "-AsObject" option is specified
+```
 
 A quick demo:
 
@@ -12532,7 +12537,7 @@ Option:
     - `[-Gantt]` ...Output as plantUML gantt chart format
     - `[-GanttNote]` ...Output as plantUML gantt chart format
         - `[-GanttPrint <String>]`
-        - `[-GanttFontSize<Int32>]`
+        - `[-GanttFontSize <Int32>]`
         - `[-GanttZoom <Double>]`
         - `[-GanttAddDays <Int32>]`
         - `[-GanttScale <Double>]`
@@ -12571,9 +12576,9 @@ Option:
 
 ```markdown
 # todo
-(B) 2023-12-01 +proj This is a first ticket  @todo due:2023-12-31
-(A) 2023-12-01 +proj This is a second ticket @todo status:monthly:25
-(B) 2023-12-01 +proj This is a third ticket  @todo status:routine
+(B) 2023-12-01 +proj This is a [1st ticket] @todo due:2023-12-31
+(A) 2023-12-01 +proj This is a [2nd ticket] @todo status:monthly:25
+(B) 2023-12-01 +proj This is a [3rd ticket] @todo status:routine
 x 2023-12-10 2023-12-01 +proj This is a completed ticket @todo
 
 # book
@@ -12666,13 +12671,12 @@ Get-Ticket -id 1 -i
 - Open `https` link with `firefox` browser
 
 ```powershell
-Get-Ticket -id 1 -InvokeLinkWith firefox
-Get-Ticket -id 1 -iw firefox
+Get-Ticket -id 1 -InvokeLinkWith "firefox"
+Get-Ticket -id 1 -iw "firefox"
 ```
 
 ```markdown
-2023-11-28 Keep-Ledger [household ledger] @life 
-status:monthly:25
+2023-11-28 Keep-Ledger [household ledger] @life status:monthly:25
     link: https://www.google.com/
 ```
 

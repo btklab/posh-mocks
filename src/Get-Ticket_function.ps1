@@ -276,7 +276,7 @@
         - [-Gantt] ...Output as plantUML gantt chart format
         - [-GanttNote] ...Output as plantUML gantt chart format
             - [-GanttPrint <String>]
-            - [-GanttFontSize<Int32>]
+            - [-GanttFontSize <Int32>]
             - [-GanttZoom <Double>]
             - [-GanttAddDays <Int32>]
             - [-GanttScale <Double>]
@@ -336,6 +336,10 @@
         x [the -- in the name] is ignored. #tips #notice
              ...The double hyphen " -- " in the [name] is not delete anystring
                 after that.
+
+.LINK
+    Get-Ticket series:
+    Get-Ticket (t), Get-Book (b), Get-Note (n), Get-Recipe (re), Get-Diary (d)
 
 .EXAMPLE
     # Sort By Project
@@ -441,6 +445,19 @@
         [+prj Take-Picture2] starts 2023-11-28 and ends 2023-12-09
 
         @endgantt
+
+.EXAMPLE
+    # list Get-Ticket family (series)
+    PS> Get-Ticket -GetSeries
+
+    Alias Name
+    ----- ----
+    t     Get-Ticket
+    d     Get-Diary
+    b     Get-Book
+    re    Get-Recipe
+    n     Get-Note
+
 
 #>
 function Get-Ticket {
@@ -590,11 +607,42 @@ function Get-Ticket {
         [Switch] $lsSection,
         
         [Parameter( Mandatory=$False )]
+        [Alias('x')]
+        [Switch] $ForceXonCreationDateBeforeToday,
+
+        [Parameter( Mandatory=$False )]
+        [Switch] $GetSeries,
+
+        [Parameter( Mandatory=$False )]
         [String] $HyphenPlaceHolder = '///@H@y@p@h@e@n@s@I@n@B@r@a@c@k@e@t@///',
         
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
         [object[]] $InputObject
     )
+    # Output Get-Ticket series
+    if ( $GetSeries ){
+        [String[]] $serNames = @(
+            "Get-Ticket",
+            "Get-Diary",
+            "Get-Book",
+            "Get-Recipe",
+            "Get-Note"
+        )
+        [String[]] $serAliases = @(
+            "t",
+            "d",
+            "b",
+            "re",
+            "n"
+        )
+        $hash = [ordered] @{}
+        for ( $i = 0; $i -lt $serNames.Count; $i++ ){
+            $hash["Alias"] = $serAliases[$i]
+            $hash["Name"]  = $serNames[$i]
+            [pscustomobject] $hash
+        }
+        return
+    }
     # set output property names
     if ( $ShortenProperty ){
         [String[]] $splatProp = @(
@@ -1105,6 +1153,43 @@ function Get-Ticket {
             return $retAry
         }
     }
+    function addXonCreationDateBeforeToday {
+        param (
+            [String] $line
+        )
+        [String] $doneStr = 'x'
+        [String] $strToday = (Get-Date).ToString('yyyy-MM-dd')
+        # pattern: (A) <date>
+        [String] $reg = '^\([A-Z]\) ([-/0-9]{6,10}).*$'
+        if ( $line -cmatch $reg ){
+            [datetime] $dateCreate = Get-Date -Date $($line -creplace $reg, '$1')
+            [String] $strCreate = $dateCreate.ToString('yyyy-MM-dd')
+            if ( $strCreate -eq $strToday ){
+                return $line
+            } elseif ( $strCreate -gt $strToday ){
+                return $line
+            } else {
+                # put dune mark at beginning of the line
+                [String] $writeLine = "$doneStr $line"
+                return $writeLine
+            }
+        }
+        # pattern: <date>
+        [String] $reg = '^([-/0-9]{6,10}).*$'
+        if ( $line -cmatch $reg ){
+            [datetime] $dateCreate = Get-Date -Date $($line -creplace $reg, '$1')
+            [String] $strCreate = $dateCreate.ToString('yyyy-MM-dd')
+            if ( $strCreate -eq $strToday ){
+                return $line
+            } elseif ( $strCreate -gt $strToday ){
+                return $line
+            } else {
+                # put dune mark at beginning of the line
+                [String] $writeLine = "$doneStr $line"
+                return $writeLine
+            }
+        }
+    }
     ## read line
     if ( $File ){
         # test path
@@ -1294,6 +1379,9 @@ function Get-Ticket {
         # skip line beggining with "#" and space
         if ( isLineBeginningWithSharpMark $line ){
             continue
+        }
+        if ( $ForceXonCreationDateBeforeToday -and ( -not $AllData )){
+            $line = addXonCreationDateBeforeToday $line
         }
         # view mode
         if ( ($Id.Count -gt 0) -and (-not $Gantt) -and (-not $GanttNote) -and (-not $AsObject) ){
