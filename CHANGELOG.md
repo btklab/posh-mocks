@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- Fixed [README.md]
+- Added [README.md] section anchor tag and fix typo
 - Fixed [Get-Ticket] synopsis
 - Added [Get-Ticket] `-ForceXonCreationDateBeforeToday` option
 - Added [Get-Ticket] `-GetSeries` option
