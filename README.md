@@ -18,9 +18,11 @@ Function list:
 
 ```powershell
 # one-liner to create function list
+# (add internal link to each function's section)
 cat README.md `
     | grep '^#### ' `
     | grep -o '\[[^[]+\]' `
+    | sed 's;\[([^\]]+)\];[$1](#$1);g' `
     | sort {
         -join ( [int[]] $_.ToCharArray()).ForEach('ToString', 'x4')
     } -Unique `
@@ -28,7 +30,7 @@ cat README.md `
     | Set-Clipboard
 ```
 
-- [Add-LineBreakEndOfFile], [Add-LineBreak], [Add-Quartile], [Add-Stats], [Apply-Function], [ConvImage], [Delete-Field], [Detect-XrsAnomaly], [Drop-NA], [Edit-Function], [Get-AppShortcut], [Get-Histogram], [Get-OGP], [Get-Ticket], [GroupBy-Object], [Invoke-Link], [Join2-Object], [Measure-Quartile], [Measure-Stats], [Measure-Summary], [Override-Yaml], [Plot-BarChart], [Rename-Normalize], [Replace-ForEach], [Replace-NA], [Select-Field], [Shorten-PropertyName], [Transpose-Property], [Unique-Object], [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2file], [clip2hyperlink], [clip2img], [clip2normalize], [clip2push], [clip2shortcut], [conv], [count], [csv2sqlite], [csv2txt], [ctail], [decil], [delf], [dot2gviz], [filehame], [fillretu], [flat], [flow2pu], [fpath], [fval], [fwatch], [gantt2pu], [gdate], [getfirst], [getlast], [grep], [gyo], [han], [head], [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc2], [lcalc], [linkcheck], [linkextract], [list2table], [logi2dot], [logi2pu], [man2], [map2], [mdfocus], [mdgrep], [mind2dot], [mind2pu], [movw], [nextyear], [pawk], [percentile], [pu2java], [push2loc], [pwmake], [pwsync], [retu], [rev2], [rev], [say], [sed-i], [sed], [self], [seq2pu], [sleepy], [sm2], [summary], [table2md], [tac], [tail-f], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [watercss], [wrap], [yarr], [ycalc], [ysort], [zen]
+- [Add-LineBreakEndOfFile](#Add-LineBreakEndOfFile), [Add-LineBreak](#Add-LineBreak), [Add-Quartile](#Add-Quartile), [Add-Stats](#Add-Stats), [Apply-Function](#Apply-Function), [ConvImage](#ConvImage), [Delete-Field](#Delete-Field), [Detect-XrsAnomaly](#Detect-XrsAnomaly), [Drop-NA](#Drop-NA), [Edit-Function](#Edit-Function), [Get-AppShortcut](#Get-AppShortcut), [Get-Histogram](#Get-Histogram), [Get-OGP](#Get-OGP), [Get-Ticket](#Get-Ticket), [GroupBy-Object](#GroupBy-Object), [Invoke-Link](#Invoke-Link), [Join2-Object](#Join2-Object), [Measure-Quartile](#Measure-Quartile), [Measure-Stats](#Measure-Stats), [Measure-Summary](#Measure-Summary), [Override-Yaml](#Override-Yaml), [Plot-BarChart](#Plot-BarChart), [Rename-Normalize](#Rename-Normalize), [Replace-ForEach](#Replace-ForEach), [Replace-NA](#Replace-NA), [Select-Field](#Select-Field), [Shorten-PropertyName](#Shorten-PropertyName), [Transpose-Property](#Transpose-Property), [Unique-Object](#Unique-Object), [addb](#addb), [addl](#addl), [addr](#addr), [addt](#addt), [cat2](#cat2), [catcsv](#catcsv), [chead](#chead), [clip2file](#clip2file), [clip2hyperlink](#clip2hyperlink), [clip2img](#clip2img), [clip2normalize](#clip2normalize), [clip2push](#clip2push), [clip2shortcut](#clip2shortcut), [conv](#conv), [count](#count), [csv2sqlite](#csv2sqlite), [csv2txt](#csv2txt), [ctail](#ctail), [decil](#decil), [delf](#delf), [dot2gviz](#dot2gviz), [filehame](#filehame), [fillretu](#fillretu), [flat](#flat), [flow2pu](#flow2pu), [fpath](#fpath), [fval](#fval), [fwatch](#fwatch), [gantt2pu](#gantt2pu), [gdate](#gdate), [getfirst](#getfirst), [getlast](#getlast), [grep](#grep), [gyo](#gyo), [han](#han), [head](#head), [image2md](#image2md), [jl](#jl), [json2txt](#json2txt), [juni](#juni), [keta](#keta), [kinsoku](#kinsoku), [lastyear](#lastyear), [lcalc2](#lcalc2), [lcalc](#lcalc), [linkcheck](#linkcheck), [linkextract](#linkextract), [list2table](#list2table), [logi2dot](#logi2dot), [logi2pu](#logi2pu), [man2](#man2), [map2](#map2), [mdfocus](#mdfocus), [mdgrep](#mdgrep), [mind2dot](#mind2dot), [mind2pu](#mind2pu), [movw](#movw), [nextyear](#nextyear), [pawk](#pawk), [percentile](#percentile), [pu2java](#pu2java), [push2loc](#push2loc), [pwmake](#pwmake), [pwsync](#pwsync), [retu](#retu), [rev2](#rev2), [rev](#rev), [say](#say), [sed-i](#sed-i), [sed](#sed), [self](#self), [seq2pu](#seq2pu), [sleepy](#sleepy), [sm2](#sm2), [summary](#summary), [table2md](#table2md), [tac](#tac), [tail-f](#tail-f), [tail](#tail), [tarr](#tarr), [tateyoko](#tateyoko), [teatimer](#teatimer), [tenki](#tenki), [tex2pdf](#tex2pdf), [thisyear](#thisyear), [toml2psobject](#toml2psobject), [uniq](#uniq), [vbStrConv](#vbStrConv), [watercss](#watercss), [wrap](#wrap), [yarr](#yarr), [ycalc](#ycalc), [ysort](#ysort), [zen](#zen)
 
 Inspired by:
 
@@ -118,9 +120,12 @@ if ($IsWindows){
 
 ### Show functions
 
-#### [man2] - Formats filelist as a wide table and gets manual
+
+
+#### [man2] - Formats filelist as a wide table and gets manual <a id="man2"></a>
 
 [man2]: src/man2_function.ps1
+
 
 `src`配下の関数（ファイル）名を列挙する。
 筆者は作った関数をすぐに忘れてしまうため。
@@ -296,7 +301,7 @@ chead                  head           sed-i
 clip2file              image2md       sed
 ```
 
-#### [Edit-Function] (Alias: edit) - Edit my function with editor
+#### [Edit-Function] (Alias: edit) - Edit my function with editor <a id="Edit-Function"></a>
 
 [Edit-Function]: src/Edit-Function_function.ps1
 
@@ -410,7 +415,7 @@ e ../bin/posh-mocks/operator.ps1
 
 ### Unix-like text filters
 
-#### [sed] - Stream EDitor
+#### [sed] - Stream EDitor <a id="sed"></a>
 
 [sed]: src/sed_function.ps1
 
@@ -514,7 +519,7 @@ aaa
 eee
 ```
 
-#### [sed-i] - Edit files in place
+#### [sed-i] - Edit files in place <a id="sed-i"></a>
 
 [sed-i]: src/sed-i_function.ps1
 
@@ -590,7 +595,7 @@ ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute -DoNotCreateBackup }
 ```
 
 
-#### [grep] - Single-line oriented searcher for regex patterns
+#### [grep] - Single-line oriented searcher for regex patterns <a id="grep"></a>
 
 [grep]: src/grep_function.ps1
 
@@ -938,7 +943,7 @@ sepal_length,sepal_width,petal_length,petal_width,species
 6.3,2.9,5.6,1.8,virginica
 ```
 
-#### [head], [tail] - Output the first/last part of files
+#### [head], [tail] - Output the first/last part of files <a id="head"></a> <a id="tail"></a>
 
 [head]: src/head_function.ps1
 [tail]: src/tail_function.ps1
@@ -958,7 +963,7 @@ Linux環境で使う`head`、`tail`のような使用感で文字列を置換す
 - Inspired by Unix/Linux Commands
     - Command: `head`, `tail`
 
-#### [tail-f] - Output appended data as the file grows
+#### [tail-f] - Output appended data as the file grows <a id="tail-f"></a>
 
 [tail-f]: src/tail-f_function.ps1
 
@@ -989,7 +994,7 @@ tail-f a.txt
 ```
 
 
-#### [chead], [ctail] - Cut the first/last part of files
+#### [chead], [ctail] - Cut the first/last part of files <a id="chead"></a> <a id="ctail"></a>
 
 [chead]: src/chead_function.ps1
 [ctail]: src/ctail_function.ps1
@@ -1105,7 +1110,7 @@ Examples:
 3
 ```
 
-#### [uniq] - Report or omit repeated lines
+#### [uniq] - Report or omit repeated lines <a id="uniq"></a>
 
 [uniq]: src/uniq_function.ps1
 
@@ -1122,7 +1127,7 @@ Examples:
 - Inspired by Unix/Linux Commands
     - Command: `uniq`
 
-#### [cat2] - Concatenate files and print on the standard output
+#### [cat2] - Concatenate files and print on the standard output <a id="cat2"></a>
 
 [cat2]: src/cat2_function.ps1
 
@@ -1136,7 +1141,7 @@ Examples:
 - Inspired by Unix/Linux Commands
     - Command: `cat`
 
-#### [tac] - Output strings in reverse
+#### [tac] - Output strings in reverse <a id="tac"></a>
 
 [tac]: src/tac_function.ps1
 
@@ -1164,7 +1169,7 @@ Examples:
 1
 ```
 
-#### [rev] - Reverse strings
+#### [rev] - Reverse strings <a id="rev"></a>
 
 [rev]: src/rev_function.ps1
 
@@ -1187,7 +1192,7 @@ Examples:
 oeuia
 ```
 
-#### [rev2] - Reverse columns
+#### [rev2] - Reverse columns <a id="rev2"></a>
 
 [rev2]: src/rev2_function.ps1
 
@@ -1225,7 +1230,7 @@ Write-Output "01 02 03" | rev2 -e
 
 ### Text filters for space-separated input
 
-#### [tateyoko] - Transpose columns and rows
+#### [tateyoko] - Transpose columns and rows <a id="tateyoko"></a>
 
 [tateyoko]: src/tateyoko_function.ps1
 
@@ -1262,7 +1267,7 @@ Examples:
 3 6 9
 ```
 
-#### [fillretu] - Align records to the maximum number of columns
+#### [fillretu] - Align records to the maximum number of columns <a id="fillretu"></a>
 
 [fillretu]: src/fillretu_function.ps1
 
@@ -1339,7 +1344,7 @@ cat dat.txt | yarr | fillretu | tateyoko | keta
    _    1    _
 ```
 
-#### [juni] - Enumerate the number of rows in each line
+#### [juni] - Enumerate the number of rows in each line <a id="juni"></a>
 
 [juni]: src/juni_function.ps1
 
@@ -1367,7 +1372,7 @@ Output:
 4 d
 ```
 
-#### [self] - Select fields
+#### [self] - Select fields <a id="self"></a>
 
 [self]: src/self_function.ps1
 
@@ -1463,7 +1468,7 @@ Examples:
 ```
 
 
-#### [delf] - Delete fields
+#### [delf] - Delete fields <a id="delf"></a>
 
 [delf]: src/delf_function.ps1
 
@@ -1523,7 +1528,7 @@ Examples:
 7 8 10
 ```
 
-#### [sm2] - Sum up
+#### [sm2] - Sum up <a id="sm2"></a>
 
 [sm2]: src/sm2_function.ps1
 
@@ -1666,7 +1671,7 @@ C 1 10
 1 C 1 10 10
 ```
 
-#### [map2] - Cross tabulation of long-type data
+#### [map2] - Cross tabulation of long-type data <a id="map2"></a>
 
 [map2]: src/map2_function.ps1
 
@@ -1783,7 +1788,7 @@ loc-3   7       70      8       80      9       90
 
 
 
-#### [lcalc] - Column-to-column calculator
+#### [lcalc] - Column-to-column calculator <a id="lcalc"></a>
 
 [lcalc]: src/lcalc_function.ps1
 
@@ -1912,7 +1917,7 @@ C 1 10
 1 C 1 10 10
 ```
 
-#### [lcalc2] - Column-to-column calculator
+#### [lcalc2] - Column-to-column calculator <a id="lcalc2"></a>
 
 [lcalc2]: src/lcalc2_function.ps1
 
@@ -2088,7 +2093,7 @@ C 1 10
 1 C 1 10 10
 ```
 
-#### [pawk] - Pattern-Action processor like GNU AWK
+#### [pawk] - Pattern-Action processor like GNU AWK <a id="pawk"></a>
 
 [pawk]: src/pawk_function.ps1
 
@@ -2888,7 +2893,7 @@ adcbe
 # the first and last elements are dropped from the array.
 ```
 
-#### [retu] - Output column number
+#### [retu] - Output column number <a id="retu"></a>
 
 [retu]: src/retu_function.ps1
 
@@ -2959,7 +2964,7 @@ d d
 2 d d
 ```
 
-#### [count] - Count up keys
+#### [count] - Count up keys <a id="count"></a>
 
 [count]: src/count_function.ps1
 
@@ -3039,7 +3044,7 @@ cat a.txt | grep . | sort | count -c 1 2
 4 04 神奈川県 16 小田原市 100
 ```
 
-#### [getfirst] - Get the first row of the same key
+#### [getfirst] - Get the first row of the same key <a id="getfirst"></a>
 
 [getfirst]: src/getfirst_function.ps1
 
@@ -3094,7 +3099,7 @@ cat a.txt | getfirst 1 2
 04 神奈川県 13 横浜市 100
 ```
 
-#### [getlast] - Get the last row of the same key
+#### [getlast] - Get the last row of the same key <a id="getlast"></a>
 
 [getlast]: src/getlast_function.ps1
 
@@ -3150,7 +3155,7 @@ cat a.txt | getlast 1 2
 ```
 
 
-#### [yarr] - Expand long data to wide
+#### [yarr] - Expand long data to wide <a id="yarr"></a>
 
 [yarr]: src/yarr_function.ps1
 
@@ -3211,7 +3216,7 @@ cat a.txt | grep . | ForEach-Object -begin{$h=@{}} -process{$a=$_ -split " ", 2;
 ```
 
 
-#### [tarr] - Expand wide data to long
+#### [tarr] - Expand wide data to long <a id="tarr"></a>
 
 [tarr]: src/tarr_function.ps1
 
@@ -3259,7 +3264,7 @@ cat a.txt | grep . | tarr -n 1
 ※ `grep .`で空行をスキップ（＝1文字以上の行のみヒット）
 
 
-#### [flat] - Flat columns
+#### [flat] - Flat columns <a id="flat"></a>
 
 [flat]: src/flat_function.ps1
 
@@ -3307,7 +3312,7 @@ aiu
 eo
 ```
 
-#### [wrap] - Wrap each fields in specified format
+#### [wrap] - Wrap each fields in specified format <a id="wrap"></a>
 
 [wrap]: src/wrap_function.ps1
 
@@ -3375,7 +3380,7 @@ Examples
 </table>
 ```
 
-#### [Add-LineBreak] , [Add-LineBreakEndOfFile] - Add LineFeed
+#### [Add-LineBreak] , [Add-LineBreakEndOfFile] - Add LineFeed <a id="Add-LineBreak"></a> <a id="Add-LineBreakEndOfFile"></a>
 
 [Add-LineBreak]: src/Add-LineBreak_function.ps1
 [Add-LineBreakEndOfFile]: src/Add-LineBreakEndOfFile_function.ps1
@@ -3389,7 +3394,7 @@ Examples
     - `man2 Add-LineBreak`
     - `man2 Add-LineBreakEndOfFile`
 
-#### [addb], [addl], [addr], [addt] - Insert text strings at the top, bottom, left, and right of the input
+#### [addb], [addl], [addr], [addt] - Insert text strings at the top, bottom, left, and right of the input <a id="addb"></a> <a id="addl"></a> <a id="addr"></a> <a id="addt"></a>
 
 [addb]: src/addb_function.ps1
 [addl]: src/addl_function.ps1
@@ -3420,7 +3425,7 @@ Examples
     - Command: `addt`, `addb`, `addr`, `addl`
 
 
-#### [conv] - Convolution operation or find N-gram of text
+#### [conv] - Convolution operation or find N-gram of text <a id="conv"></a>
 
 [conv]: src/conv_function.ps1
 
@@ -3514,7 +3519,7 @@ Write-Output "にわにはにわにわとりがいる" | conv -fs '' 2 -r -f
 ```
 
 
-#### [keta] - Padding per columns
+#### [keta] - Padding per columns <a id="keta"></a>
 
 [keta]: src/keta_function.ps1
 
@@ -3566,7 +3571,7 @@ dddddd eeee ffff
 ```
 
 
-#### [gyo] - Row counter
+#### [gyo] - Row counter <a id="gyo"></a>
 
 [gyo]: src/gyo_function.ps1
 
@@ -3610,7 +3615,7 @@ gyo *.*
 2 uri-list.txt
 ```
 
-#### [han] - Convert full-width kana to half-width kana using Microsoft.VisualBasic.VbStrConv
+#### [han] - Convert full-width kana to half-width kana using Microsoft.VisualBasic.VbStrConv <a id="han"></a>
 
 [han]: src/han_function.ps1
 
@@ -3690,7 +3695,7 @@ Examples:
 パピプペポ0123456789=A
 ```
 
-#### [zen] - Convert half-width kana to full-width kana using Microsoft.VisualBasic.VbStrConv
+#### [zen] - Convert half-width kana to full-width kana using Microsoft.VisualBasic.VbStrConv <a id="zen"></a>
 
 [zen]: src/zen_function.ps1
 
@@ -3768,7 +3773,7 @@ Examples:
 パピプペポ0123456789=A
 ```
 
-#### [vbStrConv] - Convert strings using Microsoft.VisualBasic.VbStrConv
+#### [vbStrConv] - Convert strings using Microsoft.VisualBasic.VbStrConv <a id="vbStrConv"></a>
 
 [vbStrConv]: src/vbStrConv_function.ps1
 
@@ -3798,7 +3803,7 @@ Examples:
 Input
 ```
 
-#### [thisyear], [nextyear], [lastyear], [gdate] - Add this/next/last year to month/day input. To prevent mistyping the number of year.
+#### [thisyear], [nextyear], [lastyear], [gdate] - Add this/next/last year to month/day input. To prevent mistyping the number of year. <a id="thisyear"></a> <a id="nextyear"></a> <a id="lastyear"></a> <a id="gdate"></a>
 
 [thisyear]: src/gdate_function.ps1
 [lastyear]: src/gdate_function.ps1
@@ -3898,7 +3903,7 @@ lastyear 2/28 -s "_last_year"
 2022-02-28_last_year
 ```
 
-#### [fval] - Format values of specified column
+#### [fval] - Format values of specified column <a id="fval"></a>
 
 [fval]: src/fval_function.ps1
 
@@ -3929,7 +3934,7 @@ Example:
 
 ### Statistics
 
-#### [percentile] - Ranking with percentile and quartile
+#### [percentile] - Ranking with percentile and quartile <a id="percentile"></a>
 
 [percentile]: src/percentile_function.ps1
 
@@ -4397,7 +4402,7 @@ FillNaN    : 0
 ReplaceNaN : 4
 ```
 
-#### [decil] - Decile analysis (Divide records about 10 equal parts)
+#### [decil] - Decile analysis (Divide records about 10 equal parts) <a id="decil"></a>
 
 [decil]: src/decil_function.ps1
 
@@ -4565,7 +4570,7 @@ D01 CZ84 8470022 0.0026600974009877927269611624
 
 
 
-#### [summary] - Calculate the basic statistics of a specified field
+#### [summary] - Calculate the basic statistics of a specified field <a id="summary"></a>
 
 [summary]: src/summary_function.ps1
 
@@ -4652,7 +4657,7 @@ petal_width    150 1.20 0.10  0.30  1.30  1.80 2.50 1.50 0.75
 ```
 
 
-#### [movw] - Moving window approach
+#### [movw] - Moving window approach <a id="movw"></a>
 
 [movw]: src/movw_function.ps1
 
@@ -4734,7 +4739,7 @@ s_l AcceptableLevel MaxLimit MaxFrequency WindowSize Res
 4.8 4.7             5.5      3            5          1
 ```
 
-#### [ysort] - Sort horizontally ignoring key fields
+#### [ysort] - Sort horizontally ignoring key fields <a id="ysort"></a>
 
 [ysort]: src/ysort_function.ps1
 
@@ -4985,7 +4990,7 @@ abc1 Abc2 abc3 Abc4
 Abc2 Abc4 abc1 abc3
 ```
 
-#### [ycalc] - Calculates the numeric properties horizontally ignoring key fields
+#### [ycalc] - Calculates the numeric properties horizontally ignoring key fields <a id="ycalc"></a>
 
 [ycalc]: src/ycalc_function.ps1
 
@@ -5192,7 +5197,7 @@ Procedure:
     - `Plot-BarChart`
 
 
-#### [Shorten-PropertyName] - Shorten long property names
+#### [Shorten-PropertyName] - Shorten long property names <a id="Shorten-PropertyName"></a>
 
 [Shorten-PropertyName]: src/Shorten-PropertyName_function.ps1
 
@@ -5270,7 +5275,7 @@ Default delimiter is `_`.
 
 
 
-#### [Select-Field], [Delete-Field] - Select/Delete properties by number of columns
+#### [Select-Field], [Delete-Field] - Select/Delete properties by number of columns <a id="Select-Field"></a> <a id="Delete-Field"></a>
 
 [Delete-Field]: src/Select-Field_function.ps1
 [Select-Field]: src/Delete-Field_function.ps1
@@ -5343,7 +5348,7 @@ count b_l_m b_d_m f_l_m b_m_g year
 
 
 
-#### [Drop-NA], [Replace-NA] - Drop/Replace NA, NaN, Null Value of specified property
+#### [Drop-NA], [Replace-NA] - Drop/Replace NA, NaN, Null Value of specified property <a id="Drop-NA], [Replace-NA"></a>
 
 [Drop-NA]: src/Drop-NA_function.ps1
 [Replace-NA]: src/Replace-NA_function.ps1
@@ -5376,7 +5381,7 @@ count species island    bill_length_mm bill_depth_mm sex year
 ```
 
 
-#### [Apply-Function] (Alias: apply) - Apply function for each category
+#### [Apply-Function] (Alias: apply) - Apply function for each category <a id="Apply-Function"></a>
 
 [Apply-Function]: src/Apply-Function_function.ps1
 
@@ -5435,7 +5440,7 @@ count species   island    b_l_m b_d_m f_l_m b_m_g sex    year key
 153   Gentoo    Biscoe    46.1  13.2  211   4500  female 2007 Gentoo, Biscoe
 ```
 
-#### [GroupBy-Object] (Alias: groupBy) - Apply function to each group
+#### [GroupBy-Object] (Alias: groupBy) - Apply function to each group <a id="GroupBy-Object"></a>
 
 [GroupBy-Object]: src/GroupBy-Object_function.ps1
 
@@ -5491,7 +5496,7 @@ Gentoo, Biscoe      123   47.50 5843.10 bill_length_mm
 ```
 
 
-#### [Add-Stats] - Add statistics columns to each record
+#### [Add-Stats] - Add statistics columns to each record <a id="Add-Stats"></a>
 
 [Add-Stats]: src/Add-Stats_function.ps1
 
@@ -5593,7 +5598,7 @@ sl  sw  pl  pw  species    Mean_Of_sl Sum_Of_sl DevFromMean xrs
 7.7 3.0 6.1 2.3 virginica        5.84    876.50        1.86   1
 ```
 
-#### [Measure-Stats] (Alias: mstats) - Apply first record's key to each output
+#### [Measure-Stats] (Alias: mstats) - Apply first record's key to each output <a id="Measure-Stats"></a>
 
 [Measure-Stats]: src/Measure-Stats_function.ps1
 
@@ -5645,7 +5650,7 @@ versicolor    5.94 296.80 sepal_length
 virginica     6.59 329.40 sepal_length
 ```
 
-#### [Add-Quartile] (Alias: aquart) - Add quartile columns to each record
+#### [Add-Quartile] (Alias: aquart) - Add quartile columns to each record <a id="Add-Quartile"></a>
 
 [Add-Quartile]: src/Add-Quartile_function.ps1
 
@@ -5780,7 +5785,7 @@ s_w LoIQR HiIQR Outlier
 4.4  1.90  4.30       1
 ```
 
-#### [Measure-Quartile] (Alias: mquart) - Calc quartile
+#### [Measure-Quartile] (Alias: mquart) - Calc quartile <a id="Measure-Quartile"></a>
 
 [Measure-Quartile]: src/Measure-Quartile_function.ps1
 
@@ -5870,7 +5875,7 @@ Max      : 6.9
 Outlier  : 0
 ```
 
-#### [Measure-Summary] (Alias: msummary) - Generate summary statistics for dataset
+#### [Measure-Summary] (Alias: msummary) - Generate summary statistics for dataset <a id="Measure-Summary"></a>
 
 [Measure-Summary]: src/Measure-Summary_function.ps1
 
@@ -6048,7 +6053,7 @@ Max        4.40   6.90
 Outlier    1.00   0.00
 ```
 
-#### [Transpose-Property] - Transpose Property name and value
+#### [Transpose-Property] - Transpose Property name and value <a id="Transpose-Property"></a>
 
 [Transpose-Property]: src/Transpose-Property_function.ps1
 
@@ -6132,7 +6137,7 @@ Max         7.00      730000.00  25.00  8500.00 2014.00
 Outlier    93.00         126.00  52.00   106.00   32.00
 ```
 
-#### [Detect-XrsAnomaly] - Detect anomaly values with X-Rs control
+#### [Detect-XrsAnomaly] - Detect anomaly values with X-Rs control <a id="Detect-XrsAnomaly"></a>
 
 [Detect-XrsAnomaly]: src/Detect-XrsAnomaly_function.ps1
 
@@ -6255,7 +6260,7 @@ count key            b_l_m sex  year xrs
 186   Gentoo, Biscoe 59.6  male 2007   3
 ```
 
-#### [Plot-BarChart] - Plot Barchart on the console
+#### [Plot-BarChart] - Plot Barchart on the console <a id="Plot-BarChart"></a>
 
 [Plot-BarChart]: src/Plot-BarChart_function.ps1
 
@@ -6358,7 +6363,7 @@ Import-Csv -Path penguins.csv `
     189 Gentoo    0           42.6 ||||||||||||||
 ```
 
-#### [Get-Histogram] - Get histogram data
+#### [Get-Histogram] - Get histogram data <a id="Get-Histogram"></a>
 
 [Get-Histogram]: src/Get-Histogram_function.ps1
 
@@ -6471,7 +6476,7 @@ virginica      5        6.80        7.50    10 |||||
 virginica      6        7.50        8.20     0
 ```
 
-#### [Unique-Object] - Get unique category
+#### [Unique-Object] - Get unique category <a id="Unique-Object"></a>
 
 [Unique-Object]: src/Unique-Object_function.ps1
 
@@ -6561,7 +6566,7 @@ f       1
 a       1 <--- Undesired result
 ```
 
-#### [Replace-ForEach] - Replace specified property string
+#### [Replace-ForEach] - Replace specified property string <a id="Replace-ForEach"></a>
 
 [Replace-ForEach]: src/Replace-ForEach_function.ps1
 
@@ -6615,7 +6620,7 @@ Import-Csv -Path planets.csv `
     | Format-Table
 ```
 
-#### [Join2-Object] (Alias: join2o) - INNER/OUTER Join records
+#### [Join2-Object] (Alias: join2o) - INNER/OUTER Join records <a id="Join2-Object"></a>
 
 [Join2-Object]: src/Join2-Object_function.ps1
 
@@ -6781,7 +6786,7 @@ id      v1 v2 v3 v4 v5 m_name m_val m_class
 
 ### Plot chart and graph
 
-#### [dot2gviz] - Wrapper for Graphviz:dot command
+#### [dot2gviz] - Wrapper for Graphviz:dot command <a id="dot2gviz"></a>
 
 [dot2gviz]: src/dot2gviz_function.ps1
 [Graphviz]: https://graphviz.org/
@@ -6830,7 +6835,7 @@ id      v1 v2 v3 v4 v5 m_name m_val m_class
         - `winget install --id Graphviz.Graphviz --source winget`
         - and execute `dot -c` with administrator privileges
 
-#### [pu2java] - Wrapper for plantuml.jar command
+#### [pu2java] - Wrapper for plantuml.jar command <a id="pu2java"></a>
 
 [pu2java]: src/pu2java_function.ps1
 
@@ -6877,7 +6882,7 @@ id      v1 v2 v3 v4 v5 m_name m_val m_class
         - <https://www.java.com/en/download/>
 
 
-#### [gantt2pu] - Visualizatoin tool of DANDORI-chart (setup-chart) for PlantUML.
+#### [gantt2pu] - Visualizatoin tool of DANDORI-chart (setup-chart) for PlantUML. <a id="gantt2pu"></a>
 
 [gantt2pu]: src/gantt2pu_function.ps1
 
@@ -7036,7 +7041,7 @@ title "title"
 
 ![](img/gantt2pu_1.png)
 
-#### [mind2dot] - Generate graphviz script to draw a mind map from list data in markdown format
+#### [mind2dot] - Generate graphviz script to draw a mind map from list data in markdown format <a id="mind2dot"></a>
 
 [mind2dot]: src/mind2dot_function.ps1
 
@@ -7284,7 +7289,7 @@ cat a.md | mind2dot -Kinsoku 14 > a.dot; dot2gviz a.dot -o png | ii
 
 
 
-#### [mind2pu] - Generate plantuml script to draw a mind map from list data in markdown format
+#### [mind2pu] - Generate plantuml script to draw a mind map from list data in markdown format <a id="mind2pu"></a>
 
 [mind2pu]: src/mind2pu_function.ps1
 
@@ -7518,7 +7523,7 @@ skinparam DefaultFontName "Meiryo"
 ![](img/mind2pu_WBS.png)
 
 
-#### [logi2dot] - Generate data for graphviz with simple format
+#### [logi2dot] - Generate data for graphviz with simple format <a id="logi2dot"></a>
 
 [logi2dot]: src/logi2dot_function.ps1
 
@@ -7833,7 +7838,7 @@ strict digraph logictree {
 
 
 
-#### [logi2pu] - Generate data for PlantUML (usecase diagram) with simple format
+#### [logi2pu] - Generate data for PlantUML (usecase diagram) with simple format <a id="logi2pu"></a>
 
 [logi2pu]: src/logi2pu_function.ps1
 
@@ -8060,7 +8065,7 @@ ActA <-> ActB #line:red : conflict！
 ![](img/logi2pu_2.png)
 
 
-#### [seq2pu] - Generate sequence-diagram from markdown-like list format
+#### [seq2pu] - Generate sequence-diagram from markdown-like list format <a id="seq2pu"></a>
 
 [seq2pu]: src/seq2pu_function.ps1
 
@@ -8216,7 +8221,7 @@ pu2java a.pu svg | ii
 
 
 
-#### [flow2pu] - Generate activity-diagram (flowchart) from markdown-like list format
+#### [flow2pu] - Generate activity-diagram (flowchart) from markdown-like list format <a id="flow2pu"></a>
 
 [flow2pu]: src/flow2pu_function.ps1
 
@@ -8353,7 +8358,7 @@ pu2java a.pu svg | ii
 
 ### Image processing
 
-#### [ConvImage] - Image rotation, flipping, scaling, convert format
+#### [ConvImage] - Image rotation, flipping, scaling, convert format <a id="ConvImage"></a>
 
 [ConvImage]: src/ConvImage_function.ps1
 
@@ -8505,7 +8510,7 @@ before.jpg を after.png に形式変換し、かつ、
 
 ### Writing
 
-#### [mdgrep] - Multi-line oriented searcher for markdown-heading style
+#### [mdgrep] - Multi-line oriented searcher for markdown-heading style <a id="mdgrep"></a>
 
 [mdgrep]: src/mdgrep_function.ps1
 
@@ -8528,7 +8533,7 @@ cat README.md | mdgrep man2 -l 4 -t -e | head
 ```
 
 ```markdown
-#### [man2] - Formats filelist as a wide table and gets manual
+#### [man2] - Formats filelist as a wide table and gets manual <a id="man2"></a>
 
 [man2]: src/man2_function.ps1
 
@@ -8597,7 +8602,7 @@ cat README.md | mdgrep seq2pu -Level 4
 ```
 
 ```markdown
-#### [seq2pu] - Generate sequence-diagram from markdown-like list format
+#### [seq2pu] - Generate sequence-diagram from markdown-like list format <a id="seq2pu"></a>
 ```
 
 ```powershell
@@ -9051,7 +9056,7 @@ cat changelog.txt | mdgrep fuga -Expand
 - fuga3
 ```
 
-#### [mdfocus] - Multi-line oriented searcher for markdown-list style
+#### [mdfocus] - Multi-line oriented searcher for markdown-list style <a id="mdfocus"></a>
 
 [mdfocus]: src/mdfocus_function.ps1
 
@@ -9134,7 +9139,7 @@ cat a.md | mdfocus 'Lv\.2' | list2table
 -       Lv.2    Lv.2.2
 ```
 
-#### [tex2pdf] - Compile tex to pdf
+#### [tex2pdf] - Compile tex to pdf <a id="tex2pdf"></a>
 
 [tex2pdf]: src/tex2pdf_function.ps1
 
@@ -9162,7 +9167,7 @@ cat a.md | mdfocus 'Lv\.2' | list2table
         - `lualatex`, `uplatex`
 
 
-#### [kinsoku] - Japanese text wrapper
+#### [kinsoku] - Japanese text wrapper <a id="kinsoku"></a>
 
 [kinsoku]: src/kinsoku_function.ps1
 
@@ -9314,7 +9319,7 @@ ID0001:\nあああああ、\nいいいいい、\nううううう
 ID0001:\nあああああ、\nいいいいい、\nううううう\r\n
 ```
 
-#### [filehame] - Insert contents into template
+#### [filehame] - Insert contents into template <a id="filehame"></a>
 
 [filehame]: src/filehame_function.ps1
 
@@ -9401,7 +9406,7 @@ cat contents.md `
 ```
 
 
-#### [Get-OGP] (Alias: ml) - Make Link with markdown format
+#### [Get-OGP] (Alias: ml) - Make Link with markdown format <a id="Get-OGP"></a>
 
 [Get-OGP]: src/Get-OGP_function.ps1
 
@@ -9499,7 +9504,7 @@ Get-Clipboard
 [GitHub: Let’s build from here](https://github.com/)
 ```
 
-#### [fpath] - Remove double-quotes and replace backslashes to slashes from windows path
+#### [fpath] - Remove double-quotes and replace backslashes to slashes from windows path <a id="fpath"></a>
 
 [fpath]: src/fpath_function.ps1
 
@@ -9547,7 +9552,7 @@ cat paths.txt | fpath
 ```
 
 
-#### [watercss] - Get Water.css rel link
+#### [watercss] - Get Water.css rel link <a id="watercss"></a>
 
 [watercss]: src/watercss_function.ps1
 
@@ -9607,7 +9612,7 @@ watercss -Light
     - License: The MIT License (MIT) Copyright © 2019 Kognise
 
 
-#### [image2md] - Convert image filename and alt text to markdown format
+#### [image2md] - Convert image filename and alt text to markdown format <a id="image2md"></a>
 
 [image2md]: src/image2md_function.ps1
 
@@ -9702,7 +9707,7 @@ Output:
 ```
 
 
-#### [table2md] - Convert tab and csv delimited tables to markdown table format
+#### [table2md] - Convert tab and csv delimited tables to markdown table format <a id="table2md"></a>
 
 [table2md]: src/table2md_function.ps1
 
@@ -9772,7 +9777,7 @@ cat iris.csv | table2md -d "," -Units "CFU","kg" | head -n 7
 # (Default -Units " kg"," ml", " CFU", "RLU", etc...)
 ```
 
-#### [list2table] - Convert markdown list format to long type data (make it greppable!)
+#### [list2table] - Convert markdown list format to long type data (make it greppable!) <a id="list2table"></a>
 
 [list2table]: src/list2table_function.ps1
 
@@ -10011,7 +10016,7 @@ title Lv.3
 ```
 
 
-#### [linkextract] - Extract links from html
+#### [linkextract] - Extract links from html <a id="linkextract"></a>
 
 [linkextract]: src/linkextract_function.ps1
 
@@ -10158,7 +10163,7 @@ Detect broken links.
 ```
 
 
-#### [linkcheck] - Broken link checker
+#### [linkcheck] - Broken link checker <a id="linkcheck"></a>
 
 [linkcheck]: src/linkcheck_function.ps1
 
@@ -10213,7 +10218,7 @@ Detect broken links in m.html
 ```
 
 
-#### [jl] - Join the next Line if line ends with the keyword
+#### [jl] - Join the next Line if line ends with the keyword <a id="jl"></a>
 
 [jl]: src/jl_function.ps1
 
@@ -10308,7 +10313,7 @@ bumon-C tank    17:46 2017/05/10        fuga    fuga
 ```
 
 
-#### [Override-Yaml] - Override external yaml in markdown yaml
+#### [Override-Yaml] - Override external yaml in markdown yaml <a id="Override-Yaml"></a>
 
 [Override-Yaml]: src/Override-Yaml_function.ps1
 
@@ -10588,7 +10593,7 @@ fuga
 
 ### csv / toml / json handling
 
-#### [toml2psobject] - Parser for toml-like configuration files
+#### [toml2psobject] - Parser for toml-like configuration files <a id="toml2psobject"></a>
 
 [toml2psobject]: src/toml2psobject_function.ps1
 
@@ -10669,7 +10674,7 @@ note  : multi-line note1
         multi-line note3
 ```
 
-#### [json2txt] - Transform json into key-value format with one record per line.
+#### [json2txt] - Transform json into key-value format with one record per line. <a id="json2txt"></a>
 
 [json2txt]: src/json2txt_function.ps1
 
@@ -10747,7 +10752,7 @@ cat a.json | json2txt
 .widget.text.onMouseUp = "sun1.opacity = (sun1.opacity / 100) * 90;"
 ```
 
-#### [csv2txt] - Convert CSV to SSV
+#### [csv2txt] - Convert CSV to SSV <a id="csv2txt"></a>
 
 [csv2txt]: src/csv2txt_function.ps1
 
@@ -10805,7 +10810,7 @@ id main id2 sub val
 04  ddd  03 zzz  10
 ```
 
-#### [catcsv] - Concatenate csv files
+#### [catcsv] - Concatenate csv files <a id="catcsv"></a>
 
 [catcsv]: src/catcsv_function.ps1
 
@@ -10830,7 +10835,7 @@ id main id2 sub val
         - カレントディレクトリの`a*.csv`を`out.csv`に出力する
 
 
-#### [csv2sqlite] - Apply sqlite-sql to csv files
+#### [csv2sqlite] - Apply sqlite-sql to csv files <a id="csv2sqlite"></a>
 
 [csv2sqlite]: src/csv2sqlite_function.ps1
 
@@ -10946,7 +10951,7 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
 
 ### File and directory manipuration
 
-#### [fwatch] - A filewatcher using LastWriteTime and FileHash
+#### [fwatch] - A filewatcher using LastWriteTime and FileHash <a id="fwatch"></a>
 
 [fwatch]: src/fwatch_function.ps1
 
@@ -10975,7 +10980,7 @@ survived  pclass  sex     age   sibsp  parch  fare     embarked  class
     - `fwatch -Path . -Action {cat a.md | md2html > a.html; ii a.html} -Recurse`
 
 
-#### [Rename-Normalize] (Alias: ren2norm) - File name normalizer for Japanese on windows
+#### [Rename-Normalize] (Alias: ren2norm) - File name normalizer for Japanese on windows <a id="Rename-Normalize"></a>
 
 [Rename-Normalize]: src/Rename-Normalize_function.ps1
 
@@ -11092,7 +11097,7 @@ clipwatch-function - Copy.ps1 => clipwatch-function-Copy.ps1
 clipwatch-function.ps1        => clipwatch-function.ps1
 ```
 
-#### [push2loc] - Push-Location and execute commands to clipped files
+#### [push2loc] - Push-Location and execute commands to clipped files <a id="push2loc"></a>
 
 [push2loc]: src/push2loc_function.ps1
 
@@ -11301,7 +11306,7 @@ clip2file | push2loc -Action { git status } -Pop -Execute
 
 ### Clipboard operation
 
-#### [clip2file] - Get files copied to the clipboard as an objects
+#### [clip2file] - Get files copied to the clipboard as an objects <a id="clip2file"></a>
 
 [clip2file]: src/clip2file_function.ps1
 
@@ -11391,7 +11396,7 @@ clip2file | Rename-Normalize
 ```
 
 
-#### [clip2push] - Push-Location and execute commands to clipped files
+#### [clip2push] - Push-Location and execute commands to clipped files <a id="clip2push"></a>
 
 [clip2push]: src/clip2push_function.ps1
 
@@ -11502,7 +11507,7 @@ clip2push -Action { git status } -Pop -Execute
     nothing to commit, working tree clean
 ```
 
-#### [clip2hyperlink] - Create hyperlink formula for excel from clipped files.
+#### [clip2hyperlink] - Create hyperlink formula for excel from clipped files. <a id="clip2hyperlink"></a>
 
 [clip2hyperlink]: src/clip2hyperlink_function.ps1
 
@@ -11563,7 +11568,7 @@ PS> clip2file | clip2hyperlink
 ```
 
 
-#### [clip2img] - Save clip board image as an image file
+#### [clip2img] - Save clip board image as an image file <a id="clip2img"></a>
 
 [clip2img]: src/clip2img_function.ps1
 
@@ -11597,7 +11602,7 @@ Mode        LastWriteTime   Length Name
 -a--- 2023/03/18    22:32   171680 2023-03-18___hoge.png
 ```
 
-#### [clip2normalize] - Text normalizer for japanese on windows
+#### [clip2normalize] - Text normalizer for japanese on windows <a id="clip2normalize"></a>
 
 [clip2normalize]: src/clip2normalize_function.ps1
 
@@ -11647,7 +11652,7 @@ clip2normalize
 3. abcde
 ```
 
-#### [clip2shortcut] - Create relative-path shortcuts from clipped files.
+#### [clip2shortcut] - Create relative-path shortcuts from clipped files. <a id="clip2shortcut"></a>
 
 [clip2shortcut]: src/clip2shortcut_function.ps1
 
@@ -11725,7 +11730,7 @@ popd
 
 ### Miscellaneous
 
-#### [pwmake] - Pwsh implementation of GNU make command
+#### [pwmake] - Pwsh implementation of GNU make command <a id="pwmake"></a>
 
 [pwmake]: src/pwmake_function.ps1
 
@@ -12040,7 +12045,7 @@ clean: ## Remove "*.txt" items in Documents directory
         }
 ```
 
-#### [Invoke-Link] (Alias: i) - Read and execute links written in a text file
+#### [Invoke-Link] (Alias: i) - Read and execute links written in a text file <a id="Invoke-Link"></a>
 
 [Invoke-Link]: src/Invoke-Link_function.ps1
 
@@ -12065,7 +12070,7 @@ The link execution app can be any command if `-Command` option is specified.
 
 Links written in a text file may or may not be enclosed in single/double quotes.
 
-If `-l` or `-Location`` specified, open the file location in explorer
+If `-l` or `-Location` specified, open the file location in explorer
 
 - Usage
     - `man2 i`
@@ -12137,7 +12142,7 @@ i ./link/rmarkdown_site.txt -q
 ```
 
 ```
-.\link\rmarkdown.txt
+./link/rmarkdown.txt
 Invoke-Item "C:/Users/path/to/the/index.html"
 ```
 
@@ -12170,7 +12175,7 @@ rssfeed https://api.msrc.microsoft.com/update-guide/rss -MaxResults 30
 ```powershell
 ## execute .ps1 function
 ## able to use dot sourcing functions in current process
-i ./link/\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+i ./link/MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
 ```
 
 ```markdown
@@ -12184,7 +12189,7 @@ MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4904...
 MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4905...
 ```
 
-#### [Get-Ticket] (Alias: t) - A parser for tickets written in one-liner text
+#### [Get-Ticket] (Alias: t) - A parser for tickets written in one-liner text <a id="Get-Ticket"></a>
 
 [Get-Ticket]: src/Get-Ticket_function.ps1
 
@@ -12738,7 +12743,7 @@ ganttDiagram {
 @endgantt
 ```
 
-#### [pwsync] - Invoke Robocopy.exe
+#### [pwsync] - Invoke Robocopy.exe <a id="pwsync"></a>
 
 [pwsync]: src/pwsync_function.ps1
 
@@ -12927,7 +12932,7 @@ Examples:
 
 
 
-#### [tenki] - Open tenki.jp or jma.go.jp in browser
+#### [tenki] - Open tenki.jp or jma.go.jp in browser <a id="tenki"></a>
 
 [tenki]: src/tenki_function.ps1
 
@@ -12960,7 +12965,7 @@ Open Hyogo/Japan weather reports in browser (on windows).
     - `tenki -Edge` ... open tenki.jp forecast and map in edge
 
 
-#### [say] - Speech Synthesizer
+#### [say] - Speech Synthesizer <a id="say"></a>
 
 [say]: src/say_function.ps1
 
@@ -12972,7 +12977,7 @@ Open Hyogo/Japan weather reports in browser (on windows).
     - `Get-Clipboard | say -JA`
 
 
-#### [sleepy] - A pomodoro timer using progress bar
+#### [sleepy] - A pomodoro timer using progress bar <a id="sleepy"></a>
 
 [sleepy]: src/sleepy_function.ps1
 
@@ -13006,7 +13011,7 @@ Open Hyogo/Japan weather reports in browser (on windows).
     - License: The MIT License (MIT): Copyright (c) 2022 Yasuhiro Matsumoto
     - Command: `sleepy`
 
-#### [teatimer] - Time-up notification
+#### [teatimer] - Time-up notification <a id="teatimer"></a>
 
 [teatimer]: src/teatimer_function.ps1
 
@@ -13029,7 +13034,7 @@ Windows環境用ティータイマー。時間がきたら通知トレイから�
         - `[-Quiet]`
         - `[[-IconType]`
 
-#### [Get-AppShortcut] - List up app-shortcuts
+#### [Get-AppShortcut] - List up app-shortcuts <a id="Get-AppShortcut"></a>
 
 [Get-AppShortcut]: src/Get-AppShortcut_function.ps1
 

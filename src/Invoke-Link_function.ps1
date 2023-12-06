@@ -70,12 +70,12 @@
 
 .EXAMPLE
     cat ./link/rmarkdown_site.txt
-    "C:\Users\path\to\the\index.html"
+    "C:/Users/path/to/the/index.html"
 
     # dry run
     i ./link/rmarkdown_site.txt -q
-    .\link\rmarkdown.txt
-    Invoke-Item "C:\Users\path\to\the\index.html"
+    ./link/rmarkdown.txt
+    Invoke-Item "C:/Users/path/to/the/index.html"
 
     # open index.html in default browser/explorer/apps
     i ./link/rmarkdown_site.txt
@@ -105,13 +105,13 @@
 .EXAMPLE
     ## execute if *.ps1 file specified
 
-    cat ./link/work\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+    cat ./link/work/MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
     # MSRC - Microsoft Security Response Center
     rssfeed https://api.msrc.microsoft.com/update-guide/rss -MaxResults 30
 
     ## execute .ps1 function
     ## able to use dot sourcing functions in current process
-    i ./link/\MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
+    i ./link/MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
 
     channel                    date       item
     -------                    ----       ----
