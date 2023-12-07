@@ -265,6 +265,7 @@
         - [-Id] ...Show body (description)
             - [-i|-InvokeLink] ...Invoke link in the body block
             - [-InvokeLinkWith <app>] ...Invoke link with app
+        - [-os||-OutputSection] ...Output with Section/Comment
     - Output as PsObject
         - [-o|-AsObject] ...Output as PsObject
             - [-sa|-ShortenAct]
@@ -613,6 +614,10 @@ function Get-Ticket {
         [Parameter( Mandatory=$False )]
         [Switch] $GetSeries,
 
+        [Parameter( Mandatory=$False )]
+        [Alias('os')]
+        [Switch] $OutputSection,
+                
         [Parameter( Mandatory=$False )]
         [String] $HyphenPlaceHolder = '///@H@y@p@h@e@n@s@I@n@B@r@a@c@k@e@t@///',
         
@@ -1378,7 +1383,9 @@ function Get-Ticket {
         }
         # skip line beggining with "#" and space
         if ( isLineBeginningWithSharpMark $line ){
-            continue
+            if ( -not $OutputSection ){
+                continue
+            }
         }
         if ( $ForceXonCreationDateBeforeToday -and ( -not $AllData )){
             $line = addXonCreationDateBeforeToday $line
