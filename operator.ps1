@@ -150,6 +150,7 @@ if ( $IsWindows ){
     . $pwshSrcDir/clip2hyperlink_function.ps1
     . $pwshSrcDir/clip2shortcut_function.ps1
 }
+. $pwshSrcDir/Decrease-Indent_function.ps1
 
 
 ## file watcher

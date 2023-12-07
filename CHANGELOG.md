@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [6.7.0] - 2023-12-08
+
 - Added [README.md] section anchor tag and fix typo
+- Added [Decrease-Indent] function
 - Fixed [Get-Ticket] synopsis
 - Added [Get-Ticket] `-ForceXonCreationDateBeforeToday` option
 - Added [Get-Ticket] `-GetSeries` option
 - Changed Set-Alias output to Write-Host [operator.ps1], [Add-Quartile], [Add-Stats], [Apply-Function], [Delete-Object], [Edit-Function], [Get-Book], [Get-Diary], [Get-Note], [Get-OGP], [Get-Recipe], [Get-Ticket], [GroupBy-Object], [Invoke-Link], [Invoke-Logger], [Join2-Object], [Measure-Quartile], [Measure-Stats], [Measure-Summary], [New-Function], [New-Function], [New-Quarto], [Rename-Normalize], [Schedule-Task], [Search-WordMeaning], [Sort-Ordinal], [Zap-Web], [grep], [head], [tail]
+- Added [Get-Ticket] `-OutputSection` and `-AsObjectAndShortenAct` option
 
 ## [6.6.0] - 2023-12-03
 
@@ -580,7 +586,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Edit-Function]: src/Edit-Function_function.ps1
 [Get-Ticket]: src/Get-Ticket_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.6.0..HEAD
+[Decrease-Indent]: src/Decrease-Indent_function.ps1
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.7.0..HEAD
+[6.7.0]: https://github.com/btklab/posh-mocks/releases/tag/6.7.0
 [6.6.0]: https://github.com/btklab/posh-mocks/releases/tag/6.6.0
 [6.5.4]: https://github.com/btklab/posh-mocks/releases/tag/6.5.4
 [6.5.3]: https://github.com/btklab/posh-mocks/releases/tag/6.5.3

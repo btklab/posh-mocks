@@ -265,6 +265,7 @@
         - [-Id] ...Show body (description)
             - [-i|-InvokeLink] ...Invoke link in the body block
             - [-InvokeLinkWith <app>] ...Invoke link with app
+        - [-os||-OutputSection] ...Output with Section/Comment
     - Output as PsObject
         - [-o|-AsObject] ...Output as PsObject
             - [-sa|-ShortenAct]
@@ -272,6 +273,7 @@
             - [-p|-Plus <String[]>]
             - [-d|-DeleteTagFromAct]
             - [-sp|-ShortenProperty]
+        - [-so|-AsObjectAndShortenAct]
     - Output as Gantt chart format for plantUMLweekl
         - [-Gantt] ...Output as plantUML gantt chart format
         - [-GanttNote] ...Output as plantUML gantt chart format
@@ -521,6 +523,10 @@ function Get-Ticket {
         [Switch] $AsObject,
         
         [Parameter( Mandatory=$False )]
+        [Alias('so')]
+        [Switch] $AsObjectAndShortenAct,
+        
+        [Parameter( Mandatory=$False )]
         [Switch] $Gantt,
         
         [Parameter( Mandatory=$False )]
@@ -614,6 +620,10 @@ function Get-Ticket {
         [Switch] $GetSeries,
 
         [Parameter( Mandatory=$False )]
+        [Alias('os')]
+        [Switch] $OutputSection,
+                
+        [Parameter( Mandatory=$False )]
         [String] $HyphenPlaceHolder = '///@H@y@p@h@e@n@s@I@n@B@r@a@c@k@e@t@///',
         
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
@@ -678,6 +688,11 @@ function Get-Ticket {
         "Raw", 
         "Note"
     )
+    # set opt
+    if ( $AsObjectAndShortenAct ){
+        $AsObject = $True
+        $ShortenAct = $True
+    }
     # execute -ls
     if ( $lsProperty ){
         $hash = @{}
@@ -1378,7 +1393,9 @@ function Get-Ticket {
         }
         # skip line beggining with "#" and space
         if ( isLineBeginningWithSharpMark $line ){
-            continue
+            if ( -not $OutputSection ){
+                continue
+            }
         }
         if ( $ForceXonCreationDateBeforeToday -and ( -not $AllData )){
             $line = addXonCreationDateBeforeToday $line
