@@ -273,6 +273,7 @@
             - [-p|-Plus <String[]>]
             - [-d|-DeleteTagFromAct]
             - [-sp|-ShortenProperty]
+        - [-so|-AsObjectAndShortenAct]
     - Output as Gantt chart format for plantUMLweekl
         - [-Gantt] ...Output as plantUML gantt chart format
         - [-GanttNote] ...Output as plantUML gantt chart format
@@ -522,6 +523,10 @@ function Get-Ticket {
         [Switch] $AsObject,
         
         [Parameter( Mandatory=$False )]
+        [Alias('so')]
+        [Switch] $AsObjectAndShortenAct,
+        
+        [Parameter( Mandatory=$False )]
         [Switch] $Gantt,
         
         [Parameter( Mandatory=$False )]
@@ -683,6 +688,11 @@ function Get-Ticket {
         "Raw", 
         "Note"
     )
+    # set opt
+    if ( $AsObjectAndShortenAct ){
+        $AsObject = $True
+        $ShortenAct = $True
+    }
     # execute -ls
     if ( $lsProperty ){
         $hash = @{}

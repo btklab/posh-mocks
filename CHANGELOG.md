@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added [Get-Ticket] `-ForceXonCreationDateBeforeToday` option
 - Added [Get-Ticket] `-GetSeries` option
 - Changed Set-Alias output to Write-Host [operator.ps1], [Add-Quartile], [Add-Stats], [Apply-Function], [Delete-Object], [Edit-Function], [Get-Book], [Get-Diary], [Get-Note], [Get-OGP], [Get-Recipe], [Get-Ticket], [GroupBy-Object], [Invoke-Link], [Invoke-Logger], [Join2-Object], [Measure-Quartile], [Measure-Stats], [Measure-Summary], [New-Function], [New-Function], [New-Quarto], [Rename-Normalize], [Schedule-Task], [Search-WordMeaning], [Sort-Ordinal], [Zap-Web], [grep], [head], [tail]
-- Added [Get-Ticket] `-OutputSection` option
+- Added [Get-Ticket] `-OutputSection` and `-AsObjectAndShortenAct` option
 
 ## [6.6.0] - 2023-12-03
 
