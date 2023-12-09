@@ -216,7 +216,7 @@
         4. Show Title and Body: [Get-Ticket <regex> <id,id,...>]
 
             PS> # get body of task2
-            PS> Get-Ticket -Wehre task2 -id 1
+            PS> Get-Ticket -Where task2 -id 1
             PS> t task2 1 
             This is task2
                 body of task2

@@ -12515,7 +12515,7 @@ t task2
 
 ```powershell
 # get body of task2
-Get-Ticket -Wehre task2 -id 1
+Get-Ticket -Where task2 -id 1
 t task2 1 
 ```
 

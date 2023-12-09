@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- NA
+- Fixed [README.md], [Get-Ticket] typo
 
 ## [6.7.0] - 2023-12-08
 
