@@ -44,7 +44,7 @@ function Decrease-Indent {
         [String[]] $InputObjects,
         
         [Parameter( Mandatory=$False )]
-        [String] $Skip = 0
+        [Int] $Skip = 0
     )
     if ( $input.Count -ne 0 ){
         [String[]] $inputLines = $input
