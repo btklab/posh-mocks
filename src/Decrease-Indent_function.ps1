@@ -46,12 +46,12 @@ function Decrease-Indent {
         [Parameter( Mandatory=$False )]
         [String] $Skip = 0
     )
-    if ( $InputObjects ){
-        [String[]] $inputLines = $InputObjects
+    if ( $input.Count -ne 0 ){
+        [String[]] $inputLines = $input
     } else {
         [String[]] $inputLines = Get-ClipBoard
     }
-    Write-Debug "$($InputObjects.Count)"
+    Write-Debug "$($input.Count)"
     if ( $inputLines.Count -eq 0 ){
         Write-Error "No input." -ErrorAction Stop
         return
