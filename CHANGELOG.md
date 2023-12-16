@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Added [README.md] text banner
+
+## [6.7.1] - 2023-12-16
+
 - Fixed [README.md], [Get-Ticket] typo
 - Fixed [Get-Ticket] Missing `-Raw` option
 - Fixed [Decrease-Indent] a bug where input via pipeline could not be read
