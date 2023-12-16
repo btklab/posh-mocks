@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 
 - Fixed [README.md], [Get-Ticket] typo
+- Fixed [Get-Ticket] Missing `-Raw` option
 - Fixed [Decrease-Indent] a bug where input via pipeline could not be read
 - Corrected [Decrease-Indent] the variable type of `-Skip` option from string to integer
 

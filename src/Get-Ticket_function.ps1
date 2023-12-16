@@ -1030,7 +1030,7 @@ function Get-Ticket {
             return
         }
         # Output Raw data
-        Get-Ticket -File $inputFilePath -Raw
+        Get-Ticket -File $inputFilePath
         return
     }
     # parse tickets
