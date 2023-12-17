@@ -658,12 +658,12 @@
     # -First option usecase
 
     PS> cat bank-account.txt
-    2023-10-01 0 100 +start @bank
+    2023-10-01   0 100 +start @bank
     2023-10-15 100 200 +electricity @bank
 
-    PS> cat bank-account.txt | pawk -First {$sum=$3} -Action {$sum+=$2;$2=$sum} -AllLine
-    2023-10-01 100 100 +start @bank
-    2023-10-15 200 200 +electricity @ban
+    PS> cat bank-account.txt | pawk -First {$sum=$3} -Action {$sum+=$2;$3=$sum} -AllLine -IgnoreConsecutiveDelimiters
+    2023-10-01 0 100 +start @bank
+    2023-10-15 100 200 +electricity @ban
 
 #>
 function pawk {
@@ -709,6 +709,9 @@ function pawk {
         [Parameter(Mandatory=$False)]
         [switch] $ParseBoolAndNull,
 
+        [Parameter(Mandatory=$False)]
+        [switch] $IgnoreConsecutiveDelimiters,
+
         [parameter(
             Mandatory=$False,
             ValueFromPipeline=$True)]
@@ -736,6 +739,9 @@ function pawk {
             [bool] $emptyDelimiterFlag = $True
         } else {
             [bool] $emptyDelimiterFlag = $False
+            if ( $IgnoreConsecutiveDelimiters ){
+                $iDelim = $iDelim + '+'
+            }
         }
         # private functions
         function replaceFieldStr ([string] $str){
@@ -842,6 +848,8 @@ function pawk {
         # split line by delimiter
         if ( $emptyDelimiterFlag ){
             [string[]] $tmpAry = $line.ToCharArray()
+        } elseif ( $IgnoreConsecutiveDelimiters ){
+            [string[]] $tmpAry = $line -split $iDelim
         } else {
             [string[]] $tmpAry = $line.Split( $iDelim )
         }
