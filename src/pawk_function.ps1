@@ -856,7 +856,11 @@ function pawk {
         #[int] $NF = $tmpAry.Count
         [object[]] $self = @()
         foreach ($element in $tmpAry){
-            $self += tryParseDouble $element
+            if ( [string]($element) -eq ''){
+                $self += $element
+            } else {
+                $self += tryParseDouble $element
+            }
         }
         ## Case: pattern and Action
         if (($Pattern) -and ($Action)) {
