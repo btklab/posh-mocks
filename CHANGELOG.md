@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 
 - Added [README.md] text banner
+- Added [pawk] `-First` option
 
 ## [6.7.1] - 2023-12-16
 

@@ -34,6 +34,7 @@
         - [[-a|-Action] <ScriptBlock>] ...action script
         - [-p|-Pattern <ScriptBlock>] ...pattern criteria
         - [-b|-Begin <ScriptBlock>] ...run before reading input
+        - [-f|-First <ScriptBlock>] ...run only the first input
         - [-e|-End] <ScriptBlock> ...run after reading input
         - [-fs|-Delimiter <String>] ...input/output field separator
         - [-ifs|-InputDelimiter <String>] ...input field separator
@@ -184,7 +185,7 @@
     A scriptblock to run after reading all input.
     For example, it is used for output/format results, adding footers, and more...
 
-.PARAMETER [-fs|-Delimiter]
+.PARAMETER Delimiter
     [-fs|-Delimiter] <String>
 
     Specifies the input/output delimiter. Default is a space.
@@ -199,7 +200,7 @@
     If -ifs and/or -ofs are specified together, this -fs value will
     be overridden.
 
-.PARAMETER [-ifs|-InputDelimiter]
+.PARAMETER InputDelimiter
     [-ifs|-InputDelimiter] <String>
 
     Specifies the input delimiter.
@@ -209,7 +210,7 @@
     
     If -fs and -ifs are specified at the same time, -ifs is selected.
 
-.PARAMETER [-ofs|-OutputDelimiter]
+.PARAMETER OutputDelimiter
     [-ofs|-OutputDelimiter] <String>
 
     Specifies the output delimiter.]
@@ -219,15 +220,17 @@
     
     If -fs and -ofs are specified at the same time, -ofs is selected.
 
-.PARAMETER -AllLine
+.PARAMETER AllLine
     With -AllLine switch, all rows are output regardless of whether
     matches pattern or not. Note that even in this case,
     the -Action <scriptblock> is only applied to rows that match
     -Pattern option.
 
-.PARAMETER -SkipBlank
+.PARAMETER SkipBlank
     Continue processing even if an empty line is detected.
 
+.PARAMETER First
+    Run only the first input
 
 .EXAMPLE
 # sum from 1 to 10 and output the result
@@ -651,6 +654,17 @@ adcbe
 # If an empty string is specified as the delimiter,
 # the first and last elements are dropped from the array.
 
+.EXAMPLE
+# -First option usecase
+
+PS> cat bank-account.txt
+2023-10-01 0 100 +start @bank
+2023-10-15 100 200 +electricity @bank
+
+PS> cat bank-account.txt | pawk -First {$sum=$3} -Action {$sum+=$2;$2=$sum} -AllLine
+2023-10-01 100 100 +start @bank
+2023-10-15 200 200 +electricity @ban
+
 #>
 function pawk {
     Param(
@@ -669,6 +683,10 @@ function pawk {
         [Parameter(Mandatory=$False)]
         [Alias('e')]
         [ScriptBlock]$End,
+
+        [Parameter(Mandatory=$False)]
+        [Alias('f')]
+        [ScriptBlock]$First,
 
         [Parameter(Mandatory=$False)]
         [Alias('fs')]
@@ -804,6 +822,12 @@ function pawk {
             Invoke-Expression -Command $BeginBlockStr -ErrorAction Stop
             Write-Debug "Begin: $BeginBlockStr"
         }
+        if ( $First ){
+            [bool] $isFirstLine = $True
+            [string] $FirstBlockStr = $First.ToString().Trim()
+            [string] $FirstBlockStr = replaceFieldStr $FirstBlockStr
+            Write-Debug "First: $FirstBlockStr"
+        }
     }
     process{
         # set variables
@@ -813,51 +837,65 @@ function pawk {
             if (-not $SkipBlank){
                 Write-Error 'Detect empty line.' -ErrorAction Stop
             }
+            return
+        }
+        # split line by delimiter
+        if ( $emptyDelimiterFlag ){
+            [string[]] $tmpAry = $line.ToCharArray()
         } else {
-            if ( $emptyDelimiterFlag ){
-                [string[]] $tmpAry = $line.ToCharArray()
+            [string[]] $tmpAry = $line.Split( $iDelim )
+        }
+        #[int] $NF = $tmpAry.Count
+        [object[]] $self = @()
+        foreach ($element in $tmpAry){
+            $self += tryParseDouble $element
+        }
+        ## Case: pattern and Action
+        if (($Pattern) -and ($Action)) {
+            if (Invoke-Expression -Command $PatternBlockStr -ErrorAction Stop ) {
+                if ( $First -and $isFirstLine ){
+                    Invoke-Expression -Command $FirstBlockStr -ErrorAction Stop
+                    $isFirstLine = $False
+                }
+                Invoke-Expression -Command $ActionBlockStr -ErrorAction Stop
+            }
+            if ( $AllLine ){
+                # Output all line
+                $self -Join "$oDelim"
+            }
+            return
+        }
+        ## Case: pattern Only
+        if ($Pattern) {
+            if ($AllLine) {
+                if ( $First -and $isFirstLine ){
+                    Invoke-Expression -Command $FirstBlockStr -ErrorAction Stop
+                    $isFirstLine = $False
+                }
+                Invoke-Expression -Command $PatternBlockStr -ErrorAction Stop > $Null
+                $self -Join "$oDelim"
             } else {
-                [string[]] $tmpAry = $line.Split( $iDelim )
-            }
-            #[int] $NF = $tmpAry.Count
-            $self = @()
-            foreach ($element in $tmpAry){
-                $self += tryParseDouble $element
-            }
-            ## Case: pattern and Action
-            if (($Pattern) -and ($Action)) {
-                if ($AllLine) {
-                    if (Invoke-Expression -Command $PatternBlockStr -ErrorAction Stop ) {
-                        Invoke-Expression -Command $ActionBlockStr -ErrorAction Stop
+                if (Invoke-Expression -Command $PatternBlockStr -ErrorAction Stop ) {
+                    if ( $First -and $isFirstLine ){
+                        Invoke-Expression -Command $FirstBlockStr -ErrorAction Stop
+                        $isFirstLine = $False
                     }
                     $self -Join "$oDelim"
-                } else {
-                    if (Invoke-Expression -Command $PatternBlockStr -ErrorAction Stop ) {
-                        Invoke-Expression -Command $ActionBlockStr -ErrorAction Stop
-                    }
                 }
-            ## Case: pattern Only
-            } elseif ($Pattern) {
-                if ($AllLine) {
-                    Invoke-Expression -Command $PatternBlockStr -ErrorAction Stop > $Null
-                    $self -Join "$oDelim"
-                } else {
-                    if (Invoke-Expression -Command $PatternBlockStr -ErrorAction Stop ) {
-                        $self -Join "$oDelim"
-                    }
-                }
-            ## Case: action Only
-            } elseif ($Action) {
-                if ($AllLine) {
-                    Invoke-Expression -Command $ActionBlockStr -ErrorAction Stop
-                    $self -Join "$oDelim"
-                } else {
-                    Invoke-Expression -Command $ActionBlockStr -ErrorAction Stop
-                }
-            ## Case: else
-            } else {
-                ## pass
             }
+            return
+        }
+        ## Case: action Only
+        if ($Action) {
+            if ( $First -and $isFirstLine ){
+                Invoke-Expression -Command $FirstBlockStr -ErrorAction Stop
+                $isFirstLine = $False
+            }
+            Invoke-Expression -Command $ActionBlockStr -ErrorAction Stop
+            if ($AllLine) {
+                $self -Join "$oDelim"
+            }
+            return
         }
     }
     end{
