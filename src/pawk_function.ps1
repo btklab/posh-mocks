@@ -45,7 +45,8 @@
               -fs delimiter will be overridden.
         - [-AllLine] ...output all input even if not match pattern
                          (but action is only apply to matching rows)
-        - [-SkipBlank] ...continue processing when empty row is detected
+        - [-SkipBlank] ...continue processing when empty line is detected
+        - [-LeaveBlank] ...Skip and Leave empty lines
 
     note:
         -Action, -Pattern, -Begin, -End options should be specified in
@@ -707,6 +708,9 @@ function pawk {
         [switch] $SkipBlank,
 
         [Parameter(Mandatory=$False)]
+        [switch] $LeaveBlank,
+
+        [Parameter(Mandatory=$False)]
         [switch] $ParseBoolAndNull,
 
         [Parameter(Mandatory=$False)]
@@ -840,10 +844,16 @@ function pawk {
         $NR++
         [string] $line = [string] $_
         if ($line -eq ''){
-            if (-not $SkipBlank){
-                Write-Error 'Detect empty line.' -ErrorAction Stop
+            if ( $LeaveBlank ){
+                Write-Output ''
+                return
             }
-            return
+            if ( $SkipBlank ){
+                return
+            } else {
+                Write-Error 'Detect empty line.' -ErrorAction Stop
+                return
+            }
         }
         # split line by delimiter
         if ( $emptyDelimiterFlag ){
