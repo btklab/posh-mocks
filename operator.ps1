@@ -203,6 +203,7 @@ if ( $IsWindows ){
 . $pwshSrcDir/Invoke-Link_function.ps1
 
 ## misc
+. $pwshSrcDir/Set-NowTime2Clipboard_function.ps1
 . $pwshSrcDir/tenki_function.ps1
 . $pwshSrcDir/sleepy_function.ps1
 . $pwshSrcDir/Get-AppShortcut_function.ps1

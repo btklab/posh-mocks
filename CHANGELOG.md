@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Added [Set-NowTime2Clipboard] function
 - Added [README.md] text banner
 - Added [pawk] `-First` option, `-IgnoreConsecutiveDelimiters` switch
 
@@ -595,6 +596,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Get-Ticket]: src/Get-Ticket_function.ps1
 
 [Decrease-Indent]: src/Decrease-Indent_function.ps1
+
+[Decrease-Indent]: src/Set-NowTime2Clipboard_function.ps1
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/6.7.0..HEAD
 [6.7.0]: https://github.com/btklab/posh-mocks/releases/tag/6.7.0
