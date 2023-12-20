@@ -1,10 +1,10 @@
 # posh-mocks
 
-```plaintext
-  ____   ___   ____  _   _        _    _   ___    ___  _  _  ____
- |  _ \ / _ \ /  __)| |_| | ____ | \  / | / _ \  / __)| |/ )/  __)
- |  __/( (_) )\__  \|  _  |(____)|  \/  |( (_) )( (__ |   ( \__  \
- |_|    \___/ (____/|_| |_|      |_|  |_| \___/  \___)|_|\_)(____/
+```markdown
+>  ____   ___   ____  _   _        _    _   ___    ___  _  _  ____
+> |  _ \ / _ \ /  __)| |_| | ____ | \  / | / _ \  / __)| |/ )/  __)
+> |  __/( (_) )\__  \|  _  |(____)|  \/  |( (_) )( (__ |   ( \__  \
+> |_|    \___/ (____/|_| |_|      |_|  |_| \___/  \___)|_|\_)(____/
 ```
 
 A mock-up set of [PowerShell](https://github.com/PowerShell/PowerShell) 7 functions that filter text-object input from the pipeline(stdin) and return text-object (this concept is closer to Bash than PowerShell).Inspired by [Parsing Text with PowerShell (3/3), Steve Lee, January 28th, 2019](https://devblogs.microsoft.com/powershell/parsing-text-with-powershell-3-3/).
@@ -37,7 +37,7 @@ cat README.md `
     | Set-Clipboard
 ```
 
-- [Add-LineBreakEndOfFile](#Add-LineBreakEndOfFile), [Add-LineBreak](#Add-LineBreak), [Add-Quartile](#Add-Quartile), [Add-Stats](#Add-Stats), [Apply-Function](#Apply-Function), [ConvImage](#ConvImage), [Decrease-Indent](#Decrease-Indent), [Delete-Field](#Delete-Field), [Detect-XrsAnomaly](#Detect-XrsAnomaly), [Drop-NA](#Drop-NA), [Edit-Function](#Edit-Function), [Get-AppShortcut](#Get-AppShortcut), [Get-Histogram](#Get-Histogram), [Get-OGP](#Get-OGP), [Get-Ticket](#Get-Ticket), [GroupBy-Object](#GroupBy-Object), [Invoke-Link](#Invoke-Link), [Join2-Object](#Join2-Object), [Measure-Quartile](#Measure-Quartile), [Measure-Stats](#Measure-Stats), [Measure-Summary](#Measure-Summary), [Override-Yaml](#Override-Yaml), [Plot-BarChart](#Plot-BarChart), [Rename-Normalize](#Rename-Normalize), [Replace-ForEach](#Replace-ForEach), [Replace-NA](#Replace-NA), [Select-Field](#Select-Field), [Shorten-PropertyName](#Shorten-PropertyName), [Transpose-Property](#Transpose-Property), [Unique-Object](#Unique-Object), [addb](#addb), [addl](#addl), [addr](#addr), [addt](#addt), [cat2](#cat2), [catcsv](#catcsv), [chead](#chead), [clip2file](#clip2file), [clip2hyperlink](#clip2hyperlink), [clip2img](#clip2img), [clip2normalize](#clip2normalize), [clip2push](#clip2push), [clip2shortcut](#clip2shortcut), [conv](#conv), [count](#count), [csv2sqlite](#csv2sqlite), [csv2txt](#csv2txt), [ctail](#ctail), [decil](#decil), [delf](#delf), [dot2gviz](#dot2gviz), [filehame](#filehame), [fillretu](#fillretu), [flat](#flat), [flow2pu](#flow2pu), [fpath](#fpath), [fval](#fval), [fwatch](#fwatch), [gantt2pu](#gantt2pu), [gdate](#gdate), [getfirst](#getfirst), [getlast](#getlast), [grep](#grep), [gyo](#gyo), [han](#han), [head](#head), [image2md](#image2md), [jl](#jl), [json2txt](#json2txt), [juni](#juni), [keta](#keta), [kinsoku](#kinsoku), [lastyear](#lastyear), [lcalc2](#lcalc2), [lcalc](#lcalc), [linkcheck](#linkcheck), [linkextract](#linkextract), [list2table](#list2table), [logi2dot](#logi2dot), [logi2pu](#logi2pu), [man2](#man2), [map2](#map2), [mdfocus](#mdfocus), [mdgrep](#mdgrep), [mind2dot](#mind2dot), [mind2pu](#mind2pu), [movw](#movw), [nextyear](#nextyear), [pawk](#pawk), [percentile](#percentile), [pu2java](#pu2java), [push2loc](#push2loc), [pwmake](#pwmake), [pwsync](#pwsync), [retu](#retu), [rev2](#rev2), [rev](#rev), [say](#say), [sed-i](#sed-i), [sed](#sed), [self](#self), [seq2pu](#seq2pu), [sleepy](#sleepy), [sm2](#sm2), [summary](#summary), [table2md](#table2md), [tac](#tac), [tail-f](#tail-f), [tail](#tail), [tarr](#tarr), [tateyoko](#tateyoko), [teatimer](#teatimer), [tenki](#tenki), [tex2pdf](#tex2pdf), [thisyear](#thisyear), [toml2psobject](#toml2psobject), [uniq](#uniq), [vbStrConv](#vbStrConv), [watercss](#watercss), [wrap](#wrap), [yarr](#yarr), [ycalc](#ycalc), [ysort](#ysort), [zen](#zen)
+- [Add-LineBreakEndOfFile](#Add-LineBreakEndOfFile), [Add-LineBreak](#Add-LineBreak), [Add-Quartile](#Add-Quartile), [Add-Stats](#Add-Stats), [Apply-Function](#Apply-Function), [ConvImage](#ConvImage), [Decrease-Indent](#Decrease-Indent), [Delete-Field](#Delete-Field), [Detect-XrsAnomaly](#Detect-XrsAnomaly), [Drop-NA](#Drop-NA), [Edit-Function](#Edit-Function), [Get-AppShortcut](#Get-AppShortcut), [Get-Histogram](#Get-Histogram), [Get-OGP](#Get-OGP), [Get-Ticket](#Get-Ticket), [GroupBy-Object](#GroupBy-Object), [Invoke-Link](#Invoke-Link), [Join2-Object](#Join2-Object), [Measure-Quartile](#Measure-Quartile), [Measure-Stats](#Measure-Stats), [Measure-Summary](#Measure-Summary), [Override-Yaml](#Override-Yaml), [Plot-BarChart](#Plot-BarChart), [Rename-Normalize](#Rename-Normalize), [Replace-ForEach](#Replace-ForEach), [Replace-NA](#Replace-NA), [Select-Field](#Select-Field), [Set-NowTime2Clipboard](#Set-NowTime2Clipboard), [Shorten-PropertyName](#Shorten-PropertyName), [Transpose-Property](#Transpose-Property), [Unique-Object](#Unique-Object), [addb](#addb), [addl](#addl), [addr](#addr), [addt](#addt), [cat2](#cat2), [catcsv](#catcsv), [chead](#chead), [clip2file](#clip2file), [clip2hyperlink](#clip2hyperlink), [clip2img](#clip2img), [clip2normalize](#clip2normalize), [clip2push](#clip2push), [clip2shortcut](#clip2shortcut), [conv](#conv), [count](#count), [csv2sqlite](#csv2sqlite), [csv2txt](#csv2txt), [ctail](#ctail), [decil](#decil), [delf](#delf), [dot2gviz](#dot2gviz), [filehame](#filehame), [fillretu](#fillretu), [flat](#flat), [flow2pu](#flow2pu), [fpath](#fpath), [fval](#fval), [fwatch](#fwatch), [gantt2pu](#gantt2pu), [gdate](#gdate), [getfirst](#getfirst), [getlast](#getlast), [grep](#grep), [gyo](#gyo), [han](#han), [head](#head), [image2md](#image2md), [jl](#jl), [json2txt](#json2txt), [juni](#juni), [keta](#keta), [kinsoku](#kinsoku), [lastyear](#lastyear), [lcalc2](#lcalc2), [lcalc](#lcalc), [linkcheck](#linkcheck), [linkextract](#linkextract), [list2table](#list2table), [logi2dot](#logi2dot), [logi2pu](#logi2pu), [man2](#man2), [map2](#map2), [mdfocus](#mdfocus), [mdgrep](#mdgrep), [mind2dot](#mind2dot), [mind2pu](#mind2pu), [movw](#movw), [nextyear](#nextyear), [pawk](#pawk), [percentile](#percentile), [pu2java](#pu2java), [push2loc](#push2loc), [pwmake](#pwmake), [pwsync](#pwsync), [retu](#retu), [rev2](#rev2), [rev](#rev), [say](#say), [sed-i](#sed-i), [sed](#sed), [self](#self), [seq2pu](#seq2pu), [sleepy](#sleepy), [sm2](#sm2), [summary](#summary), [table2md](#table2md), [tac](#tac), [tail-f](#tail-f), [tail](#tail), [tarr](#tarr), [tateyoko](#tateyoko), [teatimer](#teatimer), [tenki](#tenki), [tex2pdf](#tex2pdf), [thisyear](#thisyear), [toml2psobject](#toml2psobject), [uniq](#uniq), [vbStrConv](#vbStrConv), [watercss](#watercss), [wrap](#wrap), [yarr](#yarr), [ycalc](#ycalc), [ysort](#ysort), [zen](#zen)
 
 Inspired by:
 
@@ -13031,6 +13031,89 @@ Open Hyogo/Japan weather reports in browser (on windows).
     - `man2 say`
 - Examples
     - `Get-Clipboard | say -JA`
+
+
+#### [Sleep-Computer] - Sleep computer
+
+[Sleep-Computer]: src/Sleep-Computer_function.ps1
+
+- Usage
+    - `man Sleep-Computer`
+
+Script:
+
+```powershell
+if ( $UseRundll32 ){
+    # use rundll32.exe
+    powercfg -h off
+    rundll32.exe powrprof.dll,SetSuspendState 0,1,0
+} else {
+    # use windows.forms
+    Add-Type -AssemblyName System.Windows.Forms
+    [System.Windows.Forms.Application]::SetSuspendState([System.Windows.Forms.PowerState]::Suspend, $false, $false)
+}
+```
+
+
+#### [Set-NowTime2Clipboard] (Alias: now) - Set current datetime to the clipboard
+
+[Set-NowTime2Clipboard]: src/Set-NowTime2Clipboard_function.ps1
+
+- Usage
+    - `man2 now`
+
+Syntax:
+
+    now [-Date] [-WeekDay] [-WeekDayOnly] [-Echo] [-Quote] [-Delimiter <String>]
+    now [-Time] [-WeekDay] [-WeekDayOnly] [-Echo] [-Quote] [-Delimiter <String>]
+    now [-TimeS] [-WeekDay] [-WeekDayOnly] [-Echo] [-Quote] [-Delimiter <String>]
+    now [-DateTime] [-WeekDay] [-WeekDayOnly] [-Echo] [-Quote] [-Delimiter <String>]
+    now [-DateTimeT] [-DateTimeTS] [-WeekDay] [-WeekDayOnly] [-Echo] [-Quote] [-Delimiter <String>]
+
+
+Examples:
+
+```
+# output format
+now             : 2023-12-21 (default)
+now -Date       : 2023-12-21
+now -Time       : 06:32
+now -TimeS      : 06:32:35
+now -DateTime   : 2023-12-21 06:32
+now -DateTimeT  : 2023-12-21T06:32
+now -DateTimeTS : 2023-12-21T06:32
+```
+
+```
+# add quote and weekday
+now                  : 2023-12-21
+now -WeekDay         : 2023-12-21 (thu)
+now -Quote           : "2023-12-21"
+now -WeekDay -Quote  : "2023-12-21 (thu)"
+```
+
+
+```powershell
+# output all switch
+@(
+"Date"
+"Time",
+"TimeS",
+"DateTime",
+"DateTimeT",
+"DateTimeTS"
+) | %{ """now -$_ : "" + `$(now -$_)" }
+```
+
+```
+now -Date       : 2023-12-21
+now -Time       : 06:32
+now -TimeS      : 06:32:35
+now -DateTime   : 2023-12-21 06:32
+now -DateTimeT  : 2023-12-21T06:32
+now -DateTimeTS : 2023-12-21T06:32
+```
+
 
 
 #### [sleepy] - A pomodoro timer using progress bar <a id="sleepy"></a>

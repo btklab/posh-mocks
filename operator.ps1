@@ -41,6 +41,7 @@ if ($IsWindows){
     ## misc
     . $pwshSrcDir/say_function.ps1
     . $pwshSrcDir/teatimer_function.ps1
+    . $pwshSrcDir/Sleep-Computer_function.ps1
 }
 
 ## get/edit funcs
@@ -203,6 +204,7 @@ if ( $IsWindows ){
 . $pwshSrcDir/Invoke-Link_function.ps1
 
 ## misc
+. $pwshSrcDir/Set-NowTime2Clipboard_function.ps1
 . $pwshSrcDir/tenki_function.ps1
 . $pwshSrcDir/sleepy_function.ps1
 . $pwshSrcDir/Get-AppShortcut_function.ps1
