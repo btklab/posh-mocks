@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [6.8.0] - 2023-12-21
+
+- Added [Sleep-Computer] function
 - Added [Set-NowTime2Clipboard] function
 - Added [README.md] text banner
 - Added [pawk] `-First` option, `-IgnoreConsecutiveDelimiters` switch
@@ -597,9 +602,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Decrease-Indent]: src/Decrease-Indent_function.ps1
 
-[Decrease-Indent]: src/Set-NowTime2Clipboard_function.ps1
+[Set-NowTime2Clipboard]: src/Set-NowTime2Clipboard_function.ps1
+[Sleep-Computer]: src/Sleep-Computer_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.7.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.8.0..HEAD
+[6.8.0]: https://github.com/btklab/posh-mocks/releases/tag/6.8.0
 [6.7.0]: https://github.com/btklab/posh-mocks/releases/tag/6.7.0
 [6.6.0]: https://github.com/btklab/posh-mocks/releases/tag/6.6.0
 [6.5.4]: https://github.com/btklab/posh-mocks/releases/tag/6.5.4

@@ -13032,6 +13032,29 @@ Open Hyogo/Japan weather reports in browser (on windows).
 - Examples
     - `Get-Clipboard | say -JA`
 
+
+#### [Sleep-Computer] - Sleep computer
+
+[Sleep-Computer]: src/Sleep-Computer_function.ps1
+
+- Usage
+    - `man Sleep-Computer`
+
+Script:
+
+```powershell
+if ( $UseRundll32 ){
+    # use rundll32.exe
+    powercfg -h off
+    rundll32.exe powrprof.dll,SetSuspendState 0,1,0
+} else {
+    # use windows.forms
+    Add-Type -AssemblyName System.Windows.Forms
+    [System.Windows.Forms.Application]::SetSuspendState([System.Windows.Forms.PowerState]::Suspend, $false, $false)
+}
+```
+
+
 #### [Set-NowTime2Clipboard] (Alias: now) - Set current datetime to the clipboard
 
 [Set-NowTime2Clipboard]: src/Set-NowTime2Clipboard_function.ps1
