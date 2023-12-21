@@ -12199,7 +12199,7 @@ i ./link/rmarkdown_site.txt -q
 ```
 
 ```
-./link/rmarkdown.txt
+./link/rmarkdown_site.txt
 Invoke-Item "C:/Users/path/to/the/index.html"
 ```
 
@@ -13034,7 +13034,8 @@ Open Hyogo/Japan weather reports in browser (on windows).
     - `Get-Clipboard | say -JA`
 
 
-#### [Sleep-Computer] - Sleep computer
+#### [Sleep-Computer] - Sleep computer <a id="Sleep-Computer"></a>
+
 
 [Sleep-Computer]: src/Sleep-Computer_function.ps1
 
@@ -13056,7 +13057,7 @@ if ( $UseRundll32 ){
 ```
 
 
-#### [Set-NowTime2Clipboard] (Alias: now) - Set current datetime to the clipboard
+#### [Set-NowTime2Clipboard] (Alias: now) - Set current datetime to the clipboard <a id="Set-NowTime2Clipboard"></a>
 
 [Set-NowTime2Clipboard]: src/Set-NowTime2Clipboard_function.ps1
 
