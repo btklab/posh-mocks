@@ -99,9 +99,8 @@ function linkcheck {
         [parameter(Mandatory=$False)]
         [switch] $VerboseOutput
     )
-
     # set uri
-    if($input){
+    if( $input.Count -gt 0 ){
         [string[]] $src = $input
     } else {
         [string[]] $src = $Uris

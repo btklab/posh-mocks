@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 
 - Fix [README.md] section links
+- Fix [linkcheck] determination of input presence/absence
 
 ## [6.8.0] - 2023-12-21
 
