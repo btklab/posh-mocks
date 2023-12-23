@@ -143,6 +143,9 @@ function clip2hyperlink {
                 if ( ($_ -is [System.IO.FileInfo]) -or ($_ -is [System.IO.DirectoryInfo]) ){
                     ## from filesystem object
                     [string] $oText = $_.FullName
+                } elseif ( $_ -is [System.IO.FileSystemInfo] ){
+                    ## from filesystem object
+                    [string] $oText = $_.FullName
                 } else {
                     ## from text
                     [string] $oText = $_
