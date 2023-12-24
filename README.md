@@ -37,7 +37,7 @@ cat README.md `
     | Set-Clipboard
 ```
 
-- [Add-LineBreakEndOfFile](#Add-LineBreakEndOfFile), [Add-LineBreak](#Add-LineBreak), [Add-Quartile](#Add-Quartile), [Add-Stats](#Add-Stats), [Apply-Function](#Apply-Function), [ConvImage](#ConvImage), [Decrease-Indent](#Decrease-Indent), [Delete-Field](#Delete-Field), [Detect-XrsAnomaly](#Detect-XrsAnomaly), [Drop-NA](#Drop-NA), [Edit-Function](#Edit-Function), [Get-AppShortcut](#Get-AppShortcut), [Get-Histogram](#Get-Histogram), [Get-OGP](#Get-OGP), [Get-Ticket](#Get-Ticket), [GroupBy-Object](#GroupBy-Object), [Invoke-Link](#Invoke-Link), [Join2-Object](#Join2-Object), [Measure-Quartile](#Measure-Quartile), [Measure-Stats](#Measure-Stats), [Measure-Summary](#Measure-Summary), [Override-Yaml](#Override-Yaml), [Plot-BarChart](#Plot-BarChart), [Rename-Normalize](#Rename-Normalize), [Replace-ForEach](#Replace-ForEach), [Replace-NA](#Replace-NA), [Select-Field](#Select-Field), [Set-NowTime2Clipboard](#Set-NowTime2Clipboard), [Shorten-PropertyName](#Shorten-PropertyName), [Sleep-Computer](#Sleep-Computer), [Transpose-Property](#Transpose-Property), [Unique-Object](#Unique-Object), [Unzip-Archive](#Unzip-Archive), [addb](#addb), [addl](#addl), [addr](#addr), [addt](#addt), [cat2](#cat2), [catcsv](#catcsv), [chead](#chead), [clip2file](#clip2file), [clip2hyperlink](#clip2hyperlink), [clip2img](#clip2img), [clip2normalize](#clip2normalize), [clip2push](#clip2push), [clip2shortcut](#clip2shortcut), [conv](#conv), [count](#count), [csv2sqlite](#csv2sqlite), [csv2txt](#csv2txt), [ctail](#ctail), [decil](#decil), [delf](#delf), [dot2gviz](#dot2gviz), [filehame](#filehame), [fillretu](#fillretu), [flat](#flat), [flow2pu](#flow2pu), [fpath](#fpath), [fval](#fval), [fwatch](#fwatch), [gantt2pu](#gantt2pu), [gdate](#gdate), [getfirst](#getfirst), [getlast](#getlast), [grep](#grep), [gyo](#gyo), [han](#han), [head](#head), [image2md](#image2md), [jl](#jl), [json2txt](#json2txt), [juni](#juni), [keta](#keta), [kinsoku](#kinsoku), [lastyear](#lastyear), [lcalc2](#lcalc2), [lcalc](#lcalc), [linkcheck](#linkcheck), [linkextract](#linkextract), [list2table](#list2table), [logi2dot](#logi2dot), [logi2pu](#logi2pu), [man2](#man2), [map2](#map2), [mdfocus](#mdfocus), [mdgrep](#mdgrep), [mind2dot](#mind2dot), [mind2pu](#mind2pu), [movw](#movw), [nextyear](#nextyear), [pawk](#pawk), [percentile](#percentile), [pu2java](#pu2java), [push2loc](#push2loc), [pwmake](#pwmake), [pwsync](#pwsync), [retu](#retu), [rev2](#rev2), [rev](#rev), [say](#say), [sed-i](#sed-i), [sed](#sed), [self](#self), [seq2pu](#seq2pu), [sleepy](#sleepy), [sm2](#sm2), [summary](#summary), [table2md](#table2md), [tac](#tac), [tail-f](#tail-f), [tail](#tail), [tarr](#tarr), [tateyoko](#tateyoko), [teatimer](#teatimer), [tenki](#tenki), [tex2pdf](#tex2pdf), [thisyear](#thisyear), [toml2psobject](#toml2psobject), [uniq](#uniq), [vbStrConv](#vbStrConv), [watercss](#watercss), [wrap](#wrap), [yarr](#yarr), [ycalc](#ycalc), [ysort](#ysort), [zen](#zen)
+- [Add-LineBreakEndOfFile](#Add-LineBreakEndOfFile), [Add-LineBreak](#Add-LineBreak), [Add-Quartile](#Add-Quartile), [Add-Stats](#Add-Stats), [Apply-Function](#Apply-Function), [ConvImage](#ConvImage), [Decrease-Indent](#Decrease-Indent), [Delete-Field](#Delete-Field), [Detect-XrsAnomaly](#Detect-XrsAnomaly), [Drop-NA](#Drop-NA), [Edit-Function](#Edit-Function), [Get-AppShortcut](#Get-AppShortcut), [Get-ClipboardAlternative](#Get-ClipboardAlternative), [Get-Histogram](#Get-Histogram), [Get-OGP](#Get-OGP), [Get-Ticket](#Get-Ticket), [GroupBy-Object](#GroupBy-Object), [Invoke-Link](#Invoke-Link), [Join2-Object](#Join2-Object), [Measure-Quartile](#Measure-Quartile), [Measure-Stats](#Measure-Stats), [Measure-Summary](#Measure-Summary), [Override-Yaml](#Override-Yaml), [Plot-BarChart](#Plot-BarChart), [Rename-Normalize](#Rename-Normalize), [Replace-ForEach](#Replace-ForEach), [Replace-NA](#Replace-NA), [Select-Field](#Select-Field), [Set-NowTime2Clipboard](#Set-NowTime2Clipboard), [Shorten-PropertyName](#Shorten-PropertyName), [Sleep-Computer](#Sleep-Computer), [Transpose-Property](#Transpose-Property), [Unique-Object](#Unique-Object), [Unzip-Archive](#Unzip-Archive), [addb](#addb), [addl](#addl), [addr](#addr), [addt](#addt), [cat2](#cat2), [catcsv](#catcsv), [chead](#chead), [clip2file](#clip2file), [clip2hyperlink](#clip2hyperlink), [clip2img](#clip2img), [clip2normalize](#clip2normalize), [clip2push](#clip2push), [clip2shortcut](#clip2shortcut), [conv](#conv), [count](#count), [csv2sqlite](#csv2sqlite), [csv2txt](#csv2txt), [ctail](#ctail), [decil](#decil), [delf](#delf), [dot2gviz](#dot2gviz), [filehame](#filehame), [fillretu](#fillretu), [flat](#flat), [flow2pu](#flow2pu), [fpath](#fpath), [fval](#fval), [fwatch](#fwatch), [gantt2pu](#gantt2pu), [gdate](#gdate), [getfirst](#getfirst), [getlast](#getlast), [grep](#grep), [gyo](#gyo), [han](#han), [head](#head), [image2md](#image2md), [jl](#jl), [json2txt](#json2txt), [juni](#juni), [keta](#keta), [kinsoku](#kinsoku), [lastyear](#lastyear), [lcalc2](#lcalc2), [lcalc](#lcalc), [linkcheck](#linkcheck), [linkextract](#linkextract), [list2table](#list2table), [logi2dot](#logi2dot), [logi2pu](#logi2pu), [man2](#man2), [map2](#map2), [mdfocus](#mdfocus), [mdgrep](#mdgrep), [mind2dot](#mind2dot), [mind2pu](#mind2pu), [movw](#movw), [nextyear](#nextyear), [pawk](#pawk), [percentile](#percentile), [pu2java](#pu2java), [push2loc](#push2loc), [pwmake](#pwmake), [pwsync](#pwsync), [retu](#retu), [rev2](#rev2), [rev](#rev), [say](#say), [sed-i](#sed-i), [sed](#sed), [self](#self), [seq2pu](#seq2pu), [sleepy](#sleepy), [sm2](#sm2), [summary](#summary), [table2md](#table2md), [tac](#tac), [tail-f](#tail-f), [tail](#tail), [tarr](#tarr), [tateyoko](#tateyoko), [teatimer](#teatimer), [tenki](#tenki), [tex2pdf](#tex2pdf), [thisyear](#thisyear), [toml2psobject](#toml2psobject), [uniq](#uniq), [vbStrConv](#vbStrConv), [watercss](#watercss), [wrap](#wrap), [yarr](#yarr), [ycalc](#ycalc), [ysort](#ysort), [zen](#zen)
 
 
 Inspired by:
@@ -5111,7 +5111,7 @@ Example script to calculate basic statistics by category:
 # Code example 1
 # Categorical analysis with this section's toolset
 Import-Csv -Path iris.csv `
-    | Sort-Object -Propert "species" -Stable `
+    | Sort-Object -Property "species" -Stable `
     | Apply-Function -Key "species" {
         Measure-Stats -Value "sepal_length" -Key "species" -Sum -Average } `
     | Format-Table
@@ -11835,6 +11835,215 @@ popd
     Target Type: Application
     Target Location: %windir%
     Target: %windir%\explorer.exe "..\index.html"
+```
+
+#### [Get-ClipboardAlternative] (Alias: gclipa)  - Get file/image/uri objects from clipboard <a id="Get-ClipboardAlternative"></a>
+
+[Get-ClipboardAlternative]: src/Get-ClipboardAlternative_function.ps1
+[gclipa]: src/Get-ClipboardAlternative_function.ps1
+
+Get file/image/uri objects from clipboard.
+
+- Auto detect:
+    - from clipped file  : output to file object
+    - from clipped image : output to image object or save as png-file
+    - from clipped uri   : output to uri object
+    - from clipped text  : output to file object
+
+Syntax:
+
+- Usage
+    - `man Get-ClipboardAlternative`
+    - `man gclipa`
+- Procedure
+    1. Copy files to the clipboard
+    2. run `gclipa` or `Get-ClipboardAlternative`
+    3. Output file objects
+
+Examples:
+
+in the case of pipeline input, attempts to convert it to a file object and returns an error if it fails.
+
+```powershell
+cat dataset-powerBI.txt | gclipa
+```
+
+Output:
+
+```
+Get-ClipboardAlternative: Cannot find path '# Power BI dataset' because it does not exist.
+```
+
+You can avoid the error with the `-AsPlainText` switch, but in this case you should use Get-Clipboard.
+
+```powershell
+cat dataset-powerBI.txt | gclipa -Debug -AsPlainText
+```
+
+Output:
+
+```
+DEBUG: Read from pipeline
+# Power BI dataset
+https://learn.microsoft.com/ja-jp/power-bi/create-reports/sample-datasets
+https://learn.microsoft.com/ja-jp/power-bi/create-reports/sample-sales-and-marketing
+https://github.com/microsoft/powerbi-desktop-samples/tree/main/powerbi-service-samples
+```
+
+If you input file objects from the pipeline, this function will return file objects, but there is probably no need to use this function.
+
+```powershell
+ls *.md -File | gclipa
+```
+
+Output:
+
+```markdown
+    Directory: path/to/the/directory
+
+Mode         LastWriteTime  Length Name
+----         -------------  ------ ----
+-a---  2023/12/04    23:55     256 books.md
+-a---  2023/12/04    23:55      29 diaries.md
+-a---  2023/12/10    17:38    2497 notes.md
+-a---  2023/12/04    23:55    3018 recipes.md
+-a---  2023/12/23    12:47    1389 tickets.md
+```
+
+If input clipped files, this function attempts to return file objects
+
+```powershell
+("Preparation : clip files")
+gclipa
+```
+
+Output:
+
+```markdown
+    Directory: Directory: path/to/the/directory
+
+Mode         LastWriteTime Length Name
+----         ------------- ------ ----
+-a---  2023/12/23    19:55   6472 clip2hyperlink_function.ps1
+-a---  2023/06/13    23:12    920 clip2base64_function.ps1
+-a---  2023/12/23    19:55   4254 clip2dir_function.ps1
+-a---  2023/12/23    19:55   6719 clip2file_function.ps1
+```
+
+or return file fullpathas as plaintext with -AsPlainText switch
+
+```powershell
+gclipa -AsPlainText
+```
+
+Output:
+
+```
+C:/path/to/the/directory/clip2hyperlink_function.ps1
+C:/path/to/the/directory/clip2base64_function.ps1
+C:/path/to/the/directory/clip2dir_function.ps1
+C:/path/to/the/directory/clip2file_function.ps1
+```
+
+If input clipped uris, this function attempts to return uri objects
+
+```powershell
+# set uri to clipboard
+Set-Clipboard -Value "https://github.com/PowerShell/PowerShell"
+```
+
+```powershell
+# get uri object (default)
+gclipa
+```
+
+Output:
+
+```powershell
+AbsolutePath   : /PowerShell/PowerShell
+AbsoluteUri    : https://github.com/PowerShell/PowerShell
+LocalPath      : /PowerShell/PowerShell
+Authority      : github.com
+HostNameType   : Dns
+IsDefaultPort  : True
+IsFile         : False
+IsLoopback     : False
+PathAndQuery   : /PowerShell/PowerShell
+Segments       : {/, PowerShell/, PowerShell}
+IsUnc          : False
+Host           : github.com
+Port           : 443
+Query          :
+Fragment       :
+Scheme         : https
+OriginalString : https://github.com/PowerShell/PowerShell
+DnsSafeHost    : github.com
+IdnHost        : github.com
+IsAbsoluteUri  : True
+UserEscaped    : False
+UserInfo       :
+```
+
+get plain text uri
+
+```powershell
+gclipa -AsPlainText
+```
+
+Output:
+
+```
+https://github.com/PowerShell/PowerShell
+```
+
+open in default browser
+
+```powershell
+gclipa -ii
+```
+
+If input clipped image, this function attempts to return image object
+
+```powershell
+gclipa
+```
+
+Output:
+
+```powershell
+Tag                  :
+PhysicalDimension    : {Width=731, Height=359}
+Size                 : {Width=731, Height=359}
+Width                : 731
+Height               : 359
+HorizontalResolution : 96
+VerticalResolution   : 96
+Flags                : 335888
+RawFormat            : MemoryBMP
+PixelFormat          : Format32bppRgb
+PropertyIdList       : {}
+PropertyItems        : {}
+Palette              : System.Drawing.Imaging.ColorPalette
+FrameDimensionsList  : {7462dc86-6180-4c7e-8e3f-ee7333a7a483}
+```
+
+Output clipped image to png file
+
+```powershell
+gclipa -ImagePath ~/Downloads/image.png -Debug
+```
+
+Output:
+
+```markdown   
+    DEBUG: Read from Clipboard::GetImage()
+    DEBUG: SaveAs: path/to/the/dir/image.png
+
+    Directory: path/to/the/directory
+
+Mode  LastWriteTime    Length Name
+----  -------------    ------ ----
+-a--- 2023/12/24 15:07  34641 image.png
 ```
 
 

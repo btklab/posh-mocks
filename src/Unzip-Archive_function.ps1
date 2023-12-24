@@ -124,11 +124,9 @@ function Unzip-Archive {
         [string[]] $readLineAry = @([Windows.Forms.Clipboard]::GetFileDropList())
         if ( $readLineAry.Count -eq 0 ){
             ### get filepath as text
-            [string[]] $readLineAry = @([Windows.Forms.Clipboard]::GetText()) `
+            [string[]] $readLineAry = @([Windows.Forms.Clipboard]::GetText() -split "`r?`n") `
                 | ForEach-Object {
-                    if ($_ -ne '' ) {
-                        $_.Replace('"', '')
-                    }
+                    if ($_ -ne '' ) { $_.Replace('"', '') }
                 }
         }
     }
@@ -141,7 +139,7 @@ function Unzip-Archive {
     [string[]] $sortedReadLineAry = $readLineAry
     # main
     foreach ( $item in $sortedReadLineAry ){
-        if ($item -match 'http|https'){
+        if ($item -match '^http:|^https:'){
             # download from web
             $u = [Uri]::new($item)
             [String] $strUri = $u.AbsoluteUri
