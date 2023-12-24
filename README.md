@@ -5111,7 +5111,7 @@ Example script to calculate basic statistics by category:
 # Code example 1
 # Categorical analysis with this section's toolset
 Import-Csv -Path iris.csv `
-    | Sort-Object -Propert "species" -Stable `
+    | Sort-Object -Property "species" -Stable `
     | Apply-Function -Key "species" {
         Measure-Stats -Value "sepal_length" -Key "species" -Sum -Average } `
     | Format-Table
