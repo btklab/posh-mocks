@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- Fix [README.md] section links
-- Fix [linkcheck] determination of input presence/absence
+- Added [Unzip-Archive] (Alias: [clip2unzip]) function
+
+## [6.8.1] - 2023-12-24
+
+- Fixed [README.md] section links
+- Fixed [linkcheck] determination of input presence/absence
+- Fixed [clip2file], [clip2hyperlink], [clip2normalize], [clip2push], [clip2shortcut]
 
 ## [6.8.0] - 2023-12-21
 
@@ -606,7 +611,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Set-NowTime2Clipboard]: src/Set-NowTime2Clipboard_function.ps1
 [Sleep-Computer]: src/Sleep-Computer_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.8.0..HEAD
+[Unzip-Archive]: src/Unzip-Archive_function.ps1
+[clip2unzip]: src/Unzip-Archive_function.ps1
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.8.1..HEAD
+[6.8.1]: https://github.com/btklab/posh-mocks/releases/tag/6.8.1
 [6.8.0]: https://github.com/btklab/posh-mocks/releases/tag/6.8.0
 [6.7.0]: https://github.com/btklab/posh-mocks/releases/tag/6.7.0
 [6.6.0]: https://github.com/btklab/posh-mocks/releases/tag/6.6.0
