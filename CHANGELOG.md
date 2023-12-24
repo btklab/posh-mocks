@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [6.9.0] - 2023-12-24
+
+- Added [Get-ClipboardAlternative] (Alias: [gclipa]) function
 - Added [Unzip-Archive] (Alias: [clip2unzip]) function
+- Fixed [README.md] typo
 
 ## [6.8.1] - 2023-12-24
 
@@ -614,7 +620,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unzip-Archive]: src/Unzip-Archive_function.ps1
 [clip2unzip]: src/Unzip-Archive_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.8.1..HEAD
+[Get-ClipboardAlternative]: src/Get-ClipboardAlternative_function.ps1
+[gclipa]: src/Get-ClipboardAlternative_function.ps1
+
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.9.0..HEAD
+[6.9.0]: https://github.com/btklab/posh-mocks/releases/tag/6.9.0
 [6.8.1]: https://github.com/btklab/posh-mocks/releases/tag/6.8.1
 [6.8.0]: https://github.com/btklab/posh-mocks/releases/tag/6.8.0
 [6.7.0]: https://github.com/btklab/posh-mocks/releases/tag/6.7.0

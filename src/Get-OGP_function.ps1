@@ -38,7 +38,8 @@
       <https://github.com/goark/ml>
 
 .LINK
-    Get-OGP, fpath
+    Get-OGP (ml), Get-ClipboardAlternative (gclipa)
+    clip2file, clip2push, clip2shortcut, clip2img, clip2txt, clip2normalize
 
 .PARAMETER Canonical
     get canonical uri
