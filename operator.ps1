@@ -152,7 +152,7 @@ if ( $IsWindows ){
     . $pwshSrcDir/clip2shortcut_function.ps1
 }
 . $pwshSrcDir/Decrease-Indent_function.ps1
-
+. $pwshSrcDir/Unzip-Archive_function.ps1
 
 ## file watcher
 . $pwshSrcDir/fwatch_function.ps1

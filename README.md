@@ -37,7 +37,7 @@ cat README.md `
     | Set-Clipboard
 ```
 
-- [Add-LineBreakEndOfFile](#Add-LineBreakEndOfFile), [Add-LineBreak](#Add-LineBreak), [Add-Quartile](#Add-Quartile), [Add-Stats](#Add-Stats), [Apply-Function](#Apply-Function), [ConvImage](#ConvImage), [Decrease-Indent](#Decrease-Indent), [Delete-Field](#Delete-Field), [Detect-XrsAnomaly](#Detect-XrsAnomaly), [Drop-NA](#Drop-NA), [Edit-Function](#Edit-Function), [Get-AppShortcut](#Get-AppShortcut), [Get-Histogram](#Get-Histogram), [Get-OGP](#Get-OGP), [Get-Ticket](#Get-Ticket), [GroupBy-Object](#GroupBy-Object), [Invoke-Link](#Invoke-Link), [Join2-Object](#Join2-Object), [Measure-Quartile](#Measure-Quartile), [Measure-Stats](#Measure-Stats), [Measure-Summary](#Measure-Summary), [Override-Yaml](#Override-Yaml), [Plot-BarChart](#Plot-BarChart), [Rename-Normalize](#Rename-Normalize), [Replace-ForEach](#Replace-ForEach), [Replace-NA](#Replace-NA), [Select-Field](#Select-Field), [Set-NowTime2Clipboard](#Set-NowTime2Clipboard), [Shorten-PropertyName](#Shorten-PropertyName), [Sleep-Computer](#Sleep-Computer), [Transpose-Property](#Transpose-Property), [Unique-Object](#Unique-Object), [addb](#addb), [addl](#addl), [addr](#addr), [addt](#addt), [cat2](#cat2), [catcsv](#catcsv), [chead](#chead), [clip2file](#clip2file), [clip2hyperlink](#clip2hyperlink), [clip2img](#clip2img), [clip2normalize](#clip2normalize), [clip2push](#clip2push), [clip2shortcut](#clip2shortcut), [conv](#conv), [count](#count), [csv2sqlite](#csv2sqlite), [csv2txt](#csv2txt), [ctail](#ctail), [decil](#decil), [delf](#delf), [dot2gviz](#dot2gviz), [filehame](#filehame), [fillretu](#fillretu), [flat](#flat), [flow2pu](#flow2pu), [fpath](#fpath), [fval](#fval), [fwatch](#fwatch), [gantt2pu](#gantt2pu), [gdate](#gdate), [getfirst](#getfirst), [getlast](#getlast), [grep](#grep), [gyo](#gyo), [han](#han), [head](#head), [image2md](#image2md), [jl](#jl), [json2txt](#json2txt), [juni](#juni), [keta](#keta), [kinsoku](#kinsoku), [lastyear](#lastyear), [lcalc2](#lcalc2), [lcalc](#lcalc), [linkcheck](#linkcheck), [linkextract](#linkextract), [list2table](#list2table), [logi2dot](#logi2dot), [logi2pu](#logi2pu), [man2](#man2), [map2](#map2), [mdfocus](#mdfocus), [mdgrep](#mdgrep), [mind2dot](#mind2dot), [mind2pu](#mind2pu), [movw](#movw), [nextyear](#nextyear), [pawk](#pawk), [percentile](#percentile), [pu2java](#pu2java), [push2loc](#push2loc), [pwmake](#pwmake), [pwsync](#pwsync), [retu](#retu), [rev2](#rev2), [rev](#rev), [say](#say), [sed-i](#sed-i), [sed](#sed), [self](#self), [seq2pu](#seq2pu), [sleepy](#sleepy), [sm2](#sm2), [summary](#summary), [table2md](#table2md), [tac](#tac), [tail-f](#tail-f), [tail](#tail), [tarr](#tarr), [tateyoko](#tateyoko), [teatimer](#teatimer), [tenki](#tenki), [tex2pdf](#tex2pdf), [thisyear](#thisyear), [toml2psobject](#toml2psobject), [uniq](#uniq), [vbStrConv](#vbStrConv), [watercss](#watercss), [wrap](#wrap), [yarr](#yarr), [ycalc](#ycalc), [ysort](#ysort), [zen](#zen)
+- [Add-LineBreakEndOfFile](#Add-LineBreakEndOfFile), [Add-LineBreak](#Add-LineBreak), [Add-Quartile](#Add-Quartile), [Add-Stats](#Add-Stats), [Apply-Function](#Apply-Function), [ConvImage](#ConvImage), [Decrease-Indent](#Decrease-Indent), [Delete-Field](#Delete-Field), [Detect-XrsAnomaly](#Detect-XrsAnomaly), [Drop-NA](#Drop-NA), [Edit-Function](#Edit-Function), [Get-AppShortcut](#Get-AppShortcut), [Get-Histogram](#Get-Histogram), [Get-OGP](#Get-OGP), [Get-Ticket](#Get-Ticket), [GroupBy-Object](#GroupBy-Object), [Invoke-Link](#Invoke-Link), [Join2-Object](#Join2-Object), [Measure-Quartile](#Measure-Quartile), [Measure-Stats](#Measure-Stats), [Measure-Summary](#Measure-Summary), [Override-Yaml](#Override-Yaml), [Plot-BarChart](#Plot-BarChart), [Rename-Normalize](#Rename-Normalize), [Replace-ForEach](#Replace-ForEach), [Replace-NA](#Replace-NA), [Select-Field](#Select-Field), [Set-NowTime2Clipboard](#Set-NowTime2Clipboard), [Shorten-PropertyName](#Shorten-PropertyName), [Sleep-Computer](#Sleep-Computer), [Transpose-Property](#Transpose-Property), [Unique-Object](#Unique-Object), [Unzip-Archive](#Unzip-Archive), [addb](#addb), [addl](#addl), [addr](#addr), [addt](#addt), [cat2](#cat2), [catcsv](#catcsv), [chead](#chead), [clip2file](#clip2file), [clip2hyperlink](#clip2hyperlink), [clip2img](#clip2img), [clip2normalize](#clip2normalize), [clip2push](#clip2push), [clip2shortcut](#clip2shortcut), [conv](#conv), [count](#count), [csv2sqlite](#csv2sqlite), [csv2txt](#csv2txt), [ctail](#ctail), [decil](#decil), [delf](#delf), [dot2gviz](#dot2gviz), [filehame](#filehame), [fillretu](#fillretu), [flat](#flat), [flow2pu](#flow2pu), [fpath](#fpath), [fval](#fval), [fwatch](#fwatch), [gantt2pu](#gantt2pu), [gdate](#gdate), [getfirst](#getfirst), [getlast](#getlast), [grep](#grep), [gyo](#gyo), [han](#han), [head](#head), [image2md](#image2md), [jl](#jl), [json2txt](#json2txt), [juni](#juni), [keta](#keta), [kinsoku](#kinsoku), [lastyear](#lastyear), [lcalc2](#lcalc2), [lcalc](#lcalc), [linkcheck](#linkcheck), [linkextract](#linkextract), [list2table](#list2table), [logi2dot](#logi2dot), [logi2pu](#logi2pu), [man2](#man2), [map2](#map2), [mdfocus](#mdfocus), [mdgrep](#mdgrep), [mind2dot](#mind2dot), [mind2pu](#mind2pu), [movw](#movw), [nextyear](#nextyear), [pawk](#pawk), [percentile](#percentile), [pu2java](#pu2java), [push2loc](#push2loc), [pwmake](#pwmake), [pwsync](#pwsync), [retu](#retu), [rev2](#rev2), [rev](#rev), [say](#say), [sed-i](#sed-i), [sed](#sed), [self](#self), [seq2pu](#seq2pu), [sleepy](#sleepy), [sm2](#sm2), [summary](#summary), [table2md](#table2md), [tac](#tac), [tail-f](#tail-f), [tail](#tail), [tarr](#tarr), [tateyoko](#tateyoko), [teatimer](#teatimer), [tenki](#tenki), [tex2pdf](#tex2pdf), [thisyear](#thisyear), [toml2psobject](#toml2psobject), [uniq](#uniq), [vbStrConv](#vbStrConv), [watercss](#watercss), [wrap](#wrap), [yarr](#yarr), [ycalc](#ycalc), [ysort](#ysort), [zen](#zen)
 
 
 Inspired by:
@@ -11313,6 +11313,109 @@ clip2file | push2loc -Action { git status } -Pop -Execute
 
 
 ### Clipboard operation
+
+#### [Unzip-Archive] (Alias: clip2unzip) - Get files copied to the clipboard as an objects <a id="Unzip-Archive"></a>
+
+[Unzip-Archive]: src/Unzip-Archive_function.ps1
+[clip2unzip]: src/Unzip-Archive_function.ps1
+
+The `Unzip-Archive` (this) expands zip files to that's the same name as the zip files like the `Expand-Archive` (built-in) command, but the default extraction destination is different:
+
+- (**built-in**) `Expand-Archive` expands to the current location
+- (**this**) `Unzip-Archive` expands to the location where the zip files exists
+
+Syntax:
+
+- Usage
+    - `man clip2file`
+- Procedure
+    1. Copy Zip files to the clipboard
+    2. run `clip2unzip [-f|-Force]`
+    3. the copied Zip files are expanded to the directory where they exists 
+- Note
+    - If the Uri (beginning with 'http') is clipped, the zip file is first downloaded to `~/Downloads` and then expanded.
+- Link
+    - [Expand-Archive (Microsoft.PowerShell.Archive) - PowerShell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.archive/expand-archive)
+
+
+Examples:
+
+```powershell
+# Prepare: clip zip files to the clipboad
+# and run the following command
+clip2unzip
+```
+
+Output:
+
+```
+Expand-Archive [The archive file 'path/to/the/zipdir/PowerShell-7.4.0-win-x64.zip' …]
+
+Directory: path/to/the/zipdir
+
+Mode        LastWriteTime Length Name
+----        ------------- ------ ----
+d---- 2023/12/24    11:52        PowerShell-7.4.0-win-x64
+```
+
+```powershell
+# and open expanded dir in Explorer or Push-Location
+clip2unzip -f | ii
+clip2unzip -f | pushd
+```
+
+clip uri:
+
+If the Uri (beginning with 'http') is clipped, the zip file is first downloaded to `~/Downloads` and then expanded.
+
+```powershell
+# Prepare: clip uri
+"https://github.com/PowerShell/PowerShell/releases/download/v7.4.0/PowerShell-7.4.0-win-x64.zip" `
+    | Set-Clipboard
+```
+
+```powershell
+# Download zip from web (into ~/Downloads) and Expand zip
+clip2unzip
+```
+
+Output:
+
+```
+Web request status [Downloaded: 28.9 MB of 105.4 MB                                        ]
+
+Expand-Archive [The archive file 'path/to/the/zipdir/PowerShell-7.4.0-win-x64.zip' …]
+
+Directory: path/to/the/zipdir
+
+Mode        LastWriteTime Length Name
+----        ------------- ------ ----
+d---- 2023/12/24    11:52        PowerShell-7.4.0-win-x64
+```
+
+```powershell
+# and Open expanded directory in Explorer or Push-Location
+clip2unzip -f | ii
+clip2unzip -f | Pushd
+```
+
+Variation of input:
+
+```powershell
+## input fullpath-text from stdin
+"path/to/the/zipdir/PowerShell-7.4.0-win-x64.zip" | clip2unzip -f
+```
+
+```powershell
+## input file object from stdin
+ls ~/Downloads/PowerShell-7.4.0-win-x64.zip | clip2unzip -f
+```
+
+```powershell
+## specify -File <fullpath-text>
+clip2unzip -File "path/to/the/zipdir/PowerShell-7.4.0-win-x64.zip" -f
+```
+
 
 #### [clip2file] - Get files copied to the clipboard as an objects <a id="clip2file"></a>
 
