@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- NA
+- Added [Test-isAsciiLine] (Alias: isAsciiLine) function
 
 ## [6.9.0] - 2023-12-24
 
@@ -622,6 +622,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Get-ClipboardAlternative]: src/Get-ClipboardAlternative_function.ps1
 [gclipa]: src/Get-ClipboardAlternative_function.ps1
+
+[Test-isAsciiLine]: src/Test-isAsciiLine_function.ps1
+[isAsciiLine]: src/Test-isAsciiLine_function.ps1
 
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/6.9.0..HEAD

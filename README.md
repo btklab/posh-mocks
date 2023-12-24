@@ -9413,6 +9413,39 @@ cat contents.md `
 </html>
 ```
 
+#### [Test-isAsciiLine] (Alias: isAsciiLine) - Test if a line of text contains only ASCII characters <a id="Test-isAsciiLine"></a>
+
+[Test-isAsciiLine]: src/Test-isAsciiLine_function.ps1
+[isAsciiLine]: src/Test-isAsciiLine_function.ps1
+
+- Usage
+    - `man2 Test-isAsciiLine`
+
+
+```powershell
+"a".."d" | isAsciiLine
+```
+
+```markdown
+isAscii Line
+------- ----
+True    a
+True    b
+True    c
+True    d
+```
+
+```powershell
+"a".."d" | isAsciiLine -AsPlainText
+```
+
+```
+T a
+T b
+T c
+T d
+```
+
 
 #### [Get-OGP] (Alias: ml) - Make Link with markdown format <a id="Get-OGP"></a>
 
