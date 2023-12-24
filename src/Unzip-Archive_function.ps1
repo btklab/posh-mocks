@@ -141,7 +141,7 @@ function Unzip-Archive {
     [string[]] $sortedReadLineAry = $readLineAry
     # main
     foreach ( $item in $sortedReadLineAry ){
-        if ($item -match 'http|https'){
+        if ($item -match '^http:|^https:'){
             # download from web
             $u = [Uri]::new($item)
             [String] $strUri = $u.AbsoluteUri
