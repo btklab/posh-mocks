@@ -32,7 +32,6 @@ function Test-isAsciiLine {
     )
     $regASCII = "^[\x00-\x7F]*$"
     foreach ( $line in @($input) ){
-
         if ( $line -cmatch $regASCII ){
             if ( $AsPlainText ){
                 # output as text

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 
 - Added [Test-isAsciiLine] (Alias: isAsciiLine) function
+- Fixed [README.md] typo
 
 ## [6.9.0] - 2023-12-24
 
