@@ -13381,7 +13381,6 @@ Open Hyogo/Japan weather reports in browser (on windows).
 
 #### [Sleep-ComputerAFM] - Sleep computer After a Few Minutes <a id="Sleep-ComputerAFM"></a>
 
-
 [Sleep-ComputerAFM]: src/Sleep-ComputerAFM_function.ps1
 
 - Usage
@@ -13400,6 +13399,13 @@ if ( $UseRundll32 ){
     [System.Windows.Forms.Application]::SetSuspendState([System.Windows.Forms.PowerState]::Suspend, $false, $false)
 }
 ```
+
+#### [Shutdown-ComputerAFM] - Shutdown computer After a Few Minutes <a id="Shutdown-ComputerAFM"></a>
+
+[Shutdown-ComputerAFM]: src/Shutdown-ComputerAFM_function.ps1
+
+- Usage
+    - `man Shutdown-ComputerAFM`
 
 
 #### [Set-NowTime2Clipboard] (Alias: now) - Set current datetime to the clipboard <a id="Set-NowTime2Clipboard"></a>

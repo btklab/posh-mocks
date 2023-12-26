@@ -8,7 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 
 - Added [Test-isAsciiLine] (Alias: isAsciiLine) function
+- Added [Shutdown-ComputerAFM] function
 - Fixed [README.md] typo
+
+### Breaking Change
+
+- Rename `Sleep-Computer` to `Sleep-ComputerAFM`
 
 ## [6.9.0] - 2023-12-24
 
@@ -24,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [6.8.0] - 2023-12-21
 
-- Added [Sleep-Computer] function
+- Added `Sleep-Computer` function
 - Added [Set-NowTime2Clipboard] function
 - Added [README.md] text banner
 - Added [pawk] `-First` option, `-IgnoreConsecutiveDelimiters` switch
@@ -616,7 +621,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Decrease-Indent]: src/Decrease-Indent_function.ps1
 
 [Set-NowTime2Clipboard]: src/Set-NowTime2Clipboard_function.ps1
-[Sleep-Computer]: src/Sleep-Computer_function.ps1
+[Sleep-ComputerAFM]: src/Sleep-ComputerAFM_function.ps1
+[Shutdown-ComputerAFM]: src/Shutdown-ComputerAFM_function.ps1
 
 [Unzip-Archive]: src/Unzip-Archive_function.ps1
 [clip2unzip]: src/Unzip-Archive_function.ps1
