@@ -180,8 +180,7 @@ This behavior is similar to linux `ls` command.
 The reason for depending on [flat], [tateyoko] and [keta] is to obtain this output.
 
 ```powershell
-man2 -Column 4
-man2 -c 4
+man2
 ```
 
 ```
@@ -214,99 +213,6 @@ addt                   getlast        pwsync      zen
 cat2                   grep           retu
 catcsv                 gyo            rev2
 chead                  han            rev
-```
-
-
-Do the same using the [Format-Wide] commandlet instead of the [man2] command.
-However, the order of the files is slightly different from [man2].
-Lexicographically sorted from **left to right**.
-
-```powershell
-ls src/*_function.ps1 -File `
-    | Sort-Object {
-        -join ( [int[]] $_.Name.ToCharArray()).ForEach('ToString', 'x4')
-    } `
-    | select @{L="Name";E={$_.Name.Replace('_function.ps1','')}} `
-    | Format-Wide -Column 4
-```
-
-```
-Add-LineBreakEndOfFi… Add-LineBreak        Add-Stats            Apply-Function
-ConvImage             Delete-Field         Detect-XrsAnomaly    Drop-NA
-Get-AppShortcut       Get-First            Get-Histogram        Get-Last
-Get-OGP               GroupBy-Object       Invoke-Link          Measure-Stats
-Override-Yaml         Plot-BarChart        Rename-Normalize     Replace-NA
-Select-Field          Shorten-PropertyName addb                 addl
-addr                  addt                 cat2                 catcsv
-chead                 clip2file            clip2hyperlink       clip2img
-clip2normalize        clip2push            clip2shortcut        conv
-count                 csv2sqlite           csv2txt              ctail2
-ctail                 decil                delf                 dot2gviz
-filehame              fillretu             flat                 flow2pu
-fpath                 fval                 fwatch               gantt2pu
-gdate                 getfirst             getlast              grep
-gyo                   han                  head                 image2md
-jl                    json2txt             juni                 keta
-kinsoku               lcalc                linkcheck            linkextract
-list2table            logi2dot             logi2pu              man2
-map2                  mdfocus              mdgrep               mind2dot
-mind2pu               movw                 pawk                 percentile
-pu2java               push2loc             pwmake               pwsync
-retu                  rev2                 rev                  say
-sed-i                 sed                  self                 seq2pu
-sleepy                sm2                  summary              table2md
-tac                   tail-f               tail                 tarr
-tateyoko              teatimer             tenki                tex2pdf
-toml2psobject         uniq                 vbStrConv            watercss
-wrap                  yarr                 ycalc                ysort
-zen
-```
-
-[man2]を使わず、[flat], [tateyoko], [keta]のコンビネーションで[man2]の出力（上から下に辞書順）を得るワンライナーを以下に示す。
-`flat <n>`の値を変えると列数が変わる。
-
-```powershell
-ls src/*.ps1 -File -Name `
-    | Sort-Object {
-        -join ( [int[]] $_.ToCharArray()).ForEach('ToString', 'x4')
-    } `
-    | %{ $_.Replace('_function.ps1','') } `
-    | flat 30 `
-    | tateyoko `
-    | keta -l
-```
-
-```
-Add-LineBreakEndOfFile clip2hyperlink jl          self
-Add-LineBreak          clip2img       json2txt    seq2pu
-Add-Stats              clip2normalize juni        sleepy
-Apply-Function         clip2push      keta        sm2
-ConvImage              clip2shortcut  kinsoku     summary
-Delete-Field           conv           lcalc       table2md
-Detect-XrsAnomaly      count          linkcheck   tac
-Drop-NA                csv2sqlite     linkextract tail-f
-Get-AppShortcut        csv2txt        list2table  tail
-Get-First              ctail2         logi2dot    tarr
-Get-Histogram          ctail          logi2pu     tateyoko
-Get-Last               decil          man2        teatimer_exec.ps1
-Get-OGP                delf           map2        teatimer
-GroupBy-Object         dot2gviz       mdfocus     tenki
-Invoke-Link            filehame       mdgrep      tex2pdf
-Measure-Stats          fillretu       mind2dot    toml2psobject
-Override-Yaml          flat           mind2pu     uniq
-Plot-BarChart          flow2pu        movw        vbStrConv
-Rename-Normalize       fpath          pawk        watercss
-Replace-NA             fval           percentile  wrap
-Select-Field           fwatch         pu2java     yarr
-Shorten-PropertyName   gantt2pu       push2loc    ycalc
-addb                   gdate          pwmake      ysort
-addl                   getfirst       pwsync      zen
-addr                   getlast        retu
-addt                   grep           rev2
-cat2                   gyo            rev
-catcsv                 han            say
-chead                  head           sed-i
-clip2file              image2md       sed
 ```
 
 #### [Edit-Function] (Alias: edit) - Edit my function with editor <a id="Edit-Function"></a>
