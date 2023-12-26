@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [6.10.0] - 2023-12-26
+
 - Added [Test-isAsciiLine] (Alias: isAsciiLine) function
 - Added [Shutdown-ComputerAFM] function
 - Fixed [README.md] typo
@@ -634,7 +638,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [isAsciiLine]: src/Test-isAsciiLine_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.9.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.10.0..HEAD
+[6.10.0]: https://github.com/btklab/posh-mocks/releases/tag/6.10.0
 [6.9.0]: https://github.com/btklab/posh-mocks/releases/tag/6.9.0
 [6.8.1]: https://github.com/btklab/posh-mocks/releases/tag/6.8.1
 [6.8.0]: https://github.com/btklab/posh-mocks/releases/tag/6.8.0
