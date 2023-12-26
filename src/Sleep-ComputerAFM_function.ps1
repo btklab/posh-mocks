@@ -18,7 +18,18 @@ function Sleep-ComputerAFM {
         [Alias('dll')]
         [Switch] $UseRundll32
     )
-    Start-Sleep -Seconds $($Minutes * 60)
+    function isCommandExist ([string]$cmd) {
+        try { Get-Command -Name $cmd -ErrorAction Stop > $Null
+            return $True
+        } catch {
+            return $False
+        }
+    }
+    if ( isCommandExist "sleepy" ){
+        sleepy -Minutes $Minutes
+    } else {
+        Start-Sleep -Seconds $($Minutes * 60)
+    }
     if ( $UseRundll32 ){
         # use rundll32.exe
         powercfg -h off

@@ -18,7 +18,18 @@ function Shutdown-ComputerAFM {
         [Alias('f')]
         [Switch] $Force
     )
-    Start-Sleep -Seconds $($Minutes * 60);
+    function isCommandExist ([string]$cmd) {
+        try { Get-Command -Name $cmd -ErrorAction Stop > $Null
+            return $True
+        } catch {
+            return $False
+        }
+    }
+    if ( isCommandExist "sleepy" ){
+        sleepy -Minutes $Minutes
+    } else {
+        Start-Sleep -Seconds $($Minutes * 60)
+    }
     Stop-Computer -Force:$Force
 }
 ## set alias
