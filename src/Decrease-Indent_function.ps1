@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Decrease-Indent (Alias: dind) - Decreaase the total indent
+    Decrease-Indent (Alias: dind) - Decrease the total indent
     
     Decrease the total indent by one based on
     the indent of the first line. 
