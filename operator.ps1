@@ -41,7 +41,7 @@ if ($IsWindows){
     ## misc
     . $pwshSrcDir/say_function.ps1
     . $pwshSrcDir/teatimer_function.ps1
-    . $pwshSrcDir/Sleep-Computer_function.ps1
+    . $pwshSrcDir/Sleep-ComputerAFM_function.ps1
 }
 
 ## get/edit funcs
