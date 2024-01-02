@@ -153,6 +153,11 @@ function Set-NowTime2Clipboard {
 # set alias
 [String] $tmpAliasName = "now"
 [String] $tmpCmdName   = "Set-NowTime2Clipboard"
+[String] $tmpCmdPath = Join-Path `
+    -Path $PSScriptRoot `
+    -ChildPath $($MyInvocation.MyCommand.Name) `
+    | Resolve-Path -Relative
+if ( $IsWindows ){ $tmpCmdPath = $tmpCmdPath.Replace('\' ,'/') }
 # is alias already exists?
 if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0){
     try {
@@ -174,7 +179,7 @@ if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0)
             throw
         }
     } catch {
-        Write-Error "Alias ""$tmpAliasName ($((Get-Command -Name $tmpAliasName).ReferencedCommand.Name))"" is already exists. Change alias needed." -ErrorAction Stop
+        Write-Error "Alias ""$tmpAliasName ($((Get-Command -Name $tmpAliasName).ReferencedCommand.Name))"" is already exists. Change alias needed. Please edit the script at the end of the file: ""$tmpCmdPath""" -ErrorAction Stop
     } finally {
         Remove-Variable -Name "tmpAliasName" -Force
         Remove-Variable -Name "tmpCmdName" -Force
