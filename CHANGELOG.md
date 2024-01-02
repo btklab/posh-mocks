@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added [Grep-Block], [Sort-Block] functions
 - Changed [README.md] simplified explanation of `man2` function
+- Changed the file path is now displayed in the error message when aliases are duplicated
 
 ## [6.10.0] - 2023-12-26
 
