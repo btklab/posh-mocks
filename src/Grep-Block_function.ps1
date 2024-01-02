@@ -239,7 +239,7 @@ function Grep-Block {
         [Alias('g')]
         [String[]] $Grep,
         
-        [Parameter( Mandatory=$False )]
+        [Parameter( Mandatory=$False, Position=1 )]
         [Alias('f')]
         [String] $File,
         
@@ -275,7 +275,7 @@ function Grep-Block {
             Write-Error "file: $FIle is not exists." -ErrorAction Stop
         }
         # raed from specified file
-        [String[]] $readLineAry = @(Get-Content -LiteralPath $File -Encoding utf8)
+        [String[]] $readLineAry = @(Get-Content -Path $File -Encoding utf8)
     } elseif ( $input.Count -gt 0 ) {
         # read from stdin
         [String[]] $readLineAry = @($input)
