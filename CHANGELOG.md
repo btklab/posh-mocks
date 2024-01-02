@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Added [Grep-Block], [Sort-Block] functions
 - Changed [README.md] simplified explanation of `man2` function
 
 ## [6.10.0] - 2023-12-26
@@ -636,6 +637,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Test-isAsciiLine]: src/Test-isAsciiLine_function.ps1
 [isAsciiLine]: src/Test-isAsciiLine_function.ps1
+
+[Grep-Block]: src/Grep-Block_function.ps1
+[Sort-Block]: src/Sort-Block_function.ps1
 
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/6.10.0..HEAD

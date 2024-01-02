@@ -205,6 +205,9 @@ if ( $IsWindows ){
 . $pwshSrcDir/Get-Ticket_function.ps1
 . $pwshSrcDir/Invoke-Link_function.ps1
 
+. $pwshSrcDir/Sort-Block_function.ps1
+. $pwshSrcDir/Grep-Block_function.ps1
+
 ## misc
 . $pwshSrcDir/Test-isAsciiLine_function.ps1
 . $pwshSrcDir/Set-NowTime2Clipboard_function.ps1
