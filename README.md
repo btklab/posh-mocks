@@ -37,7 +37,7 @@ cat README.md `
     | Set-Clipboard
 ```
 
-- [Add-LineBreakEndOfFile](#Add-LineBreakEndOfFile), [Add-LineBreak](#Add-LineBreak), [Add-Quartile](#Add-Quartile), [Add-Stats](#Add-Stats), [Apply-Function](#Apply-Function), [ConvImage](#ConvImage), [Decrease-Indent](#Decrease-Indent), [Delete-Field](#Delete-Field), [Detect-XrsAnomaly](#Detect-XrsAnomaly), [Drop-NA](#Drop-NA), [Edit-Function](#Edit-Function), [Get-AppShortcut](#Get-AppShortcut), [Get-ClipboardAlternative](#Get-ClipboardAlternative), [Get-Histogram](#Get-Histogram), [Get-OGP](#Get-OGP), [Get-Ticket](#Get-Ticket), [GroupBy-Object](#GroupBy-Object), [Invoke-Link](#Invoke-Link), [Join2-Object](#Join2-Object), [Measure-Quartile](#Measure-Quartile), [Measure-Stats](#Measure-Stats), [Measure-Summary](#Measure-Summary), [Override-Yaml](#Override-Yaml), [Plot-BarChart](#Plot-BarChart), [Rename-Normalize](#Rename-Normalize), [Replace-ForEach](#Replace-ForEach), [Replace-NA](#Replace-NA), [Select-Field](#Select-Field), [Set-NowTime2Clipboard](#Set-NowTime2Clipboard), [Shorten-PropertyName](#Shorten-PropertyName), [Shutdown-ComputerAFM](#Shutdown-ComputerAFM), [Sleep-ComputerAFM](#Sleep-ComputerAFM), [Test-isAsciiLine](#Test-isAsciiLine), [Transpose-Property](#Transpose-Property), [Unique-Object](#Unique-Object), [Unzip-Archive](#Unzip-Archive), [addb](#addb), [addl](#addl), [addr](#addr), [addt](#addt), [cat2](#cat2), [catcsv](#catcsv), [chead](#chead), [clip2file](#clip2file), [clip2hyperlink](#clip2hyperlink), [clip2img](#clip2img), [clip2normalize](#clip2normalize), [clip2push](#clip2push), [clip2shortcut](#clip2shortcut), [conv](#conv), [count](#count), [csv2sqlite](#csv2sqlite), [csv2txt](#csv2txt), [ctail](#ctail), [decil](#decil), [delf](#delf), [dot2gviz](#dot2gviz), [filehame](#filehame), [fillretu](#fillretu), [flat](#flat), [flow2pu](#flow2pu), [fpath](#fpath), [fval](#fval), [fwatch](#fwatch), [gantt2pu](#gantt2pu), [gdate](#gdate), [getfirst](#getfirst), [getlast](#getlast), [grep](#grep), [gyo](#gyo), [han](#han), [head](#head), [image2md](#image2md), [jl](#jl), [json2txt](#json2txt), [juni](#juni), [keta](#keta), [kinsoku](#kinsoku), [lastyear](#lastyear), [lcalc2](#lcalc2), [lcalc](#lcalc), [linkcheck](#linkcheck), [linkextract](#linkextract), [list2table](#list2table), [logi2dot](#logi2dot), [logi2pu](#logi2pu), [man2](#man2), [map2](#map2), [mdfocus](#mdfocus), [mdgrep](#mdgrep), [mind2dot](#mind2dot), [mind2pu](#mind2pu), [movw](#movw), [nextyear](#nextyear), [pawk](#pawk), [percentile](#percentile), [pu2java](#pu2java), [push2loc](#push2loc), [pwmake](#pwmake), [pwsync](#pwsync), [retu](#retu), [rev2](#rev2), [rev](#rev), [say](#say), [sed-i](#sed-i), [sed](#sed), [self](#self), [seq2pu](#seq2pu), [sleepy](#sleepy), [sm2](#sm2), [summary](#summary), [table2md](#table2md), [tac](#tac), [tail-f](#tail-f), [tail](#tail), [tarr](#tarr), [tateyoko](#tateyoko), [teatimer](#teatimer), [tenki](#tenki), [tex2pdf](#tex2pdf), [thisyear](#thisyear), [toml2psobject](#toml2psobject), [uniq](#uniq), [vbStrConv](#vbStrConv), [watercss](#watercss), [wrap](#wrap), [yarr](#yarr), [ycalc](#ycalc), [ysort](#ysort), [zen](#zen)
+- [Add-LineBreakEndOfFile](#Add-LineBreakEndOfFile), [Add-LineBreak](#Add-LineBreak), [Add-Quartile](#Add-Quartile), [Add-Stats](#Add-Stats), [Apply-Function](#Apply-Function), [ConvImage](#ConvImage), [Decrease-Indent](#Decrease-Indent), [Delete-Field](#Delete-Field), [Detect-XrsAnomaly](#Detect-XrsAnomaly), [Drop-NA](#Drop-NA), [Edit-Function](#Edit-Function), [Get-AppShortcut](#Get-AppShortcut), [Get-ClipboardAlternative](#Get-ClipboardAlternative), [Get-Histogram](#Get-Histogram), [Get-OGP](#Get-OGP), [Get-Ticket](#Get-Ticket), [Grep-Block](#Grep-Block), [GroupBy-Object](#GroupBy-Object), [Invoke-Link](#Invoke-Link), [Join2-Object](#Join2-Object), [Measure-Quartile](#Measure-Quartile), [Measure-Stats](#Measure-Stats), [Measure-Summary](#Measure-Summary), [Override-Yaml](#Override-Yaml), [Plot-BarChart](#Plot-BarChart), [Rename-Normalize](#Rename-Normalize), [Replace-ForEach](#Replace-ForEach), [Replace-NA](#Replace-NA), [Select-Field](#Select-Field), [Set-NowTime2Clipboard](#Set-NowTime2Clipboard), [Shorten-PropertyName](#Shorten-PropertyName), [Shutdown-ComputerAFM](#Shutdown-ComputerAFM), [Sleep-ComputerAFM](#Sleep-ComputerAFM), [Sort-Block](#Sort-Block), [Test-isAsciiLine](#Test-isAsciiLine), [Transpose-Property](#Transpose-Property), [Unique-Object](#Unique-Object), [Unzip-Archive](#Unzip-Archive), [addb](#addb), [addl](#addl), [addr](#addr), [addt](#addt), [cat2](#cat2), [catcsv](#catcsv), [chead](#chead), [clip2file](#clip2file), [clip2hyperlink](#clip2hyperlink), [clip2img](#clip2img), [clip2normalize](#clip2normalize), [clip2push](#clip2push), [clip2shortcut](#clip2shortcut), [conv](#conv), [count](#count), [csv2sqlite](#csv2sqlite), [csv2txt](#csv2txt), [ctail](#ctail), [decil](#decil), [delf](#delf), [dot2gviz](#dot2gviz), [filehame](#filehame), [fillretu](#fillretu), [flat](#flat), [flow2pu](#flow2pu), [fpath](#fpath), [fval](#fval), [fwatch](#fwatch), [gantt2pu](#gantt2pu), [gdate](#gdate), [getfirst](#getfirst), [getlast](#getlast), [grep](#grep), [gyo](#gyo), [han](#han), [head](#head), [image2md](#image2md), [jl](#jl), [json2txt](#json2txt), [juni](#juni), [keta](#keta), [kinsoku](#kinsoku), [lastyear](#lastyear), [lcalc2](#lcalc2), [lcalc](#lcalc), [linkcheck](#linkcheck), [linkextract](#linkextract), [list2table](#list2table), [logi2dot](#logi2dot), [logi2pu](#logi2pu), [man2](#man2), [map2](#map2), [mdfocus](#mdfocus), [mdgrep](#mdgrep), [mind2dot](#mind2dot), [mind2pu](#mind2pu), [movw](#movw), [nextyear](#nextyear), [pawk](#pawk), [percentile](#percentile), [pu2java](#pu2java), [push2loc](#push2loc), [pwmake](#pwmake), [pwsync](#pwsync), [retu](#retu), [rev2](#rev2), [rev](#rev), [say](#say), [sed-i](#sed-i), [sed](#sed), [self](#self), [seq2pu](#seq2pu), [sleepy](#sleepy), [sm2](#sm2), [summary](#summary), [table2md](#table2md), [tac](#tac), [tail-f](#tail-f), [tail](#tail), [tarr](#tarr), [tateyoko](#tateyoko), [teatimer](#teatimer), [tenki](#tenki), [tex2pdf](#tex2pdf), [thisyear](#thisyear), [toml2psobject](#toml2psobject), [uniq](#uniq), [vbStrConv](#vbStrConv), [watercss](#watercss), [wrap](#wrap), [yarr](#yarr), [ycalc](#ycalc), [ysort](#ysort), [zen](#zen)
 
 
 Inspired by:
@@ -13050,6 +13050,321 @@ ganttDiagram {
 
 @endgantt
 ```
+
+#### [Sort-Block] (Alias: blsort) - Sort based on the title line without destroying the body of the list <a id="Sort-Block"></a>
+
+[Sort-Block]: src/Sort-Block_function.ps1
+
+Sort the list and returns the list block by treating a line with a non-blank character at the beginning as a title, and a line with a blank character at the beginning as a body.
+
+- Usage
+    - `man Sort-Block`
+    - `man blsort`
+        - `cat list.txt | Sort-Block`
+- Params
+    - `[-d|-Descending]`
+    - `[-c|-CaseSensitive]`
+    - `[-u|-Unique]`
+    - `[-s|-Stable]`
+    - `[-o|-Ordinal]`
+    - `[-SkipBlank]`
+    - `[[-f|-File] <String>]`
+    - `[[-Delimiter] <String>]`
+- Links
+    - `Sort-Ordinal`, `Grep-Block`, `Sort-Block`
+- Notes:
+    - [Sort-Object (Microsoft.PowerShell.Utility) - PowerShell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/sort-object)
+
+Example:
+
+Input file:
+
+```powershell
+cat list.txt
+```
+
+```markdown
+- listB
+    - B-1
+    - B-2
+- listA
+    - A-1
+    - A-2
+    - A-3
+```
+
+Output:
+
+```powershell
+cat list.txt | Sort-Block
+```
+
+```markdown
+- listA
+    - A-1
+    - A-2
+    - A-3
+- listB
+    - B-1
+    - B-2
+```
+
+Practical example:
+
+Sorting and searching a word dictionary
+
+```powershell
+cat word-meanings.txt
+```
+
+```markdown
+reciprocal
+    - As an adjective, it means "inversely related",
+        "opposite", or "mutually corresponding".
+    - As a noun, it can refer to a pair of numbers
+        whose product is 1 in mathematics.
+    - In physiology, it can describe a phenomenonin
+        which one group of muscles is excited and another
+        is inhibited.
+    - In genetics, it can refer to a pair of crosses in
+        which the male and female parent are switched in
+        the second cross.
+
+    from Definition of RECIPROCAL - merriam-webster.com
+        https://www.merriam-webster.com/dictionary/reciprocal
+
+mutual
+    - Directed by each toward the other or the others.
+    - Having the same feelings one for the other.
+    - Shared in common.
+    - Joint to their mutual advantage.
+    - Of or relating to a plan whereby the members of an
+        organization share in the profits and expenses.
+
+    from Definition of MUTUAL - merriam-webster.com
+        https://www.merriam-webster.com/dictionary/mutual
+```
+
+Sort list block
+
+```powershell
+cat word-meanings.txt | blsort
+```
+
+```markdown
+mutual
+    - Directed by each toward the other or the others.
+    - Having the same feelings one for the other.
+    - Shared in common.
+    - Joint to their mutual advantage.
+    - Of or relating to a plan whereby the members of an
+            organization share in the profits and expenses.
+
+        from Definition of MUTUAL - merriam-webster.com
+            https://www.merriam-webster.com/dictionary/mutual
+
+reciprocal
+    - As an adjective, it means "inversely related",
+            "opposite", or "mutually corresponding".
+    - As a noun, it can refer to a pair of numbers
+            whose product is 1 in mathematics.
+    - In physiology, it can describe a phenomenonin
+            which one group of muscles is excited and another
+            is inhibited.
+    - In genetics, it can refer to a pair of crosses in
+            which the male and female parent are switched in
+            the second cross.
+
+    from Definition of RECIPROCAL - merriam-webster.com
+            https://www.merriam-webster.com/dictionary/reciprocal
+```
+
+Output only list block containing `"m"` in the title line
+
+```powershell
+cat word-meanings.txt | blsort | blgrep "m" -OnlyTitle
+```
+
+```markdown
+mutual
+    - Directed by each toward the other or the others.
+    - Having the same feelings one for the other.
+    - Shared in common.
+    - Joint to their mutual advantage.
+    - Of or relating to a plan whereby the members of an
+            organization share in the profits and expenses.
+
+        from Definition of MUTUAL - merriam-webster.com
+            https://www.merriam-webster.com/dictionary/mutual
+```
+
+
+#### [Grep-Block] (Alias: blgrep) - Grep the list while preserving parent-child relationship <a id="Grep-Block"></a>
+
+[Grep-Block]: src/Grep-Block_function.ps1
+
+Searches the list and returns the list block by treating a line with a non-blank character at the beginning as a title, and a line with a blank character at the beginning as a body.
+
+- Usage:
+    - `man Grep-Block`
+    - `man blgrep`
+        - `cat list.txt | Grep-Block <regex>`
+Params:
+    - `[-c|-CaseSensitive]`
+    - `[-s|-SimpleMatch]`
+    - `[-v|-NotMatch]`
+    - `[-t|-OnlyTitle]` ...Output only blocks with matching title
+    - `[-SkipBlank]`
+    - `[[-f|-File] <String>]`
+    - `[[-Delimiter] <String>]`
+Links:
+    - `Sort-Ordinal`, `Grep-Block`, `Sort-Block`
+- Notes:
+    [Select-String (Microsoft.PowerShell.Utility) - PowerShell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-string)
+
+
+Examples:
+
+Input:
+
+```powershell
+cat list.txt
+```
+
+```markdown
+- listB
+    - B-1
+    - B-2
+- listA
+    - A-1
+    - A-2
+    - A-3
+```
+
+Output matched list block which contains `B-1` in title or body:
+
+```powershell
+cat list.txt | Grep-Block 'b\-1'
+```
+
+```markdown
+- listB
+    - B-1
+    - B-2
+```
+
+Output matched list block which contains `B-1` in only title:
+
+```powershell
+cat list.txt | Grep-Block 'b' -OnlyTitle
+
+- listB
+    - B-1
+    - B-2
+```
+
+Output matched list block which not contains `B-1` in title:
+
+```powershell
+cat list.txt | Grep-Block "B" -OnlyTitle -CaseSensitive -NotMatch
+```
+
+```markdown
+- listA
+    - A-1
+    - A-2
+    - A-3
+```
+
+Practical example: Sorting and searching a word dictionary
+
+Input: meanings of `reciprocal` and `mutual`
+
+```powershell
+cat word-meanings.txt
+```
+
+```markdown
+reciprocal
+    - As an adjective, it means "inversely related",
+        "opposite", or "mutually corresponding".
+    - As a noun, it can refer to a pair of numbers
+        whose product is 1 in mathematics.
+    - In physiology, it can describe a phenomenonin
+        which one group of muscles is excited and another
+        is inhibited.
+    - In genetics, it can refer to a pair of crosses in
+        which the male and female parent are switched in
+        the second cross.
+
+    from Definition of RECIPROCAL - merriam-webster.com
+        https://www.merriam-webster.com/dictionary/reciprocal
+
+mutual
+    - Directed by each toward the other or the others.
+    - Having the same feelings one for the other.
+    - Shared in common.
+    - Joint to their mutual advantage.
+    - Of or relating to a plan whereby the members of an
+        organization share in the profits and expenses.
+
+    from Definition of MUTUAL - merriam-webster.com
+        https://www.merriam-webster.com/dictionary/mutual
+```
+
+Sort list block using [Sort-Block] (Alias: `blsort`)
+
+```powershell
+cat word-meanings.txt | blsort
+```
+
+```markdown
+mutual
+    - Directed by each toward the other or the others.
+    - Having the same feelings one for the other.
+    - Shared in common.
+    - Joint to their mutual advantage.
+    - Of or relating to a plan whereby the members of an
+            organization share in the profits and expenses.
+
+        from Definition of MUTUAL - merriam-webster.com
+            https://www.merriam-webster.com/dictionary/mutual
+
+reciprocal
+    - As an adjective, it means "inversely related",
+            "opposite", or "mutually corresponding".
+    - As a noun, it can refer to a pair of numbers
+            whose product is 1 in mathematics.
+    - In physiology, it can describe a phenomenonin
+            which one group of muscles is excited and another
+            is inhibited.
+    - In genetics, it can refer to a pair of crosses in
+            which the male and female parent are switched in
+            the second cross.
+
+    from Definition of RECIPROCAL - merriam-webster.com
+            https://www.merriam-webster.com/dictionary/reciprocal
+```
+
+Output only blocks containing "m" in the title line using [Sort-Block] (Alias: `blsort`) and [Grep-Block] (Alias: `blgrep`):
+
+```powershell
+cat word-meanings.txt | blsort | blgrep "m" -OnlyTitle
+```
+
+```markdown
+mutual
+    - Directed by each toward the other or the others.
+    - Having the same feelings one for the other.
+    - Shared in common.
+    - Joint to their mutual advantage.
+    - Of or relating to a plan whereby the members of an
+            organization share in the profits and expenses.
+
+        from Definition of MUTUAL - merriam-webster.com
+            https://www.merriam-webster.com/dictionary/mutual
+```
+
 
 #### [pwsync] - Invoke Robocopy.exe <a id="pwsync"></a>
 
