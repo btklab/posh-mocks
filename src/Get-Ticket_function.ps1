@@ -527,6 +527,10 @@ function Get-Ticket {
         [Switch] $AsObjectAndShortenAct,
         
         [Parameter( Mandatory=$False )]
+        [Alias('r')]
+        [Switch] $Relax,
+        
+        [Parameter( Mandatory=$False )]
         [Switch] $Gantt,
         
         [Parameter( Mandatory=$False )]
@@ -689,6 +693,11 @@ function Get-Ticket {
         "Note"
     )
     # set opt
+    if ( $Relax ){
+        [Object[]] $relaxAry = @()
+        $AsObject = $True
+        $ShortenAct = $True
+    }
     if ( $AsObjectAndShortenAct ){
         $AsObject = $True
         $ShortenAct = $True
@@ -1742,7 +1751,11 @@ function Get-Ticket {
         Write-Debug "Status searchword: $($PsCmdlet.ParameterSetName)"
         Write-Debug "Status searchword: $($Status -join '|')"
         [pscustomobject] $outputObj = outputHashAsPSCustomObject $hash $splattingSelect
-        Write-Output $outputObj
+        if ( $Relax ){
+            $relaxAry += $outputObj
+        } else {
+            Write-Output $outputObj
+        }
         continue
     }
     if ( $Gantt -or $GanttNote ){
@@ -1750,6 +1763,9 @@ function Get-Ticket {
             Write-Error "No item matched." -ErrorAction Stop
         }
         Write-Output "@endgantt"
+    }
+    if ( $Relax -and $relaxAry.Count -gt 0 ){
+        Write-Output $relaxAry | Format-Table
     }
 }
 # set alias
