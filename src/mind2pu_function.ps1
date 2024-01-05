@@ -86,12 +86,6 @@
     Depends on kinsoku_function.ps1
 
 
-.PARAMETER LegendRight
-    Insert legend in bottom right
-
-.PARAMETER LegendLeft
-    Insert legend in bottom left
-
 .PARAMETER RightToLeft
     Right to left graph
 
@@ -210,12 +204,6 @@ function mind2pu {
 
         [Parameter( Mandatory=$False)]
         [int]$KinsokuOnlyPlainText,
-
-        [Parameter( Mandatory=$False)]
-        [string[]]$LegendRight,
-
-        [Parameter( Mandatory=$False)]
-        [string[]]$LegendLeft,
 
         [Parameter( Mandatory=$False)]
         [switch]$RightToLeft,
@@ -337,12 +325,25 @@ function mind2pu {
             ## set node
             $readLineAryNode += $ast + $contents
         } else {
+            ## is legend block?
+            if (($isLegend) -and ($rdLine -match '^end *legend$')){
+                $readLineAryLeg += $rdLine
+                $isLegend = $false
+                return
+            }
+            if ($isLegend){
+                $readLineAryLeg += $rdLine
+                return
+            }
+            if (($lineCounter -gt 1) -and ($rdLine -match '^legend (right|left)$')){
+                $readLineAryLeg = @()
+                $readLineAryLeg += $rdLine
+                $isLegend = $True
+                return
+            }
+            echo hoge
             ## output as is
             $readLineAryNode += $rdLine
-            ## is legend block?
-            if (($lineCounter -gt 1) -and ($rdLine -match '^legend (right|left)$')){
-                $isLegend = $True
-            }
         }
     }
     end {
@@ -396,28 +397,6 @@ function mind2pu {
         ##
         ## Footer
         ##
-        if($LegendLeft){
-            $legendFlag = $True
-            $readLineAryLegend = @()
-            $readLineAryLegend += ""
-            $readLineAryLegend += "legend left"
-            foreach($legLine in $LegendLeft){
-                $readLineAryLegend += $legLine
-            }
-            $readLineAryLegend += "end legend"
-        }elseif($LegendRight){
-            $legendFlag = $True
-            $readLineAryLegend = @()
-            $readLineAryLegend += ""
-            $readLineAryLegend += "legend right"
-            foreach($legLine in $LegendRight){
-                $readLineAryLegend += $legLine
-            }
-            $readLineAryLegend += "end legend"
-        }else{
-            $legendFlag = $False
-        }
-
         $readLineAryFooter = @()
         $readLineAryFooter += ""
         if ($WBS) {
@@ -432,9 +411,9 @@ function mind2pu {
         foreach ($lin in $readLineAryNode){
             $readLineAry += $lin
         }
-        if($legendFlag){
-            foreach ($lin in $readLineAryLegend){
-                $readLineAry += $lin
+        if ( $readLineAryLeg.Count -gt 0 ){
+            foreach ( $leg in $readLineAryLeg ){
+                $readLineAry += $leg
             }
         }
         foreach ($lin in $readLineAryFooter){
