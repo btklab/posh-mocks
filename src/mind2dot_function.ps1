@@ -88,7 +88,7 @@
 
 .PARAMETER FontName
     Set fontname
-    Default: "Meiryo"
+    Default: "MS Gothic"
 
 .PARAMETER FoldLabel
     Fold label at specified number of characters.
@@ -131,7 +131,7 @@
      // graph settings
      graph [
       charset = "UTF-8";
-      fontname = "Meiryo";
+      fontname = "MS Gothic";
       label = "What flavor would you like?\n\n";
       labelloc = "t";
       labeljust = "c";
@@ -142,13 +142,13 @@
      ];
      // node settings
      node [
-      fontname = "Meiryo";
+      fontname = "MS Gothic";
       shape = "plaintext";
       style = "rounded";
      ];
      // edge settings
      edge [
-      fontname = "Meiryo";
+      fontname = "MS Gothic";
      ];
 
      subgraph cluster_legend {
@@ -382,7 +382,7 @@ function mind2dot {
         [string]$FontName,
 
         [Parameter( Mandatory=$False)]
-        [string]$FontNameWindowsDefault = "Meiryo",
+        [string]$FontNameWindowsDefault = "MS Gothic",
 
         [Parameter( Mandatory=$False)]
         [double]$FontSize,

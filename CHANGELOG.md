@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Changed default fontname "Meiryo" to "MS Gothic"
 - Changed [mind2pu] read legend from input instead of argument
 - Added [Get-Ticket] `-Relax` option
 - Added [Grep-Block], [Sort-Block] functions

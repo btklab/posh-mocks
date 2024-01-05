@@ -28,7 +28,7 @@
 
 .PARAMETER FontName
     Specify the fontname.
-    default: Meiryo
+    default: MS Gothic
 
 .PARAMETER LayoutEngine
     Specify layout engine.

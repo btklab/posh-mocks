@@ -215,7 +215,7 @@ function seq2pu {
         [string] $FontName,
 
         [Parameter( Mandatory=$False)]
-        [string] $FontNameWindowsDefault = "Meiryo",
+        [string] $FontNameWindowsDefault = "MS Gothic",
 
         [Parameter( Mandatory=$False)]
         [int] $FontSize,

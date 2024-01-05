@@ -188,7 +188,7 @@ function flow2pu {
         [int] $FontSize,
 
         [Parameter( Mandatory=$False)]
-        [string] $FontNameWindowsDefault = "Meiryo",
+        [string] $FontNameWindowsDefault = "MS Gothic",
 
         [Parameter( Mandatory=$False)]
         [ValidateSet(

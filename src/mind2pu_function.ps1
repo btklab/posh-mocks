@@ -49,18 +49,6 @@
     If you replace '*' with '-', it becomes a map that extends from
     right to left. This is equivalent to specifying -RightToLeft switch.
 
-    Legend can be output by writing the following:
-
-        legend right|left
-        this is legend
-        end legend
-    
-    Fill color can be specified by prepending or postponing
-    [#color] to the label. For example:
-
-        - [#orange] label
-        - label [#blue]
-
 .LINK
     pu2java, dot2gviz, pert, pert2dot, pert2gantt2pu, mind2dot, mind2pu, gantt2pu, logi2dot, logi2dot2, logi2dot3, logi2pu, logi2pu2, flow2pu
 
@@ -76,7 +64,6 @@
 
 .PARAMETER FoldLabel
     Fold label at specified number of characters.
-
 
 .PARAMETER Kinsoku
     Wrapping of character string considering japanese KINSOKU rules.
@@ -113,7 +100,7 @@
     @startmindmap
 
     title "title"
-    skinparam DefaultFontName "Meiryo"
+    skinparam DefaultFontName "MS Gothic"
 
     * hogehoge
     ** hoge1
@@ -179,7 +166,7 @@ function mind2pu {
         [string]$FontName,
 
         [Parameter( Mandatory=$False)]
-        [string]$FontNameWindowsDefault = "Meiryo",
+        [string]$FontNameWindowsDefault = "MS Gothic",
 
         [Parameter( Mandatory=$False)]
         [int]$FontSize,
@@ -341,7 +328,6 @@ function mind2pu {
                 $isLegend = $True
                 return
             }
-            echo hoge
             ## output as is
             $readLineAryNode += $rdLine
         }
