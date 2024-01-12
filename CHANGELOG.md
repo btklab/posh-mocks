@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [6.10.1] - 2024-01-13
+
+- Added [Get-ClipboardAlternative] `-Property` option
 - Changed default fontname "Meiryo" to "MS Gothic"
 - Changed [mind2pu] read legend from input instead of argument
 - Added [Get-Ticket] `-Relax` option
@@ -646,7 +651,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Sort-Block]: src/Sort-Block_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.10.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.10.1..HEAD
+[6.10.1]: https://github.com/btklab/posh-mocks/releases/tag/6.10.1
 [6.10.0]: https://github.com/btklab/posh-mocks/releases/tag/6.10.0
 [6.9.0]: https://github.com/btklab/posh-mocks/releases/tag/6.9.0
 [6.8.1]: https://github.com/btklab/posh-mocks/releases/tag/6.8.1

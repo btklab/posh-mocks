@@ -45,6 +45,19 @@
         -a---          2023/12/04    23:55           3018 recipes.md
         -a---          2023/12/23    12:47           1389 tickets.md
 
+    PS > ls *.txt -File | gclipa Length, Name
+
+        Length Name
+        ------ ----
+           256 books.txt
+            29 diaries.txt
+           365 language.txt
+           984 meanings.txt
+          3334 notes.txt
+          3018 recipes.txt
+          1682 tickets.txt
+
+
 .EXAMPLE
     # If input clipped files,
     # this function attempts to return file objects
@@ -145,6 +158,11 @@
 function Get-ClipboardAlternative {
     param (
         [Parameter( Mandatory=$False, Position=0 )]
+        [Alias('p')]
+        [String[]] $Property,
+        
+        [Parameter( Mandatory=$False )]
+        [Alias('f')]
         [Object[]] $File,
         
         [Parameter( Mandatory=$False )]
@@ -186,7 +204,11 @@ function Get-ClipboardAlternative {
                 if ( $AsPlainText ){
                     Write-Output $($f.FullName)
                 } else {
-                    Write-Output $f
+                    if ( $Property.Count -gt 0 ){
+                        Write-Output $f | Select-Object -Property $Property
+                    } else {
+                        Write-Output $f
+                    }
                 }
             } else {
                 # input is file path text
@@ -194,7 +216,11 @@ function Get-ClipboardAlternative {
                 if ( $AsPlainText ){
                     Write-Output $objFile.FullName
                 } else {
-                    Write-Output $objFile
+                    if ( $Property.Count -gt 0 ){
+                        Write-Output $objFile | Select-Object -Property $Property
+                    } else {
+                        Write-Output $objFile
+                    }
                 }
             }
         }
@@ -211,7 +237,11 @@ function Get-ClipboardAlternative {
                 if ( $AsPlainText ){
                     Write-Output $($f.FullName)
                 } else {
-                    Write-Output $f
+                    if ( $Property.Count -gt 0 ){
+                        Write-Output $f | Select-Object -Property $Property
+                    } else {
+                        Write-Output $f
+                    }
                 }
                 continue
             } else {
@@ -222,7 +252,11 @@ function Get-ClipboardAlternative {
                     if ( $AsPlainText ){
                         Write-Output $objFile.FullName
                     } else {
-                        Write-Output $objFile
+                        if ( $Property.Count -gt 0 ){
+                            Write-Output $objFile | Select-Object -Property $Property
+                        } else {
+                            Write-Output $objFile
+                        }
                     }
                     continue
                 } catch {
@@ -292,8 +326,12 @@ function Get-ClipboardAlternative {
                         Write-Error "No image in clip board." -ErrorAction Stop
                     }
                 } else {
-                    # output image object
-                    $objAry
+                    # output as image object
+                    if ( $Property.Count -gt 0 ){
+                        Write-Output $objAry | Select-Object -Property $Property
+                    } else {
+                        Write-Output $objAry
+                    }
                 }
                 return
             }
@@ -320,7 +358,11 @@ function Get-ClipboardAlternative {
                 if ( $AsPlainText ){
                     Write-Output $objFile.FullName
                 } else {
-                    Write-Output $objFile
+                    if ( $Property.Count -gt 0 ){
+                        Write-Output $objFile | Select-Object -Property $Property
+                    } else {
+                        Write-Output $objFile
+                    }
                 }
             }
         }
@@ -345,7 +387,11 @@ function Get-ClipboardAlternative {
             }
             if ( [string] $f -match '^http:|^https:' ){
                 # parse uri
-                [Uri]::new($f)
+                if ( $Property.Count -gt 0 ){
+                    [Uri]::new($f) | Select-Object -Property $Property
+                } else {
+                    [Uri]::new($f)
+                }
                 continue
             }
             if ( $True ){
@@ -357,7 +403,11 @@ function Get-ClipboardAlternative {
                     if ( $AsPlainText ){
                         Write-Output $objFile.FullName
                     } else {
-                        Write-Output $objFile
+                        if ( $Property.Count -gt 0 ){
+                            Write-Output $objFile | Select-Object -Property $Property
+                        } else {
+                            Write-Output $objFile
+                        }
                     }
                     continue
                 } catch {
@@ -378,7 +428,11 @@ function Get-ClipboardAlternative {
     $objAry = @([Windows.Forms.Clipboard]::GetDataObject())
     if ( $objAry.Count -gt 0 ){
         Write-Debug "Read from Clipboard::GetDataObject()"
-        $objAry
+        if ( $Property.Count -gt 0 ){
+            Write-Output $objAry | Select-Object -Property $Property
+        } else {
+            Write-Output $objAry
+        }
         return
     }
 }
