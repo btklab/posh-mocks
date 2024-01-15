@@ -486,6 +486,7 @@ function Get-Ticket {
         [Switch] $FullProperty,
         
         [Parameter( Mandatory=$False )]
+        [Alias('New')]
         [String] $Add,
         
         [Parameter( Mandatory=$False )]
@@ -981,16 +982,34 @@ function Get-Ticket {
     }
     # Add new ticket
     if ( $Add -or $AddTail -or $AddEmpty -or $AddTailEmpty -or $Edit -or $Editor ){
+        [String] $nowDateStr =$((Get-Date).ToString('yyyy-MM-dd'))
         if ( $Add ){
-            [String] $newLine = $Add
+            [String] $addLine = $Add
+            if ( $addLine -cmatch '^(\([A-Z]\))(.*)$' ){
+                # if priority is specified
+                [String] $leftStr  = $addLine -creplace '^(\([A-Z]\))(.*)$', '$1'
+                [String] $rightStr = $addLine -creplace '^(\([A-Z]\))(.*)$', '$2'
+                [String] $newLine = $leftStr + " " + $nowDateStr + $rightStr
+            } else {
+                [String] $newLine = $nowDateStr + " " + $addLine
+            }
         } elseif ( $AddTail ){
-            [String] $newLine = $AddTail
+            [String] $addLine = $AddTail
+            if ( $addLine -cmatch '^(\([A-Z]\))(.*)$' ){
+                # if priority is specified
+                [String] $leftStr  = $addLine -creplace '^(\([A-Z]\))(.*)$', '$1'
+                [String] $rightStr = $addLine -creplace '^(\([A-Z]\))(.*)$', '$2'
+                [String] $newLine = $leftStr + " " + $nowDateStr + $rightStr
+            } else {
+                [String] $newLine = $nowDateStr + " " + $addLine
+            }
         } elseif ( $AddEmpty -or $AddTailEmpty ){
-            [String] $newLine = "(B)"
+            [String] $newLine = $nowDateStr + " " + "(B)"
         }
         # Add Create date string end of newline
-        $newLine = $newLine + ' ' + $((Get-Date).ToString('yyyy-MM-dd'))
-        $newLine = $newLine + ' due:' + $((Get-Date).AddDays(7).ToString('yyyy-MM-dd'))
+        if ( $newLine -cnotmatch ' due:[0-9]+' ){
+            $newLine = $newLine + ' due:' + $((Get-Date).AddDays(7).ToString('yyyy-MM-dd'))
+        }
         # overwrite file
         if ( $File ){
             [String] $inputFilePath = $File

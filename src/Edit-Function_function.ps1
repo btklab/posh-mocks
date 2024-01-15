@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Edit-Function (Alias: edit) - Edit my powershell scripts.
+    Edit-Function (Alias: e) - Edit my powershell scripts.
 
     Edit-Function
         [[-f|-Function] <String>] ...function name or alias name
@@ -18,7 +18,7 @@
     # or
     Edit-Function man2
     # or
-    edit man2
+    e man2
 
     Directory: path/to/the/posh-mocks/src
 
@@ -34,11 +34,11 @@
     # or
     Edit-Function man2 notepad
     # or
-    edit man2 notepad
+    e man2 notepad
 
 .EXAMPLE
     # Output only Object (do not run editor)
-    edit i -o
+    e i -o
 
     Directory: path/to/the/posh-mocks/src
 
@@ -48,7 +48,7 @@
 
 .EXAMPLE
     # If there are no arguments, return the function list
-    edit Add-*
+    e Add-*
 
     Matched multiple files. Please specify a single file.
     ------
@@ -236,45 +236,3 @@ if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0)
     Remove-Variable -Name "tmpCmdName" -Force
 }
 
-# set alias
-[String] $tmpAliasName = "edit"
-[String] $tmpCmdName   = "Edit-Function"
-[String] $tmpCmdPath = Join-Path `
-    -Path $PSScriptRoot `
-    -ChildPath $($MyInvocation.MyCommand.Name) `
-    | Resolve-Path -Relative
-if ( $IsWindows ){ $tmpCmdPath = $tmpCmdPath.Replace('\' ,'/') }
-# is alias already exists?
-if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0){
-    try {
-        if ( (Get-Command -Name $tmpAliasName).CommandType -eq "Alias" ){
-            if ( (Get-Command -Name $tmpAliasName).ReferencedCommand.Name -eq $tmpCmdName ){
-                Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru `
-                    | ForEach-Object{
-                        Write-Host "$($_.DisplayName)" -ForegroundColor Green
-                    }
-            } else {
-                throw
-            }
-        } elseif ( "$((Get-Command -Name $tmpAliasName).Name)" -match '\.exe$') {
-            Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru `
-                | ForEach-Object{
-                    Write-Host "$($_.DisplayName)" -ForegroundColor Green
-                }
-        } else {
-            throw
-        }
-    } catch {
-        Write-Error "Alias ""$tmpAliasName ($((Get-Command -Name $tmpAliasName).ReferencedCommand.Name))"" is already exists. Change alias needed. Please edit the script at the end of the file: ""$tmpCmdPath""" -ErrorAction Stop
-    } finally {
-        Remove-Variable -Name "tmpAliasName" -Force
-        Remove-Variable -Name "tmpCmdName" -Force
-    }
-} else {
-    Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru `
-        | ForEach-Object {
-            Write-Host "$($_.DisplayName)" -ForegroundColor Green
-        }
-    Remove-Variable -Name "tmpAliasName" -Force
-    Remove-Variable -Name "tmpCmdName" -Force
-}

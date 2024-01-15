@@ -1,10 +1,10 @@
 # posh-mocks
 
 ```markdown
->  ____   ___   ____  _   _        _    _   ___    ___  _  _  ____
-> |  _ \ / _ \ /  __)| |_| | ____ | \  / | / _ \  / __)| |/ )/  __)
-> |  __/( (_) )\__  \|  _  |(____)|  \/  |( (_) )( (__ |   ( \__  \
-> |_|    \___/ (____/|_| |_|      |_|  |_| \___/  \___)|_|\_)(____/
+>      ____   ___   ____  _   _        _    _   ___    ___  _  _  ____
+>     |  _ \ / _ \ /  __)| |_| | ____ | \  / | / _ \  / __)| |/ )/  __)
+>     |  __/( (_) )\__  \|  _  |(____)|  \/  |( (_) )( (__ |   ( \__  \
+>     |_|    \___/ (____/|_| |_|      |_|  |_| \___/  \___)|_|\_)(____/
 ```
 
 A mock-up set of [PowerShell](https://github.com/PowerShell/PowerShell) 7 functions that filter text-object input from the pipeline(stdin) and return text-object (this concept is closer to Bash than PowerShell).Inspired by [Parsing Text with PowerShell (3/3), Steve Lee, January 28th, 2019](https://devblogs.microsoft.com/powershell/parsing-text-with-powershell-3-3/).
@@ -19,7 +19,8 @@ A mock-up set of [PowerShell](https://github.com/PowerShell/PowerShell) 7 functi
     - The code is spaghetti (due to my technical inexperience).
     - Insufficient tests and error handlings.
     - Processing speed is slow.
-
+- Workflow-Examples:
+    - See: [examples.md](examples.md)
 
 Function list:
 
@@ -37,7 +38,7 @@ cat README.md `
     | Set-Clipboard
 ```
 
-- [Add-LineBreakEndOfFile](#Add-LineBreakEndOfFile), [Add-LineBreak](#Add-LineBreak), [Add-Quartile](#Add-Quartile), [Add-Stats](#Add-Stats), [Apply-Function](#Apply-Function), [ConvImage](#ConvImage), [Decrease-Indent](#Decrease-Indent), [Delete-Field](#Delete-Field), [Detect-XrsAnomaly](#Detect-XrsAnomaly), [Drop-NA](#Drop-NA), [Edit-Function](#Edit-Function), [Get-AppShortcut](#Get-AppShortcut), [Get-ClipboardAlternative](#Get-ClipboardAlternative), [Get-Histogram](#Get-Histogram), [Get-OGP](#Get-OGP), [Get-Ticket](#Get-Ticket), [Grep-Block](#Grep-Block), [GroupBy-Object](#GroupBy-Object), [Invoke-Link](#Invoke-Link), [Join2-Object](#Join2-Object), [Measure-Quartile](#Measure-Quartile), [Measure-Stats](#Measure-Stats), [Measure-Summary](#Measure-Summary), [Override-Yaml](#Override-Yaml), [Plot-BarChart](#Plot-BarChart), [Rename-Normalize](#Rename-Normalize), [Replace-ForEach](#Replace-ForEach), [Replace-NA](#Replace-NA), [Select-Field](#Select-Field), [Set-NowTime2Clipboard](#Set-NowTime2Clipboard), [Shorten-PropertyName](#Shorten-PropertyName), [Shutdown-ComputerAFM](#Shutdown-ComputerAFM), [Sleep-ComputerAFM](#Sleep-ComputerAFM), [Sort-Block](#Sort-Block), [Test-isAsciiLine](#Test-isAsciiLine), [Transpose-Property](#Transpose-Property), [Unique-Object](#Unique-Object), [Unzip-Archive](#Unzip-Archive), [addb](#addb), [addl](#addl), [addr](#addr), [addt](#addt), [cat2](#cat2), [catcsv](#catcsv), [chead](#chead), [clip2file](#clip2file), [clip2hyperlink](#clip2hyperlink), [clip2img](#clip2img), [clip2normalize](#clip2normalize), [clip2push](#clip2push), [clip2shortcut](#clip2shortcut), [conv](#conv), [count](#count), [csv2sqlite](#csv2sqlite), [csv2txt](#csv2txt), [ctail](#ctail), [decil](#decil), [delf](#delf), [dot2gviz](#dot2gviz), [filehame](#filehame), [fillretu](#fillretu), [flat](#flat), [flow2pu](#flow2pu), [fpath](#fpath), [fval](#fval), [fwatch](#fwatch), [gantt2pu](#gantt2pu), [gdate](#gdate), [getfirst](#getfirst), [getlast](#getlast), [grep](#grep), [gyo](#gyo), [han](#han), [head](#head), [image2md](#image2md), [jl](#jl), [json2txt](#json2txt), [juni](#juni), [keta](#keta), [kinsoku](#kinsoku), [lastyear](#lastyear), [lcalc2](#lcalc2), [lcalc](#lcalc), [linkcheck](#linkcheck), [linkextract](#linkextract), [list2table](#list2table), [logi2dot](#logi2dot), [logi2pu](#logi2pu), [man2](#man2), [map2](#map2), [mdfocus](#mdfocus), [mdgrep](#mdgrep), [mind2dot](#mind2dot), [mind2pu](#mind2pu), [movw](#movw), [nextyear](#nextyear), [pawk](#pawk), [percentile](#percentile), [pu2java](#pu2java), [push2loc](#push2loc), [pwmake](#pwmake), [pwsync](#pwsync), [retu](#retu), [rev2](#rev2), [rev](#rev), [say](#say), [sed-i](#sed-i), [sed](#sed), [self](#self), [seq2pu](#seq2pu), [sleepy](#sleepy), [sm2](#sm2), [summary](#summary), [table2md](#table2md), [tac](#tac), [tail-f](#tail-f), [tail](#tail), [tarr](#tarr), [tateyoko](#tateyoko), [teatimer](#teatimer), [tenki](#tenki), [tex2pdf](#tex2pdf), [thisyear](#thisyear), [toml2psobject](#toml2psobject), [uniq](#uniq), [vbStrConv](#vbStrConv), [watercss](#watercss), [wrap](#wrap), [yarr](#yarr), [ycalc](#ycalc), [ysort](#ysort), [zen](#zen)
+- [Add-LineBreakEndOfFile](#Add-LineBreakEndOfFile), [Add-LineBreak](#Add-LineBreak), [Add-Quartile](#Add-Quartile), [Add-Stats](#Add-Stats), [Apply-Function](#Apply-Function), [ConvImage](#ConvImage), [Decrease-Indent](#Decrease-Indent), [Delete-Field](#Delete-Field), [Detect-XrsAnomaly](#Detect-XrsAnomaly), [Drop-NA](#Drop-NA), [Edit-Function](#Edit-Function), [Get-AppShortcut](#Get-AppShortcut), [Get-ClipboardAlternative](#Get-ClipboardAlternative), [Get-Histogram](#Get-Histogram), [Get-OGP](#Get-OGP), [Get-Ticket](#Get-Ticket), [Grep-Block](#Grep-Block), [GroupBy-Object](#GroupBy-Object), [Invoke-Link](#Invoke-Link), [Join2-Object](#Join2-Object), [Measure-Quartile](#Measure-Quartile), [Measure-Stats](#Measure-Stats), [Measure-Summary](#Measure-Summary), [Override-Yaml](#Override-Yaml), [Plot-BarChart](#Plot-BarChart), [Rename-Normalize](#Rename-Normalize), [Replace-ForEach](#Replace-ForEach), [Replace-NA](#Replace-NA), [Select-Field](#Select-Field), [Set-NowTime2Clipboard](#Set-NowTime2Clipboard), [Shorten-PropertyName](#Shorten-PropertyName), [Shutdown-ComputerAFM](#Shutdown-ComputerAFM), [Sleep-ComputerAFM](#Sleep-ComputerAFM), [Sort-Block](#Sort-Block), [Test-isAsciiLine](#Test-isAsciiLine), [Transpose-Property](#Transpose-Property), [Unique-Object](#Unique-Object), [Unzip-Archive](#Unzip-Archive), [addb](#addb), [addl](#addl), [addr](#addr), [addt](#addt), [cat2](#cat2), [catcsv](#catcsv), [chead](#chead), [clip2file](#clip2file), [clip2hyperlink](#clip2hyperlink), [clip2img](#clip2img), [clip2normalize](#clip2normalize), [clip2push](#clip2push), [clip2shortcut](#clip2shortcut), [conv](#conv), [count](#count), [csv2sqlite](#csv2sqlite), [csv2txt](#csv2txt), [ctail](#ctail), [decil](#decil), [delf](#delf), [dot2gviz](#dot2gviz), [filehame](#filehame), [fillretu](#fillretu), [flat](#flat), [flow2pu](#flow2pu), [fpath](#fpath), [fval](#fval), [fwatch](#fwatch), [gantt2pu](#gantt2pu), [Get-DateAlternative](#Get-DateAlternative), [getfirst](#getfirst), [getlast](#getlast), [grep](#grep), [gyo](#gyo), [han](#han), [head](#head), [image2md](#image2md), [jl](#jl), [json2txt](#json2txt), [juni](#juni), [keta](#keta), [kinsoku](#kinsoku), [lastyear](#lastyear), [lcalc2](#lcalc2), [lcalc](#lcalc), [linkcheck](#linkcheck), [linkextract](#linkextract), [list2table](#list2table), [logi2dot](#logi2dot), [logi2pu](#logi2pu), [man2](#man2), [map2](#map2), [mdfocus](#mdfocus), [mdgrep](#mdgrep), [mind2dot](#mind2dot), [mind2pu](#mind2pu), [movw](#movw), [nextyear](#nextyear), [pawk](#pawk), [percentile](#percentile), [pu2java](#pu2java), [push2loc](#push2loc), [pwmake](#pwmake), [pwsync](#pwsync), [retu](#retu), [rev2](#rev2), [rev](#rev), [say](#say), [sed-i](#sed-i), [sed](#sed), [self](#self), [seq2pu](#seq2pu), [sleepy](#sleepy), [sm2](#sm2), [summary](#summary), [table2md](#table2md), [tac](#tac), [tail-f](#tail-f), [tail](#tail), [tarr](#tarr), [tateyoko](#tateyoko), [teatimer](#teatimer), [tenki](#tenki), [tex2pdf](#tex2pdf), [thisyear](#thisyear), [toml2psobject](#toml2psobject), [uniq](#uniq), [vbStrConv](#vbStrConv), [watercss](#watercss), [wrap](#wrap), [yarr](#yarr), [ycalc](#ycalc), [ysort](#ysort), [zen](#zen)
 
 
 Inspired by:
@@ -129,7 +130,6 @@ if ($IsWindows){
 ### Show functions
 
 
-
 #### [man2] - Formats filelist as a wide table and gets manual <a id="man2"></a>
 
 [man2]: src/man2_function.ps1
@@ -215,7 +215,7 @@ catcsv                 gyo            rev2
 chead                  han            rev
 ```
 
-#### [Edit-Function] (Alias: edit) - Edit my function with editor <a id="Edit-Function"></a>
+#### [Edit-Function] (Alias: e) - Edit my function with editor <a id="Edit-Function"></a>
 
 [Edit-Function]: src/Edit-Function_function.ps1
 
@@ -223,7 +223,7 @@ chead                  han            rev
 
 - Usage
     - `man Edit-Function`
-    - `man edit`
+    - `man e`
 - Params
     - `Edit-Function`
         - `[[-f|-Function] <String>]` ...function name or alias
@@ -251,7 +251,7 @@ Edit-Function man2
 
 ```powerhsell
 # or
-edit man2
+e man2
 ```
 
 output:
@@ -282,13 +282,13 @@ Edit-Function man2 notepad
 
 ```powerhsell
 # or
-edit man2 notepad
+e man2 notepad
 ```
 
 Output only Object (do not run editor)
 
 ```powerhsell
-edit i -o
+e i -o
 ```
 
 ```markdown
@@ -302,7 +302,7 @@ Mode  LastWriteTime 　 Length Name
 If there are no arguments, return the function directory
 
 ```powerhsell
-edit
+e
 ```
 
 ```markdown
@@ -316,7 +316,7 @@ d-r-- 2023/11/25 8:17        src
 If there are no arguments, return the function list
 
 ```powershell
-edit
+e
 ```
 
 Open text with editor if an existing file is specified
@@ -3717,12 +3717,12 @@ Examples:
 Input
 ```
 
-#### [thisyear], [nextyear], [lastyear], [gdate] - Add this/next/last year to month/day input. To prevent mistyping the number of year. <a id="thisyear"></a> <a id="nextyear"></a> <a id="lastyear"></a> <a id="gdate"></a>
+#### [thisyear], [nextyear], [lastyear], [Get-DateAlternative] - Add this/next/last year to month/day input. To prevent mistyping the number of year. <a id="thisyear"></a> <a id="nextyear"></a> <a id="lastyear"></a> <a id="Get-DateAlternative"></a>
 
-[thisyear]: src/gdate_function.ps1
-[lastyear]: src/gdate_function.ps1
-[nextyear]: src/gdate_function.ps1
-[gdate]: src/gdate_function.ps1
+[thisyear]: src/Get-DateAlternative_function.ps1
+[lastyear]: src/Get-DateAlternative_function.ps1
+[nextyear]: src/Get-DateAlternative_function.ps1
+[Get-DateAlternative]: src/Get-DateAlternative_function.ps1
 
 シンプルな日付の入力（e.g. 1/23）に年を付与して出力。
 筆者は「年数」をしばしばミスタイプしてしまうためその予防として作成。
@@ -13845,3 +13845,4 @@ Windows OS           Magnifying glass          Win +
     - Apache License 2.0 (c) 2017 Nicholas Dille
         - <http://www.apache.org/licenses/LICENSE-2.0>
         - A copy of the Apache license 2.0 is written in the script file
+
