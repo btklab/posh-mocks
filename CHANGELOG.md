@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- NA
+- Fixed [logi2dot]
+- Fixed [Get-Ticket] correct the insertion position of the date when specifying the `-Add` option
+- Deleted [Edit-Function] `edit` alias
+
+### Breaking Change
+
+- Renamed `gdate` to [Get-DateAlternative]
 
 ## [6.10.1] - 2024-01-13
 
@@ -479,7 +485,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2023-02-19
 
 - Changed Translate japanese to english
-- Added `Add-CrLf-EndOfFile`, `Add-CrLf`, [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], ctail2, [delf], [dot2gviz], [filehame], [fillretu], [flat], [fwatch], [gantt2pu], [gdate], [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], `i`, [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [nextyear], [Override-Yaml], [pawk], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [sleepy], [sm2], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [yarr], [zen]
+- Added `Add-CrLf-EndOfFile`, `Add-CrLf`, [addb], [addl], [addr], [addt], [cat2], [catcsv], [chead], [clip2img], [clipwatch], [conv], [ConvImage], [count], [csv2sqlite], [csv2txt], [ctail], ctail2, [delf], [dot2gviz], [filehame], [fillretu], [flat], [fwatch], [gantt2pu], `gdate`, [Get-OGP], [getfirst], [getlast], [grep], [gyo], [han], [head], `i`, [image2md], [jl], [json2txt], [juni], [keta], [kinsoku], [lastyear], [lcalc], [linkcheck], [linkextract], [logi2dot], [logi2pu], [man2], [map2], [mind2dot], [mind2pu], [nextyear], [Override-Yaml], [pawk], [pu2java], [pwmake], [retu], [rev], [rev2], [say], [sed-i], [sed], [self], [sleepy], [sm2], [table2md], [tac], [tail], [tarr], [tateyoko], [teatimer], [tenki], [tex2pdf], [thisyear], [toml2psobject], [uniq], [vbStrConv], [yarr], [zen]
 
 
 
@@ -509,7 +515,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [wrap]: src/wrap_function.ps1
 [fwatch]: src/fwatch_function.ps1
 [gantt2pu]: src/gantt2pu_function.ps1
-[gdate]: src/gdate_function.ps1
+[Get-DateAlternative]: src/Get-DateAlternative_function.ps1
 [Get-OGP]: src/Get-OGP_function.ps1
 [getfirst]: src/getfirst_function.ps1
 [getlast]: src/getlast_function.ps1
@@ -523,7 +529,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [juni]: src/juni_function.ps1
 [keta]: src/keta_function.ps1
 [kinsoku]: src/kinsoku_function.ps1
-[lastyear]: src/gdate_function.ps1
+[lastyear]: src/Get-DateAlternative_function.ps1
 [lcalc]: src/lcalc_function.ps1
 [linkcheck]: src/linkcheck_function.ps1
 [linkextract]: src/linkextract_function.ps1
@@ -533,7 +539,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [map2]: src/map2_function.ps1
 [mind2dot]: src/mind2dot_function.ps1
 [mind2pu]: src/mind2pu_function.ps1
-[nextyear]: src/gdate_function.ps1
+[nextyear]: src/Get-DateAlternative_function.ps1
 [Override-Yaml]: src/Override-Yaml_function.ps1
 [pawk]: src/pawk_function.ps1
 [pu2java]: src/pu2java_function.ps1
@@ -555,7 +561,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [teatimer]: src/teatimer_function.ps1
 [tenki]: src/tenki_function.ps1
 [tex2pdf]: src/tex2pdf_function.ps1
-[thisyear]: src/gdate_function.ps1
+[thisyear]: src/Get-DateAlternative_function.ps1
 [toml2psobject]: src/toml2psobject_function.ps1
 [uniq]: src/uniq_function.ps1
 [vbStrConv]: src/vbStrConv_function.ps1

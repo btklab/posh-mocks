@@ -1,9 +1,9 @@
-function gdate {
+function Get-DateAlternative {
     <#
     .SYNOPSIS
-        gdate - Add year to month/day input. To prevent mistyping the number of year.
+        Get-DateAlternative - Add year to month/day input. To prevent mistyping the number of year.
 
-            gdate 1/23
+            Get-DateAlternative 1/23
             2023-01-23
             # Result of execution on a certain day in **2023**.
 
@@ -13,7 +13,7 @@ function gdate {
     .EXAMPLE
         # Result of execution on a certain day in **2023**.
 
-        gdate 1/23
+        Get-DateAlternative 1/23
         2023-01-23
         
 
@@ -29,11 +29,11 @@ function gdate {
         lastyear 2/28 -s "_last_year"
         2022-02-28_last_year
 
-        gdate 2/28 -s "_gdate"
+        Get-DateAlternative 2/28 -s "_gdate"
         2023-02-28_gdate
 
     .LINK
-        thisyear, lastyear, nextyear, gdate
+        thisyear, lastyear, nextyear, Get-DateAlternative
 
     .NOTES
         Get-Date (Microsoft.PowerShell.Utility)
@@ -270,11 +270,11 @@ function thisyear {
         lastyear 2/28 -s "_last_year"
         2022-02-28_last_year
 
-        gdate 2/28 -s "_gdate"
+        Get-DateAlternative 2/28 -s "_gdate"
         2023-02-28_gdate
 
     .LINK
-        thisyear, lastyear, nextyear, gdate
+        thisyear, lastyear, nextyear, Get-DateAlternative
 
     .NOTES
         Get-Date (Microsoft.PowerShell.Utility)
@@ -382,7 +382,7 @@ function thisyear {
         # read from stdin
         $splatting.Set_Item('Date', $input)
     }
-    gdate @splatting
+    Get-DateAlternative @splatting
 }
 
 
@@ -416,11 +416,11 @@ function nextyear {
         lastyear 2/28 -s "_last_year"
         2022-02-28_last_year
 
-        gdate 2/28 -s "_gdate"
+        Get-DateAlternative 2/28 -s "_gdate"
         2023-02-28_gdate
 
     .LINK
-        thisyear, lastyear, nextyear, gdate
+        thisyear, lastyear, nextyear, Get-DateAlternative
 
     .NOTES
         Get-Date (Microsoft.PowerShell.Utility)
@@ -528,7 +528,7 @@ function nextyear {
         # read from stdin
         $splatting.Set_Item('Date', $input)
     }
-    gdate @splatting
+    Get-DateAlternative @splatting
 }
 
 
@@ -562,11 +562,11 @@ function lastyear {
         lastyear 2/28 -s "_last_year"
         2022-02-28_last_year
 
-        gdate 2/28 -s "_gdate"
+        Get-DateAlternative 2/28 -s "_gdate"
         2023-02-28_gdate
 
     .LINK
-        thisyear, lastyear, nextyear, gdate
+        thisyear, lastyear, nextyear, Get-DateAlternative
 
     .NOTES
         Get-Date (Microsoft.PowerShell.Utility)
@@ -674,5 +674,5 @@ function lastyear {
         # read from stdin
         $splatting.Set_Item('Date', $input)
     }
-    gdate @splatting
+    Get-DateAlternative @splatting
 }
