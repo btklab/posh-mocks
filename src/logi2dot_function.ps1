@@ -815,7 +815,7 @@ function logi2dot {
         Write-Debug $rdLine
         if (($lineCounter -eq 1) -and ($rdLine -match '^# ')) {
             ## treat first line as title
-            [string] $fTitle = $rdLine -replace '^# .', ''
+            [string] $fTitle = $rdLine -replace '^# ', ''
             [bool] $isFirstRowEqTitle = $True
             return
         }

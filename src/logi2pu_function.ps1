@@ -601,7 +601,7 @@ function logi2pu {
             [string] $rdLine = replaceHyphensToSharps $rdLine
         }
         Write-Debug $rdLine
-        if (($lineCounter -eq 1) -and ($rdLine -match '^# .')) {
+        if (($lineCounter -eq 1) -and ($rdLine -match '^# ')) {
             ## treat first line as title
             $fTitle = $rdLine -replace '^# ', ''
             $isFirstRowEqTitle = $true
