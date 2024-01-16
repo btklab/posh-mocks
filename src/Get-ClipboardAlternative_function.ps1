@@ -166,6 +166,7 @@ function Get-ClipboardAlternative {
         [Object[]] $File,
         
         [Parameter( Mandatory=$False )]
+        [Alias('t')]
         [Switch] $AsPlainText,
                 
         [Parameter( Mandatory=$False )]
