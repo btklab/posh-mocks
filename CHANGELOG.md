@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Added [Get-ClipboardAlternative] -t option as alias for -AsPlainText
 - Fixed [logi2dot]
 - Fixed [Get-Ticket] correct the insertion position of the date when specifying the `-Add` option
 - Deleted [Edit-Function] `edit` alias
