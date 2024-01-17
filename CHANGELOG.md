@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [6.10.2] - 2024-01-13
+
 - Added [examples.md]
 - Added [Get-ClipboardAlternative] -t option as alias for -AsPlainText
 - Fixed [logi2dot]
@@ -661,7 +665,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.10.1..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/6.10.2..HEAD
+[6.10.2]: https://github.com/btklab/posh-mocks/releases/tag/6.10.2
 [6.10.1]: https://github.com/btklab/posh-mocks/releases/tag/6.10.1
 [6.10.0]: https://github.com/btklab/posh-mocks/releases/tag/6.10.0
 [6.9.0]: https://github.com/btklab/posh-mocks/releases/tag/6.9.0
