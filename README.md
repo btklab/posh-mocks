@@ -1,10 +1,10 @@
 # posh-mocks
 
 ```markdown
->      ____   ___   ____  _   _        _    _   ___    ___  _  _  ____
->     |  _ \ / _ \ /  __)| |_| | ____ | \  / | / _ \  / __)| |/ )/  __)
->     |  __/( (_) )\__  \|  _  |(____)|  \/  |( (_) )( (__ |   ( \__  \
->     |_|    \___/ (____/|_| |_|      |_|  |_| \___/  \___)|_|\_)(____/
+>  ____   ___   ____  _   _        _    _   ___    ___  _  _  ____
+> |  _ \ / _ \ /  __)| |_| | ____ | \  / | / _ \  / __)| |/ )/  __)
+> |  __/( (_) )\__  \|  _  |(____)|  \/  |( (_) )( (__ |   ( \__  \
+> |_|    \___/ (____/|_| |_|      |_|  |_| \___/  \___)|_|\_)(____/
 ```
 
 A mock-up set of [PowerShell](https://github.com/PowerShell/PowerShell) 7 functions that filter text-object input from the pipeline(stdin) and return text-object (this concept is closer to Bash than PowerShell).Inspired by [Parsing Text with PowerShell (3/3), Steve Lee, January 28th, 2019](https://devblogs.microsoft.com/powershell/parsing-text-with-powershell-3-3/).

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Added [examples.md]
 - Added [Get-ClipboardAlternative] -t option as alias for -AsPlainText
 - Fixed [logi2dot]
 - Fixed [Get-Ticket] correct the insertion position of the date when specifying the `-Add` option
@@ -492,6 +493,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [README.md]: blob/main/README.md
 [CHANGELOG.md]: blob/main/CHANGELOG.md
+[examples.md]: blob/main/examples.md
 
 [addb]: src/addb_function.ps1
 [addl]: src/addl_function.ps1
@@ -656,6 +658,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Grep-Block]: src/Grep-Block_function.ps1
 [Sort-Block]: src/Sort-Block_function.ps1
+
 
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/6.10.1..HEAD
