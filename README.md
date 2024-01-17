@@ -5989,8 +5989,8 @@ Import-Excel -Path iris.xlsx `
 ```markdown
 Count Average    Sum Maximum Minimum StandardDeviation Property
 ----- -------    --- ------- ------- ----------------- --------
-    150    5.84 876.50    7.90    4.30              0.83 sepal_length
-    150    3.76 563.70    6.90    1.00              1.77 petal_length
+  150    5.84 876.50    7.90    4.30              0.83 sepal_length
+  150    3.76 563.70    6.90    1.00              1.77 petal_length
 ```
 
 ```powershell
@@ -7032,7 +7032,6 @@ Examples:
 # input data
 # A list in markdown format,
 # 4 single-byte spaces plus a hyphen
-
 cat a.md
 ```
 
@@ -7057,7 +7056,7 @@ end legend
 
 ```powershell
 # output
-# Note that fontname="meiryo" is specified by default
+# Note that fontname="MS Gothic" is specified by default
 cat a.md | mind2dot
 ```
 
@@ -7066,7 +7065,7 @@ graph mindmap {
  // graph settings
  graph [
   charset = "UTF-8";
-  fontname = "Meiryo";
+  fontname = "MS Gothic";
   label = "What flavor would you like?\n\n";
   labelloc = "t";
   labeljust = "c";
@@ -7288,7 +7287,7 @@ end legend
 
 ```powershell
 # output
-# Note that fontname="meiryo" is specified by default
+# Note that fontname="MS Gothic" is specified by default
 
 cat a.md | mind2pu
 ```
@@ -7297,7 +7296,7 @@ cat a.md | mind2pu
 @startmindmap
 
 title "What flavor would you like?"
-skinparam DefaultFontName "Meiryo"
+skinparam DefaultFontName "MS Gothic"
 
 * Flavors
 ** Chocolate
