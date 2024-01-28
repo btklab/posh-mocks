@@ -181,6 +181,9 @@ function sleepy {
         [int] $dSec = $rSpan.TotalSeconds
         # progres percentage
         [double] $tprc = $tSec / $addSec * 100
+        if ( $tprc -gt 100 ){
+            $tprc = 100
+        }
         if ($tprc -le 0.5){
             [int] $perc = 1
         } else {

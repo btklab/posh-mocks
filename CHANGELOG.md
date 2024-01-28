@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- NA
+- Fixed [sleepy] PercentComplete value to 100 if it is greater than 100
 
 ## [6.10.2] - 2024-01-13
 
