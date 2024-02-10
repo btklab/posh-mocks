@@ -164,6 +164,10 @@ function Invoke-Link {
         [switch] $AsFileObject,
         
         [Parameter( Mandatory=$False )]
+        [Alias('i')]
+        [int[]] $InvokeById,
+        
+        [Parameter( Mandatory=$False )]
         [ValidateSet(
             "Break", "Ignore", "SilentlyContinue",
             "Suspend", "Continue", "Inquire", "Stop" )]
@@ -212,6 +216,7 @@ function Invoke-Link {
         }
         return
     }
+    [int] $fileCounter = 0
     foreach ( $f in $Files){
         # interpret Paths containing wildcards
         if ( Test-Path -Path $f -PathType Container){
@@ -231,7 +236,38 @@ function Invoke-Link {
                         continue
                     }
                     # return file paths
-                    Invoke-Item -LiteralPath $File
+                    #Invoke-Item -LiteralPath $File
+                    Get-ChildItem -LiteralPath $File `
+                        | Sort-Object {
+                            -join ( [int[]] ($_.Name.ToCharArray()) | ForEach-Object { [System.Convert]::ToString($_, 16)})
+                        } `
+                        | ForEach-Object {
+                            $fileCounter++
+                            if ( $InvokeById.Count -gt 0){
+                                if ($InvokeById.Contains($fileCounter)){
+                                    Write-Output "Invoke-Link: $((Resolve-Path -LiteralPath $_.FullName -Relative).Replace('\','/'))"
+                                    Invoke-Link -Files $_.FullName
+                                }
+                                return
+                            }
+                            if (
+                                (Test-Path -LiteralPath $_.FullName -PathType Container) -or `
+                                ($_.Extension -match '\.lnk$|\.exe$|\.dll$|\.xls|\.doc|\.ppt|\.ps1$') `
+                                ){
+                                $hash = [ordered] @{
+                                    Id   = $fileCounter
+                                    Name = $_.Name -replace '\.[^\.]+$', ''
+                                    Line = $Null
+                                }
+                            } else {
+                                $hash = [ordered] @{
+                                    Id   = $fileCounter
+                                    Name = $_.Name -replace '\.[^\.]+$', ''
+                                    Line = Get-Content -Path $_.FullName -TotalCount 1 -Encoding utf-8
+                                }
+                            }
+                            [pscustomobject] $Hash
+                        }
                     continue
                 }
             }
