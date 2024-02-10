@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed [sleepy] PercentComplete value to 100 if it is greater than 100
 - Fixed [README.md] create command list script
+- Added [Invoke-Link] `-InvokeById` option
 
 ## [6.10.2] - 2024-01-13
 
