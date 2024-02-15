@@ -27,17 +27,20 @@
 
         Join2-Object
             [-m|-Master] <Object[]>
+            [-t|-Tran] <Object[]>
             [-On|-MasterKey] <String[]>
             [-tkey|-TransKey <String[]>]
             [-Where <ScriptBlock>]
             [-s|-AddSuffixToMasterProperty <String>]
             [-p|-AddPrefixToMasterProperty <String>]
-            [-d|-MasterDelimiter <String>]
+            [-d|-Delimiter <String>]
             [-mh|-MasterHeader <String[]>]
+            [-th|-TranHeader <String[]>]
             [-Dummy <String>]
             [-OnlyIfInBoth]
             [-OnlyIfInTransaction]
             [-PreSortedMasterKey]
+            [-SortTranKey]
             [-IncludeMasterKey]
 
 .Parameter Master
@@ -64,13 +67,17 @@
     property name overlaps with transaction data.
     None is set by default.
 
-.Parameter MasterDelimiter
-    Master file delimiter when specifying master data
+.Parameter Delimiter
+    Master/Trans file delimiter when specifying master data
     as a file. Comma separated by defalut.
 
 .Parameter MasterHeader
     Master file header array when specifying headerless
     master data as a file.
+
+.Parameter TranHeader
+    Transaction file header array when specifying headerless
+    transaction data as a file.
 
 .Parameter Dummy
     Alternative string if a transaction key that is not
@@ -224,6 +231,10 @@ function Join2-Object
         [Alias('m')]
         [object[]] $Master,
         
+        [Parameter(Mandatory=$False)]
+        [Alias('t')]
+        [object[]] $Tran,
+        
         [Parameter(Mandatory=$True, Position=1)]
         [Alias('On')]
         [string[]] $MasterKey,
@@ -245,11 +256,15 @@ function Join2-Object
         
         [Parameter(Mandatory=$False)]
         [Alias('d')]
-        [string] $MasterDelimiter = ",",
+        [string] $Delimiter = ",",
         
         [Parameter(Mandatory=$False)]
         [Alias('mh')]
         [string[]] $MasterHeader,
+        
+        [Parameter(Mandatory=$False)]
+        [Alias('th')]
+        [string[]] $TransHeader,
         
         [Parameter(Mandatory=$False)]
         [string] $Dummy = $Null,
@@ -262,6 +277,12 @@ function Join2-Object
         
         [Parameter(Mandatory=$False)]
         [switch] $PreSortedMasterKey,
+        
+        [Parameter(Mandatory=$False)]
+        [switch] $SortTranKey,
+        
+        [Parameter(Mandatory=$False)]
+        [switch] $Descending,
         
         [Parameter(Mandatory=$False)]
         [switch] $IncludeMasterKey,
@@ -311,8 +332,8 @@ function Join2-Object
         return
     }
     # is Master data file or object?
-    Write-Debug $Master.GetType().FullName
-    Write-Debug $Master[0]
+    #Write-Debug "Master: $($Master.GetType().FullName)"
+    Write-Debug "Master: $($Master[0])"
     $sortHash = @{
         Property = $MasterKey
         Stable = $True
@@ -321,7 +342,7 @@ function Join2-Object
         # Master is file
         # get master as object
         $csvHash = @{
-            LiteralPath = "$Master"
+            LiteralPath = [String]($Master[0])
             Delimiter   = "$MasterDelimiter"
             Encoding    = "utf8"
         }
@@ -344,6 +365,55 @@ function Join2-Object
         }
     }
     Write-Debug $MasterData.GetType().FullName
+    # is Transaction data file or object or pipeline input?
+    $sortHash = @{
+        Stable = $True
+        Descending = $Descending
+    }
+    if ( $TransKey ){
+        $sortHash.Set_Item("Property", $TransKey)
+    } else {
+        $sortHash.Set_Item("Property", $MasterKey)
+    }
+    if ( $Tran.Count -gt 0 ){
+        #Write-Debug "Tran: $($Tran.GetType().FullName)"
+        Write-Debug "Tran: $($Tran[0])"
+        if ( $Tran.Count -eq 1 -and ( Test-Path -LiteralPath "$($Tran[0])") ){
+            # Transaction is file
+            # get tran as object
+            $csvHash = @{
+                LiteralPath = [String]($Tran[0])
+                Delimiter   = "$Delimiter"
+                Encoding    = "utf8"
+            }
+            if ( $Header ){
+                $csvHash.Set_Item("Header", $TranHeader)
+            }
+            if ( $SortTranKey ){
+                [object[]] $TranData = Import-Csv @csvHash `
+                    | Sort-Object @sortHash
+            } else {
+                [object[]] $TranData = Import-Csv @csvHash
+            }
+        } else {
+            # MasterData is Object
+            if ( $SortTranKey ){
+                [object[]] $TranData = $Tran
+            } else {
+                [object[]] $TranData = $Tran `
+                    | Sort-Object @sortHash
+            }
+        }
+    } else {
+        # read from pipeline
+        if ( $SortTranKey ){
+            [object[]] $TranData = $input `
+                | Sort-Object @sortHash
+        } else {
+            [object[]] $TranData = $input
+        }
+    }
+    Write-Debug "Tran: $($TranData.GetType().FullName)"
     # Replace master propertyname
     if ( $AddSuffixToMasterProperty ){
         $MasterData = $MasterData `
@@ -410,7 +480,8 @@ function Join2-Object
         }
     }
     ## for each trans record
-    foreach ($obj in @( $input | Select-Object *) ){
+    #foreach ($obj in @( $input | Select-Object *) ){
+    foreach ($obj in $TranData ){
         # create trans key string
         [string] $tKey = ''
         foreach ( $tk in $tKeyList ){
