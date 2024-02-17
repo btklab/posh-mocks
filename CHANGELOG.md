@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [7.0.0] - 2024-02-17
+
+- Added [Execute-TinyTex] (Alias: tinytex) function
+- Added [math2tex] function
 - Fixed [sleepy] PercentComplete value to 100 if it is greater than 100
 - Fixed [README.md] create command list script
 - Added [Invoke-Link] `-InvokeById` option
@@ -670,9 +676,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Grep-Block]: src/Grep-Block_function.ps1
 [Sort-Block]: src/Sort-Block_function.ps1
 
+[Execute-TinyTex]: src/Execute-TinyTex_function.ps1
+[math2tex]: src/math2tex_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/6.10.2..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/7.0.0..HEAD
+[7.0.0]: https://github.com/btklab/posh-mocks/releases/tag/7.0.0
 [6.10.2]: https://github.com/btklab/posh-mocks/releases/tag/6.10.2
 [6.10.1]: https://github.com/btklab/posh-mocks/releases/tag/6.10.1
 [6.10.0]: https://github.com/btklab/posh-mocks/releases/tag/6.10.0
