@@ -12,13 +12,13 @@ A mock-up set of [PowerShell](https://github.com/PowerShell/PowerShell) 7 functi
 - A set of functions for interactive text processing with connecting pipes.
 - For my personal work and hobby use.
 - For use in UTF-8 Japanese environments on windows.
-- Required PowerShell 7+ on Windows
-    - Some script may work with PowerShell 5
-    - Some script may work with PowerShell 7+ on Linux
+- Required `PowerShell7+` on `Windows`
+    - Some script may work with `PowerShell5`
+    - Some script may work with `PowerShell7+` on `Linux`
 - Note:
     - The code is spaghetti (due to my technical inexperience).
     - Insufficient tests and error handlings.
-    - Processing speed is slow.
+    - Processing speed is **not fast**.
 - Workflow-Examples:
     - See: [examples.md](examples.md)
 
@@ -78,14 +78,11 @@ Inspired by:
         - [GitHub - allisonhorst/palmerpenguins: A great intro dataset for data exploration &amp; visualization (alternative to iris).](https://github.com/allisonhorst/palmerpenguins)
         - License: Creative Commons Zero v1.0 Universal
 
+**General**: This repository contains a set of filter commands for pattern matching on amorphous strings. The filter commands expect `UTF-8` + `space-delimited` + `line-oriented string data` (text object) through the pipeline as input. The output is also a string, not a typical PowerShell object. Some functions accept Object-input through pipeline, and some functions are "like PowerShell cmdlets" that output object. The design of the filters is similar to Unix/Linux shells such as Bash.
 
+**File Structure**: The file structure under the `src` directory is one file and one function. The function name is a string excluding `_function.ps1` from the file name. Basically, filters are not dependent on other filters, so if you move the function file and read it with dot source, you can use it anywhere. (Some filters depend on other filters.) Also, note that some filters only work with `PowerShell7+` on `Windows`.
 
-主に現実世界の不定形文字列に対してパターンマッチング処理を行うためのフィルタ群。基本的な入力として、UTF-8＋半角スペース区切り＋行指向のパイプライン経由文字列データ（テキストオブジェクト）を期待する。出力もPowerShellらしいオブジェクトではなく、文字列である。一部の関数はオブジェクトのパイプライン入力を受け付けたり、オブジェクトとして出力する「PowerShellのコマンドレット的といえるもの」もあるが、動作としてはUnix/LinuxのBashなどのシェルに寄せている。
-
-`src`下のファイル構成は、1ファイル1関数。関数名はファイル名から`_function.ps1`をのぞいた文字列。基本的に他の関数には依存しないようにしているので、関数ファイル単体を移動して利用することもできる。（一部の関数は他の関数ファイルに依存しているものもある）また、一部、Windows上・PowerShell7+でしか動かない関数がある点に注意する。
-
-**充分なエラー処理をしていない**モックアップ。事務職（非技術職）な筆者の毎日の仕事（おもに文字列処理）を、簡単便利に楽しくさばくための道具としてのコマンドセット。
-
+**Note**: The filters in this repository are command sets intended for personal use and are mockups without proper error handling.
 
 
 ## Install functions
@@ -101,10 +98,7 @@ Inspired by:
 . path/to/posh-mocks/operator-extra.ps1
 ```
 
-関数は一部を除きできるだけ他の関数と依存しないようにしている。
-必要な関数単独を直接ドットソースで読み込んでもよい。
-この場合、以下のように最初にカレントプロセスのエンコードを`UTF-8`にしておくとよい。
-理由は、当関数群が基本的にパイプライン経由の入出力として`UTF-8`を想定しているため。
+The functions are designed to be as independent from other functions as possible. You can also load single function using dot-sourcing. In that case, it is recommended to first set the encoding of the current process to `UTF-8` as shown below, because this functions basically assumes `UTF-8` for input and output through the pipeline.
 
 
 ```powershell
@@ -6757,7 +6751,7 @@ id      v1 v2 v3 v4 v5 m_name m_val m_class
 
 [dot2gviz]と同じくコマンド文字列が長くて覚えられないため、このラッパースクリプトを作成した。もっともシンプルに書くと`pu2java a.pu`。デフォルトで入力ファイル名と同ファイル名の`png`画像をカレントディレクトリに出力する。
 
-`plantuml.jar`ファイルの場所はデフォルトで`${HOME}/bin/plantuml.jar`を期待する。`-Jar <path/to/the/jar>`で任意の場所の`jar`ファイルを指定することもできる。
+`plantuml.jar`ファイルの場所はデフォルトで`${HOME}/bin/plantuml/plantuml.jar`を期待する。`-Jar <path/to/the/jar>`で任意の場所の`jar`ファイルを指定することもできる。
 
 - Usage
     - `man2 pu2java`
@@ -6776,15 +6770,15 @@ id      v1 v2 v3 v4 v5 m_name m_val m_class
         - `[-ErrorCheck]`
 - Examples
     - `pu2java a.pu`
-        - `java -jar plantuml.jar -charset "UTF-8" -t"png" a.pu`と等価
+        - `java -jar plantuml.jar -charset "UTF-8" -t "png" a.pu`と等価
     - `pu2java a.pu -OutputFileType png`
-        - `java -jar plantuml.jar -charset "UTF-8" -t"png" a.pu`と等価
+        - `java -jar plantuml.jar -charset "UTF-8" -t "png" a.pu`と等価
     - `pu2java a.pu -OutputFileType svg`
-        - `java -jar plantuml.jar -charset "UTF-8" -t"svg" a.pu`と等価
+        - `java -jar plantuml.jar -charset "UTF-8" -t "svg" a.pu`と等価
 - Options
     - `-ErrorCheck`スイッチで、等価なplantumlコマンド文字列が出力される
         - `pu2java a.pu svg -ErrorCheck`
-            - 出力: `java -jar plantuml.jar" -charset "UTF-8" -t"svg" a.pu`
+            - 出力: `java -jar plantuml.jar" -charset "UTF-8" -t "svg" a.pu`
 - Dependencies
     - plantuml
         - <https://plantuml.com/en/>

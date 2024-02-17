@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added [Invoke-Link] `-InvokeById` option
 - Added [Join2-Object] `-Tran` option
 
+### Breaking Change
+
+- Changed [pu2java] jar file location
+
 ## [6.10.2] - 2024-01-13
 
 - Added [examples.md]
