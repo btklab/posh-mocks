@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- NA
+- Added [Inkscape-Converter] (Alias: inkconv) function
 
 ## [7.0.0] - 2024-02-17
 
@@ -678,6 +678,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Execute-TinyTex]: src/Execute-TinyTex_function.ps1
 [math2tex]: src/math2tex_function.ps1
+[Inkscape-Converter]: src/Inkscape-Converter_function.ps1
 
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/7.0.0..HEAD

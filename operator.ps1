@@ -118,6 +118,8 @@ if ($IsWindows){
 . $pwshSrcDir/mdfocus_function.ps1
 
 . $pwshSrcDir/Execute-TinyTex_function.ps1
+. $pwshSrcDir/Inkscape-Converter_function.ps1
+
 . $pwshSrcDir/math2tex_function.ps1
 . $pwshSrcDir/tex2pdf_function.ps1
 . $pwshSrcDir/jl_function.ps1

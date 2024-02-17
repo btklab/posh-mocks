@@ -27,7 +27,7 @@
     tinytex -InstallPackage "psnfss"
 
 .LINK
-    Execute-TinyTex (Alias: tinytex), math2tex, pdf2svg, tex2pdf
+    Execute-TinyTex (Alias: tinytex), math2tex, tex2pdf, inkconv
 
 
 .NOTES
@@ -269,3 +269,4 @@ if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0)
     Remove-Variable -Name "tmpAliasName" -Force
     Remove-Variable -Name "tmpCmdName" -Force
 }
+
