@@ -12,13 +12,13 @@ A mock-up set of [PowerShell](https://github.com/PowerShell/PowerShell) 7 functi
 - A set of functions for interactive text processing with connecting pipes.
 - For my personal work and hobby use.
 - For use in UTF-8 Japanese environments on windows.
-- Required PowerShell 7+ on Windows
-    - Some script may work with PowerShell 5
-    - Some script may work with PowerShell 7+ on Linux
+- Required `PowerShell7+` on `Windows`
+    - Some script may work with `PowerShell5`
+    - Some script may work with `PowerShell7+` on `Linux`
 - Note:
     - The code is spaghetti (due to my technical inexperience).
     - Insufficient tests and error handlings.
-    - Processing speed is slow.
+    - Processing speed is **not fast**.
 - Workflow-Examples:
     - See: [examples.md](examples.md)
 
@@ -38,54 +38,13 @@ cat README.md `
     | Set-Clipboard
 ```
 
-- [Add-LineBreakEndOfFile](#Add-LineBreakEndOfFile), [Add-LineBreak](#Add-LineBreak), [Add-Quartile](#Add-Quartile), [Add-Stats](#Add-Stats), [Apply-Function](#Apply-Function), [ConvImage](#ConvImage), [Decrease-Indent](#Decrease-Indent), [Delete-Field](#Delete-Field), [Detect-XrsAnomaly](#Detect-XrsAnomaly), [Drop-NA](#Drop-NA), [Edit-Function](#Edit-Function), [Get-AppShortcut](#Get-AppShortcut), [Get-ClipboardAlternative](#Get-ClipboardAlternative), [Get-DateAlternative](#Get-DateAlternative), [Get-Histogram](#Get-Histogram), [Get-OGP](#Get-OGP), [Get-Ticket](#Get-Ticket), [Grep-Block](#Grep-Block), [GroupBy-Object](#GroupBy-Object), [Invoke-Link](#Invoke-Link), [Join2-Object](#Join2-Object), [Measure-Quartile](#Measure-Quartile), [Measure-Stats](#Measure-Stats), [Measure-Summary](#Measure-Summary), [Override-Yaml](#Override-Yaml), [Plot-BarChart](#Plot-BarChart), [Rename-Normalize](#Rename-Normalize), [Replace-ForEach](#Replace-ForEach), [Replace-NA](#Replace-NA), [Select-Field](#Select-Field), [Set-NowTime2Clipboard](#Set-NowTime2Clipboard), [Shorten-PropertyName](#Shorten-PropertyName), [Shutdown-ComputerAFM](#Shutdown-ComputerAFM), [Sleep-ComputerAFM](#Sleep-ComputerAFM), [Sort-Block](#Sort-Block), [Test-isAsciiLine](#Test-isAsciiLine), [Transpose-Property](#Transpose-Property), [Unique-Object](#Unique-Object), [Unzip-Archive](#Unzip-Archive), [addb](#addb), [addl](#addl), [addr](#addr), [addt](#addt), [cat2](#cat2), [catcsv](#catcsv), [chead](#chead), [clip2file](#clip2file), [clip2hyperlink](#clip2hyperlink), [clip2img](#clip2img), [clip2normalize](#clip2normalize), [clip2push](#clip2push), [clip2shortcut](#clip2shortcut), [conv](#conv), [count](#count), [csv2sqlite](#csv2sqlite), [csv2txt](#csv2txt), [ctail](#ctail), [decil](#decil), [delf](#delf), [dot2gviz](#dot2gviz), [filehame](#filehame), [fillretu](#fillretu), [flat](#flat), [flow2pu](#flow2pu), [fpath](#fpath), [fval](#fval), [fwatch](#fwatch), [gantt2pu](#gantt2pu), [getfirst](#getfirst), [getlast](#getlast), [grep](#grep), [gyo](#gyo), [han](#han), [head](#head), [image2md](#image2md), [jl](#jl), [json2txt](#json2txt), [juni](#juni), [keta](#keta), [kinsoku](#kinsoku), [lastyear](#lastyear), [lcalc2](#lcalc2), [lcalc](#lcalc), [linkcheck](#linkcheck), [linkextract](#linkextract), [list2table](#list2table), [logi2dot](#logi2dot), [logi2pu](#logi2pu), [man2](#man2), [map2](#map2), [mdfocus](#mdfocus), [mdgrep](#mdgrep), [mind2dot](#mind2dot), [mind2pu](#mind2pu), [movw](#movw), [nextyear](#nextyear), [pawk](#pawk), [percentile](#percentile), [pu2java](#pu2java), [push2loc](#push2loc), [pwmake](#pwmake), [pwsync](#pwsync), [retu](#retu), [rev2](#rev2), [rev](#rev), [say](#say), [sed-i](#sed-i), [sed](#sed), [self](#self), [seq2pu](#seq2pu), [sleepy](#sleepy), [sm2](#sm2), [summary](#summary), [table2md](#table2md), [tac](#tac), [tail-f](#tail-f), [tail](#tail), [tarr](#tarr), [tateyoko](#tateyoko), [teatimer](#teatimer), [tenki](#tenki), [tex2pdf](#tex2pdf), [thisyear](#thisyear), [toml2psobject](#toml2psobject), [uniq](#uniq), [vbStrConv](#vbStrConv), [watercss](#watercss), [wrap](#wrap), [yarr](#yarr), [ycalc](#ycalc), [ysort](#ysort), [zen](#zen)
+- [Add-LineBreakEndOfFile](#Add-LineBreakEndOfFile), [Add-LineBreak](#Add-LineBreak), [Add-Quartile](#Add-Quartile), [Add-Stats](#Add-Stats), [Apply-Function](#Apply-Function), [ConvImage](#ConvImage), [Decrease-Indent](#Decrease-Indent), [Delete-Field](#Delete-Field), [Detect-XrsAnomaly](#Detect-XrsAnomaly), [Drop-NA](#Drop-NA), [Edit-Function](#Edit-Function), [Execute-TinyTex](#Execute-TinyTex), [Get-AppShortcut](#Get-AppShortcut), [Get-ClipboardAlternative](#Get-ClipboardAlternative), [Get-DateAlternative](#Get-DateAlternative), [Get-Histogram](#Get-Histogram), [Get-OGP](#Get-OGP), [Get-Ticket](#Get-Ticket), [Grep-Block](#Grep-Block), [GroupBy-Object](#GroupBy-Object), [Invoke-Link](#Invoke-Link), [Join2-Object](#Join2-Object), [Measure-Quartile](#Measure-Quartile), [Measure-Stats](#Measure-Stats), [Measure-Summary](#Measure-Summary), [Override-Yaml](#Override-Yaml), [Plot-BarChart](#Plot-BarChart), [Rename-Normalize](#Rename-Normalize), [Replace-ForEach](#Replace-ForEach), [Replace-NA](#Replace-NA), [Select-Field](#Select-Field), [Set-NowTime2Clipboard](#Set-NowTime2Clipboard), [Shorten-PropertyName](#Shorten-PropertyName), [Shutdown-ComputerAFM](#Shutdown-ComputerAFM), [Sleep-ComputerAFM](#Sleep-ComputerAFM), [Sort-Block](#Sort-Block), [Test-isAsciiLine](#Test-isAsciiLine), [Transpose-Property](#Transpose-Property), [Unique-Object](#Unique-Object), [Unzip-Archive](#Unzip-Archive), [addb](#addb), [addl](#addl), [addr](#addr), [addt](#addt), [cat2](#cat2), [catcsv](#catcsv), [chead](#chead), [clip2file](#clip2file), [clip2hyperlink](#clip2hyperlink), [clip2img](#clip2img), [clip2normalize](#clip2normalize), [clip2push](#clip2push), [clip2shortcut](#clip2shortcut), [conv](#conv), [count](#count), [csv2sqlite](#csv2sqlite), [csv2txt](#csv2txt), [ctail](#ctail), [decil](#decil), [delf](#delf), [dot2gviz](#dot2gviz), [filehame](#filehame), [fillretu](#fillretu), [flat](#flat), [flow2pu](#flow2pu), [fpath](#fpath), [fval](#fval), [fwatch](#fwatch), [gantt2pu](#gantt2pu), [getfirst](#getfirst), [getlast](#getlast), [grep](#grep), [gyo](#gyo), [han](#han), [head](#head), [image2md](#image2md), [jl](#jl), [json2txt](#json2txt), [juni](#juni), [keta](#keta), [kinsoku](#kinsoku), [lastyear](#lastyear), [lcalc2](#lcalc2), [lcalc](#lcalc), [linkcheck](#linkcheck), [linkextract](#linkextract), [list2table](#list2table), [logi2dot](#logi2dot), [logi2pu](#logi2pu), [man2](#man2), [map2](#map2), [math2tex](#math2tex), [mdfocus](#mdfocus), [mdgrep](#mdgrep), [mind2dot](#mind2dot), [mind2pu](#mind2pu), [movw](#movw), [nextyear](#nextyear), [pawk](#pawk), [percentile](#percentile), [pu2java](#pu2java), [push2loc](#push2loc), [pwmake](#pwmake), [pwsync](#pwsync), [retu](#retu), [rev2](#rev2), [rev](#rev), [say](#say), [sed-i](#sed-i), [sed](#sed), [self](#self), [seq2pu](#seq2pu), [sleepy](#sleepy), [sm2](#sm2), [summary](#summary), [table2md](#table2md), [tac](#tac), [tail-f](#tail-f), [tail](#tail), [tarr](#tarr), [tateyoko](#tateyoko), [teatimer](#teatimer), [tenki](#tenki), [tex2pdf](#tex2pdf), [thisyear](#thisyear), [toml2psobject](#toml2psobject), [uniq](#uniq), [vbStrConv](#vbStrConv), [watercss](#watercss), [wrap](#wrap), [yarr](#yarr), [ycalc](#ycalc), [ysort](#ysort), [zen](#zen)
 
+**General**: This repository contains a set of filter commands for pattern matching on amorphous strings. The filter commands expect `UTF-8` + `space-delimited` + `line-oriented string data` (text object) through the pipeline as input. The output is also a string, not a typical PowerShell object. Some functions accept Object-input through pipeline, and some functions are "like PowerShell cmdlets" that output object. The design of the filters is similar to Unix/Linux shells such as Bash.
 
-Inspired by:
+**File Structure**: The file structure under the `src` directory is one file and one function. The function name is a string excluding `_function.ps1` from the file name. Basically, filters are not dependent on other filters, so if you move the function file and read it with dot source, you can use it anywhere. (Some filters depend on other filters.) Also, note that some filters only work with `PowerShell7+` on `Windows`.
 
-- Article
-    - [Parsing Text with PowerShell (3/3), Steve Lee, January 28th, 2019](https://devblogs.microsoft.com/powershell/parsing-text-with-powershell-3-3/).
-- Unix/Linux commands
-    - Commands: `grep`, `sed`, `head`, `tail`, `awk`, `make`, `uniq`, and more...
-- [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
-    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
-    - Commands: `man2`, `keta`, `tateyoko`, `gyo`, `fillretu`, `yarr`, `count`, `han`, `zen`, `filehame`, `self`, `delf`, `count`, `getfirst`, `getlast`, and more...
-- [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
-    - License: The MIT License (MIT): Copyright (c) 2016 Yasuhiro, Yamada
-    - Commands: `flat`, `addt`, `addb`, `addr`, `addl`, `mirror`,`wrap`, and more...
-- [mattn/sleepy - GitHub](https://github.com/mattn/sleepy)
-    - License: The MIT License (MIT): Copyright (c) 2022 Yasuhiro Matsumoto
-    - Commands: `sleepy`
-- [tomnomnom/gron: Make JSON greppable! - GitHub](https://github.com/tomnomnom/gron)
-    - License: The MIT License (MIT): Copyright (c) 2016 Tom Hudson
-    - Commands: `gron`
-- [禁則処理 - PyJaPDF](http://pyjapdf.linxs.org/home/kinsoku)
-    - Commands: `kinsoku.py`
-- [miyamiya/mypss: My PowerShell scripts - GitHub](https://github.com/miyamiya/mypss)
-    - Commands: `Get-Draw.ps1`
-- [ImageMagick](https://imagemagick.org/index.php)
-    - Commands: `convert`, `magick convert`(on windows)
-- [Water.css](https://watercss.kognise.dev/)
-    - GitHub: <https://github.com/kognise/water.css>
-    - License: The MIT License (MIT) Copyright © 2019 Kognise
-- [nicholasdille/PowerShell-Statistics - GitHub](https://github.com/nicholasdille/PowerShell-Statistics/tree/master)
-    - License: [The Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)
-- [todo.txt format](https://github.com/todotxt/todo.txt)
-    - License: GNU General Public License v3.0 (GPL-3.0 license)
-- Dataset
-    - allisonhorst / palmerpenguins
-        - [palmerpenguins R data package](https://allisonhorst.github.io/palmerpenguins/)
-        - [GitHub - allisonhorst/palmerpenguins: A great intro dataset for data exploration &amp; visualization (alternative to iris).](https://github.com/allisonhorst/palmerpenguins)
-        - License: Creative Commons Zero v1.0 Universal
-
-
-
-主に現実世界の不定形文字列に対してパターンマッチング処理を行うためのフィルタ群。基本的な入力として、UTF-8＋半角スペース区切り＋行指向のパイプライン経由文字列データ（テキストオブジェクト）を期待する。出力もPowerShellらしいオブジェクトではなく、文字列である。一部の関数はオブジェクトのパイプライン入力を受け付けたり、オブジェクトとして出力する「PowerShellのコマンドレット的といえるもの」もあるが、動作としてはUnix/LinuxのBashなどのシェルに寄せている。
-
-`src`下のファイル構成は、1ファイル1関数。関数名はファイル名から`_function.ps1`をのぞいた文字列。基本的に他の関数には依存しないようにしているので、関数ファイル単体を移動して利用することもできる。（一部の関数は他の関数ファイルに依存しているものもある）また、一部、Windows上・PowerShell7+でしか動かない関数がある点に注意する。
-
-**充分なエラー処理をしていない**モックアップ。事務職（非技術職）な筆者の毎日の仕事（おもに文字列処理）を、簡単便利に楽しくさばくための道具としてのコマンドセット。
-
+**Note**: The filters in this repository are command sets intended for personal use and are mockups without proper error handling.
 
 
 ## Install functions
@@ -101,10 +60,7 @@ Inspired by:
 . path/to/posh-mocks/operator-extra.ps1
 ```
 
-関数は一部を除きできるだけ他の関数と依存しないようにしている。
-必要な関数単独を直接ドットソースで読み込んでもよい。
-この場合、以下のように最初にカレントプロセスのエンコードを`UTF-8`にしておくとよい。
-理由は、当関数群が基本的にパイプライン経由の入出力として`UTF-8`を想定しているため。
+The functions are designed to be as independent from other functions as possible. You can also load single function using dot-sourcing. In that case, it is recommended to first set the encoding of the current process to `UTF-8` as shown below, because this functions basically assumes `UTF-8` for input and output through the pipeline.
 
 
 ```powershell
@@ -6757,7 +6713,7 @@ id      v1 v2 v3 v4 v5 m_name m_val m_class
 
 [dot2gviz]と同じくコマンド文字列が長くて覚えられないため、このラッパースクリプトを作成した。もっともシンプルに書くと`pu2java a.pu`。デフォルトで入力ファイル名と同ファイル名の`png`画像をカレントディレクトリに出力する。
 
-`plantuml.jar`ファイルの場所はデフォルトで`${HOME}/bin/plantuml.jar`を期待する。`-Jar <path/to/the/jar>`で任意の場所の`jar`ファイルを指定することもできる。
+`plantuml.jar`ファイルの場所はデフォルトで`${HOME}/bin/plantuml/plantuml.jar`を期待する。`-Jar <path/to/the/jar>`で任意の場所の`jar`ファイルを指定することもできる。
 
 - Usage
     - `man2 pu2java`
@@ -6776,15 +6732,15 @@ id      v1 v2 v3 v4 v5 m_name m_val m_class
         - `[-ErrorCheck]`
 - Examples
     - `pu2java a.pu`
-        - `java -jar plantuml.jar -charset "UTF-8" -t"png" a.pu`と等価
+        - `java -jar plantuml.jar -charset "UTF-8" -t "png" a.pu`と等価
     - `pu2java a.pu -OutputFileType png`
-        - `java -jar plantuml.jar -charset "UTF-8" -t"png" a.pu`と等価
+        - `java -jar plantuml.jar -charset "UTF-8" -t "png" a.pu`と等価
     - `pu2java a.pu -OutputFileType svg`
-        - `java -jar plantuml.jar -charset "UTF-8" -t"svg" a.pu`と等価
+        - `java -jar plantuml.jar -charset "UTF-8" -t "svg" a.pu`と等価
 - Options
     - `-ErrorCheck`スイッチで、等価なplantumlコマンド文字列が出力される
         - `pu2java a.pu svg -ErrorCheck`
-            - 出力: `java -jar plantuml.jar" -charset "UTF-8" -t"svg" a.pu`
+            - 出力: `java -jar plantuml.jar" -charset "UTF-8" -t "svg" a.pu`
 - Dependencies
     - plantuml
         - <https://plantuml.com/en/>
@@ -9051,6 +9007,98 @@ cat a.md | mdfocus 'Lv\.2' | list2table
 -       Lv.2    Lv.2.1  Lv.2.1.1
 -       Lv.2    Lv.2.2
 ```
+
+#### [Execute-TinyTex] (Alias: tinytex) - Execute `Rscript -e "tinytex::lualatex('a.tex')"` on cli <a id="Execute-TinyTex"></a>
+
+[Execute-TinyTex]: src/Execute-TinyTex_function.ps1
+
+Compiler for `.tex` file using tinytex.
+
+- Usage
+    - `man tinytex`
+- Examples
+    - `tinytex a.tex`
+- Dependencies
+    - R: The R Project for Statistical Computing
+        - <https://www.r-project.org/>
+    - TinyTeX - Yihui Xie
+        - <https://yihui.org/tinytex/>
+    - LaTeX - A document preparation system
+        - <https://www.latex-project.org/>
+- Links
+    - `math2tex`, `pdf2svg`, `tex2pdf`
+- Notes
+    - GitHub - rstudio/tinytex-releases
+        - <https://github.com/rstudio/tinytex-releases>
+    - CTAN: Package haranoaji
+        - <https://ctan.org/pkg/haranoaji>
+
+Examples:
+
+Compile `a.tex` to `a.pdf`
+
+```powershell
+tinytex -f a.tex
+```
+
+```markdown
+    Rscript --vanilla --slave -e "library(tinytex);" -e "tinytex::lualatex('a.tex');"
+```
+
+Search and Install package
+
+```powershell
+tinytex -SearchPackage "/times.sty"
+```
+
+```markdown
+    tlmgr.pl: package repository https://mirror.ctan.org/systems/texlive/tlnet (verified)
+    psnfss:
+            texmf-dist/tex/latex/psnfss/times.sty
+```
+
+```powershell
+tinytex -InstallPackage "psnfss"
+```
+
+#### [math2tex] - Add LaTeX preables to the mathematical and chemical formula in LaTex format. <a id="math2tex"></a>
+
+[math2tex]: src/math2tex_function.ps1
+
+Add LaTeX preables to the mathematical and chemical formula in LaTex format. By using this function with the "tinytex" (Execute-TinyTex) command, you can generate a PDF file containing only mathematical or chemical formula.
+
+- Usage
+    - `man math2tex`
+- Examples
+    - `echo '\ce{2H + O2 -> H2O}' | math2tex > a.tex; tinytex a.tex | ii`
+- Dependencies
+    - LaTeX - A document preparation system
+        - <https://www.latex-project.org/>
+- Links
+    - `Execute-TinyTex` (Alias: `tinytex`), `pdf2svg`
+- Notes
+    - Easy Copy Mathjax
+        - <https://easy-copy-mathjax.nakaken88.com/en/>
+
+Examples:
+
+Add a preamble to the chemical formula and compile the output `a.tex` into `a.pdf`.
+
+```powershell
+echo '\ce{2H + O2 -> H2O}' | math2tex > a.tex; tinytex a.tex | ii
+```
+
+```latex
+\documentclass[varwidth,crop,border=1pt]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage[version=4]{mhchem}
+\begin{document}
+    $\ce{2H + O2 -> H2O}$
+\end{document}
+```
+
 
 #### [tex2pdf] - Compile tex to pdf <a id="tex2pdf"></a>
 
@@ -13844,4 +13892,41 @@ Windows OS           Magnifying glass          Win +
     - Apache License 2.0 (c) 2017 Nicholas Dille
         - <http://www.apache.org/licenses/LICENSE-2.0>
         - A copy of the Apache license 2.0 is written in the script file
+
+## Inspired by
+
+- Article
+    - [Parsing Text with PowerShell (3/3), Steve Lee, January 28th, 2019](https://devblogs.microsoft.com/powershell/parsing-text-with-powershell-3-3/).
+- Unix/Linux commands
+    - Commands: `grep`, `sed`, `head`, `tail`, `awk`, `make`, `uniq`, and more...
+- [Open-usp-Tukubai - GitHub](https://github.com/usp-engineers-community/Open-usp-Tukubai)
+    - License: The MIT License (MIT): Copyright (C) 2011-2022 Universal Shell Programming Laboratory
+    - Commands: `man2`, `keta`, `tateyoko`, `gyo`, `fillretu`, `yarr`, `count`, `han`, `zen`, `filehame`, `self`, `delf`, `count`, `getfirst`, `getlast`, and more...
+- [greymd/egzact: Generate flexible patterns on the shell - GitHub](https://github.com/greymd/egzact)
+    - License: The MIT License (MIT): Copyright (c) 2016 Yasuhiro, Yamada
+    - Commands: `flat`, `addt`, `addb`, `addr`, `addl`, `mirror`,`wrap`, and more...
+- [mattn/sleepy - GitHub](https://github.com/mattn/sleepy)
+    - License: The MIT License (MIT): Copyright (c) 2022 Yasuhiro Matsumoto
+    - Commands: `sleepy`
+- [tomnomnom/gron: Make JSON greppable! - GitHub](https://github.com/tomnomnom/gron)
+    - License: The MIT License (MIT): Copyright (c) 2016 Tom Hudson
+    - Commands: `gron`
+- [禁則処理 - PyJaPDF](http://pyjapdf.linxs.org/home/kinsoku)
+    - Commands: `kinsoku.py`
+- [miyamiya/mypss: My PowerShell scripts - GitHub](https://github.com/miyamiya/mypss)
+    - Commands: `Get-Draw.ps1`
+- [ImageMagick](https://imagemagick.org/index.php)
+    - Commands: `convert`, `magick convert`(on windows)
+- [Water.css](https://watercss.kognise.dev/)
+    - GitHub: <https://github.com/kognise/water.css>
+    - License: The MIT License (MIT) Copyright © 2019 Kognise
+- [nicholasdille/PowerShell-Statistics - GitHub](https://github.com/nicholasdille/PowerShell-Statistics/tree/master)
+    - License: [The Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)
+- [todo.txt format](https://github.com/todotxt/todo.txt)
+    - License: GNU General Public License v3.0 (GPL-3.0 license)
+- Dataset
+    - allisonhorst / palmerpenguins
+        - [palmerpenguins R data package](https://allisonhorst.github.io/palmerpenguins/)
+        - [GitHub - allisonhorst/palmerpenguins: A great intro dataset for data exploration &amp; visualization (alternative to iris).](https://github.com/allisonhorst/palmerpenguins)
+        - License: Creative Commons Zero v1.0 Universal
 

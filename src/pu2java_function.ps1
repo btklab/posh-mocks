@@ -20,9 +20,9 @@
         - Windwos/Linux
             - ./plantuml.jar
         - Windows:
-            - ${HOME}/bin/plantuml.jar
+            - ${HOME}/bin/plantuml/plantuml.jar
         - Linux:
-            - /usr/local/bin/plantuml.jar
+            - /usr/local/bin/plantuml/plantuml.jar
     
     The input file is UTF-8 NoBOM.
     The output format is automatically determined from the output
@@ -141,16 +141,27 @@ function pu2java {
 
     ## is JAR execute file exist?
     if($Jar){
+        if ( -not (Test-Path -LiteralPath $Jar ) ){
+            Write-Error "$Jar is not exist." -ErrorAction Stop
+        }
         [string] $jarFilePath = (Resolve-Path -LiteralPath $Jar -Relative).Replace('\','/')
     } elseif (Test-Path "plantuml.jar"){
         [string] $jarFilePath = "./plantuml.jar"
     } elseif ($IsWindows){
-        [string] $jarFilePath = (Resolve-Path -LiteralPath ${HOME}\bin\plantuml.jar -Relative).Replace('\','/')
+        [string] $jarPath = "$(${HOME})\bin\plantuml\plantuml.jar"
+        if ( -not (Test-Path -LiteralPath $jarPath ) ){
+            Write-Error "$jarPath is not exist." -ErrorAction Stop
+        }
+        [string] $jarFilePath = (Resolve-Path -LiteralPath $jarPath -Relative).Replace('\','/')
     } elseif ($IsLinux){
-        [string] $jarFilePath = "/usr/local/bin/plantuml.jar"
+        [string] $jarPath = "/usr/local/bin/plantuml/plantuml.jar"
+        if ( -not (Test-Path -LiteralPath $jarPath ) ){
+            Write-Error "$jarPath is not exist." -ErrorAction Stop
+        }
+        [string] $jarFilePath = "/usr/local/bin/plantuml/plantuml.jar"
     }
     if( -not (Test-Path -LiteralPath $jarFilePath) ){
-        #Write-Error "$jarFilePath is not exist." -ErrorAction Stop
+        Write-Error "$jarFilePath is not exist." -ErrorAction Stop
     }
 
     ## is input file exist?
@@ -193,12 +204,13 @@ function pu2java {
             $CommandLineStr += " -checkonly"
         }
         if($ConfigFile){
-            $CommandLineStr += " -config ""$ConfigFile"""
+            [string] $configPath = $(Resolve-Path -Path $ConfigFile -Relative).replace('\','/')
+            $CommandLineStr += " -config ""$configPath"""
         }
         if($OutputFileType -eq "gui"){
             $CommandLineStr += " -gui"
         }else{
-            $CommandLineStr += " -t""$OutputFileType"""
+            $CommandLineStr += " -t ""$OutputFileType"""
             if($OutputDir){
                 $odir = $(Resolve-Path -Path $OutputDir -Relative).replace('\','/')
                 $CommandLineStr += " -o ""$odir"""
@@ -223,3 +235,4 @@ function pu2java {
         }
     }
 }
+

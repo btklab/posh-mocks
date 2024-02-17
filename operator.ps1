@@ -116,6 +116,9 @@ if ($IsWindows){
 ## writing
 . $pwshSrcDir/mdgrep_function.ps1
 . $pwshSrcDir/mdfocus_function.ps1
+
+. $pwshSrcDir/Execute-TinyTex_function.ps1
+. $pwshSrcDir/math2tex_function.ps1
 . $pwshSrcDir/tex2pdf_function.ps1
 . $pwshSrcDir/jl_function.ps1
 . $pwshSrcDir/kinsoku_function.ps1
