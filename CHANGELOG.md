@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [7.1.0] - 2024-02-18
+
+- Added [Execute-RMarkdown] (Alias: rmarkdown) function
 - Renamed [Execute-TinyTeX] from `Execute-TinyTex`
 - Added [Inkscape-Converter] (Alias: inkconv) function
 
@@ -681,8 +686,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [math2tex]: src/math2tex_function.ps1
 [Inkscape-Converter]: src/Inkscape-Converter_function.ps1
 
+[Execute-RMarkdown]: src/Execute-RMarkdown_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/7.0.0..HEAD
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/7.1.0..HEAD
+[7.1.0]: https://github.com/btklab/posh-mocks/releases/tag/7.1.0
 [7.0.0]: https://github.com/btklab/posh-mocks/releases/tag/7.0.0
 [6.10.2]: https://github.com/btklab/posh-mocks/releases/tag/6.10.2
 [6.10.1]: https://github.com/btklab/posh-mocks/releases/tag/6.10.1
