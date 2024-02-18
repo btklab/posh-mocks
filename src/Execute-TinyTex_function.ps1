@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Execute-TinyTex (Alias: tinytex) -- Execute Rscript -e "tinytex::lualatex('a.tex')"
+    Execute-TinyTeX (Alias: tinytex) - Execute Rscript -e "tinytex::lualatex('a.tex')"
 
     Compiler for .tex file using tinytex.
 
@@ -27,7 +27,7 @@
     tinytex -InstallPackage "psnfss"
 
 .LINK
-    Execute-TinyTex (Alias: tinytex), math2tex, pdf2svg, tex2pdf
+    Execute-TinyTeX (Alias: tinytex), math2tex, tex2pdf, inkconv
 
 
 .NOTES
@@ -43,7 +43,7 @@
     CTAN: Package haranoaji
         https://ctan.org/pkg/haranoaji
 #>
-function Execute-TinyTex {
+function Execute-TinyTeX {
 
     [CmdletBinding()]
     param (
@@ -62,16 +62,16 @@ function Execute-TinyTex {
         [Switch] $UpdatePackage,
         
         [Parameter( Mandatory=$False )]
-        [Switch] $ReInstallTinyTex,
+        [Switch] $ReInstallTinyTeX,
         
         [Parameter( Mandatory=$False )]
-        [Switch] $InstallTinyTex,
+        [Switch] $InstallTinyTeX,
         
         [Parameter( Mandatory=$False )]
-        [Switch] $UnInstallTinyTex,
+        [Switch] $UnInstallTinyTeX,
         
         [Parameter( Mandatory=$False )]
-        [Switch] $UpdateTinyTex,
+        [Switch] $UpdateTinyTeX,
         
         [Parameter( Mandatory=$False )]
         [Switch] $pdflatex,
@@ -140,15 +140,15 @@ function Execute-TinyTex {
     }
     # set rscript command
     [String[]] $cmd = @()
-    if ( $InstallTinyTex ){
+    if ( $InstallTinyTeX ){
         [String[]] $cmd += @("-e", "install.packages('tinytex');")
         [String[]] $cmd += @("-e", "tinytex::install_tinytex();")
-    } elseif ( $UnInstallTinyTex ){
+    } elseif ( $UnInstallTinyTeX ){
         [String[]] $cmd += @("-e", "library(tinytex);")
         [String[]] $cmd += @("-e", "tinytex::uninstall_tinytex();")
-    } elseif ( $UpdateTinyTex ){
+    } elseif ( $UpdateTinyTeX ){
         [String[]] $cmd += @("-e", "install.packages('tinytex');")
-    } elseif ( $ReInstallTinyTex ){
+    } elseif ( $ReInstallTinyTeX ){
         [String[]] $cmd += @("-e", "library(tinytex);")
         [String[]] $cmd += @("-e", "tinytex::reinstall_tinytex();")
     } elseif ( $SearchPackage ){
@@ -200,7 +200,8 @@ function Execute-TinyTex {
     for ( $i=0; $i -lt $ArgumentList.Count; $i++ ){
         [String] $beforeCmd = $ArgumentList[($i - 1)]
         if ( $beforeCmd -eq '-e' ){
-            [String] $writeCmd += " " + """$($ArgumentList[$i])"""
+            [String] $tmpCmd = ($ArgumentList[$i] ).Replace('"', '')
+            [String] $writeCmd += " " + """$tmpCmd"""
         } else {
             [String] $writeCmd += " " + "$($ArgumentList[$i])"
         }
@@ -229,7 +230,7 @@ function Execute-TinyTex {
 }
 # set alias
 [String] $tmpAliasName = "tinytex"
-[String] $tmpCmdName   = "Execute-TinyTex"
+[String] $tmpCmdName   = "Execute-TinyTeX"
 [String] $tmpCmdPath = Join-Path `
     -Path $PSScriptRoot `
     -ChildPath $($MyInvocation.MyCommand.Name) `
@@ -269,3 +270,4 @@ if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0)
     Remove-Variable -Name "tmpAliasName" -Force
     Remove-Variable -Name "tmpCmdName" -Force
 }
+
