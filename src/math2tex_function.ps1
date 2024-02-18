@@ -3,7 +3,7 @@
     math2tex - Add LaTeX preables to the mathematical and chemical formula in LaTex format.
 
     Add LaTeX preables to the mathematical and chemical formula in LaTex format.
-    By using this function with the "tinytex" (Execute-TinyTex) command,
+    By using this function with the "tinytex" (Execute-TinyTeX) command,
     you can generate a PDF file containing only mathematical or chemical
     formula.
 
@@ -27,7 +27,7 @@
         \end{document}
 
 .LINK
-    Execute-TinyTex (Alias: tinytex), math2tex, pdf2svg
+    Execute-TinyTeX (Alias: tinytex), math2tex, pdf2svg
 
 .NOTES
     Easy Copy Mathjax

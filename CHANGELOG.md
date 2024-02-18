@@ -7,11 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Renamed [Execute-TinyTeX] from `Execute-TinyTex`
 - Added [Inkscape-Converter] (Alias: inkconv) function
 
 ## [7.0.0] - 2024-02-17
 
-- Added [Execute-TinyTex] (Alias: tinytex) function
+- Added [Execute-TinyTeX] (Alias: tinytex) function
 - Added [math2tex] function
 - Fixed [sleepy] PercentComplete value to 100 if it is greater than 100
 - Fixed [README.md] create command list script
@@ -676,7 +677,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Grep-Block]: src/Grep-Block_function.ps1
 [Sort-Block]: src/Sort-Block_function.ps1
 
-[Execute-TinyTex]: src/Execute-TinyTex_function.ps1
+[Execute-TinyTeX]: src/Execute-TinyTeX_function.ps1
 [math2tex]: src/math2tex_function.ps1
 [Inkscape-Converter]: src/Inkscape-Converter_function.ps1
 
