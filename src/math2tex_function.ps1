@@ -7,6 +7,17 @@
     you can generate a PDF file containing only mathematical or chemical
     formula.
 
+    References:
+        amsmath.sty
+            - https://ftp.kddilabs.jp/CTAN/macros/latex/required/amsmath/amsldoc.pdf
+
+        physics.sty
+            - https://ftp.jaist.ac.jp/pub/CTAN/macros/latex/contrib/physics/physics.pdf
+            
+        siunitx.sty
+            - https://ftp.yz.yamagata-u.ac.jp/pub/CTAN/macros/latex/contrib/siunitx/siunitx.pdf
+            - http://www.yamamo10.jp/yamamoto/comp/latex/make_doc/unit/index.php
+
 .PARAMETER ja
     Specify this when the formula contains
     Japanese characters.
@@ -51,7 +62,13 @@ function math2tex {
         [String] $DocumentClass = "standalone",
         
         [Parameter( Mandatory=$False )]
-        [Switch] $NoChem,
+        [Switch] $NoMhchem,
+        
+        [Parameter( Mandatory=$False )]
+        [Switch] $NoSiunitx,
+        
+        [Parameter( Mandatory=$False )]
+        [Switch] $NoPhysics,
         
         [Parameter( Mandatory=$False )]
         [Switch] $ja,
@@ -111,8 +128,16 @@ function math2tex {
         #$tempAryList.Add('\usepackage[ipa]{luatexja-preset}')
         $tempAryList.Add('\usepackage[haranoaji,nfssonly]{luatexja-preset}')
     }
-    if ( -not $NoChem ){
+    if ( -not $NoMhchem ){
         $tempAryList.Add("\usepackage[version=$mhchemVersion]{mhchem}")
+    }
+    if ( -not $NoPhysics ){
+        $tempAryList.Add("\usepackage{physics}")
+    }
+    if ( -not $NoSiunitx ){
+        $tempAryList.Add("\usepackage{siunitx}")
+        $tempAryList.Add("\AtBeginDocument{\RenewCommandCopy\qty\SI}")
+
     }
     if ( $True ){
         $tempAryList.Add('\begin{document}')

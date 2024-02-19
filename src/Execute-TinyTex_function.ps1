@@ -59,7 +59,13 @@ function Execute-TinyTeX {
         [String] $InstallPackage,
         
         [Parameter( Mandatory=$False )]
+        [String] $RemovePackage,
+        
+        [Parameter( Mandatory=$False )]
         [Switch] $UpdatePackage,
+        
+        [Parameter( Mandatory=$False )]
+        [Switch] $AddPackage,
         
         [Parameter( Mandatory=$False )]
         [Switch] $ReInstallTinyTeX,
@@ -103,35 +109,18 @@ function Execute-TinyTeX {
         }
     }
     # test script
-    if ( $SearchPackage -or $InstallPackage -or $UpdatePackage ){
-        [String] $cmdRscript = "Rscript"
-        #[String] $cmdRscript = "tlmgr"
-        if ( -not ( isCommandExist $cmdRscript )){
-            Write-Error "$cmdRscript is not exists." -ErrorAction Continue
-            if ($IsWindows){
-                Write-Error 'Install R: The R Project for Statistical Computing.' -ErrorAction Continue
-                Write-Error '  uri: https://www.r-project.org/' -ErrorAction Continue
-                Write-Error '  winget install --id RProject.R --source winget' -ErrorAction Stop
-            } else {
-                Write-Error 'Install R: The R Project for Statistical Computing.' -ErrorAction Continue
-                Write-Error '  uri: https://www.r-project.org/' -ErrorAction Continue
-                Write-Error '  sudo apt install r-base' -ErrorAction Stop
-            }
-        }
-    } else {
-        [String] $cmdRscript = "Rscript"
-        #[String] $cmdRscript = "tlmgr"
-        if ( -not ( isCommandExist $cmdRscript )){
-            Write-Error "$cmdRscript is not exists." -ErrorAction Continue
-            if ($IsWindows){
-                Write-Error 'Install R: The R Project for Statistical Computing.' -ErrorAction Continue
-                Write-Error '  uri: https://www.r-project.org/' -ErrorAction Continue
-                Write-Error '  winget install --id RProject.R --source winget' -ErrorAction Stop
-            } else {
-                Write-Error 'Install R: The R Project for Statistical Computing.' -ErrorAction Continue
-                Write-Error '  uri: https://www.r-project.org/' -ErrorAction Continue
-                Write-Error '  sudo apt install r-base' -ErrorAction Stop
-            }
+    [String] $cmdRscript = "Rscript"
+    #[String] $cmdRscript = "tlmgr"
+    if ( -not ( isCommandExist $cmdRscript )){
+        Write-Error "$cmdRscript is not exists." -ErrorAction Continue
+        if ($IsWindows){
+            Write-Error 'Install R: The R Project for Statistical Computing.' -ErrorAction Continue
+            Write-Error '  uri: https://www.r-project.org/' -ErrorAction Continue
+            Write-Error '  winget install --id RProject.R --source winget' -ErrorAction Stop
+        } else {
+            Write-Error 'Install R: The R Project for Statistical Computing.' -ErrorAction Continue
+            Write-Error '  uri: https://www.r-project.org/' -ErrorAction Continue
+            Write-Error '  sudo apt install r-base' -ErrorAction Stop
         }
     }
     # test option
@@ -163,6 +152,20 @@ function Execute-TinyTeX {
         #  tlmgr path add 
         [String[]] $cmd += @("-e", "library(tinytex);")
         [String[]] $cmd += @("-e", "tinytex::tlmgr_install('$InstallPackage');")
+        [String[]] $cmd += @("-e", "tinytex::tlmgr_path('add');")
+        [String[]] $cmd += @("-e", "tinytex::tlmgr_update();")
+    } elseif ( $AddPackage ){
+        # equivalent to:
+        #  tlmgr path add
+        [String[]] $cmd += @("-e", "library(tinytex);")
+        [String[]] $cmd += @("-e", "tinytex::tlmgr_path('add');")
+    } elseif ( $RemovePackage ){
+        # equivalent to:
+        #  tlmgr path add
+        [String[]] $cmd += @("-e", "library(tinytex);")
+        [String[]] $cmd += @("-e", "tinytex::tlmgr_remove('$RemovePackage');")
+        #[String[]] $cmd += @("-e", "tinytex::tlmgr_path('add');")
+        #[String[]] $cmd += @("-e", "tinytex::tlmgr_update();")
     } elseif ( $UpdatePackage ){
         # equivalent to:
         #  tlmgr update --self --all
