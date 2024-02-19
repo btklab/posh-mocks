@@ -62,6 +62,9 @@ function Execute-TinyTeX {
         [Switch] $UpdatePackage,
         
         [Parameter( Mandatory=$False )]
+        [Switch] $AddPackage,
+        
+        [Parameter( Mandatory=$False )]
         [Switch] $ReInstallTinyTeX,
         
         [Parameter( Mandatory=$False )]
@@ -103,7 +106,7 @@ function Execute-TinyTeX {
         }
     }
     # test script
-    if ( $SearchPackage -or $InstallPackage -or $UpdatePackage ){
+    if ( $SearchPackage -or $InstallPackage -or $UpdatePackage -or $AddPackage ){
         [String] $cmdRscript = "Rscript"
         #[String] $cmdRscript = "tlmgr"
         if ( -not ( isCommandExist $cmdRscript )){
@@ -163,6 +166,13 @@ function Execute-TinyTeX {
         #  tlmgr path add 
         [String[]] $cmd += @("-e", "library(tinytex);")
         [String[]] $cmd += @("-e", "tinytex::tlmgr_install('$InstallPackage');")
+        [String[]] $cmd += @("-e", "tinytex::tlmgr_path('add');")
+        [String[]] $cmd += @("-e", "tinytex::tlmgr_update();")
+    } elseif ( $AddPackage ){
+        # equivalent to:
+        #  tlmgr path add
+        [String[]] $cmd += @("-e", "library(tinytex);")
+        [String[]] $cmd += @("-e", "tinytex::tlmgr_path('add');")
     } elseif ( $UpdatePackage ){
         # equivalent to:
         #  tlmgr update --self --all
