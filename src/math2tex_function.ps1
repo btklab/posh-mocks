@@ -42,6 +42,7 @@
         \usepackage{amssymb}
         \usepackage{amsfonts}
         \usepackage[version=4]{mhchem}
+        \usepackage{chemfig}
         \begin{document}
           $\ce{2H + O2 -> H2O}$
         \end{document}
