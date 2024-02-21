@@ -162,7 +162,7 @@ function Execute-TinyTeX {
         [String[]] $cmd += @("-e", "library(tinytex);")
         #[String[]] $cmd += @("-e", """tinytex::tlmgr_install(c('bxjscls', 'luatexja', 'zxjatype', 'zxjafont', 'haranoaji', 'jlreq'));""")
         [String[]] $cmd += @("-e", """tinytex::tlmgr_install(c('bxjscls', 'luatexja', 'haranoaji', 'jlreq'));""")
-        #[String[]] $cmd += @("-e", """tinytex::tlmgr_install(c('pgf', 'preview', 'xcolor'));""")
+        [String[]] $cmd += @("-e", """tinytex::tlmgr_install(c('pgf', 'preview', 'xcolor'));""")
         [String[]] $cmd += @("-e", "tinytex::tlmgr_path('add');")
         [String[]] $cmd += @("-e", "tinytex::tlmgr_update();")
     } elseif ( $AddPackage ){
