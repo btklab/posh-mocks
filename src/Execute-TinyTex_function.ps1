@@ -74,6 +74,9 @@ function Execute-TinyTeX {
         [Switch] $InstallTinyTeX,
         
         [Parameter( Mandatory=$False )]
+        [Switch] $InstallJaPackages,
+        
+        [Parameter( Mandatory=$False )]
         [Switch] $UnInstallTinyTeX,
         
         [Parameter( Mandatory=$False )]
@@ -152,6 +155,15 @@ function Execute-TinyTeX {
         #  tlmgr path add 
         [String[]] $cmd += @("-e", "library(tinytex);")
         [String[]] $cmd += @("-e", "tinytex::tlmgr_install('$InstallPackage');")
+        [String[]] $cmd += @("-e", "tinytex::tlmgr_path('add');")
+        [String[]] $cmd += @("-e", "tinytex::tlmgr_update();")
+    } elseif ( $InstallJaPackages ){
+        # equivalent to:
+        [String[]] $cmd += @("-e", "library(tinytex);")
+        #[String[]] $cmd += @("-e", "tinytex::tlmgr_install(c('bxjscls', 'luatexja', 'zxjatype', 'zxjafont', 'haranoaji', 'jlreq'));")
+        [String[]] $cmd += @("-e", "tinytex::tlmgr_install(c('bxjscls', 'luatexja', 'haranoaji'));")
+        [String[]] $cmd += @("-e", "tinytex::tlmgr_install(c('jlreq'));")
+        [String[]] $cmd += @("-e", "tinytex::tlmgr_install(c('pgf', 'preview', 'xcolor'));")
         [String[]] $cmd += @("-e", "tinytex::tlmgr_path('add');")
         [String[]] $cmd += @("-e", "tinytex::tlmgr_update();")
     } elseif ( $AddPackage ){
