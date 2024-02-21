@@ -100,7 +100,7 @@ function math2tex {
         #pass
     }
     if ( $DocumentClass -eq 'standalone' -and $ja ){
-        Write-Error "-ja could not specify with standalone." -ErrorAction Stop
+        Write-Error "-ja could not specify with DocumentClass.standalone." -ErrorAction Stop
     }
     if ( $DocumentClass -eq 'standalone' ){
         if ( $fList[0] -notmatch '^\s*\$' ){
@@ -113,8 +113,8 @@ function math2tex {
     $tempAryList = New-Object 'System.Collections.Generic.List[System.String]'
     if ( $DocumentClass -eq 'standalone'){
         $tempAryList.Add("\documentclass[varwidth,crop,border=$(${MarginPt})pt]{standalone}")
-    } elseif ( $ja -and $DocumentClass -eq 'report'){
-        $tempAryList.Add("\documentclass{ltjsarticle}")
+    } elseif ( $ja ){
+        $tempAryList.Add("\documentclass[lualatex,ja=standard,jafont=haranoaji]{bxjsarticle}")
     } else {
         $tempAryList.Add("\documentclass{$DocumentClass}")
     }
@@ -124,9 +124,9 @@ function math2tex {
         $tempAryList.Add('\usepackage{amsfonts}')
     }
     if ( $ja ){
-        $tempAryList.Add('\usepackage[no-math]{fontspec}')
+        #$tempAryList.Add('\usepackage[no-math]{fontspec}')
         #$tempAryList.Add('\usepackage[ipa]{luatexja-preset}')
-        $tempAryList.Add('\usepackage[haranoaji,nfssonly]{luatexja-preset}')
+        #$tempAryList.Add('\usepackage[haranoaji,nfssonly]{luatexja-preset}')
     }
     if ( -not $NoMhchem ){
         $tempAryList.Add("\usepackage[version=$mhchemVersion]{mhchem}")
