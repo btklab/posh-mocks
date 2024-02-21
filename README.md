@@ -9104,7 +9104,7 @@ rmarkdown .\index.Rmd -All
 ```
 
 
-#### [math2tex] - Add LaTeX preables to the mathematical and chemical formula in LaTex format. <a id="math2tex"></a>
+#### [math2tex] (Alias: chem2tex) - Add LaTeX preables to the mathematical and chemical formula in LaTex format. <a id="math2tex"></a>
 
 [math2tex]: src/math2tex_function.ps1
 
@@ -9137,6 +9137,7 @@ echo '\ce{2H + O2 -> H2O}' | math2tex > a.tex; tinytex a.tex | ii
 \usepackage{amssymb}
 \usepackage{amsfonts}
 \usepackage[version=4]{mhchem}
+\usepackage{chemfig}
 \begin{document}
     $\ce{2H + O2 -> H2O}$
 \end{document}
