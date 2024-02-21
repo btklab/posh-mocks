@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    math2tex - Add LaTeX preables to the mathematical and chemical formula in LaTex format.
+    math2tex (Alias: chem2tex) - Add LaTeX preables to the mathematical and chemical formula in LaTex format.
 
     Add LaTeX preables to the mathematical and chemical formula in LaTex format.
     By using this function with the "tinytex" (Execute-TinyTeX) command,
@@ -8,15 +8,24 @@
     formula.
 
     References:
-        amsmath.sty
+        amsmath
             - https://ftp.kddilabs.jp/CTAN/macros/latex/required/amsmath/amsldoc.pdf
 
-        physics.sty
+        physics
             - https://ftp.jaist.ac.jp/pub/CTAN/macros/latex/contrib/physics/physics.pdf
             
-        siunitx.sty
+        siunitx
             - https://ftp.yz.yamagata-u.ac.jp/pub/CTAN/macros/latex/contrib/siunitx/siunitx.pdf
             - http://www.yamamo10.jp/yamamoto/comp/latex/make_doc/unit/index.php
+
+        mhchem
+            - https://ctan.org/pkg/mhchem
+            - http://www.yamamo10.jp/yamamoto/comp/latex/make_doc/chemistry/index.php
+            - https://doratex.hatenablog.jp/entry/20131203/1386068127
+
+        chemfig
+            - https://www.ctan.org/pkg/chemfig
+            - https://doratex.hatenablog.jp/entry/20141212/1418393703
 
 .PARAMETER ja
     Specify this when the formula contains
@@ -63,6 +72,9 @@ function math2tex {
         
         [Parameter( Mandatory=$False )]
         [Switch] $NoMhchem,
+        
+        [Parameter( Mandatory=$False )]
+        [Switch] $NoChemfig,
         
         [Parameter( Mandatory=$False )]
         [Switch] $NoSiunitx,
@@ -131,6 +143,9 @@ function math2tex {
     if ( -not $NoMhchem ){
         $tempAryList.Add("\usepackage[version=$mhchemVersion]{mhchem}")
     }
+    if ( -not $NoChemfig ){
+        $tempAryList.Add("\usepackage{chemfig}")
+    }
     if ( -not $NoPhysics ){
         $tempAryList.Add("\usepackage{physics}")
     }
@@ -157,45 +172,45 @@ function math2tex {
     [string[]] $tempLineAry = $tempAryList.ToArray()
     Write-Output $tempLineAry
 }
-## set alias
-#[String] $tmpAliasName = "alias"
-#[String] $tmpCmdName   = "math2tex"
-#[String] $tmpCmdPath = Join-Path `
-#    -Path $PSScriptRoot `
-#    -ChildPath $($MyInvocation.MyCommand.Name) `
-#    | Resolve-Path -Relative
-#if ( $IsWindows ){ $tmpCmdPath = $tmpCmdPath.Replace('\' ,'/') }
-## is alias already exists?
-#if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0){
-#    try {
-#        if ( (Get-Command -Name $tmpAliasName).CommandType -eq "Alias" ){
-#            if ( (Get-Command -Name $tmpAliasName).ReferencedCommand.Name -eq $tmpCmdName ){
-#                Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru `
-#                    | ForEach-Object{
-#                        Write-Host "$($_.DisplayName)" -ForegroundColor Green
-#                    }
-#            } else {
-#                throw
-#            }
-#        } elseif ( "$((Get-Command -Name $tmpAliasName).Name)" -match '\.exe$') {
-#            Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru `
-#                | ForEach-Object{
-#                    Write-Host "$($_.DisplayName)" -ForegroundColor Green
-#                }
-#        } else {
-#            throw
-#        }
-#    } catch {
-#        Write-Error "Alias ""$tmpAliasName ($((Get-Command -Name $tmpAliasName).ReferencedCommand.Name))"" is already exists. Change alias needed. Please edit the script at the end of the file: ""$tmpCmdPath""" -ErrorAction Stop
-#    } finally {
-#        Remove-Variable -Name "tmpAliasName" -Force
-#        Remove-Variable -Name "tmpCmdName" -Force
-#    }
-#} else {
-#    Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru `
-#        | ForEach-Object {
-#            Write-Host "$($_.DisplayName)" -ForegroundColor Green
-#        }
-#    Remove-Variable -Name "tmpAliasName" -Force
-#    Remove-Variable -Name "tmpCmdName" -Force
-#}
+# set alias
+[String] $tmpAliasName = "chem2tex"
+[String] $tmpCmdName   = "math2tex"
+[String] $tmpCmdPath = Join-Path `
+    -Path $PSScriptRoot `
+    -ChildPath $($MyInvocation.MyCommand.Name) `
+    | Resolve-Path -Relative
+if ( $IsWindows ){ $tmpCmdPath = $tmpCmdPath.Replace('\' ,'/') }
+# is alias already exists?
+if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0){
+    try {
+        if ( (Get-Command -Name $tmpAliasName).CommandType -eq "Alias" ){
+            if ( (Get-Command -Name $tmpAliasName).ReferencedCommand.Name -eq $tmpCmdName ){
+                Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru `
+                    | ForEach-Object{
+                        Write-Host "$($_.DisplayName)" -ForegroundColor Green
+                    }
+            } else {
+                throw
+            }
+        } elseif ( "$((Get-Command -Name $tmpAliasName).Name)" -match '\.exe$') {
+            Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru `
+                | ForEach-Object{
+                    Write-Host "$($_.DisplayName)" -ForegroundColor Green
+                }
+        } else {
+            throw
+        }
+    } catch {
+        Write-Error "Alias ""$tmpAliasName ($((Get-Command -Name $tmpAliasName).ReferencedCommand.Name))"" is already exists. Change alias needed. Please edit the script at the end of the file: ""$tmpCmdPath""" -ErrorAction Stop
+    } finally {
+        Remove-Variable -Name "tmpAliasName" -Force
+        Remove-Variable -Name "tmpCmdName" -Force
+    }
+} else {
+    Set-Alias -Name $tmpAliasName -Value $tmpCmdName -PassThru `
+        | ForEach-Object {
+            Write-Host "$($_.DisplayName)" -ForegroundColor Green
+        }
+    Remove-Variable -Name "tmpAliasName" -Force
+    Remove-Variable -Name "tmpCmdName" -Force
+}
