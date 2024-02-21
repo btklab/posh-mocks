@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Fixed [Execute-TinyTeX] quotes when specifying multiple packages
 - Added [Execute-TinyTeX] `-RemovePackage` option, `-InstallJaPackages`
-- Added [math2tex] physics, siunitx package
+- Added [math2tex] physics, siunitx, chemfig package
 
 ## [7.1.0] - 2024-02-18
 
