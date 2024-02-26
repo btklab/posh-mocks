@@ -210,7 +210,8 @@ function pu2java {
         if($OutputFileType -eq "gui"){
             $CommandLineStr += " -gui"
         }else{
-            $CommandLineStr += " -t ""$OutputFileType"""
+            #$CommandLineStr += " -t ""$OutputFileType"""
+            $CommandLineStr += " -t$OutputFileType"
             if($OutputDir){
                 $odir = $(Resolve-Path -Path $OutputDir -Relative).replace('\','/')
                 $CommandLineStr += " -o ""$odir"""
@@ -218,8 +219,6 @@ function pu2java {
             $CommandLineStr += " ""$ifile"""
         }
     }
-    #Write-Output $CommandLineStr
-
     if($ErrorCheck){
         Write-Output "$CommandLineStr"
     }else{

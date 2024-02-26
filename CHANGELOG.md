@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Fixed [pu2java] an error when outputting svg format
 - Fixed [Execute-TinyTeX] quotes when specifying multiple packages
 - Added [Execute-TinyTeX] `-RemovePackage` option, `-InstallJaPackages`
 - Added [math2tex] physics, siunitx, chemfig, luatexja package
