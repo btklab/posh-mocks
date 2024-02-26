@@ -141,6 +141,7 @@ function math2tex {
     }
     if ( $ja ){
         $tempAryList.Add('\usepackage{luatexja}')
+        $tempAryList.Add('%\usepackage[no-math]{luatexja-fontspec}')
         #$tempAryList.Add('\usepackage[no-math]{fontspec}')
         #$tempAryList.Add('\usepackage[ipa]{luatexja-preset}')
         #$tempAryList.Add('\usepackage[haranoaji,nfssonly]{luatexja-preset}')
