@@ -44,7 +44,7 @@
 
 .PARAMETER Jar
     Sppecifying JAR executable file path.
-    Default = ${HOME}/bin/plantuml.jar
+    Default = ${HOME}/bin/plantuml/plantuml.jar
 
 .PARAMETER TestDot
     Test integration with graphviz.
@@ -107,11 +107,11 @@ function pu2java {
     )
     # private function
     function isCommandExist ($cmd) {
-      try { Get-Command $cmd -ErrorAction Stop | Out-Null
-        return $True
-      } catch {
-        return $False
-      }
+        try { Get-Command $cmd -ErrorAction Stop | Out-Null
+            return $True
+        } catch {
+            return $False
+        }
     }
     ## cmd test
     if ( -not (isCommandExist "java")){
@@ -189,45 +189,58 @@ function pu2java {
     #Usage: java -jar plantuml.jar -version
     #Usage: java -jar plantuml.jar -testdot
     #Usage: java -jar plantuml.jar -tpng
+    [String] $cmd = "java"
+    [String[]] $ArgumentList = @()
     if($TestDot){
-        $CommandLineStr  = "java"
-        $CommandLineStr += " -jar ""$jarFilePath"""
-        $CommandLineStr += " -testdot"
+        $ArgumentList += @("-jar", """$jarFilePath""")
+        $ArgumentList += @("-testdot")
     }else{
-        $CommandLineStr  = "java"
-        $CommandLineStr += " -jar ""$jarFilePath"""
-        $CommandLineStr += " -charset ""$Charset"""
+        $ArgumentList += @("-jar", """$jarFilePath""")
+        $ArgumentList += @("-charset", """$Charset""")
         if($NoMetadata){
-            $CommandLineStr += " -nometadata"
+            $ArgumentList += @("-nometadata")
         }
         if($CheckOnly){
-            $CommandLineStr += " -checkonly"
+            $ArgumentList += @("-checkonly")
         }
         if($ConfigFile){
             [string] $configPath = $(Resolve-Path -Path $ConfigFile -Relative).replace('\','/')
-            $CommandLineStr += " -config ""$configPath"""
+            $ArgumentList += @("-config", """$configPath""")
         }
         if($OutputFileType -eq "gui"){
-            $CommandLineStr += " -gui"
+            $ArgumentList += @("-gui")
         }else{
-            $CommandLineStr += " -t ""$OutputFileType"""
+            #$CommandLineStr += " -t ""$OutputFileType"""
+            $ArgumentList += @("-t$OutputFileType")
             if($OutputDir){
                 $odir = $(Resolve-Path -Path $OutputDir -Relative).replace('\','/')
-                $CommandLineStr += " -o ""$odir"""
+                $ArgumentList += @("-o", """$odir""")
             }
-            $CommandLineStr += " ""$ifile"""
+            $ArgumentList += @("""$ifile""")
         }
     }
-    #Write-Output $CommandLineStr
-
     if($ErrorCheck){
-        Write-Output "$CommandLineStr"
+        Write-Output "$cmd $($ArgumentList -join ' ')"
     }else{
-        Invoke-Expression $CommandLineStr
+        # set splatting
+        $splatting = @{
+            FilePath = $cmd
+            ArgumentList = $ArgumentList
+        }
+        if ($True){
+            $splatting.Set_Item("NoNewWindow", $True)
+            $splatting.Set_Item("Wait", $True)
+        }
+        # execute command
+        try {
+            Start-Process @splatting
+        } catch {
+            Write-Error $Error[0] -ErrorAction Stop
+        }
         if($TestDot){
-            Write-Output "$CommandLineStr"
+            Write-Output "$cmd $($ArgumentList -join ' ')"
         }elseif($CheckOnly){
-            Write-Output "$CommandLineStr"
+            Write-Output "$cmd $($ArgumentList -join ' ')"
         }elseif($OutputFileType -eq 'gui'){
             #pass
         }else{

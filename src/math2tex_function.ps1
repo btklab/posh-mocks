@@ -27,6 +27,9 @@
             - https://www.ctan.org/pkg/chemfig
             - https://doratex.hatenablog.jp/entry/20141212/1418393703
 
+        luatexja
+            - https://ctan.org/pkg/luatexja
+
 .PARAMETER ja
     Specify this when the formula contains
     Japanese characters.
@@ -42,6 +45,7 @@
         \usepackage{amssymb}
         \usepackage{amsfonts}
         \usepackage[version=4]{mhchem}
+        \usepackage{chemfig}
         \begin{document}
           $\ce{2H + O2 -> H2O}$
         \end{document}
@@ -136,6 +140,8 @@ function math2tex {
         $tempAryList.Add('\usepackage{amsfonts}')
     }
     if ( $ja ){
+        $tempAryList.Add('\usepackage{luatexja}')
+        $tempAryList.Add('%\usepackage[no-math]{luatexja-fontspec}')
         #$tempAryList.Add('\usepackage[no-math]{fontspec}')
         #$tempAryList.Add('\usepackage[ipa]{luatexja-preset}')
         #$tempAryList.Add('\usepackage[haranoaji,nfssonly]{luatexja-preset}')

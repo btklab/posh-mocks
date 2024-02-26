@@ -134,48 +134,58 @@ function dot2gviz {
 
     ## execute command
     #Usage: dot [-Vv?] [-(GNE)name=val] [-(KTlso)<val>] <dot files>
+    [String] $cmd = "dot"
+    [String[]] $ArgumentList = @()
     if( ($FontName -eq '') -and ($LayoutEngine -eq '') ){
         ## No FontName, No LayoutEngine
-        [string] $CommandLineStr  = "dot"
-        [string] $CommandLineStr += " -T" + $OutputFileType
-        [string] $CommandLineStr += " -o ""$oFilePath"""
-        [string] $CommandLineStr += " ""$InputFile"""
+        [String[]] $ArgumentList += @("-T" + $OutputFileType)
+        [String[]] $ArgumentList += @("-o", """$oFilePath""")
+        [String[]] $ArgumentList += @("""$InputFile""")
 
     }elseif( ($FontName -ne '') -and ($LayoutEngine -eq '') ){
         ## FontName, No LayoutEngine
-        [string] $CommandLineStr  = "dot"
-        [string] $CommandLineStr += " -Nfontname=""$FontName"""
-        [string] $CommandLineStr += " -Efontname=""$FontName"""
-        [string] $CommandLineStr += " -Gfontname=""$FontName"""
-        [string] $CommandLineStr += " -T" + $OutputFileType
-        [string] $CommandLineStr += " -o ""$oFilePath"""
-        [string] $CommandLineStr += " ""$InputFile"""
+        [String[]] $ArgumentList += @("-Nfontname=""$FontName""")
+        [String[]] $ArgumentList += @("-Efontname=""$FontName""")
+        [String[]] $ArgumentList += @("-Gfontname=""$FontName""")
+        [String[]] $ArgumentList += @("-T" + $OutputFileType)
+        [String[]] $ArgumentList += @("-o", """$oFilePath""")
+        [String[]] $ArgumentList += @("""$InputFile""")
 
     }elseif( ($FontName -eq '') -and ($LayoutEngine -ne '') ){
         ## No FontName, LayoutEngine
-        [string] $CommandLineStr  = "dot"
-        [string] $CommandLineStr += " -K" + $LayoutEngine
-        [string] $CommandLineStr += " -T" + $OutputFileType
-        [string] $CommandLineStr += " -o ""$oFilePath"""
-        [string] $CommandLineStr += " ""$InputFile"""
+        [String[]] $ArgumentList += @("-K" + $LayoutEngine)
+        [String[]] $ArgumentList += @("-T" + $OutputFileType)
+        [String[]] $ArgumentList += @("-o", """$oFilePath""")
+        [String[]] $ArgumentList += @("""$InputFile""")
 
     }else{
         ## FontName, LayoutEngine
-        [string] $CommandLineStr  = "dot"
-        [string] $CommandLineStr += " -Nfontname=""$FontName"""
-        [string] $CommandLineStr += " -Efontname=""$FontName"""
-        [string] $CommandLineStr += " -Gfontname=""$FontName"""
-        [string] $CommandLineStr += " -K" + $LayoutEngine
-        [string] $CommandLineStr += " -T" + $OutputFileType
-        [string] $CommandLineStr += " -o ""$oFilePath"""
-        [string] $CommandLineStr += " ""$InputFile"""
+        [String[]] $ArgumentList += @("-Nfontname=""$FontName""")
+        [String[]] $ArgumentList += @("-Efontname=""$FontName""")
+        [String[]] $ArgumentList += @("-Gfontname=""$FontName""")
+        [String[]] $ArgumentList += @("-K" + $LayoutEngine)
+        [String[]] $ArgumentList += @("-T" + $OutputFileType)
+        [String[]] $ArgumentList += @("-o", """$oFilePath""")
+        [String[]] $ArgumentList += @("""$InputFile""")
     }
-    #Write-Output $CommandLineStr
-
     if($ErrorCheck){
-        Write-Output "$CommandLineStr"
+        Write-Output "$cmd $($ArgumentList -join ' ')"
     }else{
-        Invoke-Expression $CommandLineStr
+        # set splatting
+        $splatting = @{
+            FilePath = $cmd
+            ArgumentList = $ArgumentList
+        }
+        if ($True){
+            $splatting.Set_Item("NoNewWindow", $True)
+            $splatting.Set_Item("Wait", $True)
+        }
+        # execute command
+        try {
+            Start-Process @splatting
+        } catch {
+            Write-Error $Error[0] -ErrorAction Stop
+        }
         Get-Item -LiteralPath $oFilePath
     }
 }

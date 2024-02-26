@@ -6710,7 +6710,7 @@ id      v1 v2 v3 v4 v5 m_name m_val m_class
 
 [pu2java]: src/pu2java_function.ps1
 
-[plantuml](https://plantuml.com/en/)形式の`.pu`ファイルを読み取り実行するラッパースクリプト。日本語WindowsでUTF-8な環境下での使用を想定。グラフ（棒グラフのグラフではなく、箱と矢印・ノードとエッジのほうのグラフ）を描画する。`java -jar plantuml.jar -charset "UTF-8" -t"svg" a.pu`と等価。日本語を用いるときは`-charset "UTF-8"`を指定する。
+[plantuml](https://plantuml.com/en/)形式の`.pu`ファイルを読み取り実行するラッパースクリプト。日本語WindowsでUTF-8な環境下での使用を想定。グラフ（棒グラフのグラフではなく、箱と矢印・ノードとエッジのほうのグラフ）を描画する。`java -jar plantuml.jar -charset "UTF-8" -tsvg a.pu`と等価。日本語を用いるときは`-charset "UTF-8"`を指定する。
 
 [dot2gviz]と同じくコマンド文字列が長くて覚えられないため、このラッパースクリプトを作成した。もっともシンプルに書くと`pu2java a.pu`。デフォルトで入力ファイル名と同ファイル名の`png`画像をカレントディレクトリに出力する。
 
@@ -6733,15 +6733,15 @@ id      v1 v2 v3 v4 v5 m_name m_val m_class
         - `[-ErrorCheck]`
 - Examples
     - `pu2java a.pu`
-        - `java -jar plantuml.jar -charset "UTF-8" -t "png" a.pu`と等価
+        - `java -jar plantuml.jar -charset "UTF-8" -tpng a.pu`と等価
     - `pu2java a.pu -OutputFileType png`
-        - `java -jar plantuml.jar -charset "UTF-8" -t "png" a.pu`と等価
+        - `java -jar plantuml.jar -charset "UTF-8" -tpng a.pu`と等価
     - `pu2java a.pu -OutputFileType svg`
-        - `java -jar plantuml.jar -charset "UTF-8" -t "svg" a.pu`と等価
+        - `java -jar plantuml.jar -charset "UTF-8" -tsvg a.pu`と等価
 - Options
     - `-ErrorCheck`スイッチで、等価なplantumlコマンド文字列が出力される
         - `pu2java a.pu svg -ErrorCheck`
-            - 出力: `java -jar plantuml.jar" -charset "UTF-8" -t "svg" a.pu`
+            - 出力: `java -jar plantuml.jar" -charset "UTF-8" -tsvg a.pu`
 - Dependencies
     - plantuml
         - <https://plantuml.com/en/>
@@ -7640,7 +7640,7 @@ strict digraph logictree {
     charset = "UTF-8";
     compound = true;
     fontname = "MS Gothic";
-    label = "ogic tree";
+    label = "logic tree";
     labelloc = "t";
     rankdir = "TB";
     newrank = true;
@@ -9104,7 +9104,7 @@ rmarkdown .\index.Rmd -All
 ```
 
 
-#### [math2tex] - Add LaTeX preables to the mathematical and chemical formula in LaTex format. <a id="math2tex"></a>
+#### [math2tex] (Alias: chem2tex) - Add LaTeX preables to the mathematical and chemical formula in LaTex format. <a id="math2tex"></a>
 
 [math2tex]: src/math2tex_function.ps1
 
@@ -9137,6 +9137,7 @@ echo '\ce{2H + O2 -> H2O}' | math2tex > a.tex; tinytex a.tex | ii
 \usepackage{amssymb}
 \usepackage{amsfonts}
 \usepackage[version=4]{mhchem}
+\usepackage{chemfig}
 \begin{document}
     $\ce{2H + O2 -> H2O}$
 \end{document}

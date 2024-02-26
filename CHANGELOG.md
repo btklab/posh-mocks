@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [7.2.0] - 2024-02-27
+
+- Fixed [dot2gviz] an error when outputting svg format
+- Fixed [pu2java] an error when outputting svg format
+- Changed [dot2gviz] Changed to use Start-Process instead of Invoke-Expression
+- Changed [pu2java] Changed to use Start-Process instead of Invoke-Expression
 - Fixed [Execute-TinyTeX] quotes when specifying multiple packages
 - Added [Execute-TinyTeX] `-RemovePackage` option, `-InstallJaPackages`
-- Added [math2tex] physics, siunitx, chemfig package
+- Added [math2tex] physics, siunitx, chemfig, luatexja package
 
 ## [7.1.0] - 2024-02-18
 
@@ -685,13 +693,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Sort-Block]: src/Sort-Block_function.ps1
 
 [Execute-TinyTeX]: src/Execute-TinyTeX_function.ps1
+[Execute-RMarkdown]: src/Execute-RMarkdown_function.ps1
+
 [math2tex]: src/math2tex_function.ps1
 [Inkscape-Converter]: src/Inkscape-Converter_function.ps1
 
-[Execute-RMarkdown]: src/Execute-RMarkdown_function.ps1
 
-
-[unreleased]: https://github.com/btklab/posh-mocks/compare/7.1.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/7.2.0..HEAD
+[7.2.0]: https://github.com/btklab/posh-mocks/releases/tag/7.2.0
 [7.1.0]: https://github.com/btklab/posh-mocks/releases/tag/7.1.0
 [7.0.0]: https://github.com/btklab/posh-mocks/releases/tag/7.0.0
 [6.10.2]: https://github.com/btklab/posh-mocks/releases/tag/6.10.2
