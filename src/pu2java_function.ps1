@@ -44,7 +44,7 @@
 
 .PARAMETER Jar
     Sppecifying JAR executable file path.
-    Default = ${HOME}/bin/plantuml.jar
+    Default = ${HOME}/bin/plantuml/plantuml.jar
 
 .PARAMETER TestDot
     Test integration with graphviz.
