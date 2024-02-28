@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Added [Get-Histogram] Detect NaN
 - Added [Get-Histogram] `-Cast` option
 - Added [math2tex] AddDollars, AddBrackets option
 
