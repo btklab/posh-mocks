@@ -43,7 +43,7 @@
     Default = UTF-8
 
 .PARAMETER Jar
-    Sppecifying JAR executable file path.
+    Specifying JAR executable file path.
     Default = ${HOME}/bin/plantuml/plantuml.jar
 
 .PARAMETER TestDot

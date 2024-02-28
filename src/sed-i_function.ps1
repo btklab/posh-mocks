@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    sed-i - Edit files in place
+    sed-i - Edit  file in place
 
     Pattern match replace and overwrite files at onece.
 
