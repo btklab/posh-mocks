@@ -75,6 +75,12 @@ function math2tex {
         [String] $DocumentClass = "standalone",
         
         [Parameter( Mandatory=$False )]
+        [Switch] $AddDollars,
+        
+        [Parameter( Mandatory=$False )]
+        [Switch] $AddBrackets,
+        
+        [Parameter( Mandatory=$False )]
         [Switch] $NoMhchem,
         
         [Parameter( Mandatory=$False )]
@@ -118,13 +124,16 @@ function math2tex {
     if ( $DocumentClass -eq 'standalone' -and $ja ){
         Write-Error "-ja could not specify with DocumentClass.standalone." -ErrorAction Stop
     }
-    if ( $DocumentClass -eq 'standalone' ){
+    if ( $AddDollars ){
         if ( $fList[0] -notmatch '^\s*\$' ){
             $fList[0] = '$' + $fList[0]
         }
         if ( $fList[0] -notmatch '\$\s*$' ){
             $fList[0] = $fList[0] + '$'
         }
+    }
+    if ( $AddBrackets ){
+        $fList[0] = '\[' + $fList[0] + '\]'
     }
     $tempAryList = New-Object 'System.Collections.Generic.List[System.String]'
     if ( $DocumentClass -eq 'standalone'){
