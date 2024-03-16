@@ -17,6 +17,9 @@
         - Specify the absolute file path in the text file as possible.
           Or Note that when specifying a relative path, the root is the
           location of the current process
+    - If a directory is specified, the names and first lines of the
+      files in tbat hierarchy are listed.
+        - Collect files recursively with -Recurse option
 
     Multiple links(lines) in a file available.
     Lines that empty or beginning with "#" are skipped.
@@ -164,6 +167,9 @@ function Invoke-Link {
         [switch] $AsFileObject,
         
         [Parameter( Mandatory=$False )]
+        [switch] $Extension,
+        
+        [Parameter( Mandatory=$False )]
         [Alias('i')]
         [int[]] $InvokeById,
         
@@ -237,9 +243,9 @@ function Invoke-Link {
                     }
                     # return file paths
                     #Invoke-Item -LiteralPath $File
-                    Get-ChildItem -LiteralPath $File `
+                    Get-ChildItem -LiteralPath $File -Recurse:$Recurse `
                         | Sort-Object {
-                            -join ( [int[]] ($_.Name.ToCharArray()) | ForEach-Object { [System.Convert]::ToString($_, 16)})
+                            -join ( [int[]] ($_.FullName.ToCharArray()) | ForEach-Object { [System.Convert]::ToString($_, 16)})
                         } `
                         | ForEach-Object {
                             $fileCounter++
@@ -250,19 +256,30 @@ function Invoke-Link {
                                 }
                                 return
                             }
-                            if (
-                                (Test-Path -LiteralPath $_.FullName -PathType Container) -or `
-                                ($_.Extension -match '\.lnk$|\.exe$|\.dll$|\.xls|\.doc|\.ppt|\.ps1$') `
-                                ){
+                            # set path
+                            [String] $parentPath = Split-Path -Parent $_
+                            [String] $childPath = Split-Path -Leaf $_
+                            [String] $relativePath = Join-Path -Path $parentPath -ChildPath $childPath
+                            [String] $relativePath = Resolve-Path $relativePath -Relative
+                            # remove extension
+                            if ( -not $Extension -and $_.Name -notmatch '^\.') {
+                                [String] $relativePath = $relativePath -replace '\.[^\.]+$', ''
+                            }
+                            if ( $IsWindows ){
+                                [String] $relativePath = $relativePath.Replace('\', '/')
+                            }
+                            if ( Test-Path -LiteralPath $_.FullName -PathType Container){
+                                return
+                            } elseif ( $_.Extension -match '\.lnk$|\.exe$|\.dll$|\.xls|\.doc|\.ppt|\.ps1$' ){
                                 $hash = [ordered] @{
                                     Id   = $fileCounter
-                                    Name = $_.Name -replace '\.[^\.]+$', ''
+                                    Name = $relativePath
                                     Line = $Null
                                 }
                             } else {
                                 $hash = [ordered] @{
                                     Id   = $fileCounter
-                                    Name = $_.Name -replace '\.[^\.]+$', ''
+                                    Name = $relativePath
                                     Line = Get-Content -Path $_.FullName -TotalCount 1 -Encoding utf-8
                                 }
                             }
