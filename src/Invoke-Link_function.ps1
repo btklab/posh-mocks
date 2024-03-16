@@ -102,7 +102,7 @@
     ## Specify path containing wildcards
     i ./link/a.*
     
-    ## Filee Recursive search
+    ## File Recursive search
     i ./work/google-* -Recurse
 
 .EXAMPLE
@@ -170,8 +170,14 @@ function Invoke-Link {
         [switch] $Extension,
         
         [Parameter( Mandatory=$False )]
+        [switch] $AllowBulkInput,
+        
+        [Parameter( Mandatory=$False )]
         [Alias('i')]
         [int[]] $InvokeById,
+        
+        [Parameter( Mandatory=$False )]
+        [int[]] $Id,
         
         [Parameter( Mandatory=$False )]
         [ValidateSet(
@@ -181,7 +187,10 @@ function Invoke-Link {
         
         [Parameter( Mandatory=$False )]
         [Alias('q')]
-        [switch] $DryRun
+        [switch] $DryRun,
+        
+        [parameter( Mandatory=$False, ValueFromPipeline=$True )]
+        [object[]] $InputObject
     )
     # private functions
     function isCommentOrEmptyLine ( [string] $line ){
@@ -222,6 +231,31 @@ function Invoke-Link {
         }
         return
     }
+    if ( $Files.Count -gt 0){
+        #pass
+    } else {
+        if ( $input.Count -lt 1 ){
+            Write-Error "No input file." -ErrorAction Stop
+        }
+        if ( $True ){
+            Write-Error "Input via pipeline is not allowed." -ErrorAction Stop
+        }
+        return
+        [string[]] $Files = $input | ForEach-Object {
+            if ( ($_ -is [System.IO.FileInfo]) `
+                -or ($_ -is [System.IO.DirectoryInfo]) `
+                -or ($_ -is [System.IO.FileSystemInfo]) ){
+                Write-Output $_.FullName
+            } else {
+                Write-Output "$_"
+            }
+        }
+    }
+    # test bulk input
+    if ( $Files.Count -gt 5 -and -not $AllowBulkInput ){
+        Write-Error "Detect input of 5 or more items. To avoid this error, specify the '-AllowBulkInput' option." -ErrorAction Stop
+    }
+    # main
     [int] $fileCounter = 0
     foreach ( $f in $Files){
         # interpret Paths containing wildcards
@@ -231,6 +265,10 @@ function Invoke-Link {
         } else {
             [string[]] $tmpFiles = Get-ChildItem -Path $f -Recurse:$Recurse `
                 | Resolve-Path -Relative
+            # test count of items
+            if ( $tmpFiles.Count -gt 5 -and -not $AllowBulkInput ){
+                Write-Error "Detect input of 5 or more items in ""$f"". To avoid this error, specify the '-AllowBulkInput' option." -ErrorAction Stop
+            }
         }
         # set links
         foreach ( $File in $tmpFiles ){
@@ -256,6 +294,13 @@ function Invoke-Link {
                                 }
                                 return
                             }
+                            if ( $Id.Count -gt 0){
+                                if ($Id.Contains($fileCounter)){
+                                    Get-Item -LiteralPath $_.FullName
+                                }
+                                return
+                            }
+                            # set path
                             # set path
                             [String] $parentPath = Split-Path -Parent $_
                             [String] $childPath = Split-Path -Leaf $_
