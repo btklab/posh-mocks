@@ -7,7 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [7.2.1] - 2024-03-17
+
+- Enabled [Invoke-Link] Tag management
+- Added [Invoke-Link] `-Recurse` option
+- Added [Get-Histogram] Detect NaN
+- Added [Get-Histogram] `-Cast` option
 - Added [math2tex] AddDollars, AddBrackets option
+- Changed [Get-Ticket] ErrorActionPreference setting
+- Changed [Invoke-Link] ErrorActionPreference setting
+- Changed [linkcheck] ErrorActionPreference setting
 
 ## [7.2.0] - 2024-02-27
 
@@ -699,7 +710,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Inkscape-Converter]: src/Inkscape-Converter_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/7.2.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/7.2.1..HEAD
+[7.2.1]: https://github.com/btklab/posh-mocks/releases/tag/7.2.1
 [7.2.0]: https://github.com/btklab/posh-mocks/releases/tag/7.2.0
 [7.1.0]: https://github.com/btklab/posh-mocks/releases/tag/7.1.0
 [7.0.0]: https://github.com/btklab/posh-mocks/releases/tag/7.0.0

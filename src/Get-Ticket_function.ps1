@@ -967,8 +967,8 @@ function Get-Ticket {
         return $httpFlag
     }
     function isLinkAlive ( [string] $uri ){
+        $origErrActPref = $ErrorActionPreference
         try {
-            $origErrActPref = $ErrorActionPreference
             $ErrorActionPreference = "SilentlyContinue"
             $Response = Invoke-WebRequest -Uri "$uri"
             $ErrorActionPreference = $origErrActPref
@@ -978,6 +978,8 @@ function Get-Ticket {
         } catch {
             $StatusCode = $_.Exception.Response.StatusCode.value__
             return $False
+        } finally {
+            $ErrorActionPreference = $origErrActPref
         }
     }
     # Add new ticket

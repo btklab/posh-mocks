@@ -12490,18 +12490,29 @@ Open links written in a text file.
 - If a link file (`.lnk`) is specified, open the link in explorer
 - If a PowerShell Script file (`.ps1`) is specified, execute the script in current process:
     - able to use dot sourcing functions in current process
-    - Specify the absolute file path in the text file as possible.
-      Or Note that when specifying a relative path, the root is the
-      location of the current process
+    - Specify the absolute file path in the text file as possible.  Or Note that when specifying a relative path, the root is the location of the current process
+- If a directory is specified, the names and first lines of the files in that hierarchy are listed.
+    - Collect files recursively with `-Recurse` option
 
-Multiple links(lines) in a file available.
-Lines that empty or beginning with `#` are skipped.
+Link file settings:
 
-The link execution app can be any command if `-Command` option is specified.
+- Multiple links(lines) in a file available.
+- Tag
+    - To add tags, add a `space` + `#tag` to a comment line
+      starting with `#` or `Tag:`
+        - e.g. `# commnent #tag-1 #tag-2`
+        - e.g. `Tag: #tag-1 #tag-2`
+    - If you specify a directory as an argument, tags will be output.  This is useful when searching linked files by tag.
+- Skip line
+    - Lines that empty or beginning with `#` are skipped.
+    - Lines that empty or beginning with `Tag:` are skipped.
+- The link execution app can be any command if -Command option is specified.
+- Links written in a text file may or may not be enclosed in single/double quotes.
+- If `-l` or `-Location` specified, open the file location in explorer (do not run link)
+- Environment variables such as `${HOME}` can be used for path strings.
 
-Links written in a text file may or may not be enclosed in single/double quotes.
+Usage:
 
-If `-l` or `-Location` specified, open the file location in explorer
 
 - Usage
     - `man2 i`
@@ -12619,6 +12630,34 @@ MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4903...
 MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4904...
 MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4905...
 ```
+
+.EXAMPLE
+```powershell
+# tag search
+
+## link file
+cat ./work/apps/chrome.txt
+```
+
+```markdown
+# chrome #app #browser
+
+Tag: #hoge #fuga
+
+"C:\Program Files\Google\Chrome\Application\chrome.exe"
+```
+
+```powershell
+## search by tag
+i ./work/apps/ | ? tag -match hoge
+```
+
+```markdown
+Id Tag                   Name               Line
+-- ---                   ----               ----
+ 1 app,browser,hoge,fuga ./work/apps/chrome # chrome #app #browser
+```
+
 
 #### [Get-Ticket] (Alias: t) - A parser for tickets written in one-liner text <a id="Get-Ticket"></a>
 

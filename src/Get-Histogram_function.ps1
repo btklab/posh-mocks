@@ -322,6 +322,10 @@ function Get-Histogram {
         [Alias('a')]
         [switch] $AllProperty
         ,
+        [Parameter(Mandatory=$False)]
+        [ValidateSet("int", "double", "decimal")]
+        [string] $Cast = "double"
+        ,
         [Parameter(Mandatory=$False, ValueFromPipeline=$True )]
         [ValidateNotNullOrEmpty()]
         [array] $InputObject
@@ -367,20 +371,20 @@ function Get-Histogram {
     $Buckets = 1..$BucketCount | ForEach-Object {
         if ( $AllProperty ){
             [pscustomobject]@{
-                Index         = $_
+                Index          = $_
                 lower_bound    = $Minimum + ($_ - 1) * $BucketWidth
                 upper_bound    = $Minimum +  $_      * $BucketWidth
-                Count         = 0
+                Count          = 0
                 Relative_Count = 0
-                Group         = New-Object -TypeName System.Collections.ArrayList
-                PSTypeName    = 'HistogramBucket'
+                Group          = New-Object -TypeName System.Collections.ArrayList
+                PSTypeName     = 'HistogramBucket'
             }
         } elseif ( $Key ) {
             [pscustomobject]@{
                 $Key          = ''
                 Index         = $_
-                lower_bound    = $Minimum + ($_ - 1) * $BucketWidth
-                upper_bound    = $Minimum +  $_      * $BucketWidth
+                lower_bound   = $Minimum + ($_ - 1) * $BucketWidth
+                upper_bound   = $Minimum +  $_      * $BucketWidth
                 Count         = 0
                 Group         = New-Object -TypeName System.Collections.ArrayList
                 PSTypeName    = 'HistogramBucket'
@@ -388,8 +392,8 @@ function Get-Histogram {
         } else {
             [pscustomobject]@{
                 Index         = $_
-                lower_bound    = $Minimum + ($_ - 1) * $BucketWidth
-                upper_bound    = $Minimum +  $_      * $BucketWidth
+                lower_bound   = $Minimum + ($_ - 1) * $BucketWidth
+                upper_bound   = $Minimum +  $_      * $BucketWidth
                 Count         = 0
                 Group         = New-Object -TypeName System.Collections.ArrayList
                 PSTypeName    = 'HistogramBucket'
@@ -399,7 +403,29 @@ function Get-Histogram {
     Write-Debug ('[{0}] Building histogram' -f $MyInvocation.MyCommand)
     $DataIndex = 1
     foreach ($_ in $input) {
-        $val = $_.$Value
+        if ( [string]($_.$Value) -match '^NA$' ){
+            Write-Error "Drop 'NA/NaN' in advance." -ErrorAction Stop
+        }
+        if ( [string]($_.$Value) -match '^NaN$' ){
+            Write-Error "Drop 'NA/NaN' in advance." -ErrorAction Stop
+        }
+        #if ( [string]($_.$Value) -match '^\s*$' ){
+        if ( [string]($_.$Value).Trim() -eq '' ){
+            Write-Error "The input string '' was not in a correct format." -ErrorAction Stop
+        }
+        try {
+            if ( $Cast -eq 'double' ){
+                $val = [double]( $_.$Value )
+            } elseif ( $Cast -eq 'decimal' ){
+                $val = [decimal]( $_.$Value )
+            } elseif ( $Cast -eq 'int' ){
+                $val = [int]( $_.$Value )
+            } else {
+                $val = [double]( $_.$Value )
+            }
+        } catch {
+            Write-Error $Error[0] -ErrorAction Stop
+        }
         Write-Progress -Activity 'Filling buckets' -PercentComplete ($DataIndex / $inputCount * 100)
         
         if ($val -ge $Minimum -and $val -le $Maximum) {
