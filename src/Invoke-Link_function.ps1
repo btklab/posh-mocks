@@ -468,7 +468,7 @@ function Invoke-Link {
             }
             # output file name
             if ( -not $Quiet ){
-                Write-Output $File
+                Write-Output $($File.Replace('\','/'))
             }
             # is windows shortcut?
             [string] $ext = (Get-Item -LiteralPath $File).Extension
