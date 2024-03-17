@@ -21,18 +21,26 @@
       files in that hierarchy are listed.
         - Collect files recursively with -Recurse option
 
-    Multiple links(lines) in a file available.
-    Lines that empty or beginning with "#" are skipped.
+    Link file settings:
 
-    The link execution app can be any command if -Command option is
-    specified.
-
-    Links written in a text file may or may not be enclosed in
-    single/double quotes.
-
-    If -l or -Location specified, open the file location in explorer
-
-    Environment variables such as ${HOME} can be used for path strings.
+    - Multiple links(lines) in a file available.
+    - Tag
+        - To add tags, add a space + "#tag" to a comment line
+          starting with "#" or "Tag:"
+            - e.g. # commnent #tag-1 #tag-2
+            - e.g. Tag: #tag-1 #tag-2
+        - If you specify a directory as an argument, tags will be output.
+          This is useful when searching linked files by tag.
+    - Skip line
+        - Lines that empty or beginning with "#" are skipped.
+        - Lines that empty or beginning with "Tag:" are skipped.
+    - The link execution app can be any command if -Command option is
+      specified.
+    - Links written in a text file may or may not be enclosed in
+      single/double quotes.
+    - If -l or -Location specified, open the file location in explorer
+      (do not run link)
+    - Environment variables such as ${HOME} can be used for path strings.
 
     Usage:
         i                  ... Equivalent to Invoke-Item .
@@ -42,6 +50,13 @@
         i <file> -l or -Location ... Open <link> location in explorer
         i <file> -d or -DryRun   ... DryRun (listup links)
         i <file> -e or -Edit     ... Edit <linkfile> using text editor
+    
+    Example of link file with tag:
+        cat ./work/apps/chrome.txt
+
+            # title of link file #app #browser
+            Tag: #hoge #fuga
+            "C:\Program Files\Google\Chrome\Application\chrome.exe"
 
     Input:
         cat ./link/about_Invoke-Item.txt
@@ -125,6 +140,21 @@
     MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4904...
     MSRC Security Update Guide 2023-09-15 Chromium: CVE-2023-4905...
 
+.EXAMPLE
+    # tag search
+    
+    ## link file
+    cat ./work/apps/chrome.txt
+        # chrome #app #browser
+        Tag: #hoge #fuga
+        "C:\Program Files\Google\Chrome\Application\chrome.exe"
+
+    ## search by tag
+    i ./work/apps/ | ? tag -match hoge
+        Id Tag                   Name               Line
+        -- ---                   ----               ----
+         1 app,browser,hoge,fuga ./work/apps/chrome # chrome #app #browser
+
 .LINK
     linkcheck
 
@@ -174,6 +204,10 @@ function Invoke-Link {
         [switch] $AllowBulkInput,
         
         [Parameter( Mandatory=$False )]
+        [Alias('t')]
+        [string[]] $Tag,
+        
+        [Parameter( Mandatory=$False )]
         [Alias('i')]
         [int[]] $InvokeById,
         
@@ -202,6 +236,7 @@ function Invoke-Link {
         [bool] $coeFlag = $False
         if ( $line -match '^#' )   { $coeFlag = $True }
         if ( $line -match '^\s*$' ){ $coeFlag = $True }
+        if ( $line -match '^Tag:' ){ $coeFlag = $True }
         return $coeFlag
     }
     function isLinkHttp ( [string] $line ){
@@ -242,6 +277,33 @@ function Invoke-Link {
         [String] $res = Resolve-Path -LiteralPath $LiteralPath -Relative
         if ( $IsWindows ){ [String] $res = $res.Replace('\', '/') }
         return $res
+    }
+    function getMatchesValue {
+        param (
+            [String] $line,
+            [String] $pattern,
+            [Parameter( Mandatory=$False )]
+            [String[]] $replaceChar
+        )
+        $splatting = @{
+            Pattern       = $pattern
+            CaseSensitive = $False
+            Encoding      = "utf8"
+            SimpleMatch   = $False
+            NotMatch      = $False
+            AllMatches    = $True
+        }
+        [String[]] $retAry = ($line | Select-String @splatting).Matches.Value `
+            | ForEach-Object {
+                [String] $writeLine = "$_".Trim()
+                if ( $replaceChar.Count -gt 0 ){
+                    foreach ( $r in $replaceChar ){
+                        $writeLine = $writeLine.Replace($r, '')
+                    }
+                }
+                Write-Output $writeLine
+            }
+        return $retAry
     }
     # set variable
     $hrefList = New-Object 'System.Collections.Generic.List[System.String]'
@@ -336,16 +398,49 @@ function Invoke-Link {
                             [String] $relativePath = $relativePath -replace '\.[^\.]+$', ''
                         }
                         if ( Test-Path -LiteralPath $_.FullName -PathType Container){
-                            return
+                            continue
                         } elseif ( $_.Extension -match '\.lnk$|\.exe$|\.dll$|\.xls|\.doc|\.ppt|\.ps1$' ){
-                            $hash = [ordered] @{
-                                Id   = $fileCounter
-                                Name = $relativePath
-                                Line = $Null
+                            if ( $Tag.Count -gt 0 ){
+                                continue
+                            } else {
+                                $hash = [ordered] @{
+                                    Id   = $fileCounter
+                                    Tag  = $Null
+                                    Name = $relativePath
+                                    Line = $Null
+                                }
                             }
                         } else {
+                            # get tag
+                            [String] $pat = ' #[^ ]+'
+                            $splatting = @{
+                                Pattern       = $pat
+                                CaseSensitive = $False
+                                Encoding      = "utf8"
+                                AllMatches    = $True
+                                Path          = $_.FullName
+                            }
+                            #[String[]] $tagAry = getMatchesValue $line ' #[^ ]+|^#[^ ]+'
+                            [String[]] $tagAry = (Select-String @splatting).Matches.Value `
+                                | ForEach-Object { Write-Output $("$_".Trim()) }
+                            if ( $Tag.Count -gt 0 ){
+                                [bool] $isMatchTag = $False
+                                $tagAry | ForEach-Object {
+                                    foreach ( $t in $Tag ){
+                                        if ( $_ -match $t ){
+                                            $isMatchTag = $True
+                                            return
+                                        }
+                                    }
+                                }
+                                if ( -not $isMatchTag ){
+                                    return
+                                }
+                            }
+                            [String] $tagStr = ($tagAry -join ", ").Replace('#', '')
                             $hash = [ordered] @{
                                 Id   = $fileCounter
+                                Tag  = $tagStr
                                 Name = $relativePath
                                 Line = Get-Content -Path $_.FullName -TotalCount 1 -Encoding utf-8
                             }
