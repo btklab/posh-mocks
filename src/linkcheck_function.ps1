@@ -124,8 +124,8 @@ function linkcheck {
         # For some reason, the variable "$uri" may be $null
         # from pipline input
         if ($uri -ne $null) {
+            $origErrActPref = $ErrorActionPreference
             try {
-                $origErrActPref = $ErrorActionPreference
                 $ErrorActionPreference = "SilentlyContinue"
                 $Response = Invoke-WebRequest -Uri "$href"
                 $ErrorActionPreference = $origErrActPref
@@ -140,6 +140,8 @@ function linkcheck {
                 [string] $msg = "[ng] " + $msg.trim()
                 if($VerboseOutput){Write-Host $msg -ForegroundColor Yellow}
                 $errAry += ,$msg
+            } finally {
+                $ErrorActionPreference = $origErrActPref
             }
             Start-Sleep -Seconds $WaitSeconds
         }

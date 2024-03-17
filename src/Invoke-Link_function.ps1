@@ -18,7 +18,7 @@
           Or Note that when specifying a relative path, the root is the
           location of the current process
     - If a directory is specified, the names and first lines of the
-      files in tbat hierarchy are listed.
+      files in that hierarchy are listed.
         - Collect files recursively with -Recurse option
 
     Multiple links(lines) in a file available.
@@ -40,7 +40,7 @@
         i <file>           ... Invoke-Item <links-writtein-in-text-file>
         i <file> <command> ... command <links-writtein-in-text-file>
         i <file> -l or -Location ... Open <link> location in explorer
-        i <file> -q or -DryRun   ... DryRun (listup links)
+        i <file> -d or -DryRun   ... DryRun (listup links)
         i <file> -e or -Edit     ... Edit <linkfile> using text editor
 
     Input:
@@ -68,7 +68,7 @@
     i <file> <command> ... command <links-writtein-in-text-file>
     i <file> <command> -b    ... run command in background
     i <file> -l or -Location ... Open <link> location in explorer
-    i <file> -q or -DryRun   ... DryRun (listup links)
+    i <file> -d or -DryRun   ... DryRun (listup links)
     i <file> -e or -Edit     ... Edit <linkfile> using text editor
 
 .EXAMPLE
@@ -102,8 +102,8 @@
     ## Specify path containing wildcards
     i ./link/a.*
     
-    ## File Recursive search
-    i ./work/google-* -Recurse
+    ## Directory recursive search
+    i ./work/ -Recurse
 
 .EXAMPLE
     ## execute if *.ps1 file specified
@@ -170,6 +170,7 @@ function Invoke-Link {
         [switch] $Extension,
         
         [Parameter( Mandatory=$False )]
+        [Alias('a')]
         [switch] $AllowBulkInput,
         
         [Parameter( Mandatory=$False )]
@@ -186,8 +187,12 @@ function Invoke-Link {
         [string] $ErrAction = "Stop",
         
         [Parameter( Mandatory=$False )]
-        [Alias('q')]
+        [Alias('d')]
         [switch] $DryRun,
+        
+        [Parameter( Mandatory=$False )]
+        [Alias('q')]
+        [switch] $Quiet,
         
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
         [object[]] $InputObject
@@ -206,8 +211,8 @@ function Invoke-Link {
         return $httpFlag
     }
     function isLinkAlive ( [string] $uri ){
+        $origErrActPref = $ErrorActionPreference
         try {
-            $origErrActPref = $ErrorActionPreference
             $ErrorActionPreference = "SilentlyContinue"
             $Response = Invoke-WebRequest -Uri "$uri"
             $ErrorActionPreference = $origErrActPref
@@ -217,6 +222,8 @@ function Invoke-Link {
         } catch {
             $StatusCode = $_.Exception.Response.StatusCode.value__
             return $False
+        } finally {
+            $ErrorActionPreference = $origErrActPref
         }
     }
     function editFile ( [string] $fpath ){
@@ -231,6 +238,13 @@ function Invoke-Link {
         }
         return
     }
+    function getRelativePath ( [string] $LiteralPath ){
+        [String] $res = Resolve-Path -LiteralPath $LiteralPath -Relative
+        if ( $IsWindows ){ [String] $res = $res.Replace('\', '/') }
+        return $res
+    }
+    # set variable
+    $hrefList = New-Object 'System.Collections.Generic.List[System.String]'
     if ( $Files.Count -gt 0){
         #pass
     } else {
@@ -252,86 +266,93 @@ function Invoke-Link {
         }
     }
     # test bulk input
-    if ( $Files.Count -gt 5 -and -not $AllowBulkInput ){
-        Write-Error "Detect input of 5 or more items. To avoid this error, specify the '-AllowBulkInput' option." -ErrorAction Stop
+    if ( -not $AllowBulkInput ){
+        $bulkList = New-Object 'System.Collections.Generic.List[System.String]'
+        foreach ( $f in $Files ){
+            # expand wildcard
+            Get-Item -Path $f | ForEach-Object {
+                if ( Test-Path -Path $_.FullName -PathType Leaf){
+                    [String] $resPath = getRelativePath $_.FullName
+                    $bulkList.Add($resPath)
+                }
+            }
+        }
+        [String[]] $bulkFileAry = $bulkList.ToArray()
+        if ( $bulkFileAry.Count -gt 1 ){
+            foreach ( $f in $bulkFileAry ){
+                Write-Output $f
+            }
+            Write-Error "Detect input of 5 or more items. To avoid this error, specify the '-AllowBulkInput' option." -ErrorAction Stop
+        }
     }
     # main
     [int] $fileCounter = 0
-    foreach ( $f in $Files){
+    foreach ( $f in $Files ){
         # interpret Paths containing wildcards
         if ( Test-Path -Path $f -PathType Container){
             [string[]] $tmpFiles = Get-Item -Path $f `
                 | Resolve-Path -Relative
         } else {
-            [string[]] $tmpFiles = Get-ChildItem -Path $f -Recurse:$Recurse `
+            [string[]] $tmpFiles = Get-ChildItem -Path $f -Recurse:$Recurse -File `
                 | Resolve-Path -Relative
-            # test count of items
-            if ( $tmpFiles.Count -gt 5 -and -not $AllowBulkInput ){
-                Write-Error "Detect input of 5 or more items in ""$f"". To avoid this error, specify the '-AllowBulkInput' option." -ErrorAction Stop
-            }
         }
         # set links
         foreach ( $File in $tmpFiles ){
             # is path directory?
-            if ( -not (isLinkHttp $File) ){
-                if ( Test-Path -LiteralPath $File -PathType Container){
-                    if ( $DryRun ){
-                        Write-Output $File
-                        continue
-                    }
-                    # return file paths
-                    #Invoke-Item -LiteralPath $File
-                    Get-ChildItem -LiteralPath $File -Recurse:$Recurse `
-                        | Sort-Object {
-                            -join ( [int[]] ($_.FullName.ToCharArray()) | ForEach-Object { [System.Convert]::ToString($_, 16)})
-                        } `
-                        | ForEach-Object {
-                            $fileCounter++
-                            if ( $InvokeById.Count -gt 0){
-                                if ($InvokeById.Contains($fileCounter)){
-                                    Write-Output "Invoke-Link: $((Resolve-Path -LiteralPath $_.FullName -Relative).Replace('\','/'))"
-                                    Invoke-Link -Files $_.FullName
-                                }
-                                return
-                            }
-                            if ( $Id.Count -gt 0){
-                                if ($Id.Contains($fileCounter)){
-                                    Get-Item -LiteralPath $_.FullName
-                                }
-                                return
-                            }
-                            # set path
-                            # set path
-                            [String] $parentPath = Split-Path -Parent $_
-                            [String] $childPath = Split-Path -Leaf $_
-                            [String] $relativePath = Join-Path -Path $parentPath -ChildPath $childPath
-                            [String] $relativePath = Resolve-Path $relativePath -Relative
-                            # remove extension
-                            if ( -not $Extension -and $_.Name -notmatch '^\.') {
-                                [String] $relativePath = $relativePath -replace '\.[^\.]+$', ''
-                            }
-                            if ( $IsWindows ){
-                                [String] $relativePath = $relativePath.Replace('\', '/')
-                            }
-                            if ( Test-Path -LiteralPath $_.FullName -PathType Container){
-                                return
-                            } elseif ( $_.Extension -match '\.lnk$|\.exe$|\.dll$|\.xls|\.doc|\.ppt|\.ps1$' ){
-                                $hash = [ordered] @{
-                                    Id   = $fileCounter
-                                    Name = $relativePath
-                                    Line = $Null
-                                }
-                            } else {
-                                $hash = [ordered] @{
-                                    Id   = $fileCounter
-                                    Name = $relativePath
-                                    Line = Get-Content -Path $_.FullName -TotalCount 1 -Encoding utf-8
-                                }
-                            }
-                            [pscustomobject] $Hash
-                        }
+            if ( Test-Path -LiteralPath $File -PathType Container){
+                if ( $DryRun ){
+                    Write-Output $File
                     continue
                 }
+                # return file paths
+                #Invoke-Item -LiteralPath $File
+                Get-ChildItem -LiteralPath $File -Recurse:$Recurse -File `
+                    | Sort-Object {
+                        -join ( [int[]] ($_.FullName.ToCharArray()) | ForEach-Object { [System.Convert]::ToString($_, 16)})
+                    } `
+                    | ForEach-Object {
+                        $fileCounter++
+                        if ( $InvokeById.Count -gt 0){
+                            if ($InvokeById.Contains($fileCounter)){
+                                [String] $relPath = getRelativePath $_.FullName
+                                Write-Output "Invoke-Link: $relPath"
+                                Invoke-Link -Files $_.FullName
+                            }
+                            return
+                        }
+                        if ( $Id.Count -gt 0){
+                            if ($Id.Contains($fileCounter)){
+                                Get-Item -LiteralPath $_.FullName
+                            }
+                            return
+                        }
+                        # set path
+                        [String] $parentPath = Split-Path -Parent $_
+                        [String] $childPath = Split-Path -Leaf $_
+                        [String] $joinedPath = Join-Path -Path $parentPath -ChildPath $childPath
+                        [String] $relativePath = getRelativePath $joinedPath
+                        # remove extension
+                        if ( -not $Extension -and $_.Name -notmatch '^\.') {
+                            [String] $relativePath = $relativePath -replace '\.[^\.]+$', ''
+                        }
+                        if ( Test-Path -LiteralPath $_.FullName -PathType Container){
+                            return
+                        } elseif ( $_.Extension -match '\.lnk$|\.exe$|\.dll$|\.xls|\.doc|\.ppt|\.ps1$' ){
+                            $hash = [ordered] @{
+                                Id   = $fileCounter
+                                Name = $relativePath
+                                Line = $Null
+                            }
+                        } else {
+                            $hash = [ordered] @{
+                                Id   = $fileCounter
+                                Name = $relativePath
+                                Line = Get-Content -Path $_.FullName -TotalCount 1 -Encoding utf-8
+                            }
+                        }
+                        [pscustomobject] $Hash
+                    }
+                continue
             }
             # is file exist?
             if ( -not ( Test-Path -LiteralPath $File ) ){
@@ -349,6 +370,10 @@ function Invoke-Link {
             if ( $Edit ){
                 editFile $File
                 continue
+            }
+            # output file name
+            if ( -not $Quiet ){
+                Write-Output $File
             }
             # is windows shortcut?
             [string] $ext = (Get-Item -LiteralPath $File).Extension
@@ -408,10 +433,15 @@ function Invoke-Link {
                         Write-Output $linkLine
                     }
                 } | Sort-Object -Unique
-            if ( $Edit ){ continue }
+            if ( $Edit ){
+                continue
+            }
             if ( -not $linkLines ){
-                if ( Test-Path -LiteralPath $File -PathType Container){ continue }
-                "Could not find links in file: $File" | Write-Error -ErrorAction Stop; continue
+                if ( Test-Path -LiteralPath $File -PathType Container){
+                    continue
+                }
+                "Could not find links in file: $File" | Write-Error -ErrorAction Stop
+                continue
             }
             if ( $DryRun ){
                 Write-Host "$File" -ForegroundColor Green
@@ -425,16 +455,20 @@ function Invoke-Link {
                     }
                 continue
             }
+            foreach ( $href in $linkLines ){
+                $hrefList.Add($href)
+            }
         }
         if ( $Location -and -not $Command ){
             continue
         }
-        foreach ( $hlink in $linkLines ){
+        [String[]] $linkAry = $hrefList.ToArray()
+        foreach ( $href in $linkAry ){
             # execute command
             if ( $Command ){
                 [string] $com = $Command
             } else {
-                if ( isLinkHttp $hlink ){
+                if ( isLinkHttp $href ){
                     [string] $com = "Start-Process -FilePath"
                 } elseif ($AsFileObject) {
                     [string] $com = "Get-Item -LiteralPath"
@@ -442,8 +476,8 @@ function Invoke-Link {
                     [string] $com = "Invoke-Item"
                 }
             }
-            Write-Debug $hlink
-            [string] $com = "$com ""$hlink"""
+            Write-Debug $href
+            [string] $com = "$com ""$href"""
             if ( $DryRun ){
                 if ( $BackGround ){
                     [string] $com = "Start-Job -ScriptBlock { Invoke-Expression -Command $com -ErrorAction $ErrAction }"
