@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- NA
+- Changed [Invoke-Link] Tag management
 
 ## [7.2.1] - 2024-03-17
 

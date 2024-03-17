@@ -12640,7 +12640,7 @@ cat ./work/apps/chrome.txt
 ```
 
 ```markdown
-# chrome #app #browser
+# chrome #app
 
 Tag: #hoge #fuga
 
@@ -12653,9 +12653,9 @@ i ./work/apps/ | ? tag -match hoge
 ```
 
 ```markdown
-Id Tag                   Name               Line
--- ---                   ----               ----
- 1 app,browser,hoge,fuga ./work/apps/chrome # chrome #app #browser
+Id Tag                Name               Line
+-- ---                ----               ----
+ 1 #app, #hoge, #fuga ./work/apps/chrome # chrome #app
 ```
 
 
