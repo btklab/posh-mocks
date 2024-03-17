@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- Added [Invoke-Link] `-Recurse` option and Tag system
+- Added [Invoke-Link] `-Recurse` option
 - Added [Get-Histogram] Detect NaN
 - Added [Get-Histogram] `-Cast` option
 - Added [math2tex] AddDollars, AddBrackets option
+- Changed [Get-Ticket] ErrorActionPreference setting
+- Changed [Invoke-Link] ErrorActionPreference setting
+- Changed [linkcheck] ErrorActionPreference setting
 
 ## [7.2.0] - 2024-02-27
 
