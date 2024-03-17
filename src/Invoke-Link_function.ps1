@@ -153,7 +153,7 @@
     i ./work/apps/ | ? tag -match hoge
         Id Tag                 Name               Line
         -- ---                 ----               ----
-         1 #app, #hoge, #fuga  ./work/apps/chrome # chrome #app #browser
+         1 #app, #hoge, #fuga  ./work/apps/chrome # chrome #app
 
 .LINK
     linkcheck
