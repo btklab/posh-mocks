@@ -145,15 +145,15 @@
     
     ## link file
     cat ./work/apps/chrome.txt
-        # chrome #app #browser
+        # chrome #app
         Tag: #hoge #fuga
         "C:\Program Files\Google\Chrome\Application\chrome.exe"
 
     ## search by tag
     i ./work/apps/ | ? tag -match hoge
-        Id Tag                   Name               Line
-        -- ---                   ----               ----
-         1 app,browser,hoge,fuga ./work/apps/chrome # chrome #app #browser
+        Id Tag                 Name               Line
+        -- ---                 ----               ----
+         1 #app, #hoge, #fuga  ./work/apps/chrome # chrome #app #browser
 
 .LINK
     linkcheck
@@ -202,10 +202,6 @@ function Invoke-Link {
         [Parameter( Mandatory=$False )]
         [Alias('a')]
         [switch] $AllowBulkInput,
-        
-        [Parameter( Mandatory=$False )]
-        [Alias('t')]
-        [string[]] $Tag,
         
         [Parameter( Mandatory=$False )]
         [Alias('i')]
@@ -400,15 +396,11 @@ function Invoke-Link {
                         if ( Test-Path -LiteralPath $_.FullName -PathType Container){
                             continue
                         } elseif ( $_.Extension -match '\.lnk$|\.exe$|\.dll$|\.xls|\.doc|\.ppt|\.ps1$' ){
-                            if ( $Tag.Count -gt 0 ){
-                                continue
-                            } else {
-                                $hash = [ordered] @{
-                                    Id   = $fileCounter
-                                    Tag  = $Null
-                                    Name = $relativePath
-                                    Line = $Null
-                                }
+                            $hash = [ordered] @{
+                                Id   = $fileCounter
+                                Tag  = $Null
+                                Name = $relativePath
+                                Line = $Null
                             }
                         } else {
                             # get tag
@@ -423,21 +415,8 @@ function Invoke-Link {
                             #[String[]] $tagAry = getMatchesValue $line ' #[^ ]+|^#[^ ]+'
                             [String[]] $tagAry = (Select-String @splatting).Matches.Value `
                                 | ForEach-Object { Write-Output $("$_".Trim()) }
-                            if ( $Tag.Count -gt 0 ){
-                                [bool] $isMatchTag = $False
-                                $tagAry | ForEach-Object {
-                                    foreach ( $t in $Tag ){
-                                        if ( $_ -match $t ){
-                                            $isMatchTag = $True
-                                            return
-                                        }
-                                    }
-                                }
-                                if ( -not $isMatchTag ){
-                                    return
-                                }
-                            }
-                            [String] $tagStr = ($tagAry -join ", ").Replace('#', '')
+                            #[String] $tagStr = ($tagAry -join ", ").Replace('#', '')
+                            [String] $tagStr = $tagAry -join ", "
                             $hash = [ordered] @{
                                 Id   = $fileCounter
                                 Tag  = $tagStr
