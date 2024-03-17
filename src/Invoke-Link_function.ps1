@@ -404,7 +404,7 @@ function Invoke-Link {
                             }
                         } else {
                             # get tag
-                            [String] $pat = ' #[^ ]+'
+                            [String] $pat = ' #[^ #]+'
                             $splatting = @{
                                 Pattern       = $pat
                                 CaseSensitive = $False
