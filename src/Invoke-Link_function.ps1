@@ -13,7 +13,7 @@
     - If a link file (.lnk) is specified, open the link in explorer
     - If a PowerShell Script file (.ps1) is specified,
       execute the script in current process:
-        - able to use dot sourcing functions in current process
+        - Able to use dot sourcing functions in current process
         - Specify the absolute file path in the text file as possible.
           Or Note that when specifying a relative path, the root is the
           location of the current process
@@ -34,7 +34,7 @@
     - Skip line
         - Lines that empty or beginning with "#" are skipped.
         - Lines that empty or beginning with "Tag:" are skipped.
-    - The link execution app can be any command if -Command option is
+    - The link execution app can be any command if "-Command" option is
       specified.
     - Links written in a text file may or may not be enclosed in
       single/double quotes.
@@ -91,7 +91,7 @@
     "C:/Users/path/to/the/index.html"
 
     # dry run
-    i ./link/rmarkdown_site.txt -q
+    i ./link/rmarkdown_site.txt -d
     ./link/rmarkdown.txt
     Invoke-Item "C:/Users/path/to/the/index.html"
 
@@ -447,7 +447,9 @@ function Invoke-Link {
             }
             # output file name
             if ( -not $Quiet ){
-                Write-Output $($File.Replace('\','/'))
+                if ( -not $DryRun ){
+                    Write-Output $($File.Replace('\','/'))
+                }
             }
             # is windows shortcut?
             [string] $ext = (Get-Item -LiteralPath $File).Extension
