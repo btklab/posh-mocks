@@ -12489,7 +12489,7 @@ Open links written in a text file.
         - `Invoke-Item <link>`
 - If a link file (`.lnk`) is specified, open the link in explorer
 - If a PowerShell Script file (`.ps1`) is specified, execute the script in current process:
-    - able to use dot sourcing functions in current process
+    - Able to use dot sourcing functions in current process
     - Specify the absolute file path in the text file as possible.  Or Note that when specifying a relative path, the root is the location of the current process
 - If a directory is specified, the names and first lines of the files in that hierarchy are listed.
     - Collect files recursively with `-Recurse` option
@@ -12506,7 +12506,7 @@ Link file settings:
 - Skip line
     - Lines that empty or beginning with `#` are skipped.
     - Lines that empty or beginning with `Tag:` are skipped.
-- The link execution app can be any command if -Command option is specified.
+- The link execution app can be any command if `-Command` option is specified.
 - Links written in a text file may or may not be enclosed in single/double quotes.
 - If `-l` or `-Location` specified, open the file location in explorer (do not run link)
 - Environment variables such as `${HOME}` can be used for path strings.
@@ -12523,7 +12523,7 @@ Usage:
         - `i <file>` ... `Invoke-Item <links-writtein-in-text-file>`
         - `i <file> <command>` ... `command <links-writtein-in-text-file>`
         - `i <file> -l or -Location` ... Open `<link>` location in explorer
-        - `i <file> -q or -DryRun` ... DryRun (listup links)
+        - `i <file> -d or -DryRun` ... DryRun (listup links)
         - `i <file> -e or -Edit` ... Edit `<linkfile>` using text editor
 - Note
     - This is the command I use most often in my daily work
@@ -12580,7 +12580,7 @@ Mode         LastWriteTime Length Name
 
 ```powershell
 # dry run
-i ./link/rmarkdown_site.txt -q
+i ./link/rmarkdown_site.txt -d
 ```
 
 ```
