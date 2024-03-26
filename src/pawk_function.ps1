@@ -716,9 +716,7 @@ function pawk {
         [Parameter(Mandatory=$False)]
         [switch] $IgnoreConsecutiveDelimiters,
 
-        [parameter(
-            Mandatory=$False,
-            ValueFromPipeline=$True)]
+        [parameter( Mandatory=$False, ValueFromPipeline=$True)]
         [string[]]$Text
     )
     begin{
@@ -751,9 +749,9 @@ function pawk {
         function replaceFieldStr ([string] $str){
             $str = " " + $str
             $str = escapeDollarMarkBetweenQuotes $str
-            $str = $str.Replace('$0','($self -join "$oDelim")')
-            $str = $str -replace('([^\\`])\$NF','$1$self[($self.Count - 1)]')
-            $str = $str -replace '([^\\`])\$(\d+)','$1$self[($2-1)]'
+            $str = $str.Replace('$0','$($self -join $oDelim)')
+            $str = $str -replace('([^\\`])\$NF','${1}$($self[($self.Count-1)])')
+            $str = $str -replace '([^\\`])\$(\d+)','${1}$($self[($2-1)])'
             $str = $str.Replace('\$','$').Replace('`$','$')
             $str = $str.Trim()
             return $str
