@@ -79,9 +79,9 @@ if ($IsWindows){
 ```
 
 
-## Description of each functions
+## Description of each function
 
-各関数の挙動と作った動機と簡単な説明。
+The motivation for creating each function and usage.
 
 ### Show functions
 
@@ -90,9 +90,7 @@ if ($IsWindows){
 
 [man2]: src/man2_function.ps1
 
-
-`src`配下の関数（ファイル）名を列挙する。
-筆者は作った関数をすぐに忘れてしまうため。
+List the function names (file names) under `src` directory. With this function, I don't have to remember the name of the function I created.
 
 - Usage
     - `man2 man2`
@@ -107,11 +105,12 @@ if ($IsWindows){
         - `[-Examples]`
         - `[-Independent]`
         - `[-l|-Line]`
-- 挙動
-    - `man2`関数ファイルと同階層にある`*_function.ps1`ファイルのファイル名から`_function.ps1`を除去して列挙する
-- 依存
+- Behavior
+    1. Remove `_function.ps1` strings from the file names of the `src/*_function.ps1` files in the same hierarchy as this function file
+    2. Enumerate function name
+- Dependencies
     - [flat], [tateyoko], [keta]
-        - `-Independent`スイッチで依存ファイルを用いず[Format-Wide]だけでテーブル化する
+        - Use the `-Independent` switch to create a table without depending on other functions in this repository (use only built-in `Format-Wide` function to formar the output).
 - Examples
     - Get command list as table
         - `man2`
