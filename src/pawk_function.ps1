@@ -134,6 +134,13 @@
         d zzz f 2
         g zzz i 3
 
+        # when using the column specification operator "$1" in double uotes,
+        # add the subexpression operator like "$($1)"
+        PS> "a b c 1","d e f 2","g h i 3" | pwk -Action {"id: $($4), tag: ""$($1)"""}
+        id: 1, tag: "a"
+        id: 2, tag: "d"
+        id: 3, tag: "g"
+
         # see more examples in .EXAMPLE section.
 
     inspired by:
@@ -666,6 +673,13 @@
     2023-10-01 0 100 +start @bank
     2023-10-15 100 200 +electricity @ban
 
+.EXAMPLE
+    # when using the column specification operator "$1" in double uotes,
+    # add the subexpression operator like "$($1)"
+    PS> "a b c 1","d e f 2","g h i 3" | pwk -Action {"id: $($4), tag: ""$($1)"""}
+    id: 1, tag: "a"
+    id: 2, tag: "d"
+    id: 3, tag: "g"
 #>
 function pawk {
     Param(
@@ -716,6 +730,9 @@ function pawk {
         [Parameter(Mandatory=$False)]
         [switch] $IgnoreConsecutiveDelimiters,
 
+        [Parameter(Mandatory=$False)]
+        [switch] $AutoSubExpression,
+
         [parameter( Mandatory=$False, ValueFromPipeline=$True)]
         [string[]]$Text
     )
@@ -749,9 +766,15 @@ function pawk {
         function replaceFieldStr ([string] $str){
             $str = " " + $str
             $str = escapeDollarMarkBetweenQuotes $str
-            $str = $str.Replace('$0','$($self -join $oDelim)')
-            $str = $str -replace('([^\\`])\$NF','${1}$($self[($self.Count-1)])')
-            $str = $str -replace '([^\\`])\$(\d+)','${1}$($self[($2-1)])'
+            if ( $AutoSubExpression ){
+                $str = $str.Replace('$0','$($self -join $oDelim)')
+                $str = $str -replace('([^\\`])\$NF','${1}$($self[($self.Count-1)])')
+                $str = $str -replace '([^\\`])\$(\d+)','${1}$($self[($2-1)])'
+            } else {
+                $str = $str.Replace('$0','$self -join $oDelim')
+                $str = $str -replace('([^\\`])\$NF','${1}$self[($self.Count-1)]')
+                $str = $str -replace '([^\\`])\$(\d+)','${1}$self[($2-1)]'
+            }
             $str = $str.Replace('\$','$').Replace('`$','$')
             $str = $str.Trim()
             return $str

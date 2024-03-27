@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- Changed [pawk] Use subexpression operator to expand column specifications inside double quotes
+- Added [pawk] AutoSubExpression switch
 - Changed [Invoke-Link] Tag management
 - Translated [README.md] synopsis of `man2` function Japanese to English: `man2` function
 
