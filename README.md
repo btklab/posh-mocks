@@ -281,28 +281,26 @@ e ../bin/posh-mocks/operator.ps1
 ```
 
 
-
 ### Unix-like text filters
 
 #### [sed] - Stream EDitor <a id="sed"></a>
 
 [sed]: src/sed_function.ps1
 
-文字列を置換する。Windows用。
-Linux環境で使う`sed`のような使用感で文字列を置換するが、劣化コピーであるため機能は限定的。
-`"string" | ForEach-Object{ $_ -replace 'reg','str' }`と同じ効果を得る。
-`sed`は（筆者が毎日）よく使うコマンドなので、Bash・PowerShellとも同じ使用感・より短い文字数で利用できるようにした。
+Replace input line by line. A degraded copy of the `sed` command used in Unix/Linux environments. Roughly equivalent to `"string" | ForEach-Object{ $_ -replace 'reg','str' }`.
+
+`sed` is a command that I use every day, so I made it available with similar syntax on Bash and PowerShell.
 
 - Usage
     - `man2 sed`
     - `sed 's;<regex-pattern>;<replace-strings>;g'`
-        - 左から2文字目が区切り文字。`sed 's@hoge@piyo@g'`と書いてもよい
+        - The second characters from the left is recognized as a delimiter. This behavior is used when replacing delimiter `;`. For example, you can write `sed 's@;;;@aaa@g'` to replace `;`.
     - `sed 's;<regex-pattern>;<replace-strings>;'`
-        - 末尾に`g`がない場合、行の左から右にみて最初にヒットした`regex-pattern`のみ置換する
-        - このユースケースでは大文字小文字が区別される点に注意する
+        - If there is no `g` at the end, only the first match pattern from the left of the line is replaced.
+        - Note that this use case is case-sensitive
     - ```sed "s;`t;<replace-strings>;g"```
-        - ダブルクオートで囲むと``` `t ```や``` `r`n ```などの制御文字を置換可能
-        - Bashで使う`sed`のように`\t`や`\n`ではない点に注意
+        - Control characters such as ``` `t ``` and ``` `r`n `` can be replaced by surrounding them with double quotes.
+        - Note that it is not `\t` or `\n` line `sed` on Bash.
 - Inspired by Unix/Linux Commands
     - Command: `sed`
 
@@ -392,21 +390,20 @@ eee
 
 [sed-i]: src/sed-i_function.ps1
 
-文字列を置換し、かつファイルを上書き。
-Linuxでいう`sed -i`（の劣化コピー）。ただし誤爆防止のため`-Execute`スイッチを使用しなければ上書きはしない。
-同じ動作をするPowerShellワンライナーがいつも長くなるので。
+Edit files in-place. A degraded copy of `sed -i` on Unix/Linux. To prevent files from being accidentally overwritten due to incorrect substitution, this command does not actually overwrite files until you specify the `-Execute` swicth.
 
 - Usage
     - `man2 sed-i`
     - `sed-i 's;pattern;replace;g' file [-Execute] [-DoNotCreateBackup|-OverwriteBackup]`
-    - デフォルトでdry run、かつ、バックアップ作成（.bak）ありの安全動作
+    - The default behavior is dry run and creates a backup file (`.bak`) in the current directory
+    - Overwrite files by specifying `-Execute` switch
 - Examples
     - `sed-i 's;abc;def;g' file -Execute`
-        - Linux: `sed -i.bak 's;abc;def;g' file` と等価（`.bak`ファイルにオリジナルファイルをバックアップ）
+        - Equivalent to `sed -i.bak 's;abc;def;g' file` on Unix/Linux (backup original file to `.bak` file.)
     - `sed-i 's;abc;def;g' file -Execute -DoNotCreateBackup`
-        - Linux: `sed -i 's;abc;def;g' file` と等価（上書き）↓
+        - Equivalent to `sed -i 's;abc;def;g' file` on Unix/Linux (do not create backup file.)
     - `sed-i 's;pattern1;replace1;g','s;pattern2;replace2;g',... file`
-        - 置換文字列はカンマ区切りで複数指定できる
+        - Multiple replacement strings can be specified by separating them with commas
 - Inspired by Unix/Linux Commands
     - Command: `sed`
 

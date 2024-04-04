@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added [pawk] AutoSubExpression switch
 - Changed [Invoke-Link] Tag management
-- Translated [README.md] synopsis of `man2` function Japanese to English: `man2` function
+- Translated [README.md] synopsis Japanese to English
 
 ## [7.2.1] - 2024-03-17
 
