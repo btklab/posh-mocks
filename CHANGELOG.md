@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Fixed [grep] `-File` option
 - Added [pawk] AutoSubExpression switch
 - Changed [Invoke-Link] Tag management
 - Translated [README.md] synopsis Japanese to English
