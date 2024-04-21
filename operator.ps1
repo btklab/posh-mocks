@@ -201,6 +201,8 @@ if ( $IsWindows ){
 . $pwshSrcDir/Delete-Field_function.ps1
 . $pwshSrcDir/Unique-Object_function.ps1
 
+. $pwshSrcDir/GetValueFrom-Key_function.ps1
+
 . $pwshSrcDir/Replace-ForEach_function.ps1
 
 . $pwshSrcDir/Join2-Object_function.ps1
