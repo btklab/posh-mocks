@@ -260,7 +260,7 @@ function Grep-Object {
         
         [Parameter(Mandatory=$False)]
         [alias('f')]
-        [switch] $File,
+        [string] $File,
         
         [Parameter(Mandatory=$False)]
         [alias('v')]
@@ -307,11 +307,14 @@ function Grep-Object {
         Write-Error "do not set regex pattern or pattern-files." -ErrorAction Stop
     }
     # set params
+    [string[]] $pat = @()
     if ($File){
         # read patterns from files
-        $pat = Get-Content -Path $Pattern -Encoding UTF8
+        $pat = Get-Content -Path $File -Encoding UTF8
     } else {
-        $pat = $Pattern
+        foreach ( $p in $Pattern ){
+            $pat += $Pattern
+        }
     }
     $splatting = @{
         Pattern       = $pat

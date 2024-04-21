@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [7.2.2] - 2024-04-21
+
+- Added [GetValueFrom-Key] (Alias: getvalkey) function
+- Fixed [grep] `-File` option
 - Added [pawk] AutoSubExpression switch
 - Changed [Invoke-Link] Tag management
 - Translated [README.md] synopsis Japanese to English
@@ -711,8 +717,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [math2tex]: src/math2tex_function.ps1
 [Inkscape-Converter]: src/Inkscape-Converter_function.ps1
 
+[GetValueFrom-Key]: src/GetValueFrom-Key_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/7.2.1..HEAD
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/7.2.2..HEAD
+[7.2.2]: https://github.com/btklab/posh-mocks/releases/tag/7.2.2
 [7.2.1]: https://github.com/btklab/posh-mocks/releases/tag/7.2.1
 [7.2.0]: https://github.com/btklab/posh-mocks/releases/tag/7.2.0
 [7.1.0]: https://github.com/btklab/posh-mocks/releases/tag/7.1.0

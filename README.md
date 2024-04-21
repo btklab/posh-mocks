@@ -38,7 +38,7 @@ cat README.md `
     | Set-Clipboard
 ```
 
-- [Add-LineBreakEndOfFile][], [Add-LineBreak][], [Add-Quartile][], [Add-Stats][], [Apply-Function][], [ConvImage][], [Decrease-Indent][], [Delete-Field][], [Detect-XrsAnomaly][], [Drop-NA][], [Edit-Function][], [Execute-RMarkdown][], [Execute-TinyTeX][], [Get-AppShortcut][], [Get-ClipboardAlternative][], [Get-DateAlternative][], [Get-Histogram][], [Get-OGP][], [Get-Ticket][], [Grep-Block][], [GroupBy-Object][], [Inkscape-Converter][], [Invoke-Link][], [Join2-Object][], [Measure-Quartile][], [Measure-Stats][], [Measure-Summary][], [Override-Yaml][], [Plot-BarChart][], [Rename-Normalize][], [Replace-ForEach][], [Replace-NA][], [Select-Field][], [Set-NowTime2Clipboard][], [Shorten-PropertyName][], [Shutdown-ComputerAFM][], [Sleep-ComputerAFM][], [Sort-Block][], [Test-isAsciiLine][], [Transpose-Property][], [Unique-Object][], [Unzip-Archive][], [addb][], [addl][], [addr][], [addt][], [cat2][], [catcsv][], [chead][], [clip2file][], [clip2hyperlink][], [clip2img][], [clip2normalize][], [clip2push][], [clip2shortcut][], [conv][], [count][], [csv2sqlite][], [csv2txt][], [ctail][], [decil][], [delf][], [dot2gviz][], [filehame][], [fillretu][], [flat][], [flow2pu][], [fpath][], [fval][], [fwatch][], [gantt2pu][], [getfirst][], [getlast][], [grep][], [gyo][], [han][], [head][], [image2md][], [jl][], [json2txt][], [juni][], [keta][], [kinsoku][], [lastyear][], [lcalc2][], [lcalc][], [linkcheck][], [linkextract][], [list2table][], [logi2dot][], [logi2pu][], [man2][], [map2][], [math2tex][], [mdfocus][], [mdgrep][], [mind2dot][], [mind2pu][], [movw][], [nextyear][], [pawk][], [percentile][], [pu2java][], [push2loc][], [pwmake][], [pwsync][], [retu][], [rev2][], [rev][], [say][], [sed-i][], [sed][], [self][], [seq2pu][], [sleepy][], [sm2][], [summary][], [table2md][], [tac][], [tail-f][], [tail][], [tarr][], [tateyoko][], [teatimer][], [tenki][], [tex2pdf][], [thisyear][], [toml2psobject][], [uniq][], [vbStrConv][], [watercss][], [wrap][], [yarr][], [ycalc][], [ysort][], [zen][]
+- [Add-LineBreakEndOfFile][], [Add-LineBreak][], [Add-Quartile][], [Add-Stats][], [Apply-Function][], [ConvImage][], [Decrease-Indent][], [Delete-Field][], [Detect-XrsAnomaly][], [Drop-NA][], [Edit-Function][], [Execute-RMarkdown][], [Execute-TinyTeX][], [Get-AppShortcut][], [Get-ClipboardAlternative][], [Get-DateAlternative][], [Get-Histogram][], [Get-OGP][], [Get-Ticket][], [GetValueFrom-Key][], [Grep-Block][], [GroupBy-Object][], [Inkscape-Converter][], [Invoke-Link][], [Join2-Object][], [Measure-Quartile][], [Measure-Stats][], [Measure-Summary][], [Override-Yaml][], [Plot-BarChart][], [Rename-Normalize][], [Replace-ForEach][], [Replace-NA][], [Select-Field][], [Set-NowTime2Clipboard][], [Shorten-PropertyName][], [Shutdown-ComputerAFM][], [Sleep-ComputerAFM][], [Sort-Block][], [Test-isAsciiLine][], [Transpose-Property][], [Unique-Object][], [Unzip-Archive][], [addb][], [addl][], [addr][], [addt][], [cat2][], [catcsv][], [chead][], [clip2file][], [clip2hyperlink][], [clip2img][], [clip2normalize][], [clip2push][], [clip2shortcut][], [conv][], [count][], [csv2sqlite][], [csv2txt][], [ctail][], [decil][], [delf][], [dot2gviz][], [filehame][], [fillretu][], [flat][], [flow2pu][], [fpath][], [fval][], [fwatch][], [gantt2pu][], [getfirst][], [getlast][], [grep][], [gyo][], [han][], [head][], [image2md][], [jl][], [json2txt][], [juni][], [keta][], [kinsoku][], [lastyear][], [lcalc2][], [lcalc][], [linkcheck][], [linkextract][], [list2table][], [logi2dot][], [logi2pu][], [man2][], [map2][], [math2tex][], [mdfocus][], [mdgrep][], [mind2dot][], [mind2pu][], [movw][], [nextyear][], [pawk][], [percentile][], [pu2java][], [push2loc][], [pwmake][], [pwsync][], [retu][], [rev2][], [rev][], [say][], [sed-i][], [sed][], [self][], [seq2pu][], [sleepy][], [sm2][], [summary][], [table2md][], [tac][], [tail-f][], [tail][], [tarr][], [tateyoko][], [teatimer][], [tenki][], [tex2pdf][], [thisyear][], [toml2psobject][], [uniq][], [vbStrConv][], [watercss][], [wrap][], [yarr][], [ycalc][], [ysort][], [zen][]
 
 **General**: This repository contains a set of filter commands for pattern matching on amorphous strings. The filter commands expect `UTF-8` + `space-delimited` + `line-oriented string data` (text object) through the pipeline as input. The output is also a string, not a typical PowerShell object. Some functions accept Object-input through pipeline, and some functions are "like PowerShell cmdlets" that output object. The design of the filters is similar to Unix/Linux shells such as Bash.
 
@@ -3810,6 +3810,72 @@ Example:
 
 ```
 1111 2,222.0 3,333.0
+```
+
+
+#### [GetValueFrom-Key] (Alias: getvalkey) - Get the value only from the key-value text data <a id="GetValueFrom-Key"></a>
+
+[GetValueFrom-Key]: src/GetValueFrom-Key_function.ps1
+
+Returns only the values that match the specified key from text data stored in space-delimited (space or tab) key-value format.
+
+- Usage
+    - `man2 getvalkey`
+        - `cat file | getvalkey [[-k|-Key] <Regex[]>]`
+        - `getvalkey [[-k|-Key] <Regex[]>] [[-p|-Path] <String[]>]`
+- Params
+    - `cat file | getvalkey [[-k|-Key] <Regex[]>]`
+        - `[-d|-Delimiter <String>]`
+        - `[-f|-File]`
+        - `[-v|-NotMatch]`
+        - `[-s|-SimpleMatch]`
+        - `[-CaseSensitive]`
+        - `[-r|-Recurse]`
+        - `[-Split <n>]`
+        - `[-Get <n>]`
+
+Example:
+
+```powershell
+cat keyval-dict.txt
+```
+
+```
+key value
+hog val hoge
+fug val fuga
+```
+
+output values that match `hog`
+
+```powershell
+cat keyval-dict.txt | getvalkey hog
+```
+
+```
+val hoge
+```
+
+output all values
+
+```powershell
+cat keyval-dict.txt | getvalkey .
+```
+
+```
+value
+val hoge
+val fuga
+```
+
+output with key (using -Get option
+
+```powershell
+cat keyval-dict.txt | getvalkey hog -Get 0,1
+```
+
+```
+hog val hoge
 ```
 
 ### Statistics
