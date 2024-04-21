@@ -57,7 +57,7 @@
         val fuga
 
 .EXAMPLE
-    # output with key (using -Get option
+    # output with key (using -Get option)
     cat keyval-dict.txt | getvalkey hog -Get 0,1
 
         hog val hoge
