@@ -3819,6 +3819,8 @@ Example:
 
 Returns only the values that match the specified key from text data stored in space-delimited (space or tab) key-value format.
 
+Whitespaces before and after keys and values are trimmed and ignored.
+
 - Usage
     - `man2 getvalkey`
         - `cat file | getvalkey [[-k|-Key] <Regex[]>]`

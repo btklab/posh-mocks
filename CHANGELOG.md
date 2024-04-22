@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- NA
+- Fixed [GetValueFrom-Key] skip if there is insufficient number of elements
 
 ## [7.2.2] - 2024-04-21
 
