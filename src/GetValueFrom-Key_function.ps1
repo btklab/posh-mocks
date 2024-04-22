@@ -5,6 +5,9 @@
     Returns only the values that match the specified key from
     text data stored in space-delimited (space or tab) key-value format.
 
+    Whitespaces before and after keys and values are trimmed and
+    ignored.
+
     cat file | GetValueFrom-Key [[-k|-Key] <Regex[]>]
      or 
     GetValueFrom-Key [[-k|-Key] <Regex[]>] [[-p|-Path] <String[]>]
@@ -91,20 +94,27 @@ function GetValueFrom-Key {
         [alias('f')]
         [string] $File,
         
-        [Parameter(Mandatory=$False, HelpMessage="Invert search results")]
-        [alias('v')]
-        [switch] $NotMatch,
-        
-        [Parameter(Mandatory=$False, HelpMessage="Search without regex.")]
-        [alias('s')]
-        [switch] $SimpleMatch,
-        
         [Parameter(Mandatory=$False, HelpMessage="Case sensitive")]
         [switch] $CaseSensitive,
         
         [Parameter(Mandatory=$False, HelpMessage="Recursively search files.")]
         [alias('r')]
         [switch] $Recurse,
+        
+        [Parameter(Mandatory=$False, HelpMessage="Skip empty value")]
+        [switch] $SkipEmpty,
+        
+        [Parameter(Mandatory=$False, HelpMessage="Skip comment")]
+        [switch] $SkipComment,
+        
+        [Parameter(Mandatory=$False, HelpMessage="Comment symbol")]
+        [string] $CommentString = '#',
+        
+        [Parameter(Mandatory=$False, HelpMessage="Yaml delimiter")]
+        [switch] $Yaml,
+        
+        [Parameter(Mandatory=$False, HelpMessage="Toml delimiter")]
+        [switch] $Toml,
         
         [parameter(Mandatory=$False,ValueFromPipeline=$True)]
         [string[]] $Text
@@ -121,6 +131,13 @@ function GetValueFrom-Key {
         $Pattern += $regex
         Write-Debug "regex: $regex"
     }
+    if ( $Yaml ){
+        [string] $splitDelimiter = ':'
+    } elseif ( $Toml ){
+        [string] $splitDelimiter = '='
+    } else {
+        [string] $splitDelimiter = $Delimiter
+    }
     [string[]] $pat = @()
     if ($File){
         # read patterns from files
@@ -131,12 +148,10 @@ function GetValueFrom-Key {
         }
     }
     $splatting = @{
-        Pattern       = $pat
+        Pattern       = '^$'
         CaseSensitive = $CaseSensitive
         Encoding      = "utf8"
-        SimpleMatch   = $SimpleMatch
-        NotMatch      = $NotMatch
-        AllMatches    = $AllMatches
+        NotMatch      = $True
     }
     if ($PSVersionTable.PSVersion.Major -ge 7){
         # -NoEmphasis parameter was introduced in PowerShell 7
@@ -148,34 +163,61 @@ function GetValueFrom-Key {
     # main
     [int] $cnt = 0
     ## regex '^[^ ]+( ).*$'
-    [string] $tmpDelim = $Delimiter -replace '\+$', ''
+    [string] $tmpDelim = $splitDelimiter -replace '\+$', ''
     [string] $regGetOutputDelim = '^[^' + $tmpDelim + ']+(' + $tmpDelim + ').*$'
+    [string] $regSkipComment = '^\s*' + $CommentString
     if ($Path){
         (Select-String @splatting).Line | ForEach-Object {
+            [string] $readLine = $_.Trim()
+            ## skip comment
+            if ( $SkipComment -and $readLine -match $regSkipComment ){ return }
+            [string[]] $splitLine = $readLine -split $splitDelimiter, $Split
+            ## skip if there is insufficient number of elements
+            if ( $splitLine.Count -lt $Split ){ return }
             $cnt++
+            ## Get a delimiter character from the first data
             if ( $cnt -eq 1 ){
-                [string] $oDelim = $_ -replace $regGetOutputDelim, '$1'
+                [string] $oDelim = $readLine -replace $regGetOutputDelim, '$1'
             }
-            [string[]] $splitLine = $_ -split $Delimiter, $Split
             foreach ( $p in $pat ){
-                if ( $splitLine[0] -match $p ){
-                    Write-Output $($splitLine[$GetColNums] -join $oDelim)
-                    Write-Debug "$splitLine"
+                if ( $($splitLine[0]).Trim() -match $p ){
+                    $splitLine[0] = ($splitLine[0]).Trim()
+                    [string] $writeLine = ($splitLine[$GetColNums] -join $oDelim).Trim()
+                    if ( $SkipEmpty -and $writeLine -eq '' ){
+                        #pass
+                    } else {
+                        Write-Output $writeLine
+                        Write-Debug "$splitLine"
+                    }
                 }
             }
         }
         return
     }
-    ($input | Select-String @splatting).Line | ForEach-Object {
-        $cnt++
-        if ( $cnt -eq 1 ){
-            [string] $oDelim = $_ -replace $regGetOutputDelim, '$1'
-        }
-        [string[]] $splitLine = $_ -split $Delimiter, $Split
-        foreach ( $p in $pat ){
-            if ( $splitLine[0] -match $p ){
-                Write-Output $($splitLine[$GetColNums] -join $oDelim)
-                Write-Debug "$splitLine"
+    if ( $True ) {
+        ($input | Select-String @splatting).Line | ForEach-Object {
+            [string] $readLine = $_.Trim()
+            ## skip comment
+            if ( $SkipComment -and $readLine -match $regSkipComment ){ return }
+            [string[]] $splitLine = $readLine -split $splitDelimiter, $Split
+            ## skip if there is insufficient number of elements
+            if ( $splitLine.Count -lt $Split ){ return }
+            $cnt++
+            ## Get a delimiter character from the first data
+            if ( $cnt -eq 1 ){
+                [string] $oDelim = $readLine -replace $regGetOutputDelim, '$1'
+            }
+            foreach ( $p in $pat ){
+                if ( $($splitLine[0]).Trim() -match $p ){
+                    $splitLine[0] = ($splitLine[0]).Trim()
+                    [string] $writeLine = ($splitLine[$GetColNums] -join $oDelim).Trim()
+                    if ( $SkipEmpty -and $writeLine -eq '' ){
+                        #pass
+                    } else {
+                        Write-Output $writeLine
+                        Write-Debug "$splitLine"
+                    }
+                }
             }
         }
     }
