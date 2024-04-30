@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 
 - Fixed [GetValueFrom-Key] skip if there is insufficient number of elements
+- Translated [README.md] synopsis Japanese to English
 
 ## [7.2.2] - 2024-04-21
 
