@@ -465,16 +465,11 @@ ls *.txt | %{ sed-i 's;abc;hoge;g' $_.FullName -Execute -DoNotCreateBackup }
 
 [grep]: src/grep_function.ps1
 
-文字列の検索とヒット行の出力。Windows用。
-Linux環境で使う`grep`のような使用感で文字列を検索するが、劣化コピーのため機能は限定的。
-`Select-String -Pattern <reg>`と同じ効果を得る。
-`grep`は（筆者が毎日）よく使うコマンドなので、Bash・PowerShellとも同じ使用感・より短い文字数で利用できるようにした。
+Single-line oriented pattern matching using regular expressions for windows. A degraded copy of the `grep` command on Linux environment. Roughly equivalent to `Select-String -Pattern <reg>`.  Since `grep` is one of the commands that I often use in my daily tasks, I aimed for an equivalent usability on both Bash and PowerShell environments.
 
-デフォルトで大文字小文字を区別しないが、
--CaseSensitiveスイッチで大文字小文字を区別する
+By default, it is case insensitive, but `-CaseSensitive` switch makes case sensitive.
 
-指定したパターンはデフォルトで正規表現として解釈するが、
-[-s|-SimpleMatch]オプションでパターンを文字列として認識する
+By default, the specified pattern is interpreted as a regular expression, but the `[-s|SimpleMatch]` option allows it to be treated as literal strings.
 
 - Usage
     - `man2 grep`
@@ -489,10 +484,7 @@ Linux環境で使う`grep`のような使用感で文字列を検索するが、
 [about_splatting]: https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_splatting
 [about_splatting_jp]: https://learn.microsoft.com/ja-jp/powershell/module/microsoft.powershell.core/about/about_splatting
 
-検索速度は遅い。筆者の環境ではシンプルに`Select-String`を用いた方が速い。
-したがって、あまり引数をもちいないシンプルな用途であれば、
-`Set-Alias -name grep -value Select-String`としたほうがより速く動作する
-（むしろ`grep`よりも`sls`の方が文字数が少ないため、何もせずそのまま`sls`を用いてもよい）。
+The search speed of this command is not fast. (In my environment, it is faster to simply use `Select-String` cmdlet.) Therefore, if you are searching with simple conditions, it is faster to use `Set-Alias -Name grep -Value Select-String`. 
 
 
 ```powershell
@@ -535,9 +527,7 @@ Days Hours Minutes Seconds Milliseconds
 0    0     0       1       183
 ```
 
-`grep`, `Select-String`ともにパイプライン経由の入力を読むよりも、引数にファイルを指定して検索する方が高速。
-そのため、大きなデータを処理する場合は、
-最初のコマンドで引数にファイルを指定する形で処理量を減らしてからパイプラインにつなぐとよい。
+Both `grep` and `Select-String` are faster to search by specifying a file as an argument than reading input via the pipeline. Therefore, when processing big size data, it is a good practice to use `grep` instead of `cat` at the beginning of the pipeline and specify a file as an argument to reduce the amount of data.
 
 ```powershell
 # slow
@@ -712,30 +702,27 @@ PowerShell
 PowerShell
 ```
 
-これは`Select-String（alias:sls）`を用いて以下のようにも書ける。
+The above example can also be written as follows using `Select-String (alias:sls)`
 
 
 ```powershell
-# パイプラインをつなげているときに
-# カッコ()を追加するのは手戻りがあって面倒
+# Adding parentheses "( )" when connecting pipelines requires rework and is troublesome
 (cat "$PSHOME\en-US\*.txt" | sls "PowerShell" -AllMatches).Matches.Value
 ```
 
 ```
 PowerShell
-…(以下略)
+PowerShell
+...
 ```
 
-単に`grep 'regex'`する場合は、`sls 'regex'`とした方が速い。
-しかし、ちょっと複雑な（だが筆者的にはよく使う）オプション、
-たとえば`grep 'regex' -o`や`grep 'regex' -H <files> -FileNameOnly`などは、
-余計なカッコ`()`や長いパイプを書かずにすむ。
+If you simply want to `grep 'regex'`, it is faster to use `sls 'regex'`. However, slightly complicated (but frequently used in my tasks) options, such as `grep 'regex' -o` and `grep 'regex' -H <files>`, it can be written shorter than using `sls`.
 
 
 ```powershell
-# このように書けばカッコ()は書かなくてよいが、
-# grep -oと書けばすむところ、2つも多くパイプを
-# つなげることになるので面倒。
+# An example of using "sls" without parentheses.
+# In this case as well, compared to using "grep -o",
+# you will have to connect two more pipes, which is cumbersome.
 cat "$PSHOME\en-US\*.txt" `
     | sls "PowerShell" -AllMatches `
     | select -ExpandProperty Matches `
@@ -744,7 +731,8 @@ cat "$PSHOME\en-US\*.txt" `
 
 ```
 PowerShell
-…(以下略)
+PowerShell
+...
 ```
 
 ```powershell
