@@ -13268,13 +13268,11 @@ ganttDiagram {
 }
 </style>
 
--- @haccp --
+-- +prj --
 
-[+prj Take-Picture1] starts 2023-11-28 and ends 2023-12-09
+[Take-Picture1] on {@haccp} starts 2023-11-28 and ends 2023-12-09
 
--- @haccp --
-
-[+prj Take-Picture2] starts 2023-11-28 and ends 2023-12-09
+[Take-Picture2] on {@haccp} starts 2023-11-28 and ends 2023-12-09
 
 @endgantt
 ```
