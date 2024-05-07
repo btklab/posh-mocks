@@ -341,7 +341,7 @@
 
 .LINK
     Get-Ticket series:
-    Get-Ticket (t), Get-Book (b), Get-Note (n), Get-Recipe (re), Get-Diary (d), Get-Checklist (c)
+    Get-Ticket (t), Get-Book (b), Get-Changelog (c), Get-Recipe (recipe), Get-Diary (d), Get-Checklist (checklist)
 
 .EXAMPLE
     # Sort By Project
