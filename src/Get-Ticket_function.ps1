@@ -341,7 +341,7 @@
 
 .LINK
     Get-Ticket series:
-    Get-Ticket (t), Get-Book (b), Get-Note (n), Get-Recipe (re), Get-Diary (d), Get-Checklist (c)
+    Get-Ticket (t), Get-Book (b), Get-Changelog (c), Get-Recipe (recipe), Get-Diary (d), Get-Checklist (checklist)
 
 .EXAMPLE
     # Sort By Project
@@ -438,13 +438,11 @@
         }
         </style>
 
-        -- @haccp --
+        -- +prj --
 
-        [+prj Take-Picture1] starts 2023-11-28 and ends 2023-12-09
+        [Take-Picture1] on {@haccp} starts 2023-11-28 and ends 2023-12-09
 
-        -- @haccp --
-
-        [+prj Take-Picture2] starts 2023-11-28 and ends 2023-12-09
+        [Take-Picture2] on {@haccp} starts 2023-11-28 and ends 2023-12-09
 
         @endgantt
 
@@ -1260,6 +1258,8 @@ function Get-Ticket {
         return
     }
     # parse each line
+    # init var
+    [String] $beforeProjectName = ''
     [Int] $idCounter = 0
     if ( $Id.Count -gt 0){
         # init variables used in view mode
@@ -1734,14 +1734,25 @@ function Get-Ticket {
             $actLine = $actLine -creplace '^([-/0-9]{6,10}) ', ''
             $nameLine = $($hash["Name"]).Trim()
             #$nameLine = $nameLine.Replace(', ', ',')
-            Write-Output "-- $($hash["At"]) --"
-            Write-Output ""
-            if ( $GanttNote ){
-                $actLine = "$actLine $($hash["Project"])".Trim()
-            } else {
-                $actLine = "$actLine $nameLine $($hash["Project"])".Trim()
+            if ($hash["Project"] -ne '' -and $hash["Project"] -ne $beforeProjectName){
+                Write-Output "-- $($hash["Project"]) --"
+                [String] $beforeProjectName = $hash["Project"]
+                Write-Output ""
             }
-            Write-Output "[$actLine] starts $($hash["Create"]) and ends $($hash["Due"])"
+            if ( $GanttNote ){
+                if ( $hash["At"] -ne '' ){
+                    $actLine = "[$actLine] on {$($hash['At'])}" -replace '\s+@', ' @'
+                } else {
+                    $actLine = "[$actLine]"
+                }
+            } else {
+                if ( $hash["At"] -ne '' ){
+                    $actLine = "[$actLine $nameLine] on {$($hash['At'])}" -replace '\s+@', ' @'
+                } else {
+                    $actLine = "[$actLine $nameLine]".Trim()
+                }
+            }
+            Write-Output "$actLine starts $($hash["Create"]) and ends $($hash["Due"])"
             if ( $GanttNote ){
                 if ( $($nameLine + $hash["Project"]) -ne ''){
                     Write-Output ""
