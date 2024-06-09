@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Added [Trim-EmptyLine] function
 - Fixed [GetValueFrom-Key] skip if there is insufficient number of elements
 - Translated [README.md] synopsis Japanese to English
 
@@ -724,6 +725,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [GetValueFrom-Key]: src/GetValueFrom-Key_function.ps1
 
+[Trim-EmptyLine]: src/Trim-EmptyLine_function.ps1
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/7.2.2..HEAD
 [7.2.2]: https://github.com/btklab/posh-mocks/releases/tag/7.2.2
