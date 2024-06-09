@@ -108,11 +108,11 @@ function tenki {
     }
     # set browser
     if ( $Firefox ){
-        [string] $webBrowser = 'C:\Program Files\Mozilla Firefox\firefox.exe'
+        [string] $webBrowser = 'firefox'
     } elseif ( $Chrome ){
-        [string] $webBrowser = 'C:\Program Files\Google\Chrome\Application\chrome.exe'
+        [string] $webBrowser = 'chrome'
     } elseif ( $Edge ){
-        [string] $webBrowser = 'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
+        [string] $webBrowser = 'msedge.exe'
     } else {
         [string] $webBrowser = 'Default'
     }
