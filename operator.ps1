@@ -75,6 +75,7 @@ if ($IsWindows){
 
 . $pwshSrcDir/Add-LineBreak_function.ps1
 . $pwshSrcDir/Add-LineBreakEndOfFile_function.ps1
+. $pwshSrcDir/Trim-EmptyLine_function.ps1
 
 . $pwshSrcDir/lcalc_function.ps1
 . $pwshSrcDir/lcalc2_function.ps1

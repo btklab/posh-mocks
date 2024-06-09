@@ -448,7 +448,8 @@ function Invoke-Link {
             # output file name
             if ( -not $Quiet ){
                 if ( -not $DryRun ){
-                    Write-Output $($File.Replace('\','/'))
+                    # pass
+                    #Write-Output $($File.Replace('\','/'))
                 }
             }
             # is windows shortcut?
