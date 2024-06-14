@@ -217,6 +217,9 @@ function Invoke-Link {
         [string] $ErrAction = "Stop",
         
         [Parameter( Mandatory=$False )]
+        [int] $LimitErrorCount = 5,
+        
+        [Parameter( Mandatory=$False )]
         [Alias('d')]
         [switch] $DryRun,
         
@@ -302,6 +305,7 @@ function Invoke-Link {
         return $retAry
     }
     # set variable
+    [int] $errCounter = 0
     $hrefList = New-Object 'System.Collections.Generic.List[System.String]'
     if ( $Files.Count -gt 0){
         #pass
@@ -557,14 +561,46 @@ function Invoke-Link {
             [string] $com = "$com ""$href"""
             if ( $DryRun ){
                 if ( $BackGround ){
-                    [string] $com = "Start-Job -ScriptBlock { Invoke-Expression -Command $com -ErrorAction $ErrAction }"
+                    try {
+                        [string] $com = "Start-Job -ScriptBlock { Invoke-Expression -Command $com -ErrorAction $ErrAction }"
+                    } catch {
+                        $errCounter++
+                    }
+                    if ( $errCounter -ge $LimitErrorCount ){
+                        Write-Warning "The number of errors exceeded the -LimitErrorCount = $LimitErrorCount times."
+                        return
+                    }
                 }
                 Write-Output $com
             } else {
                 if ( $BackGround ){
-                    Start-Job -ScriptBlock { Invoke-Expression -Command $com -ErrorAction $ErrAction }
+                    $executeCom = {
+                        param( [string] $strCom, [string] $strErrAct )
+                        try {
+                            Invoke-Expression -Command $strCom -ErrorAction $strErrAct
+                        } catch {
+                            throw
+                        }
+                    }
+                    try {
+                        Start-Job -ScriptBlock $executeCom -ArgumentList $com, $ErrAction -ErrorAction $ErrAction
+                    } catch {
+                        $errCounter++
+                    }
+                    if ( $errCounter -ge $LimitErrorCount ){
+                        Write-Warning "The number of errors exceeded the -LimitErrorCount = $LimitErrorCount times."
+                        return
+                    }
                 } else {
-                    Invoke-Expression -Command $com -ErrorAction $ErrAction
+                    try {
+                        Invoke-Expression -Command $com -ErrorAction $ErrAction
+                    } catch {
+                        $errCounter++
+                    }
+                    if ( $errCounter -ge $LimitErrorCount ){
+                        Write-Warning "The number of errors exceeded the -LimitErrorCount = $LimitErrorCount times."
+                        return
+                    }
                 }
             }
         }

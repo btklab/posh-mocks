@@ -3269,8 +3269,8 @@ Examples
 Remove empty lines from the beginning and end of line.
 
 - Usage
-    - `man Trim-EmptyLine'
-    - `man etrim'
+    - `man Trim-EmptyLine`
+    - `man etrim`
 
 EXAMPLE
 
