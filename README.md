@@ -3275,43 +3275,73 @@ Remove empty lines from the beginning and end of line.
 EXAMPLE
 
 ```powershell
-## input data
+# Remove empty lines from the beginning and end of line
+## input
 [string[]] $dat = @("",""),@("a".."c"),@("",""),@("d".."f"),@("","") | % { $_ }
 $dat
 ```
 
 ```
- <- Empty line
- <- Empty line
+<- Empty line
+<- Empty line
 a
 b
 c
- <- Empty line
- <- Empty line
+<- Empty line
+<- Empty line
 d
 e
 f
- <- Empty line
- <- Empty line
+<- Empty line
+<- Empty line
 ```
-
-apply function
 
 ```powershell
 ## output
 $dat | Trim-EmptyLine
-## or
-$dat | etrim
 ```
-
-output: Remove empty lines from the beginning and end of line
 
 ```
 a
 b
 c
- <- Empty line
- <- Empty line
+<- Empty line
+<- Empty line
+d
+e
+f
+```
+
+`-Uniq` switch
+
+```powershell
+# The -Uniq switch merges consecutive blank lines in the body into a single line
+## input
+[string[]] $dat = @("a".."c"),@("",""),@("d".."f") | % { $_ }
+$dat
+```
+
+```
+a
+b
+c
+  <- Consecutive blank line
+  <- Consecutive blank line
+d
+e
+f
+```
+
+```powershell
+## output
+$dat | Trim-EmptyLine
+```
+
+```
+a
+b
+c
+  <- A single blank line
 d
 e
 f
