@@ -70,7 +70,7 @@ function GetValueFrom-Key {
     Param(
         [Parameter(Mandatory=$False,Position=0, HelpMessage="Specify key using regex.")]
         [alias('k')]
-        [string[]] $Key,
+        [string[]] $Key = ".",
         
         [Parameter(Mandatory=$False,Position=1, HelpMessage="Specify file path to search.")]
         [alias('p')]
@@ -123,28 +123,75 @@ function GetValueFrom-Key {
     if ((-not $Key) -and (-not $File)){
         Write-Error "do not set regex pattern or pattern-files." -ErrorAction Stop
     }
+    # private function
+    function parse_text_from_pipeline {
+        param (
+            [parameter(Mandatory=$False,ValueFromPipeline=$True)]
+            [String[]] $objText
+        )
+        begin {
+            if ( $Yaml ){
+                [string] $splitDelimiter = ':'
+            } elseif ( $Toml ){
+                [string] $splitDelimiter = '='
+            } else {
+                [string] $splitDelimiter = $Delimiter
+            }
+            [int] $cnt = 0
+            ## regex '^[^ ]+( ).*$'
+            [string] $tmpDelim = $splitDelimiter -replace '\+$', ''
+            [string] $regGetOutputDelim = '^[^' + $tmpDelim + ']+(' + $tmpDelim + ').*$'
+            [string] $regSkipComment = '^\s*' + $CommentString
+        }
+        process {
+            [string] $readLine = $_.Trim()
+            ## skip comment
+            if ( $SkipComment -and $readLine -match $regSkipComment ){
+                return
+            }
+            [string[]] $splitLine = $readLine -split $splitDelimiter, $Split
+            ## skip if there is insufficient number of elements
+            if ( $splitLine.Count -lt $Split ){
+                return
+            }
+            $cnt++
+            ## Get a delimiter character from the first data
+            if ( $cnt -eq 1 ){
+                [string] $oDelim = $readLine -replace $regGetOutputDelim, '$1'
+            }
+            [Bool] $isMatchPattern = $False
+            foreach ( $p in $pat ){
+                if ( -not $isMatchPattern ){
+                    if ( $($splitLine[0]).Trim() -match $p ){
+                        [Bool] $isMatchPattern = $True
+                        $splitLine[0] = ($splitLine[0]).Trim()
+                        [string] $writeLine = ($splitLine[$GetColNums] -join $oDelim).Trim()
+                        if ( $SkipEmpty -and $writeLine -eq '' ){
+                            #pass
+                        } else {
+                            Write-Output $writeLine
+                            Write-Debug "$splitLine"
+                        }
+                    }
+                }
+            }
+        }
+    }
     # set params
     [int[]] $GetColNums = $Get
-    [string[]] $Pattern = @()
-    foreach ( $k in $Key ){
-        [string] $regex += $Key
-        $Pattern += $regex
-        Write-Debug "regex: $regex"
-    }
-    if ( $Yaml ){
-        [string] $splitDelimiter = ':'
-    } elseif ( $Toml ){
-        [string] $splitDelimiter = '='
-    } else {
-        [string] $splitDelimiter = $Delimiter
-    }
     [string[]] $pat = @()
     if ($File){
-        # read patterns from files
-        $pat = Get-Content -Path $File -Encoding UTF8
+        # read pattern from files
+        Get-Content -Path $File -Encoding UTF8 | ForEach-Object {
+            $pat += $_
+        }
     } else {
-        foreach ( $p in $Pattern ){
-            $pat += $Pattern
+        # read pattern from -Key <regex>,<regex>,...
+        if ( -not $Key ){
+            Write-Warning "Please specify -Key <regex>." -ErrorAction Stop
+        }
+        foreach ( $k in $Key ){
+            $pat += $k
         }
     }
     $splatting = @{
@@ -161,65 +208,12 @@ function GetValueFrom-Key {
         $splatting.Set_Item('Path', (Get-ChildItem -Path $Path -Recurse:$Recurse))
     }
     # main
-    [int] $cnt = 0
-    ## regex '^[^ ]+( ).*$'
-    [string] $tmpDelim = $splitDelimiter -replace '\+$', ''
-    [string] $regGetOutputDelim = '^[^' + $tmpDelim + ']+(' + $tmpDelim + ').*$'
-    [string] $regSkipComment = '^\s*' + $CommentString
     if ($Path){
-        (Select-String @splatting).Line | ForEach-Object {
-            [string] $readLine = $_.Trim()
-            ## skip comment
-            if ( $SkipComment -and $readLine -match $regSkipComment ){ return }
-            [string[]] $splitLine = $readLine -split $splitDelimiter, $Split
-            ## skip if there is insufficient number of elements
-            if ( $splitLine.Count -lt $Split ){ return }
-            $cnt++
-            ## Get a delimiter character from the first data
-            if ( $cnt -eq 1 ){
-                [string] $oDelim = $readLine -replace $regGetOutputDelim, '$1'
-            }
-            foreach ( $p in $pat ){
-                if ( $($splitLine[0]).Trim() -match $p ){
-                    $splitLine[0] = ($splitLine[0]).Trim()
-                    [string] $writeLine = ($splitLine[$GetColNums] -join $oDelim).Trim()
-                    if ( $SkipEmpty -and $writeLine -eq '' ){
-                        #pass
-                    } else {
-                        Write-Output $writeLine
-                        Write-Debug "$splitLine"
-                    }
-                }
-            }
-        }
-        return
-    }
-    if ( $True ) {
-        ($input | Select-String @splatting).Line | ForEach-Object {
-            [string] $readLine = $_.Trim()
-            ## skip comment
-            if ( $SkipComment -and $readLine -match $regSkipComment ){ return }
-            [string[]] $splitLine = $readLine -split $splitDelimiter, $Split
-            ## skip if there is insufficient number of elements
-            if ( $splitLine.Count -lt $Split ){ return }
-            $cnt++
-            ## Get a delimiter character from the first data
-            if ( $cnt -eq 1 ){
-                [string] $oDelim = $readLine -replace $regGetOutputDelim, '$1'
-            }
-            foreach ( $p in $pat ){
-                if ( $($splitLine[0]).Trim() -match $p ){
-                    $splitLine[0] = ($splitLine[0]).Trim()
-                    [string] $writeLine = ($splitLine[$GetColNums] -join $oDelim).Trim()
-                    if ( $SkipEmpty -and $writeLine -eq '' ){
-                        #pass
-                    } else {
-                        Write-Output $writeLine
-                        Write-Debug "$splitLine"
-                    }
-                }
-            }
-        }
+        (Select-String @splatting).Line `
+            | parse_text_from_pipeline
+    } else {
+        ($input | Select-String @splatting).Line `
+            | parse_text_from_pipeline
     }
     return
 }
