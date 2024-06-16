@@ -61,6 +61,10 @@ function Trim-EmptyLine {
         [Parameter(Mandatory=$False, HelpMessage=".Trim()")]
         [Switch] $TrimBoth,
         
+        [Parameter(Mandatory=$False, HelpMessage="Uniq empty line in body.")]
+        [Alias('u')]
+        [Switch] $Uniq,
+        
         [parameter(Mandatory=$False,ValueFromPipeline=$True)]
         [String[]] $Text
     )
@@ -95,6 +99,42 @@ function Trim-EmptyLine {
             Write-Output $readLine
         }
     }
+    function UniqEmptyInBody {
+        Param(
+            [parameter(Mandatory=$False, Position=0)]
+            [String] $regEmptyLine = '^$',
+            [parameter(Mandatory=$False,ValueFromPipeline=$True)]
+            [String[]] $ReadLineAry
+        )
+        begin {
+            [Bool] $isPreviousLineEmpty = $False
+        }
+        process {
+            [string] $readLine = $_
+            if ( -not $Uniq ){
+                Write-Output $readLine
+                return
+            }
+            if ( $readLine -notmatch $regEmptyLine ){
+                ## if $readLine is not empty
+                $isPreviousLineEmpty = $False
+                Write-Output $readLine
+                return
+            } else {
+                ## if $readLine is empty
+                if ( $isPreviousLineEmpty ){
+                    ## if previous line is empty
+                    $isPreviousLineEmpty = $True
+                    return
+                } else {
+                    ## if previous line is not empty
+                    $isPreviousLineEmpty = $True
+                    Write-Output $readLine
+                    return
+                }
+            }
+        }
+    }
     # main
     if ($File){
         $splatting = @{
@@ -106,26 +146,31 @@ function Trim-EmptyLine {
                 | ReverseLine `
                 | TrimEmptyInHeader $charEmptyLine `
                 | ReverseLine `
-                | TrimEmptyInHeader $charEmptyLine
+                | TrimEmptyInHeader $charEmptyLine `
+                | UniqEmptyInBody
         } elseif ( $TrimBoth ){
             Get-Content @splatting `
                 | ReverseLine `
                 | TrimEmptyInHeader $charEmptyLine `
                 | ReverseLine `
-                | TrimEmptyInHeader $charEmptyLine
+                | TrimEmptyInHeader $charEmptyLine `
+                | UniqEmptyInBody
         } elseif ( $TrimStart ){
             Get-Content @splatting `
-                | TrimEmptyInHeader $charEmptyLine
+                | TrimEmptyInHeader $charEmptyLine `
+                | UniqEmptyInBody
         } elseif ( $TrimEnd ){
             Get-Content @splatting `
                 | ReverseLine `
                 | TrimEmptyInHeader $charEmptyLine `
+                | UniqEmptyInBody
         } else {
             Get-Content @splatting `
                 | ReverseLine `
                 | TrimEmptyInHeader $charEmptyLine `
                 | ReverseLine `
-                | TrimEmptyInHeader $charEmptyLine
+                | TrimEmptyInHeader $charEmptyLine `
+                | UniqEmptyInBody
         }
         return
     }
@@ -135,27 +180,32 @@ function Trim-EmptyLine {
                 | ReverseLine `
                 | TrimEmptyInHeader $charEmptyLine `
                 | ReverseLine `
-                | TrimEmptyInHeader $charEmptyLine
+                | TrimEmptyInHeader $charEmptyLine `
+                | UniqEmptyInBody
         } elseif ( $TrimBoth ){
             $input `
                 | ReverseLine `
                 | TrimEmptyInHeader $charEmptyLine `
                 | ReverseLine `
-                | TrimEmptyInHeader $charEmptyLine
+                | TrimEmptyInHeader $charEmptyLine `
+                | UniqEmptyInBody
         } elseif ( $TrimStart ){
             $input `
-                | TrimEmptyInHeader $charEmptyLine
+                | TrimEmptyInHeader $charEmptyLine `
+                | UniqEmptyInBody
         } elseif ( $TrimEnd ){
             $input `
                 | ReverseLine `
                 | TrimEmptyInHeader $charEmptyLine `
-                | ReverseLine
+                | ReverseLine `
+                | UniqEmptyInBody
         } else {
             $input `
                 | ReverseLine `
                 | TrimEmptyInHeader $charEmptyLine `
                 | ReverseLine `
-                | TrimEmptyInHeader $charEmptyLine
+                | TrimEmptyInHeader $charEmptyLine `
+                | UniqEmptyInBody
         }
     }
     return
