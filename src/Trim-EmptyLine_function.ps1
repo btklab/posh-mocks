@@ -3,9 +3,11 @@
     Trim-EmptyLine (alias: etrim) - Remove empty lines from the beginning and end of line.
 
 .EXAMPLE
+    # Remove empty lines from the beginning and end of line
+    ## input
     [string[]] $dat = @("",""),@("a".."c"),@("",""),@("d".."f"),@("","") | % { $_ }
     $dat
-     
+    
      (output)
          <- Empty line
          <- Empty line
@@ -20,10 +22,9 @@
          <- Empty line
          <- Empty line
 
-
+    ## output
     $dat | Trim-EmptyLine
-     
-     (output: Remove empty lines from the beginning and end of line)
+    
         a
         b
         c
@@ -33,6 +34,31 @@
         e
         f
 
+.EXAMPLE
+    # The -Uniq switch merges consecutive blank lines in the body into a single line
+    ## input
+    [string[]] $dat = @("a".."c"),@("",""),@("d".."f") | % { $_ }
+    $dat
+    
+        a
+        b
+        c
+         <- Consecutive blank line
+         <- Consecutive blank line
+        d
+        e
+        f
+
+    ## output
+    $dat | Trim-EmptyLine
+    
+        a
+        b
+        c
+         <- A single blank line
+        d
+        e
+        f
 
 .LINK
     Add-LineBreakEndOfFile
