@@ -50,7 +50,7 @@
         f
 
     ## output
-    $dat | Trim-EmptyLine
+    $dat | Trim-EmptyLine -u
     
         a
         b

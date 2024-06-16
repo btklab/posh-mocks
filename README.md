@@ -3282,18 +3282,18 @@ $dat
 ```
 
 ```
-<- Empty line
-<- Empty line
+  <- Empty line
+  <- Empty line
 a
 b
 c
-<- Empty line
-<- Empty line
+  <- Empty line
+  <- Empty line
 d
 e
 f
-<- Empty line
-<- Empty line
+  <- Empty line
+  <- Empty line
 ```
 
 ```powershell
@@ -3305,8 +3305,8 @@ $dat | Trim-EmptyLine
 a
 b
 c
-<- Empty line
-<- Empty line
+  <- Empty line
+  <- Empty line
 d
 e
 f
@@ -3334,7 +3334,7 @@ f
 
 ```powershell
 ## output
-$dat | Trim-EmptyLine
+$dat | Trim-EmptyLine -u
 ```
 
 ```
