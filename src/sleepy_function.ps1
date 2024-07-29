@@ -208,7 +208,8 @@ function sleepy {
         if (-not (isCommandExist "teatimer")){
             Write-Error "command: ""teatimer"" is not available." -ErrorAction Stop
         }
-        teatimer -At (Get-Date).AddSeconds(2).ToString('yyyy-MM-dd HH:mm:ss') -Quiet
+        #teatimer -At (Get-Date).AddSeconds(2).ToString('yyyy-MM-dd HH:mm:ss') -Quiet
+        teatimer -Quiet
     }
 
     # past timer

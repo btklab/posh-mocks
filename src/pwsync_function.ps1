@@ -8,6 +8,7 @@
         Only for Windows OS, UTF-8
 
     Option:
+        -Create: Creates a directory tree and zero-length files only
         -Quit: test args (not execute) (default)
         -L|-DryRun: dry run (not execute)
         -Echo|-EchoCommand: display robocopy command (not execute)
@@ -62,10 +63,10 @@
         [-M|-AttribIncrementalBackup]
         [-DeleteSystemAndHiddenAttribFromDest] avoide destination becomes hidden
 
-        [-MAXAGE|-ExcludeLastWriteDateOlderEqal <n> or YYYYMMDD]
-        [-MINAGE|-ExcludeLastWriteDateNewerEqal <n> or YYYYMMDD]
-        [-MAXLAD|-ExcludeLastAccessDateOlderEqal <n> or YYYYMMDD]
-        [-MINLAD|-ExcludeLastAccessDateNewerEqal <n> or YYYYMMDD]
+        [-MAXAGE|-ExcludeLastWriteDateOlderEqual <n> or YYYYMMDD]
+        [-MINAGE|-ExcludeLastWriteDateNewerEqual <n> or YYYYMMDD]
+        [-MAXLAD|-ExcludeLastAccessDateOlderEqual <n> or YYYYMMDD]
+        [-MINLAD|-ExcludeLastAccessDateNewerEqual <n> or YYYYMMDD]
 
         [-Quit]
         [-L|-DryRun]
@@ -162,34 +163,34 @@
     
     # Exclude LastWriteDate older equal 3 days ago or 2023-03-24
     pwsync src dst -MAXAGE 3
-    pwsync src dst -ExcludeLastWriteDateOlderEqal 3
+    pwsync src dst -ExcludeLastWriteDateOlderEqual 3
 
     pwsync src dst -MAXAGE 20230324
-    pwsync src dst -ExcludeLastWriteDateOlderEqal 20230324
+    pwsync src dst -ExcludeLastWriteDateOlderEqual 20230324
 
 
     # Exclude LastWriteDate newer equal 3 days ago or 2023-03-24
     pwsync src dst -MINAGE 3
-    pwsync src dst -ExcludeLastWriteDateNewerEqal 3
+    pwsync src dst -ExcludeLastWriteDateNewerEqual 3
 
     pwsync src dst -MINAGE 20230324
-    pwsync src dst -ExcludeLastWriteDateNewerEqal 20230324
+    pwsync src dst -ExcludeLastWriteDateNewerEqual 20230324
 
         
     # Exclude LastAccessDate older equal 3 days ago or 2023-03-24
     pwsync src dst -MAXLAD 3
-    pwsync src dst -ExcludeLastAccessDateOlderEqal 3
+    pwsync src dst -ExcludeLastAccessDateOlderEqual 3
 
     pwsync src dst -MAXLAD 20230324
-    pwsync src dst -ExcludeLastAccessDateOlderEqal 20230324
+    pwsync src dst -ExcludeLastAccessDateOlderEqual 20230324
 
 
     # Exclude LastAccessDate newer equal 3 days ago or 2023-03-24
     pwsync src dst -MINLAD 3
-    pwsync src dst -ExcludeLastAccessDateNewerEqal 3
+    pwsync src dst -ExcludeLastAccessDateNewerEqual 3
 
     pwsync src dst -MINLAD 20230324
-    pwsync src dst -ExcludeLastAccessDateNewerEqal 20230324
+    pwsync src dst -ExcludeLastAccessDateNewerEqual 20230324
 
 .LINK
     Robosync
@@ -249,25 +250,25 @@ function pwsync {
             HelpMessage="Specifies the maximum file age (to exclude files older than n days or date)." )]
         [ValidateScript({ $_ -ge 0 })]
         [Alias('MAXAGE')]
-        [int] $ExcludeLastWriteDateOlderEqal,
+        [int] $ExcludeLastWriteDateOlderEqual,
         
         [Parameter( Mandatory=$False,
             HelpMessage="Specifies the minimum file age (exclude files newer than n days or date)." )]
         [ValidateScript({ $_ -ge 0 })]
         [Alias('MINAGE')]
-        [int] $ExcludeLastWriteDateNewerEqal,
+        [int] $ExcludeLastWriteDateNewerEqual,
         
         [Parameter( Mandatory=$False,
             HelpMessage="Specifies the maximum last access date (excludes files unused since n)." )]
         [ValidateScript({ $_ -ge 0 })]
         [Alias('MAXLAD')]
-        [int] $ExcludeLastAccessDateOlderEqal,
+        [int] $ExcludeLastAccessDateOlderEqual,
         
         [Parameter( Mandatory=$False,
             HelpMessage="Specifies the minimum last access date (excludes files used since n) If n is less than 1900, n specifies the number of days. Otherwise, n specifies a date in the format YYYYMMDD." )]
         [ValidateScript({ $_ -ge 0 })]
         [Alias('MINLAD')]
-        [int] $ExcludeLastAccessDateNewerEqal,
+        [int] $ExcludeLastAccessDateNewerEqual,
         
         [Parameter( Mandatory=$False )]
         [Alias('E')]
@@ -420,17 +421,17 @@ function pwsync {
         $roboArgs += "/COPY:DAT"
         $roboArgs += "/DCOPY:DAT"
     }
-    if ( $ExcludeLastWriteDateOlderEqal ){
-        $roboArgs += "/MAXAGE:$ExcludeLastWriteDateOlderEqal"
+    if ( $ExcludeLastWriteDateOlderEqual ){
+        $roboArgs += "/MAXAGE:$ExcludeLastWriteDateOlderEqual"
     }
-    if ( $ExcludeLastWriteDateNewerEqal ){
-        $roboArgs += "/MINAGE:$ExcludeLastWriteDateNewerEqal"
+    if ( $ExcludeLastWriteDateNewerEqual ){
+        $roboArgs += "/MINAGE:$ExcludeLastWriteDateNewerEqual"
     }
-    if ( $ExcludeLastAccessDateOlderEqal ){
-        $roboArgs += "/MAXLAD:$ExcludeLastAccessDateOlderEqal"
+    if ( $ExcludeLastAccessDateOlderEqual ){
+        $roboArgs += "/MAXLAD:$ExcludeLastAccessDateOlderEqual"
     }
-    if ( $ExcludeLastAccessDateNewerEqal ){
-        $roboArgs += "/MINLAD:$ExcludeLastAccessDateNewerEqal"
+    if ( $ExcludeLastAccessDateNewerEqual ){
+        $roboArgs += "/MINLAD:$ExcludeLastAccessDateNewerEqual"
     }
     if ( $Mot ){
         $roboArgs += "/MOT:$Mot"

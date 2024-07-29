@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [7.2.3] - 2024-07-29
+
+- Added [Cast-Date] function.
+- Added [Cast-Decimal] function.
+- Added [Cast-Double] function.
+- Added [Cast-Integer] function.
+- Added [Edit-Property] function.
 - Added [Trim-EmptyLine] function
 - Fixed [GetValueFrom-Key] skip if there is insufficient number of elements
 - Translated [README.md] synopsis Japanese to English
@@ -727,7 +736,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Trim-EmptyLine]: src/Trim-EmptyLine_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/7.2.2..HEAD
+[Cast-Date]: src/Cast-Date_function.ps1
+[Cast-Decimal]: src/Cast-Decimal_function.ps1
+[Cast-Double]: src/Cast-Double_function.ps1
+[Cast-Integer]: src/Cast-Integer_function.ps1
+[Edit-Property]: src/Edit-Property_function.ps1
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/7.2.3..HEAD
+[7.2.3]: https://github.com/btklab/posh-mocks/releases/tag/7.2.3
 [7.2.2]: https://github.com/btklab/posh-mocks/releases/tag/7.2.2
 [7.2.1]: https://github.com/btklab/posh-mocks/releases/tag/7.2.1
 [7.2.0]: https://github.com/btklab/posh-mocks/releases/tag/7.2.0

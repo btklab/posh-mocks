@@ -76,6 +76,10 @@ if ($IsWindows){
 . $pwshSrcDir/Add-LineBreak_function.ps1
 . $pwshSrcDir/Add-LineBreakEndOfFile_function.ps1
 . $pwshSrcDir/Trim-EmptyLine_function.ps1
+. $pwshSrcDir/ForEach-Block_function.ps1
+. $pwshSrcDir/ForEach-Step_function.ps1
+. $pwshSrcDir/Add-ForEach_function.ps1
+
 
 . $pwshSrcDir/lcalc_function.ps1
 . $pwshSrcDir/lcalc2_function.ps1
@@ -207,6 +211,12 @@ if ( $IsWindows ){
 . $pwshSrcDir/Replace-ForEach_function.ps1
 
 . $pwshSrcDir/Join2-Object_function.ps1
+
+. $pwshSrcDir/Cast-Date_function.ps1
+. $pwshSrcDir/Cast-Decimal_function.ps1
+. $pwshSrcDir/Cast-Double_function.ps1
+. $pwshSrcDir/Cast-Integer_function.ps1
+. $pwshSrcDir/Edit-Property_function.ps1
 
 ## math
 
