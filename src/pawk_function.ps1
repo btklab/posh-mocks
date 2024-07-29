@@ -136,7 +136,7 @@
 
         # when using the column specification operator "$1" in double uotes,
         # add the subexpression operator like "$($1)"
-        PS> "a b c 1","d e f 2","g h i 3" | pwk -Action {"id: $($4), tag: ""$($1)"""}
+        PS> "a b c 1","d e f 2","g h i 3" | pawk -Action {"id: $($4), tag: ""$($1)"""}
         id: 1, tag: "a"
         id: 2, tag: "d"
         id: 3, tag: "g"
