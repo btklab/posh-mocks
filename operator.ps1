@@ -212,6 +212,12 @@ if ( $IsWindows ){
 
 . $pwshSrcDir/Join2-Object_function.ps1
 
+. $pwshSrcDir/Cast-Date_function.ps1
+. $pwshSrcDir/Cast-Decimal_function.ps1
+. $pwshSrcDir/Cast-Double_function.ps1
+. $pwshSrcDir/Cast-Integer_function.ps1
+. $pwshSrcDir/Edit-Property_function.ps1
+
 ## math
 
 ## task/ticket management

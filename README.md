@@ -38,7 +38,7 @@ cat README.md `
     | Set-Clipboard
 ```
 
-- [Add-LineBreakEndOfFile][], [Add-LineBreak][], [Add-Quartile][], [Add-Stats][], [Apply-Function][], [ConvImage][], [Decrease-Indent][], [Delete-Field][], [Detect-XrsAnomaly][], [Drop-NA][], [Edit-Function][], [Execute-RMarkdown][], [Execute-TinyTeX][], [Get-AppShortcut][], [Get-ClipboardAlternative][], [Get-DateAlternative][], [Get-Histogram][], [Get-OGP][], [Get-Ticket][], [GetValueFrom-Key][], [Grep-Block][], [GroupBy-Object][], [Inkscape-Converter][], [Invoke-Link][], [Join2-Object][], [Measure-Quartile][], [Measure-Stats][], [Measure-Summary][], [Override-Yaml][], [Plot-BarChart][], [Rename-Normalize][], [Replace-ForEach][], [Replace-NA][], [Select-Field][], [Set-NowTime2Clipboard][], [Shorten-PropertyName][], [Shutdown-ComputerAFM][], [Sleep-ComputerAFM][], [Sort-Block][], [Test-isAsciiLine][], [Transpose-Property][], [Trim-EmptyLine][], [Unique-Object][], [Unzip-Archive][], [addb][], [addl][], [addr][], [addt][], [cat2][], [catcsv][], [chead][], [clip2file][], [clip2hyperlink][], [clip2img][], [clip2normalize][], [clip2push][], [clip2shortcut][], [conv][], [count][], [csv2sqlite][], [csv2txt][], [ctail][], [decil][], [delf][], [dot2gviz][], [filehame][], [fillretu][], [flat][], [flow2pu][], [fpath][], [fval][], [fwatch][], [gantt2pu][], [getfirst][], [getlast][], [grep][], [gyo][], [han][], [head][], [image2md][], [jl][], [json2txt][], [juni][], [keta][], [kinsoku][], [lastyear][], [lcalc2][], [lcalc][], [linkcheck][], [linkextract][], [list2table][], [logi2dot][], [logi2pu][], [man2][], [map2][], [math2tex][], [mdfocus][], [mdgrep][], [mind2dot][], [mind2pu][], [movw][], [nextyear][], [pawk][], [percentile][], [pu2java][], [push2loc][], [pwmake][], [pwsync][], [retu][], [rev2][], [rev][], [say][], [sed-i][], [sed][], [self][], [seq2pu][], [sleepy][], [sm2][], [summary][], [table2md][], [tac][], [tail-f][], [tail][], [tarr][], [tateyoko][], [teatimer][], [tenki][], [tex2pdf][], [thisyear][], [toml2psobject][], [uniq][], [vbStrConv][], [watercss][], [wrap][], [yarr][], [ycalc][], [ysort][], [zen][]
+- [Add-LineBreakEndOfFile][], [Add-LineBreak][], [Add-Quartile][], [Add-Stats][], [Apply-Function][], [Cast-Date][], [Cast-Decimal][], [Cast-Double][], [Cast-Integer][], [ConvImage][], [Decrease-Indent][], [Delete-Field][], [Detect-XrsAnomaly][], [Drop-NA][], [Edit-Function][], [Edit-Property][], [Execute-RMarkdown][], [Execute-TinyTeX][], [Get-AppShortcut][], [Get-ClipboardAlternative][], [Get-DateAlternative][], [Get-Histogram][], [Get-OGP][], [Get-Ticket][], [GetValueFrom-Key][], [Grep-Block][], [GroupBy-Object][], [Inkscape-Converter][], [Invoke-Link][], [Join2-Object][], [Measure-Quartile][], [Measure-Stats][], [Measure-Summary][], [Override-Yaml][], [Plot-BarChart][], [Rename-Normalize][], [Replace-ForEach][], [Replace-NA][], [Select-Field][], [Set-NowTime2Clipboard][], [Shorten-PropertyName][], [Shutdown-ComputerAFM][], [Sleep-ComputerAFM][], [Sort-Block][], [Test-isAsciiLine][], [Transpose-Property][], [Trim-EmptyLine][], [Unique-Object][], [Unzip-Archive][], [addb][], [addl][], [addr][], [addt][], [cat2][], [catcsv][], [chead][], [clip2file][], [clip2hyperlink][], [clip2img][], [clip2normalize][], [clip2push][], [clip2shortcut][], [conv][], [count][], [csv2sqlite][], [csv2txt][], [ctail][], [decil][], [delf][], [dot2gviz][], [filehame][], [fillretu][], [flat][], [flow2pu][], [fpath][], [fval][], [fwatch][], [gantt2pu][], [getfirst][], [getlast][], [grep][], [gyo][], [han][], [head][], [image2md][], [jl][], [json2txt][], [juni][], [keta][], [kinsoku][], [lastyear][], [lcalc2][], [lcalc][], [linkcheck][], [linkextract][], [list2table][], [logi2dot][], [logi2pu][], [man2][], [map2][], [math2tex][], [mdfocus][], [mdgrep][], [mind2dot][], [mind2pu][], [movw][], [nextyear][], [pawk][], [percentile][], [pu2java][], [push2loc][], [pwmake][], [pwsync][], [retu][], [rev2][], [rev][], [say][], [sed-i][], [sed][], [self][], [seq2pu][], [sleepy][], [sm2][], [summary][], [table2md][], [tac][], [tail-f][], [tail][], [tarr][], [tateyoko][], [teatimer][], [tenki][], [tex2pdf][], [thisyear][], [toml2psobject][], [uniq][], [vbStrConv][], [watercss][], [wrap][], [yarr][], [ycalc][], [ysort][], [zen][]
 
 **General**: This repository contains a set of filter commands for pattern matching on amorphous strings. The filter commands expect `UTF-8` + `space-delimited` + `line-oriented string data` (text object) through the pipeline as input. The output is also a string, not a typical PowerShell object. Some functions accept Object-input through pipeline, and some functions are "like PowerShell cmdlets" that output object. The design of the filters is similar to Unix/Linux shells such as Bash.
 
@@ -6804,6 +6804,170 @@ id      v1 v2 v3 v4 v5 m_name m_val m_class
 0000004 58 71 20 10 6
 0000009 60 89 33 18 6
 0000003 30 50 71 36 30 John   26    F
+```
+
+
+#### [Cast-Date] - Cast all castable columns to datetime type.<a id="Cast-Date"></a>
+
+[Cast-Date]: src/Cast-Date_function.ps1
+
+- Usage: `man Cast-Date`
+
+Example
+
+```powershell
+# cast string to datetime
+# input data
+cat data.txt
+```
+
+```
+date version
+2020-02-26 v2.2.4
+2020-02-26 v3.0.3
+2019-11-10 v3.0.2
+2019-11-10 v3.0.1
+2019-09-18 v3.0.0
+2019-08-10 v2.2.3
+```
+
+```powershell
+cat data.txt `
+    | ConvertFrom-Csv -Delimiter " " `
+    | Cast-Date
+```
+
+```markdown
+date               version
+----               -------
+2020/02/26 0:00:00 v2.2.4
+2020/02/26 0:00:00 v3.0.3
+2019/11/10 0:00:00 v3.0.2
+2019/11/10 0:00:00 v3.0.1
+2019/09/18 0:00:00 v3.0.0
+2019/08/10 0:00:00 v2.2.3
+```
+
+#### [Cast-Decimal] - Cast all castable columns to decimal type.<a id="Cast-Decimal"></a>
+
+[Cast-Decimal]: src/Cast-Decimal_function.ps1
+
+- Usage: `man Cast-Decimal`
+
+Example
+
+```powershell
+Import-Csv iris.csv | select -First 3 | Cast-Decimal | ft
+```
+
+```markdown
+sepal_length sepal_width petal_length petal_width species
+------------ ----------- ------------ ----------- -------
+        5.10        3.50         1.40        0.20 setosa
+        4.90        3.00         1.40        0.20 setosa
+        4.70        3.20         1.30        0.20 setosa
+```
+
+#### [Cast-Double] - Cast all castable columns to double type.<a id="Cast-Double"></a>
+
+[Cast-Double]: src/Cast-Double_function.ps1
+
+- Usage: `man Cast-Double`
+
+Example
+
+```powershell
+Import-Csv iris.csv | select -First 3 | Cast-Double | ft
+```
+
+```markdown
+sepal_length sepal_width petal_length petal_width species
+------------ ----------- ------------ ----------- -------
+        5.10        3.50         1.40        0.20 setosa
+        4.90        3.00         1.40        0.20 setosa
+        4.70        3.20         1.30        0.20 setosa
+```
+
+#### [Cast-Integer] - Cast all castable columns to integer type.<a id="Cast-Integer"></a>
+
+[Cast-Integer]: src/Cast-Integer_function.ps1
+
+- Usage: `man Cast-Integer`
+
+Example
+
+```powershell
+Import-Csv iris.csv | select -First 3 | Cast-Integer | ft
+```
+
+```markdown
+sepal_length sepal_width petal_length petal_width species
+------------ ----------- ------------ ----------- -------
+            5           4            1           0 setosa
+            5           3            1           0 setosa
+            5           3            1           0 setosa
+```
+
+
+#### [Edit-Property] - Edit values in a specific column.<a id="Edit-Property"></a>
+
+[Edit-Property]: src/Edit-Property_function.ps1
+
+- Usage: `man Edit-Property`
+
+Example1
+
+edit date format
+
+```powershell
+# input data
+cat data.txt
+```
+
+```
+date version
+2020-02-26 v2.2.4
+2020-02-26 v3.0.3
+2019-11-10 v3.0.2
+2019-11-10 v3.0.1
+2019-09-18 v3.0.0
+2019-08-10 v2.2.3
+```
+
+```powershell
+cat data.txt `
+    | ConvertFrom-Csv -Delimiter " " `
+    | Edit-Property -p date -e {(Get-Date $_.date).ToString('yyyy/MM/dd (ddd)') }
+```
+
+```markdown
+date             version
+----             -------
+2020/02/26 (Wed) v2.2.4
+2020/02/26 (Wed) v3.0.3
+2019/11/10 (Sun) v3.0.2
+2019/11/10 (Sun) v3.0.1
+2019/09/18 (Wed) v3.0.0
+```
+
+EXAMPLE2
+
+Create a new property from an exiting property
+
+```powershell
+cat data.txt `
+    | ConvertFrom-Csv -Delimiter " " `
+    | Edit-Property -p date2 -e {(Get-Date $_.date ).ToString('yy/M/d') }
+```
+
+```markdown
+date       version date2
+----       ------- -----
+2020-02-26 v2.2.4  20/2/26
+2020-02-26 v3.0.3  20/2/26
+2019-11-10 v3.0.2  19/11/10
+2019-11-10 v3.0.1  19/11/10
+2019-09-18 v3.0.0  19/9/18
 ```
 
 ### Plot chart and graph
