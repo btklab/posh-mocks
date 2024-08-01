@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- NA
+- Added [ClipImageFrom-File] function
+- Fixed [clip2file] `-Files` option
 
 ## [7.2.3] - 2024-07-29
 
@@ -741,6 +742,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Cast-Double]: src/Cast-Double_function.ps1
 [Cast-Integer]: src/Cast-Integer_function.ps1
 [Edit-Property]: src/Edit-Property_function.ps1
+
+[ClipImageFrom-File]: src/ClipImageFrom-File_function.ps1
+
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/7.2.3..HEAD
 [7.2.3]: https://github.com/btklab/posh-mocks/releases/tag/7.2.3

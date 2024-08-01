@@ -142,6 +142,10 @@ function clip2file {
         [string[]] $readLineAry = ForEach ($r in $readLineAry ){
             if ( $r -ne '' ){ $r.Replace('"', '') }
         }
+    } elseif ( $Files.Count -gt 0 ){
+        ## get filepath from option
+        [string[]] $readLineAry = $Files | `
+            ForEach-Object { (Get-Item -LiteralPath $_).FullName }
     } else {
         ## get filepath from clipboard
         if ( $True ){
