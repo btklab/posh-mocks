@@ -162,6 +162,7 @@ if ( $IsWindows ){
     . $pwshSrcDir/clip2push_function.ps1
     . $pwshSrcDir/clip2hyperlink_function.ps1
     . $pwshSrcDir/clip2shortcut_function.ps1
+    . $pwshSrcDir/ClipImageFrom-File_function.ps1
 }
 . $pwshSrcDir/Decrease-Indent_function.ps1
 . $pwshSrcDir/Unzip-Archive_function.ps1
