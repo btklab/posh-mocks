@@ -176,6 +176,6 @@ function teatimer {
   $displayAlartDateTime = $(Get-Date).AddSeconds(1) + $objTimeSpan
   $ymdhms = $displayAlartDateTime.ToString('yyyy-M-d (ddd) HH:mm:ss')
   if (-not $Quiet){
-    Write-Host "Set an alerm for $ymdhms"
+    Write-Host "Set an alarm for $ymdhms"
   }
 }
