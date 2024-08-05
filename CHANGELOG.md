@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Added [ClipImageFrom-File] Object output option
 - Added [ClipImageFrom-File] function
 - Fixed [clip2file] `-Files` option
 
