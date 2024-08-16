@@ -12820,7 +12820,8 @@ clean: ## Remove "*.txt" items in Documents directory
 
 [Invoke-Link]: src/Invoke-Link_function.ps1
 
-Open links written in a text file.
+Open file/web links written in a text file or via pipeline or via Clipboard.
+The processing priority is `pipeline > arguments > clipboard`.
 
 - If a text file (`.txt`, `.md`, ...) is specified, open each line as link in default application
     - Link beginning with "http" or "www":
@@ -12865,6 +12866,9 @@ Usage:
         - `i <file> -l or -Location` ... Open `<link>` location in explorer
         - `i <file> -d or -DryRun` ... DryRun (listup links)
         - `i <file> -e or -Edit` ... Edit `<linkfile>` using text editor
+        - `"url" | i`                ... `Start-Process -FilePath <url>`
+        - `"url" | i -c "firefox"`   ... `firefox <url>`
+
 - Note
     - This is the command I use most often in my daily work
     - I use this command and link file combination:

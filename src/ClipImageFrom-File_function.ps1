@@ -30,10 +30,32 @@ function ClipImageFrom-File {
         [Alias('p')]
         [switch] $MSPaint,
         
+        [Parameter(Mandatory=$False)]
+        [Alias('o')]
+        [switch] $OutputOnlyObject,
+        
+        [Parameter(Mandatory=$False)]
+        [Alias('e')]
+        [switch] $SkipError,
+        
         [Parameter( Mandatory=$False )]
         [Alias("u")]
         [switch] $UrlDecode        
     )
+    ## private function
+    function Get-ImageTypeFromExt {
+        param(
+            [Parameter(Mandatory)]
+            [string]$filePath
+        )
+        try {
+            [String] $ext = (Get-Item -LiteralPath $filePath).Extension
+            return $ext
+        }
+        catch {
+            Write-Warning "$($_.Exception.Message)" -ErrorAction Stop
+        }
+    }
     ## init filepath array
     [string[]] $readLineAry = @()
     if ( $input.Count -gt 0 ){
@@ -83,24 +105,38 @@ function ClipImageFrom-File {
         if ( ( $f -match '^file:///' ) -or ( $UrlDecode ) ){
             [string] $f = [uri]::UnEscapeDataString( $($f -replace '^file:///', '') )
         }
-        Get-Item -LiteralPath $f
+        if ( Test-Path -LiteralPath $f ){
+            Get-Item -LiteralPath $f
+        } else {
+            Write-Error "File not found: ""$f""." -ErrorAction Stop
+        }
     }
     # main
     ## load assembly
     Add-Type -AssemblyName System.Windows.Forms
     Add-Type -AssemblyName System.Drawing
     [String[]] $imagePaths = $obj | ForEach-Object { $_.FullName }
-    [String] $imagePath = $imagePaths[0]
-    if (Test-Path -LiteralPath $imagePath) {
-        $image = [System.Drawing.Image]::FromFile($imagePath)
+    foreach ( $imagePath in $imagePaths ){
+        try {
+            $image = [System.Drawing.Image]::FromFile($imagePath)
+        } catch {
+            if ( -not $SkipError ){
+                Write-Error "$($_.Exception.Message)" -ErrorAction Stop
+            }
+        }
+        $imageType = Get-ImageTypeFromExt $imagePath
         $bitmap = New-Object System.Drawing.Bitmap $image
+        $bitmap `
+            | Select-Object `
+                @{N="Name";E={$(Get-Item -Path $imagePath).Name}}, `
+                @{N="Ext";E={$imageType}}, `
+                *
+        if ( $OutputOnlyObject ){ continue }
         $dataObject = New-Object System.Windows.Forms.DataObject
         $dataObject.SetData([System.Windows.Forms.DataFormats]::Bitmap, $bitmap)
         [System.Windows.Forms.Clipboard]::SetDataObject($dataObject, $true)
-        Write-Host "Image loaded to clipboard successfully." -ForegroundColor "Green"
-        Write-Host "Image: $imagePath" -ForegroundColor "Green"
-    } else {
-        Write-Host "File not found: $imagePath" -ForegroundColor "Yellow"
+        #Write-Host "Image loaded to clipboard successfully." -ForegroundColor "Green"
+        #Write-Host "Image: $imagePath" -ForegroundColor "Green"
     }
     # invoke clipboard
     if ($MSPaint){
