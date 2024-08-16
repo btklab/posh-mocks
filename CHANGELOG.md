@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- NA
+- Fixed [Invoke-Link] initialization of arrays when multiple lines are input from a pipeline.
 
 ## [7.2.4] - 2024-08-16
 
@@ -750,6 +750,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Edit-Property]: src/Edit-Property_function.ps1
 
 [ClipImageFrom-File]: src/ClipImageFrom-File_function.ps1
+
+[Invoke-Link]: src/Invoke-Link_function.ps1
 
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/7.2.4..HEAD
