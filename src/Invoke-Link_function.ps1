@@ -1,55 +1,59 @@
 <#
 .SYNOPSIS
-    i : Invoke-Link - Open links written in a text file
+    i : Invoke-Link - Open file/web links written in a text file
 
-    Open links written in a text file.
+    Open file/web links written in a text file or via pipeline or via Clipboard.
+    The processing priority is pipeline > arguments > clipboard.
 
-    - If a text file (.txt, .md, ...) is specified,
-      open each line as link in default application
-        - Link beginning with "http" or "www":
-            - Start-Process (default browser)
-        - Directory and others:
-            - Invoke-Item <link>
-    - If a link file (.lnk) is specified, open the link in explorer
-    - If a PowerShell Script file (.ps1) is specified,
-      execute the script in current process:
-        - Able to use dot sourcing functions in current process
-        - Specify the absolute file path in the text file as possible.
-          Or Note that when specifying a relative path, the root is the
-          location of the current process
-    - If a directory is specified, the names and first lines of the
-      files in that hierarchy are listed.
-        - Collect files recursively with -Recurse option
+        - If a text file (.txt, .md, ...) is specified,
+          open each line as link in default application
+            - Link beginning with "http" or "www":
+                - Start-Process (default browser)
+            - Directory and others:
+                - Invoke-Item <link>
+        - If a link file (.lnk) is specified, open the link in explorer
+        - If a PowerShell Script file (.ps1) is specified,
+          execute the script in current process:
+            - Able to use dot sourcing functions in current process
+            - Specify the absolute file path in the text file as possible.
+              Or Note that when specifying a relative path, the root is the
+              location of the current process
+        - If a directory is specified, the names and first lines of the
+          files in that hierarchy are listed.
+            - Collect files recursively with -Recurse option
 
     Link file settings:
 
-    - Multiple links(lines) in a file available.
-    - Tag
-        - To add tags, add a space + "#tag" to a comment line
-          starting with "#" or "Tag:"
-            - e.g. # commnent #tag-1 #tag-2
-            - e.g. Tag: #tag-1 #tag-2
-        - If you specify a directory as an argument, tags will be output.
-          This is useful when searching linked files by tag.
-    - Skip line
-        - Lines that empty or beginning with "#" are skipped.
-        - Lines that empty or beginning with "Tag:" are skipped.
-    - The link execution app can be any command if "-Command" option is
-      specified.
-    - Links written in a text file may or may not be enclosed in
-      single/double quotes.
-    - If -l or -Location specified, open the file location in explorer
-      (do not run link)
-    - Environment variables such as ${HOME} can be used for path strings.
+        - Multiple links(lines) in a file available.
+        - Tag
+            - To add tags, add a space + "#tag" to a comment line
+              starting with "#" or "Tag:"
+                - e.g. # commnent #tag-1 #tag-2
+                - e.g. Tag: #tag-1 #tag-2
+            - If you specify a directory as an argument, tags will be output.
+              This is useful when searching linked files by tag.
+        - Skip line
+            - Lines that empty or beginning with "#" are skipped.
+            - Lines that empty or beginning with "Tag:" are skipped.
+        - The link execution app can be any command if "-Command" option is
+          specified.
+        - Links written in a text file may or may not be enclosed in
+          single/double quotes.
+        - If -l or -Location specified, open the file location in explorer
+          (do not run link)
+        - Environment variables such as ${HOME} can be used for path strings.
 
     Usage:
-        i                  ... Equivalent to Invoke-Item .
+        i                  ... Invoke-Item from Clipboard
         i <dir>            ... Invoke-Item <dir>
         i <file>           ... Invoke-Item <links-writtein-in-text-file>
         i <file> <command> ... command <links-writtein-in-text-file>
         i <file> -l or -Location ... Open <link> location in explorer
         i <file> -d or -DryRun   ... DryRun (listup links)
         i <file> -e or -Edit     ... Edit <linkfile> using text editor
+
+        "url" | i                ... Start-Process -FilePath <url>
+        "url" | i -c "firefox"   ... firefox <url>
     
     Example of link file with tag:
         cat ./work/apps/chrome.txt
@@ -77,14 +81,16 @@
         3. As a simple task runner
 
 .EXAMPLE
-    i                  ... Equivalent to Invoke-Item .
-    i <dir>            ... Invoke-Item <dir>
+    i                  ... Invoke-Item from Clipboard
     i <file>           ... Invoke-Item <links-writtein-in-text-file>
     i <file> <command> ... command <links-writtein-in-text-file>
     i <file> <command> -b    ... run command in background
     i <file> -l or -Location ... Open <link> location in explorer
     i <file> -d or -DryRun   ... DryRun (listup links)
     i <file> -e or -Edit     ... Edit <linkfile> using text editor
+
+    "url" | i                ... Start-Process -FilePath <url>
+    "url" | i -c "firefox"   ... firefox <url>
 
 .EXAMPLE
     cat ./link/rmarkdown_site.txt
@@ -161,8 +167,9 @@
 #>
 function Invoke-Link {
 
+    [CmdletBinding()]
     param (
-        [Parameter( Mandatory=$True, Position=0 )]
+        [Parameter( Mandatory=$False, Position=0, ValueFromPipeline=$True )]
         [Alias('f')]
         [string[]] $Files,
         
@@ -225,10 +232,7 @@ function Invoke-Link {
         
         [Parameter( Mandatory=$False )]
         [Alias('q')]
-        [switch] $Quiet,
-        
-        [parameter( Mandatory=$False, ValueFromPipeline=$True )]
-        [object[]] $InputObject
+        [switch] $Quiet
     )
     # private functions
     function isCommentOrEmptyLine ( [string] $line ){
@@ -307,35 +311,17 @@ function Invoke-Link {
     # set variable
     [int] $errCounter = 0
     $hrefList = New-Object 'System.Collections.Generic.List[System.String]'
-    if ( $Files.Count -gt 0){
-        #pass
-    } else {
-        if ( $input.Count -lt 1 ){
-            Write-Error "No input file." -ErrorAction Stop
-        }
-        if ( $True ){
-            Write-Error "Input via pipeline is not allowed." -ErrorAction Stop
-        }
-        return
-        [string[]] $Files = $input | ForEach-Object {
-            if ( ($_ -is [System.IO.FileInfo]) `
-                -or ($_ -is [System.IO.DirectoryInfo]) `
-                -or ($_ -is [System.IO.FileSystemInfo]) ){
-                Write-Output $_.FullName
-            } else {
-                Write-Output "$_"
-            }
-        }
-    }
     # test bulk input
     if ( -not $AllowBulkInput ){
         $bulkList = New-Object 'System.Collections.Generic.List[System.String]'
         foreach ( $f in $Files ){
             # expand wildcard
-            Get-Item -Path $f | ForEach-Object {
-                if ( Test-Path -Path $_.FullName -PathType Leaf){
-                    [String] $resPath = getRelativePath $_.FullName
-                    $bulkList.Add($resPath)
+            if ( Test-Path -LiteralPath $f ){
+                Get-Item -Path $f | ForEach-Object {
+                    if ( Test-Path -Path $_.FullName -PathType Leaf){
+                        [String] $resPath = getRelativePath $_.FullName
+                        $bulkList.Add($resPath)
+                    }
                 }
             }
         }
@@ -349,14 +335,61 @@ function Invoke-Link {
     }
     # main
     [int] $fileCounter = 0
-    foreach ( $f in $Files ){
+    [string[]] $readLineAry = @()
+    if ( $input.Count -gt 0 ){
+        ## get file path from pipeline text
+        [string[]] $readLineAry = $input `
+            | ForEach-Object {
+                if ( ($_ -is [System.IO.FileInfo]) -or ($_ -is [System.IO.DirectoryInfo]) ){
+                    ## from filesystem object
+                    [string] $oText = $_.FullName
+                } elseif ( $_ -is [System.IO.FileSystemInfo] ){
+                    ## from filesystem object
+                    [string] $oText = $_.FullName
+                } else {
+                    ## from text
+                    [string] $oText = $_
+                }
+                Write-Output $oText
+            }
+        [string[]] $readLineAry = ForEach ($r in $readLineAry ){
+            if ( $r -ne '' ){ $r.Replace('"', '') }
+        }
+    } elseif ( $Files.Count -gt 0 ){
+        ## get filepath from option
+        [string[]] $readLineAry = $Files | `
+            ForEach-Object { (Get-Item -LiteralPath $_).FullName }
+    } else {
+        ## get filepath from clipboard
+        if ( $True ){
+            ### get filepath as object
+            Add-Type -AssemblyName System.Windows.Forms
+            [string[]] $readLineAry = [Windows.Forms.Clipboard]::GetFileDropList()
+        }
+        if ( -not $readLineAry ){
+            ### get filepath as text
+            [string[]] $readLineAry = Get-Clipboard | `
+                ForEach-Object { if ($_ -ne '' ) { $_.Replace('"', '')} }
+        }
+    }
+    ## test
+    if ( $readLineAry.Count -lt 1 ){
+        Write-Error "no input file." -ErrorAction Stop
+    }
+    ## sort file paths
+    #[string[]] $sortedReadLineAry = $readLineAry | Sort-Object
+    ## parse paths
+    foreach ( $f in $readLineAry ){
         # interpret Paths containing wildcards
         if ( Test-Path -Path $f -PathType Container){
             [string[]] $tmpFiles = Get-Item -Path $f `
                 | Resolve-Path -Relative
-        } else {
+        } elseif ( Test-Path -Path $f -PathType Leaf){
             [string[]] $tmpFiles = Get-ChildItem -Path $f -Recurse:$Recurse -File `
                 | Resolve-Path -Relative
+        } else {
+            [string[]] $tmpFiles = @()
+            $tmpFiles += $f
         }
         # set links
         foreach ( $File in $tmpFiles ){
@@ -433,21 +466,23 @@ function Invoke-Link {
                 continue
             }
             # is file exist?
-            if ( -not ( Test-Path -LiteralPath $File ) ){
+            #if ( -not ( Test-Path -LiteralPath $File ) ){
+            #    if ( $Edit ){
+            #        # about Read-Host
+            #        # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/read-host
+            #        [string] $resp = Read-Host "$File is not exists. Create and Edit? (y/n)"
+            #        if ( $resp -eq 'y' ){ editFile $File }
+            #        continue
+            #    }
+            #    Invoke-Item -LiteralPath $File
+            #    continue
+            #}
+            # edit file mode
+            if ( Test-Path -LiteralPath $File ){
                 if ( $Edit ){
-                    # about Read-Host
-                    # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/read-host
-                    [string] $resp = Read-Host "$File is not exists. Create and Edit? (y/n)"
-                    if ( $resp -eq 'y' ){ editFile $File }
+                    editFile $File
                     continue
                 }
-                Invoke-Item -LiteralPath $File
-                continue
-            }
-            # edit file mode
-            if ( $Edit ){
-                editFile $File
-                continue
             }
             # output file name
             if ( -not $Quiet ){
@@ -457,30 +492,40 @@ function Invoke-Link {
                 }
             }
             # is windows shortcut?
-            [string] $ext = (Get-Item -LiteralPath $File).Extension
-            ## is file shortcut?
-            if ( ( $ext -eq '.lnk' ) -or ( $ext -eq '.url') ){
-                if ( $DryRun ){
-                    "Invoke-Item -LiteralPath $File"
-                    continue
-                } else {
-                    Invoke-Item -LiteralPath $File
-                    continue
+            if ( Test-Path -LiteralPath $File ){
+                [string] $ext = (Get-Item -LiteralPath $File).Extension
+                ## is file shortcut?
+                if ( ( $ext -eq '.lnk' ) -or ( $ext -eq '.url') ){
+                    if ( $DryRun ){
+                        "Invoke-Item -LiteralPath $File"
+                        continue
+                    } else {
+                        Invoke-Item -LiteralPath $File
+                        continue
+                    }
                 }
-            }
-            ## is file .ps1 script?
-            if ( $ext -eq '.ps1' ){
-                [string] $ps1FileFullPath = (Resolve-Path -LiteralPath $File).Path
-                if ( $DryRun ){
-                    "Invoke-Item -LiteralPath ""$ps1FileFullPath"""
-                    continue
-                } else {
-                    & $ps1FileFullPath
-                    continue
+                ## is file .ps1 script?
+                if ( $ext -eq '.ps1' ){
+                    [string] $ps1FileFullPath = (Resolve-Path -LiteralPath $File).Path
+                    if ( $DryRun ){
+                        "Invoke-Item -LiteralPath ""$ps1FileFullPath"""
+                        continue
+                    } else {
+                        & $ps1FileFullPath
+                        continue
+                    }
                 }
             }
             ## is -not shortcut and -not ps1 script?
-            [string[]] $linkLines = Get-Content -LiteralPath $File -Encoding utf8 `
+            if ( Test-Path -LiteralPath $File ){
+                ## link written in file
+                [string[]] $linkLines = Get-Content -LiteralPath $File -Encoding utf8
+            } else {
+                ## plain text link
+                [string[]] $linkLines = @()
+                $linkLines += $File
+            }
+            $linkLines = $linkLines `
                 | ForEach-Object {
                     [string] $linkLine = $_
                     if ( isCommentOrEmptyLine $linkLine ){
@@ -557,8 +602,8 @@ function Invoke-Link {
                     [string] $com = "Invoke-Item"
                 }
             }
-            Write-Debug $href
             [string] $com = "$com ""$href"""
+            Write-Host $com
             if ( $DryRun ){
                 if ( $BackGround ){
                     try {

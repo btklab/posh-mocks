@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [7.2.4] - 2024-08-16
+
+- Enabled [Invoke-Link] value from pipeline and clipboard
 - Added [ClipImageFrom-File] Object output option
 - Added [ClipImageFrom-File] function
 - Fixed [clip2file] `-Files` option
@@ -747,7 +752,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [ClipImageFrom-File]: src/ClipImageFrom-File_function.ps1
 
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/7.2.3..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/7.2.4..HEAD
+[7.2.4]: https://github.com/btklab/posh-mocks/releases/tag/7.2.4
 [7.2.3]: https://github.com/btklab/posh-mocks/releases/tag/7.2.3
 [7.2.2]: https://github.com/btklab/posh-mocks/releases/tag/7.2.2
 [7.2.1]: https://github.com/btklab/posh-mocks/releases/tag/7.2.1
