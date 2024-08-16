@@ -310,7 +310,6 @@ function Invoke-Link {
     }
     # set variable
     [int] $errCounter = 0
-    $hrefList = New-Object 'System.Collections.Generic.List[System.String]'
     # test bulk input
     if ( -not $AllowBulkInput ){
         $bulkList = New-Object 'System.Collections.Generic.List[System.String]'
@@ -393,6 +392,7 @@ function Invoke-Link {
         }
         # set links
         foreach ( $File in $tmpFiles ){
+            $hrefList = New-Object 'System.Collections.Generic.List[System.String]'
             # is path directory?
             if ( Test-Path -LiteralPath $File -PathType Container){
                 if ( $DryRun ){
@@ -517,12 +517,12 @@ function Invoke-Link {
                 }
             }
             ## is -not shortcut and -not ps1 script?
+            [string[]] $linkLines = @()
             if ( Test-Path -LiteralPath $File ){
                 ## link written in file
-                [string[]] $linkLines = Get-Content -LiteralPath $File -Encoding utf8
+                $linkLines = Get-Content -LiteralPath $File -Encoding utf8
             } else {
                 ## plain text link
-                [string[]] $linkLines = @()
                 $linkLines += $File
             }
             $linkLines = $linkLines `
@@ -589,6 +589,7 @@ function Invoke-Link {
             continue
         }
         [String[]] $linkAry = $hrefList.ToArray()
+        $hrefList = New-Object 'System.Collections.Generic.List[System.String]'
         foreach ( $href in $linkAry ){
             # execute command
             if ( $Command ){
