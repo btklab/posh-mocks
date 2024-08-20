@@ -2,7 +2,7 @@
 .SYNOPSIS
     Grep-Object (alias: grep) - Searches for regex patterns
 
-    Output lines that match pattern.
+    Output lines that match regex pattern.
 
     Case-insensitive by default, but can be made
     Case-sensitive with the "-CaseSensitive" switch.
