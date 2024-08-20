@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Fixed [grep] synopsis
 - Fixed [Invoke-Link] initialization of arrays when multiple lines are input from a pipeline.
 
 ## [7.2.4] - 2024-08-16
