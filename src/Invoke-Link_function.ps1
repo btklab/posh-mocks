@@ -30,8 +30,9 @@
               starting with "#" or "Tag:"
                 - e.g. # commnent #tag-1 #tag-2
                 - e.g. Tag: #tag-1 #tag-2
-            - If you specify a directory as an argument, tags will be output.
-              This is useful when searching linked files by tag.
+            - If you specify a directory as an argument:
+                - tags will be output. This is useful when searching linked files by tag.
+                - the directory name is set as a tag.
         - Skip line
             - Lines that empty or beginning with "#" are skipped.
             - Lines that empty or beginning with "Tag:" are skipped.
@@ -239,7 +240,7 @@ function Invoke-Link {
         [bool] $coeFlag = $False
         if ( $line -match '^#' )   { $coeFlag = $True }
         if ( $line -match '^\s*$' ){ $coeFlag = $True }
-        if ( $line -match '^Tag:' ){ $coeFlag = $True }
+        if ( $line -match '^[Tt][Aa][Gg]:' ){ $coeFlag = $True }
         return $coeFlag
     }
     function isLinkHttp ( [string] $line ){
@@ -422,10 +423,11 @@ function Invoke-Link {
                             return
                         }
                         # set path
-                        [String] $parentPath = Split-Path -Parent $_
-                        [String] $childPath = Split-Path -Leaf $_
-                        [String] $joinedPath = Join-Path -Path $parentPath -ChildPath $childPath
-                        [String] $relativePath = getRelativePath $joinedPath
+                        [String] $parentPath    = Split-Path -Parent $_
+                        [String] $childPath     = Split-Path -Leaf $_
+                        [String] $joinedPath    = Join-Path -Path $parentPath -ChildPath $childPath
+                        [String] $relativePath  = getRelativePath $joinedPath
+                        [String] $parentDirName = Split-Path -Parent $_ | Split-Path -Leaf
                         # remove extension
                         if ( -not $Extension -and $_.Name -notmatch '^\.') {
                             [String] $relativePath = $relativePath -replace '\.[^\.]+$', ''
@@ -435,7 +437,7 @@ function Invoke-Link {
                         } elseif ( $_.Extension -match '\.lnk$|\.exe$|\.dll$|\.xls|\.doc|\.ppt|\.ps1$' ){
                             $hash = [ordered] @{
                                 Id   = $fileCounter
-                                Tag  = $Null
+                                Tag  = '#' + $parentDirName
                                 Name = $relativePath
                                 Line = $Null
                             }
@@ -450,10 +452,15 @@ function Invoke-Link {
                                 Path          = $_.FullName
                             }
                             #[String[]] $tagAry = getMatchesValue $line ' #[^ ]+|^#[^ ]+'
-                            [String[]] $tagAry = (Select-String @splatting).Matches.Value `
+                            [String[]] $tagAry = @()
+                            [String[]] $tagAry += (Select-String @splatting).Matches.Value `
                                 | ForEach-Object { Write-Output $("$_".Trim()) }
-                            #[String] $tagStr = ($tagAry -join ", ").Replace('#', '')
-                            [String] $tagStr = $tagAry -join ", "
+                            # set tag
+                            [String] $tagStr = '#' + $parentDirName
+                            if ( $tagAry.Count -gt 0 ){
+                                [String] $tagStr += ", "
+                                [String] $tagStr += $tagAry -join ", "
+                            }
                             $hash = [ordered] @{
                                 Id   = $fileCounter
                                 Tag  = $tagStr
