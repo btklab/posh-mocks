@@ -75,22 +75,38 @@
 
 #>
 function Unzip-Archive {
+    [CmdletBinding()]
     param (
         [Parameter( Mandatory=$False, Position=0 )]
-        [Object[]] $File,
+        [Object[]] $File
+        ,
         [Parameter( Mandatory=$False )]
         [Alias('f')]
-        [Switch] $Force,
+        [Switch] $Force
+        ,
         [Parameter( Mandatory=$False )]
-        [String] $Path,
+        [String] $Path
+        ,
         [Parameter( Mandatory=$False )]
-        [Switch] $Push,
+        [Switch] $Push
+        ,
         [Parameter( Mandatory=$False )]
         [Alias('ii')]
-        [Switch] $InvokeItem,
+        [Switch] $InvokeItem
+        ,
+        [Parameter( Mandatory=$False )]
+        [Switch] $SkipDownload
+        ,
+        [Parameter( Mandatory=$False )]
+        [String] $Algorithm = 'SHA256'
+        ,
+        [Parameter( Mandatory=$False )]
+        [String] $Hash
+        ,
         [Parameter( Mandatory=$False )]
         [Alias('a')]
-        [Switch] $UnzipAndInvoke,
+        [Switch] $UnzipAndInvoke
+        ,
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
         [object[]] $InputObject
     )
@@ -149,22 +165,55 @@ function Unzip-Archive {
             # test path
             if (Test-Path -LiteralPath $outDir -PathType Container){
                 [String] $outPath = "$outDir" | Join-Path -ChildPath $Name
-                if (Test-Path -LiteralPath $outPath){
-                    if ( -not $Force ){
-                        Write-Error "$outPath is already exists." -ErrorAction Stop
-                    }
-                }
             } else {
                 Write-Error "$outDir is not exists or is not directory." -ErrorAction Stop
             }
-            Invoke-WebRequest -Uri $strUri -OutFile $outPath
+            if (Test-Path -LiteralPath $outPath){
+                if ( $Force ){
+                    #pass
+                } elseif ( $Hash ){
+                    # compare hash values
+                    [String] $hashVal = Get-FileHash -LiteralPath $outPath -Algorithm $Algorithm `
+                        | Select-Object -ExpandProperty Hash
+                    Write-Host "Set: $Hash" -ForegroundColor Yellow
+                    Write-Host "Get: $hashVal" -ForegroundColor Yellow
+                    if ( $Hash -eq $hashVal ){
+                        #pass
+                        [bool] $isHashMatched = $True
+                        Write-Host "Result: Matched hash. skip download." -ForegroundColor Green
+                    } else {
+                        [bool] $isHashMatched = $False
+                        Write-Host "Result: UnMatched hash. start downloadd." -ForegroundColor Red
+                        #Write-Error "Hash does not equal." -ErrorAction Stop
+                    }
+                } else {
+                    if ( -not $SkipDownload ){
+                        Write-Error "$outPath is already exists." -ErrorAction Stop
+                    }
+                }
+            }
+            if ( $Force -and $SkipDownload ){
+                #pass
+            } elseif ( $Force ){
+                Invoke-WebRequest -Uri $strUri -OutFile $outPath
+            } elseif ( $SkipDownload ){
+                #pass
+            } elseif ( $Hash ) {
+                if ( $isHashMatched ){
+                    #pass
+                } else {
+                    Invoke-WebRequest -Uri $strUri -OutFile $outPath
+                }
+            } else {
+                Invoke-WebRequest -Uri $strUri -OutFile $outPath
+            }
             $item = $outpath
         }
         # get destination directory
         [String] $outDir  = Split-Path -Parent (Resolve-Path -LiteralPath $item).Path
         [String] $outName = (Get-Item -LiteralPath $item).BaseName
         [String] $outExt = (Get-Item -LiteralPath $item).Extension
-        if ( $outExt -ne '.zip'){
+        if ( $outExt -notmatch '\.zip$'){
             Write-Error "A file other than "".zip"" was specified:`n$(Resolve-Path -LiteralPath $item -Relative)" -ErrorAction Stop
         }
         if ( $Path ){
@@ -183,11 +232,19 @@ function Unzip-Archive {
         }
         # expand zip
         [String] $destPath = $outPath
-        Expand-Archive `
-            -LiteralPath $item `
-            -DestinationPath $destPath `
-            -Force:$Force
-        Get-Item -LiteralPath $destPath
+        if ($True) {
+            # zip
+            Expand-Archive `
+                -LiteralPath $item `
+                -DestinationPath $destPath `
+                -Force:$Force
+        }
+        Get-FileHash -LiteralPath $item -Algorithm $Algorithm `
+            | Select-Object `
+                Algorithm, `
+                Hash , `
+                @{N="From";E={(Get-Item -LiteralPath $_.Path).Name}}, `
+                @{N="To";E={(Get-Item -LiteralPath $destPath).Name}}
     }
     if ( $InvokeItem -or $UnzipAndInvoke ){
         Invoke-Item -LiteralPath $outPath

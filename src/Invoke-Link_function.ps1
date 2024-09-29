@@ -452,9 +452,13 @@ function Invoke-Link {
                                 Path          = $_.FullName
                             }
                             #[String[]] $tagAry = getMatchesValue $line ' #[^ ]+|^#[^ ]+'
-                            [String[]] $tagAry = @()
-                            [String[]] $tagAry += (Select-String @splatting).Matches.Value `
-                                | ForEach-Object { Write-Output $("$_".Trim()) }
+                            [String[]] $tagAry = (Select-String @splatting).Matches.Value `
+                                | ForEach-Object {
+                                    [String] $tmpTagStr = $("$_".Trim())
+                                    if ( $tmpTagStr -ne '' ){
+                                        Write-Output $("$_".Trim())
+                                    }
+                                }
                             # set tag
                             [String] $tagStr = '#' + $parentDirName
                             if ( $tagAry.Count -gt 0 ){
