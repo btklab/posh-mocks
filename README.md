@@ -12843,7 +12843,9 @@ Link file settings:
       starting with `#` or `Tag:`
         - e.g. `# commnent #tag-1 #tag-2`
         - e.g. `Tag: #tag-1 #tag-2`
-    - If you specify a directory as an argument, tags will be output.  This is useful when searching linked files by tag.
+    - If you specify a directory as an argument:
+        - tags will be output. This is useful when searching linked files by tag.
+        - the directory name is set as a tag.
 - Skip line
     - Lines that empty or beginning with `#` are skipped.
     - Lines that empty or beginning with `Tag:` are skipped.
