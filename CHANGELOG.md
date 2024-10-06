@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 
 - Added [Unzip-Archive] compare hash
+- Changed [Invoke-Link] parse text file only to .txt, .md and files without extensions
 - Changed [Invoke-Link] made tag symbols case insensitive
 - Fixed [grep] synopsis
 - Fixed [Invoke-Link] initialization of arrays when multiple lines are input from a pipeline.
