@@ -5,7 +5,7 @@
     Open file/web links written in a text file or via pipeline or via Clipboard.
     The processing priority is pipeline > arguments > clipboard.
 
-        - If a text file (.txt, .md, ...) is specified,
+        - If a text file (Ext: None, .txt, .md, ...) is specified,
           open each line as link in default application
             - Link beginning with "http" or "www":
                 - Start-Process (default browser)
@@ -205,7 +205,8 @@ function Invoke-Link {
         [switch] $AsFileObject,
         
         [Parameter( Mandatory=$False )]
-        [switch] $Extension,
+        [Alias('rmext')]
+        [switch] $RemoveExtension,
         
         [Parameter( Mandatory=$False )]
         [Alias('a')]
@@ -417,7 +418,7 @@ function Invoke-Link {
                             return
                         }
                         if ( $Id.Count -gt 0){
-                            if ($Id.Contains($fileCounter)){
+                            i ($Id.Contains($fileCounter)){
                                 Get-Item -LiteralPath $_.FullName
                             }
                             return
@@ -429,19 +430,12 @@ function Invoke-Link {
                         [String] $relativePath  = getRelativePath $joinedPath
                         [String] $parentDirName = Split-Path -Parent $_ | Split-Path -Leaf
                         # remove extension
-                        if ( -not $Extension -and $_.Name -notmatch '^\.') {
+                        if ( $RemoveExtension -and $_.Name -notmatch '^\.') {
                             [String] $relativePath = $relativePath -replace '\.[^\.]+$', ''
                         }
                         if ( Test-Path -LiteralPath $_.FullName -PathType Container){
                             continue
-                        } elseif ( $_.Extension -match '\.lnk$|\.exe$|\.dll$|\.xls|\.doc|\.ppt|\.ps1$' ){
-                            $hash = [ordered] @{
-                                Id   = $fileCounter
-                                Tag  = '#' + $parentDirName
-                                Name = $relativePath
-                                Line = $Null
-                            }
-                        } else {
+                        } elseif ( -not ($_.Extension) -or $_.Extension -match '\.txt$|\.md$' ){
                             # get tag
                             [String] $pat = ' #[^ #]+'
                             $splatting = @{
@@ -470,6 +464,13 @@ function Invoke-Link {
                                 Tag  = $tagStr
                                 Name = $relativePath
                                 Line = Get-Content -Path $_.FullName -TotalCount 1 -Encoding utf-8
+                            }
+                        } else {
+                            $hash = [ordered] @{
+                                Id   = $fileCounter
+                                Tag  = '#' + $parentDirName
+                                Name = $relativePath
+                                Line = $Null
                             }
                         }
                         [pscustomobject] $Hash
@@ -526,6 +527,17 @@ function Invoke-Link {
                         continue
                     }
                 }
+                ## is non-text file
+                if ( -not ( ( -not $ext ) -or ( $ext -match '\.txt$|\.md$') ) ){
+                    if ( $DryRun ){
+                        "Invoke-Item -LiteralPath $File"
+                        continue
+                    } else {
+                        Invoke-Item -LiteralPath $File
+                        continue
+                    }
+                }
+                ## is file .ps1 script?
             }
             ## is -not shortcut and -not ps1 script?
             [string[]] $linkLines = @()
