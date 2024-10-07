@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed [Invoke-Link] parse text file only to .txt, .md and files without extensions
 - Changed [Invoke-Link] made tag symbols case insensitive
 - Fixed [grep] synopsis
+- Fixed [README.md] typo
+- Translated [README.md] Partially translated from Japanese to English
 - Fixed [Invoke-Link] initialization of arrays when multiple lines are input from a pipeline.
 
 ## [7.2.4] - 2024-08-16
