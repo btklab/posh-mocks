@@ -19,6 +19,7 @@ A mock-up set of [PowerShell](https://github.com/PowerShell/PowerShell) 7 functi
     - The code is spaghetti (due to my technical inexperience).
     - Insufficient tests and error handlings.
     - Processing speed is **not fast**.
+    - The text used in this README.md and the functions in the `src` directory is basically English, but some parts of the code may use Japanese syntax or comments.
 - Workflow-Examples:
     - See: [examples.md](examples.md)
 
@@ -802,9 +803,7 @@ sepal_length,sepal_width,petal_length,petal_width,species
 [head]: src/head_function.ps1
 [tail]: src/tail_function.ps1
 
-入力文字列の最初の数行または最後の数行を出力する。
-Linux環境で使う`head`、`tail`のような使用感で文字列を置換する。
-`"string" | Select-Object -First <int> / -Last <int>`と同じ効果を得る。
+Outputs the first or last few lines of the input string. Roughly equivalent to `head` and `tail` command used in Linux environment. Also roughly equivalent to `"string" | Select-Object -First <int> / -Last <int>` in PowerShell.
 
 - Usage
     - `man2 head`
@@ -853,9 +852,7 @@ tail-f a.txt
 [chead]: src/chead_function.ps1
 [ctail]: src/ctail_function.ps1
 
-
-入力文字列の最初の数行または最後の数行を削除（カット）して出力する。
-`"string" | Select-Object -Skip <int> / -SkipLast <int>`と同じ効果を得る。
+Deletes (cuts) the first or last few lines of the input string and outputs it. Roughly equivalent to `"string" | Select-Object -Skip <int> / -SkipLast <int>` in PowerShell.
 
 - Usage
     - `man2 chead`
@@ -968,9 +965,7 @@ Examples:
 
 [uniq]: src/uniq_function.ps1
 
-
-入力から隣接する（連続する）重複行をなくし一意とする。大文字小文字は区別しない。事前ソート必要。
-`Group-Object -NoElement`、`Get-Unique`と似ている。
+Removes adjacent (consecutive) duplicate lines from the input and makes them unique. Requires pre-sorting. Similar to `Group-Object -NoElement` and `Get-Unique` in PowerShell. Case insensitive.
 
 - Usage
     - `man2 uniq`
@@ -985,9 +980,7 @@ Examples:
 
 [cat2]: src/cat2_function.ps1
 
-テキストファイルのコンテンツを取得。
-複数ファイルを指定する方法は、`Get-Content`の際の「カンマ区切り」ではなく「半角スペース区切り」。
-引数にハイフン「`-`」指定で標準入力から読み込み。
+Gets the contents of a text file. To specify multiple files, separate them with a space instead of a comma like in `Get-Content`. Specify a hyphen (`-`) as an argument to read from standard input.
 
 - Usage
     - `man2 cat2`
@@ -999,7 +992,7 @@ Examples:
 
 [tac]: src/tac_function.ps1
 
-入力を行単位逆順に出力する。
+Read input from end to beginning.
 
 - Usage
     - `man2 tac`
@@ -1027,7 +1020,7 @@ Examples:
 
 [rev]: src/rev_function.ps1
 
-文字列を行内で反転する。
+Reverse text within a line.
 
 - Usage
     - `man2 rev`
@@ -1050,9 +1043,7 @@ oeuia
 
 [rev2]: src/rev2_function.ps1
 
-半角スペースで区切られた列をリバースする。
-列内の文字列はリバースしない。
-入力はパイプのみ受け付け。
+Reverses columns separated by spaces. Does not reverse strings within columns. Input is only accepted via pipeline.
 
 - Usage
     - `man2 rev2`
@@ -1088,8 +1079,7 @@ Write-Output "01 02 03" | rev2 -e
 
 [tateyoko]: src/tateyoko_function.ps1
 
-半角スペース区切り行列の転置（半角スペース区切り文字列の縦横変換）。
-列数は不揃いでもよい。
+Transpose of a space-separated matrix (vertical/horizontal conversion of a space-separated string). The number of columns can be uneven.
 
 - Usage
     - `man2 tateyoko`
@@ -1125,10 +1115,7 @@ Examples:
 
 [fillretu]: src/fillretu_function.ps1
 
-
-半角スペース区切りレコードの列数を最大列数にそろえる。
-不足列を埋める、で、fill（埋める）＋retu（列）。
-列数がそろっていると何かと都合よい。
+Align the number of columns in space-delimited records to the maximum number of columns. The command name is derived from a compound word of English and Japanese, meaning to fill and "retsu" (to fill in column in Japanese).
 
 - Usage
     - `man2 fillretu`
@@ -1183,7 +1170,7 @@ cat dat.txt | grep . | yarr | fillretu -NaN 0
 2022 5 5 0 0 0
 ```
 
-`tateyoko`とのコンビネーション。
+Combination with `tateyoko`
 
 ```powershell
 cat dat.txt | yarr | fillretu | tateyoko | keta
@@ -1202,7 +1189,7 @@ cat dat.txt | yarr | fillretu | tateyoko | keta
 
 [juni]: src/juni_function.ps1
 
-各行の行数を列挙
+Enumerate the number of lines for each record.
 
 - Usage
     - `man2 juni`
@@ -1230,12 +1217,9 @@ Output:
 
 [self]: src/self_function.ps1
 
-半角スペース区切りの標準入力から任意の列のみ抽出する。
-すべての列は`0`で、最終列は`NF`で指定することもできる
+Extracts only specific columns from standard input separated by spaces. All columns can be specified with `0` and the last column with `NF`.
 
-`1.2.3`と指定すると、1列目の2文字目から3文字を切り出し
-切り出し文字数が対象文字数よりも多い場合は切り取れる範囲のみ切り出し。
-
+If you specify `1.2.3`, the second to third characters of the first column will be extracted. If the number of characters to be extracted is greater than the number of characters to be targeted, only the range that can be extracted will be extracted.
 
 - Usage
     - `man2 self`
@@ -1326,9 +1310,7 @@ Examples:
 
 [delf]: src/delf_function.ps1
 
-半角スペース区切りの標準入力から指定列のみ削除する
-最終列を`NF`で指定することもできる
-
+Deletes only the specified columns from the standard input, which is separated by spaces. You can also specify the last column with `NF`.
 
 - Usage
     - `man2 delf`
@@ -1386,22 +1368,18 @@ Examples:
 
 [sm2]: src/sm2_function.ps1
 
-半角スペース区切りの標準入力から指定列の合計を算出（サムアップ）する。
+Calculates the sum of specified columns from space-separated standard input.
 
-`sm2 <k1> <k2> <s1> <s2>`と指定することで、
-`<k1>`列から`<k2>`列をキーとして`<s1>`列から`<s2>`列までを合計する。
+By specifying `sm2 <k1> <k2> <s1> <s2>`, columns `<s1>` to `<s2>` are summed using columns `<k1>` to `<k2>` as keys.
 
-`sm2 0 0 <s1> <s2>`と指定すると全行サムアップ。
-ファイルのキーの事前ソートが必要。
-大文字小文字を区別しない。
-
+By specifying `sm2 0 0 <s1> <s2>`, all rows are summed. The file keys must be pre-sorted. Case insensitive.
 
 - Usage
     - `man2 sm2`
 - Params
     - `sm2 [+count] <k1> <k2> <s1> <s2>`
 - Options
-    - `+count`: Output the total number of rows in the leftmost column. 合計した行数を最左列に出力
+    - `+count`: Output the total number of rows in the leftmost column.
 - Examples
     - `"A 1 10","B 1 10","A 1 10","C 1 10" | sort | sm2 1 2 3 3`
         - **How to read** : Using the value obtained by concatenating from 1st to 2nd columns as a key, sum-up for each column values from 3rd to 3rd columns.
@@ -1529,9 +1507,7 @@ C 1 10
 
 [map2]: src/map2_function.ps1
 
-半角スペース区切りのロング型データをクロス集計する。入力データはヘッダなし、かつ、キーが事前に一意に集計されていること。
-
-Input data must be preprocessed to ensure unique keys and no header line.
+Cross-tabulate long data separated by spaces. The input data has no header and the keys have been uniquely calculated in advance. Input data must be preprocessed to ensure unique keys and no header line.
 
 - Usage
     - `man2 map2`
@@ -1543,7 +1519,7 @@ Input data must be preprocessed to ensure unique keys and no header line.
 
 Examples:
 
-値列が1列のみの場合。
+Case where there is only one value column:
 
 ```powershell
 # Input data example1:
@@ -1592,7 +1568,7 @@ location-B        4        5        6
 location-C        7        8        9
 ```
 
-値列が複数列の場合。
+Case where there are multiple value columns
 
 ```powershell
 # Input data example2:
@@ -1646,30 +1622,28 @@ loc-3   7       70      8       80      9       90
 
 [lcalc]: src/lcalc_function.ps1
 
-
-半角スペース区切りの標準入力における列同士の計算。
-
+Column-by-column calculations on space-separated standard input.
 
 - Usage
     - `man2 lcalc`
     - `lcalc [-d] 'expr; expr;...'`
 - Options
-    - `expr`はクオート内において`;`区切りで複数の計算式を指定可能
-    - `-d`: calculator mode. 電卓(`dentaku`)モード
+    - `expr` can specify multiple expressions separated by `;` within quotes.
+    - `-d`: calculator mode. (The origin of the name of the `-d` option: In Japanese, "dentaku" means "calculator")
 - Note
-    - 計算列の指定
-        - `$1,$2,...` : 列指定は`$`記号＋列数
-        - `$0`        : 全列指定
-        - `$NF`       : 最終列のみこのように書くことができる。ただし`$NF-1`とは書けない点に注意。
-    - 短縮形で使用できる関数
-        - 丸め       : `round($1,num)`
-        - 平方根     : `sqrt($1)`
-        - べき乗     : `pow($1,2)`
-        - 絶対値     : `abs($1)`
-        - 対数       : `log($1)`
-        - 対数base=2 : `log2($1)`
-        - 常用対数   : `log10($1)`
-        - パイ       : `PI`
+    - Specifying calculated columns
+        - `$1,$2,...`: Specify columns with the `$` symbol + number of columns
+        - `$0`: Specify all columns
+        - `$NF`: Only the last column can be written like this. Note that you cannot write `$NF-1`.
+    - Functions that can be used in abbreviated form
+        - Rounding: `round($1,num)`
+        - Square root: `sqrt($1)`
+        - Power: `pow($1,2)`
+        - Absolute value: `abs($1)`
+        - Logarithm: `log($1)`
+        - Logarithm base=2: `log2($1)`
+        - Common logarithm: `log10($1)`
+        - Pi: `PI`
 - Examples
     - `"8.3 70","8.6 65","8.8 63" | lcalc '$1+1;$2/10'`
     - `lcalc -d '1+1'`
@@ -1728,7 +1702,7 @@ lcalc -d 'pi'
 ```
 
 ```powershell
-# 短縮形で使用できる関数以外の関数も使用できる
+# Functions other than those available in the shorthand form can also be used
 lcalc -d '[math]::Ceiling(1.1)'
 ```
 
@@ -1951,7 +1925,7 @@ C 1 10
 
 [pawk]: src/pawk_function.ps1
 
-半角スペース区切りの標準入力に対する行指向のパターンマッチングプロセッサ。
+A line-oriented pattern-matching processor for space-separated standard input.
 
 ```powershell
 pawk [-fs "delim"] [-Pattern { condition }] -Action { action }
@@ -11540,7 +11514,7 @@ clip2file
 
 in `~/cms/drafts`
 
-```POWERSHELL
+```powershell
 clip2file | push2loc
 ```
 
@@ -11705,7 +11679,7 @@ The `Unzip-Archive` (this) expands zip files to that's the same name as the zip 
 Syntax:
 
 - Usage
-    - `man clip2file`
+    - `man clip2unzip`
 - Procedure
     1. Copy Zip files to the clipboard
     2. run `clip2unzip [-f|-Force]`
@@ -12539,7 +12513,7 @@ GNU make用のMakefileとの互換性は、シンプルな書き方をすれば�
         - ファイルは絶対パス指定でない場合はカレントディレクトリからの相対パスで探す
         - 実行コマンドにPowerShellコマンドを使用できる
             - カレントプロセスのPowerShellにドットソースで読み込んだ関数も、Makefileに記述して走らせることができる
-    - コマンドラインの行頭に@をつけると出力にコマンドラインをechoしない
+    - コマンドラインの行頭に`@`をつけると出力にコマンドラインをechoしない
     - 宣言した変数を用いるときは`${ver}`とする
         - `$(ver)`を用いてもよいがPowerShellの`Subexpression演算子`とみなされ展開される点に注意する
     - ただし変数に代入する値には$(shell command)としてもよい。たとえば：
