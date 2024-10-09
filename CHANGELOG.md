@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Added [Execute-TinyTeX] Specify the repository URL
 - Added [Unzip-Archive] compare hash
 - Changed [Invoke-Link] parse text file only to .txt, .md and files without extensions
 - Changed [Invoke-Link] made tag symbols case insensitive

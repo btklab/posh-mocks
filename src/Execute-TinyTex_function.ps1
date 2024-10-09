@@ -4,6 +4,17 @@
 
     Compiler for .tex file using tinytex.
 
+        # install tinytex
+        Rscript --vanilla --slave -e 'install.packages("tinytex", dependencies=T, repos="https://cran.r-project.org/");'
+        Rscript --vanilla --slave -e 'library(tinytex); tinytex::install_tinytex();'
+
+        # install japanese libraries
+        Rscript --vanilla --slave -e 'library(tinytex); tinytex::tlmgr_install(c("bxjscls", "luatexja", "haranoaji", "jlreq"));'
+        Rscript --vanilla --slave -e 'library(tinytex); tinytex::tlmgr_install(c("pgf", "preview", "xcolor"));'
+        Rscript --vanilla --slave -e 'library(tinytex); tinytex::tlmgr_path("add");'
+        Rscript --vanilla --slave -e 'library(tinytex); tinytex::tlmgr_update();'
+
+
 .PARAMETER ReInstall
     If you see an error message "Remote repository newer than local",
     it means it is time for you to upgrade (reinstall) TinyTeX manually
@@ -133,57 +144,57 @@ function Execute-TinyTeX {
     # set rscript command
     [String[]] $cmd = @()
     if ( $InstallTinyTeX ){
-        [String[]] $cmd += @("-e", "install.packages('tinytex');")
-        [String[]] $cmd += @("-e", "tinytex::install_tinytex();")
+        [String[]] $cmd += @("-e", """install.packages('tinytex', dependencies=T, repos='https://cran.r-project.org/');""")
+        [String[]] $cmd += @("-e", """library(tinytex); tinytex::install_tinytex();""")
     } elseif ( $UnInstallTinyTeX ){
-        [String[]] $cmd += @("-e", "library(tinytex);")
-        [String[]] $cmd += @("-e", "tinytex::uninstall_tinytex();")
+        [String[]] $cmd += @("-e", """library(tinytex);""")
+        [String[]] $cmd += @("-e", """tinytex::uninstall_tinytex();""")
     } elseif ( $UpdateTinyTeX ){
-        [String[]] $cmd += @("-e", "install.packages('tinytex');")
+        [String[]] $cmd += @("-e", """install.packages('tinytex', dependencies=T, force=T, repos='https://cran.r-project.org/');""")
     } elseif ( $ReInstallTinyTeX ){
-        [String[]] $cmd += @("-e", "library(tinytex);")
-        [String[]] $cmd += @("-e", "tinytex::reinstall_tinytex();")
+        [String[]] $cmd += @("-e", """library(tinytex);""")
+        [String[]] $cmd += @("-e", """tinytex::reinstall_tinytex();""")
     } elseif ( $SearchPackage ){
         # equivalent to:
         # tlmgr search --global --file "/times.sty"
-        [String[]] $cmd += @("-e", "library(tinytex);")
-        [String[]] $cmd += @("-e", "tinytex::tlmgr_search('$SearchPackage');")
+        [String[]] $cmd += @("-e", """library(tinytex);""")
+        [String[]] $cmd += @("-e", """tinytex::tlmgr_search(""$SearchPackage"");""")
     } elseif ( $InstallPackage ){
         # equivalent to:
         #  tlmgr install psnfss
         # if the package contains executables (e.g., dvisvgm), run
         #  tlmgr path add 
-        [String[]] $cmd += @("-e", "library(tinytex);")
-        [String[]] $cmd += @("-e", "tinytex::tlmgr_install('$InstallPackage');")
-        [String[]] $cmd += @("-e", "tinytex::tlmgr_path('add');")
-        [String[]] $cmd += @("-e", "tinytex::tlmgr_update();")
+        [String[]] $cmd += @("-e", """library(tinytex);""")
+        [String[]] $cmd += @("-e", """tinytex::tlmgr_install('$InstallPackage');""")
+        [String[]] $cmd += @("-e", """tinytex::tlmgr_path('add');""")
+        [String[]] $cmd += @("-e", """tinytex::tlmgr_update();""")
     } elseif ( $InstallJaPackages ){
         # equivalent to:
-        [String[]] $cmd += @("-e", "library(tinytex);")
+        [String[]] $cmd += @("-e", """library(tinytex);""")
         #[String[]] $cmd += @("-e", """tinytex::tlmgr_install(c('bxjscls', 'luatexja', 'zxjatype', 'zxjafont', 'haranoaji', 'jlreq'));""")
         [String[]] $cmd += @("-e", """tinytex::tlmgr_install(c('bxjscls', 'luatexja', 'haranoaji', 'jlreq'));""")
         [String[]] $cmd += @("-e", """tinytex::tlmgr_install(c('pgf', 'preview', 'xcolor'));""")
-        [String[]] $cmd += @("-e", "tinytex::tlmgr_path('add');")
-        [String[]] $cmd += @("-e", "tinytex::tlmgr_update();")
+        [String[]] $cmd += @("-e", """tinytex::tlmgr_path('add');""")
+        [String[]] $cmd += @("-e", """tinytex::tlmgr_update();""")
     } elseif ( $AddPackage ){
         # equivalent to:
         #  tlmgr path add
-        [String[]] $cmd += @("-e", "library(tinytex);")
-        [String[]] $cmd += @("-e", "tinytex::tlmgr_path('add');")
+        [String[]] $cmd += @("-e", """library(tinytex);""")
+        [String[]] $cmd += @("-e", """tinytex::tlmgr_path('add');""")
     } elseif ( $RemovePackage ){
         # equivalent to:
         #  tlmgr path add
-        [String[]] $cmd += @("-e", "library(tinytex);")
-        [String[]] $cmd += @("-e", "tinytex::tlmgr_remove('$RemovePackage');")
-        #[String[]] $cmd += @("-e", "tinytex::tlmgr_path('add');")
-        #[String[]] $cmd += @("-e", "tinytex::tlmgr_update();")
+        [String[]] $cmd += @("-e", """library(tinytex);""")
+        [String[]] $cmd += @("-e", """tinytex::tlmgr_remove('$RemovePackage');""")
+        #[String[]] $cmd += @("-e", """tinytex::tlmgr_path('add');""")
+        #[String[]] $cmd += @("-e", """tinytex::tlmgr_update();""")
     } elseif ( $UpdatePackage ){
         # equivalent to:
         #  tlmgr update --self --all
         #  tlmgr path add
         #  fmtutil-sys --all
-        [String[]] $cmd += @("-e", "library(tinytex);")
-        [String[]] $cmd += @("-e", "tinytex::tlmgr_update();")
+        [String[]] $cmd += @("-e", """library(tinytex);""")
+        [String[]] $cmd += @("-e", """tinytex::tlmgr_update();""")
     } else {
         # set script
         if ( $File ){
@@ -191,20 +202,20 @@ function Execute-TinyTeX {
             if ( $IsWindows ){
                 [String] $texFilePath = $texFilePath.Replace('\','/')
             }
-            [String[]] $cmd += @("-e", "library(tinytex);")
+            [String[]] $cmd += @("-e", """library(tinytex);""")
             if ( $pdflatex ){
-                [String[]] $cmd += @("-e", "tinytex::pdflatex('$texFilePath');")
+                [String[]] $cmd += @("-e", """tinytex::pdflatex('$texFilePath');""")
             } elseif ( $xelatex ){
-                [String[]] $cmd += @("-e", "tinytex::xelatex('$texFilePath');")
+                [String[]] $cmd += @("-e", """tinytex::xelatex('$texFilePath');""")
             } elseif ( $lualatex ){
-                [String[]] $cmd += @("-e", "tinytex::lualatex('$texFilePath');")
+                [String[]] $cmd += @("-e", """tinytex::lualatex('$texFilePath');""")
             } else {
-                [String[]] $cmd += @("-e", "tinytex::lualatex('$texFilePath');")
+                [String[]] $cmd += @("-e", """tinytex::lualatex('$texFilePath');""")
             }
         } elseif ( $Script ){
-            [String[]] $cmd += @("-e", $Script)
+            [String[]] $cmd += @("-e", """$Script""")
         } else {
-            [String[]] $cmd += @("-e", 'getwd();')
+            [String[]] $cmd += @("-e", """getwd();""")
         }
     }
     # set argument list
@@ -232,7 +243,8 @@ function Execute-TinyTeX {
         $splatting.Set_Item("Wait", $True)
     }
     try {
-        Write-Host -Message $writeCmd -ForegroundColor "Yellow"
+        #Write-Host -Message $writeCmd -ForegroundColor "Yellow"
+        Write-Host -Message "$cmdRscript $ArgumentList" -ForegroundColor "Yellow"
         Start-Process @splatting
     } catch {
         Write-Error $Error[0] -ErrorAction Stop
