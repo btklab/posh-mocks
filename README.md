@@ -2739,13 +2739,12 @@ adcbe
 
 [retu]: src/retu_function.ps1
 
-半角スペース区切り入力の列数を出力。
+Output the number of columns of space-separated input.
 
-- 同じ列数の場合は、重複を削除して列数を出力
-- 列数が変化するごとに列数を出力する
-- 空行はゼロを出力
+- Outputs the numbers of columns each time the number of columns changes
+- Outputs zero for empty rows
 
-すべての行の列数が同じか否かを検知するタスクなどで使う。
+Used to verify whether the number of columns of data is the same or not.
 
 - Usage
     - `man2 retu`
