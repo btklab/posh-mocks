@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Added [Add-ID] function
 - Added [Execute-TinyTeX] Specify the repository URL
 - Added [Unzip-Archive] compare hash
 - Changed [Invoke-Link] parse text file only to .txt, .md and files without extensions
@@ -760,6 +761,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Invoke-Link]: src/Invoke-Link_function.ps1
 
+[Add-ID]: src/Add-ID_function.ps1
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/7.2.4..HEAD
 [7.2.4]: https://github.com/btklab/posh-mocks/releases/tag/7.2.4
