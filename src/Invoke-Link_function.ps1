@@ -229,6 +229,12 @@ function Invoke-Link {
         [int] $LimitErrorCount = 5,
         
         [Parameter( Mandatory=$False )]
+        [string] $Grep,
+        
+        [Parameter( Mandatory=$False )]
+        [switch] $NotMatch,
+        
+        [Parameter( Mandatory=$False )]
         [Alias('d')]
         [switch] $DryRun,
         
@@ -459,6 +465,7 @@ function Invoke-Link {
                                 [String] $tagStr += ", "
                                 [String] $tagStr += $tagAry -join ", "
                             }
+                            [String] $tagStr += ","
                             $hash = [ordered] @{
                                 Id   = $fileCounter
                                 Tag  = $tagStr
@@ -554,6 +561,21 @@ function Invoke-Link {
                     if ( isCommentOrEmptyLine $linkLine ){
                         # pass
                     } else {
+                        if ( $Grep ){
+                            if ( $NotMatch ){
+                                if ( $linkLine -notmatch $Grep ){
+                                    #pass
+                                } else {
+                                    return
+                                }
+                            } else {
+                                if ( $linkLine -match $Grep ){
+                                    #pass
+                                } else {
+                                    return
+                                }
+                            }
+                        }
                         # trim and drop quotes
                         $linkLine = $linkLine.Trim()
                         $linkLine = $linkLine -replace '^"',''
@@ -640,7 +662,7 @@ function Invoke-Link {
                         return
                     }
                 }
-                Write-Output $com
+                #Write-Output $com
             } else {
                 if ( $BackGround ){
                     $executeCom = {
