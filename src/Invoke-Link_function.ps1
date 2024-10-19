@@ -465,6 +465,7 @@ function Invoke-Link {
                                 [String] $tagStr += ", "
                                 [String] $tagStr += $tagAry -join ", "
                             }
+                            [String] $tagStr += ","
                             $hash = [ordered] @{
                                 Id   = $fileCounter
                                 Tag  = $tagStr
