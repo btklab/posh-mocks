@@ -232,6 +232,7 @@ function Invoke-Link {
         [string] $Grep,
         
         [Parameter( Mandatory=$False )]
+        [Alias('v')]
         [switch] $NotMatch,
         
         [Parameter( Mandatory=$False )]
