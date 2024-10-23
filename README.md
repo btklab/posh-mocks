@@ -10744,7 +10744,7 @@ bumon-C tank    17:46 2017/05/10        fuga    fuga
 
 #### [Join-Line2] (Alias: jl2) - Concatenates lines until a specified string is found.<a id="Join-Line2"></a>
 
-[jl2]: src/Join-Line2_function.ps1
+[Join-Line2]: src/Join-Line2_function.ps1
 
 Concatenates lines until a specified string is found.
 
