@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [7.3.0] - 2024-10-24
+
+- Added [Join-Line2] (Alias: jl2) function
+- Added [jl] indentation to examples
 - Added [Add-ID] function
 - Added [Execute-TinyTeX] Specify the repository URL
 - Added [Unzip-Archive] compare hash
@@ -764,7 +770,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Add-ID]: src/Add-ID_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/7.2.4..HEAD
+[Add-ID]: src/Join-Line2_function.ps1
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/7.3.0..HEAD
+[7.3.0]: https://github.com/btklab/posh-mocks/releases/tag/7.3.0
 [7.2.4]: https://github.com/btklab/posh-mocks/releases/tag/7.2.4
 [7.2.3]: https://github.com/btklab/posh-mocks/releases/tag/7.2.3
 [7.2.2]: https://github.com/btklab/posh-mocks/releases/tag/7.2.2
