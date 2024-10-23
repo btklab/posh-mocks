@@ -129,6 +129,7 @@ if ($IsWindows){
 . $pwshSrcDir/math2tex_function.ps1
 . $pwshSrcDir/tex2pdf_function.ps1
 . $pwshSrcDir/jl_function.ps1
+. $pwshSrcDir/Join-Line2_function.ps1
 . $pwshSrcDir/kinsoku_function.ps1
 . $pwshSrcDir/filehame_function.ps1
 . $pwshSrcDir/table2md_function.ps1
