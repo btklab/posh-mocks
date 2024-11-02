@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Added [Auto-Clip] (Alias: aclip) function
 - Added [Tee-Clip] (Alias: tclip) function
 
 ## [7.3.0] - 2024-10-24
@@ -773,6 +774,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Join-Line2]: src/Join-Line2_function.ps1
 
 [Tee-Clip]: src/Tee-Clip_function.ps1
+[Auto-Clip]: src/Auto-Clip_function.ps1
 
 [unreleased]: https://github.com/btklab/posh-mocks/compare/7.3.0..HEAD
 [7.3.0]: https://github.com/btklab/posh-mocks/releases/tag/7.3.0

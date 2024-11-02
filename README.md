@@ -39,7 +39,7 @@ cat README.md `
     | Set-Clipboard
 ```
 
-- [Add-ID][], [Add-LineBreakEndOfFile][], [Add-LineBreak][], [Add-Quartile][], [Add-Stats][], [Apply-Function][], [Cast-Date][], [Cast-Decimal][], [Cast-Double][], [Cast-Integer][], [ClipImageFrom-File][], [ConvImage][], [Decrease-Indent][], [Delete-Field][], [Detect-XrsAnomaly][], [Drop-NA][], [Edit-Function][], [Edit-Property][], [Execute-RMarkdown][], [Execute-TinyTeX][], [Get-AppShortcut][], [Get-ClipboardAlternative][], [Get-DateAlternative][], [Get-Histogram][], [Get-OGP][], [Get-Ticket][], [GetValueFrom-Key][], [Grep-Block][], [GroupBy-Object][], [Inkscape-Converter][], [Invoke-Link][], [Join-Line2][], [Join2-Object][], [Measure-Quartile][], [Measure-Stats][], [Measure-Summary][], [Override-Yaml][], [Plot-BarChart][], [Rename-Normalize][], [Replace-ForEach][], [Replace-NA][], [Select-Field][], [Set-NowTime2Clipboard][], [Shorten-PropertyName][], [Shutdown-ComputerAFM][], [Sleep-ComputerAFM][], [Sort-Block][], [Tee-Clip][], [Test-isAsciiLine][], [Transpose-Property][], [Trim-EmptyLine][], [Unique-Object][], [Unzip-Archive][], [addb][], [addl][], [addr][], [addt][], [cat2][], [catcsv][], [chead][], [clip2file][], [clip2hyperlink][], [clip2img][], [clip2normalize][], [clip2push][], [clip2shortcut][], [conv][], [count][], [csv2sqlite][], [csv2txt][], [ctail][], [decil][], [delf][], [dot2gviz][], [filehame][], [fillretu][], [flat][], [flow2pu][], [fpath][], [fval][], [fwatch][], [gantt2pu][], [getfirst][], [getlast][], [grep][], [gyo][], [han][], [head][], [image2md][], [jl][], [json2txt][], [juni][], [keta][], [kinsoku][], [lastyear][], [lcalc2][], [lcalc][], [linkcheck][], [linkextract][], [list2table][], [logi2dot][], [logi2pu][], [man2][], [map2][], [math2tex][], [mdfocus][], [mdgrep][], [mind2dot][], [mind2pu][], [movw][], [nextyear][], [pawk][], [percentile][], [pu2java][], [push2loc][], [pwmake][], [pwsync][], [retu][], [rev2][], [rev][], [say][], [sed-i][], [sed][], [self][], [seq2pu][], [sleepy][], [sm2][], [summary][], [table2md][], [tac][], [tail-f][], [tail][], [tarr][], [tateyoko][], [teatimer][], [tenki][], [tex2pdf][], [thisyear][], [toml2psobject][], [uniq][], [vbStrConv][], [watercss][], [wrap][], [yarr][], [ycalc][], [ysort][], [zen][]
+- [Add-ID][], [Add-LineBreakEndOfFile][], [Add-LineBreak][], [Add-Quartile][], [Add-Stats][], [Apply-Function][], [Auto-Clip][], [Cast-Date][], [Cast-Decimal][], [Cast-Double][], [Cast-Integer][], [ClipImageFrom-File][], [ConvImage][], [Decrease-Indent][], [Delete-Field][], [Detect-XrsAnomaly][], [Drop-NA][], [Edit-Function][], [Edit-Property][], [Execute-RMarkdown][], [Execute-TinyTeX][], [Get-AppShortcut][], [Get-ClipboardAlternative][], [Get-DateAlternative][], [Get-Histogram][], [Get-OGP][], [Get-Ticket][], [GetValueFrom-Key][], [Grep-Block][], [GroupBy-Object][], [Inkscape-Converter][], [Invoke-Link][], [Join-Line2][], [Join2-Object][], [Measure-Quartile][], [Measure-Stats][], [Measure-Summary][], [Override-Yaml][], [Plot-BarChart][], [Rename-Normalize][], [Replace-ForEach][], [Replace-NA][], [Select-Field][], [Set-NowTime2Clipboard][], [Shorten-PropertyName][], [Shutdown-ComputerAFM][], [Sleep-ComputerAFM][], [Sort-Block][], [Tee-Clip][], [Test-isAsciiLine][], [Transpose-Property][], [Trim-EmptyLine][], [Unique-Object][], [Unzip-Archive][], [addb][], [addl][], [addr][], [addt][], [cat2][], [catcsv][], [chead][], [clip2file][], [clip2hyperlink][], [clip2img][], [clip2normalize][], [clip2push][], [clip2shortcut][], [conv][], [count][], [csv2sqlite][], [csv2txt][], [ctail][], [decil][], [delf][], [dot2gviz][], [filehame][], [fillretu][], [flat][], [flow2pu][], [fpath][], [fval][], [fwatch][], [gantt2pu][], [getfirst][], [getlast][], [grep][], [gyo][], [han][], [head][], [image2md][], [jl][], [json2txt][], [juni][], [keta][], [kinsoku][], [lastyear][], [lcalc2][], [lcalc][], [linkcheck][], [linkextract][], [list2table][], [logi2dot][], [logi2pu][], [man2][], [map2][], [math2tex][], [mdfocus][], [mdgrep][], [mind2dot][], [mind2pu][], [movw][], [nextyear][], [pawk][], [percentile][], [pu2java][], [push2loc][], [pwmake][], [pwsync][], [retu][], [rev2][], [rev][], [say][], [sed-i][], [sed][], [self][], [seq2pu][], [sleepy][], [sm2][], [summary][], [table2md][], [tac][], [tail-f][], [tail][], [tarr][], [tateyoko][], [teatimer][], [tenki][], [tex2pdf][], [thisyear][], [toml2psobject][], [uniq][], [vbStrConv][], [watercss][], [wrap][], [yarr][], [ycalc][], [ysort][], [zen][]
 
 **General**: This repository contains a set of filter commands for pattern matching on amorphous strings. The filter commands expect `UTF-8` + `space-delimited` + `line-oriented string data` (text object) through the pipeline as input. The output is also a string, not a typical PowerShell object. Some functions accept Object-input through pipeline, and some functions are "like PowerShell cmdlets" that output object. The design of the filters is similar to Unix/Linux shells such as Bash.
 
@@ -12649,6 +12649,115 @@ echo "hoge" | Tee-Clip
 hoge
 ```
 
+#### [Auto-Clip] (Alias: aclip) - Get from clipboard and Set clipboard from pipeline.<a id="Auto-Clip"></a>
+
+[Auto-Clip]: src/Auto-Clip_function.ps1
+
+    Automatically distinguishes between `Get-Clipboard` and `Set-Clipboard` depending on the situation. If detects pipeline input, it runs as `Set-Clipboard`, otherwise it runs `Get-Clipboard`.
+
+- Usage
+    - `man Auto-Clip`
+    - `man aclip`
+
+Example
+
+```powershell
+# Set clipboard
+echo "hoge" | aclip
+    hoge
+
+# Get clioboard
+acilp
+    hoge
+
+# Get and Replace and Set clipboard
+aclip | %{ $_ -replace "hoge", "fuga" } | aclip
+    fuga
+```
+
+```powershell
+# Get clipped files
+("copy files to clipboard")
+
+# Output as file object
+aclip
+
+    Directory: path/to/the/dir
+
+    Mode     LastWriteTime Length Name
+    ----     ------------- ------ ----
+    -a--- 2023/09/03 13:40   3525 Get-CMLog_function.ps1
+    -a--- 2024/01/14  9:11  19917 Get-DateAlternative_function.ps1
+
+
+# Output as plain text path
+aclip -AsPlainText
+
+    path/to/the/dir/Get-CMLog_function.ps1
+    path/to/the/dir/Get-DateAlternative_function.ps1
+```
+
+```powershell
+# Get uri
+aclip -AsPlainText
+
+    https://github.com/
+
+# Default output
+aclip
+
+    AbsolutePath   : /
+    AbsoluteUri    : https://github.com/
+    LocalPath      : /
+    Authority      : github.com
+    HostNameType   : Dns
+    IsDefaultPort  : True
+    IsFile         : False
+    IsLoopback     : False
+    PathAndQuery   : /
+    Segments       : {/}
+    IsUnc          : False
+    Host           : github.com
+    Port           : 443
+    Query          :
+    Fragment       :
+    Scheme         : https
+    OriginalString : https://github.com/
+    DnsSafeHost    : github.com
+    IdnHost        : github.com
+    IsAbsoluteUri  : True
+    UserEscaped    : False
+    UserInfo       :
+```
+
+```powershell
+# Get clipped image (e.g. screen shot)
+aclip
+
+    Tag                  :
+    PhysicalDimension    : {Width=1273, Height=935}
+    Size                 : {Width=1273, Height=935}
+    Width                : 1273
+    Height               : 935
+    HorizontalResolution : 96
+    VerticalResolution   : 96
+    Flags                : 335888
+    RawFormat            : MemoryBMP
+    PixelFormat          : Format32bppRgb
+    PropertyIdList       : {}
+    PropertyItems        : {}
+    Palette              : System.Drawing.Imaging.ColorPalette
+    FrameDimensionsList  : {7462dc86-6180-4c7e-8e3f-ee7333a7a483}
+
+# Get clipped image and Output to file
+    aclip -ImagePath a
+
+        Directory: path/to/the/dir
+
+    Mode      LastWriteTime  Length Name
+    ----      -------------  ------ ----
+    -a---  2024/11/02  6:31  116412 a.png
+```
 
 ### Miscellaneous
 

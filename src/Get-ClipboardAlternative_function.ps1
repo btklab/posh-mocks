@@ -168,7 +168,7 @@ function Get-ClipboardAlternative {
         [Parameter( Mandatory=$False )]
         [Alias('t')]
         [Switch] $AsPlainText,
-                
+        
         [Parameter( Mandatory=$False )]
         [String] $ImagePath,
         
@@ -318,7 +318,7 @@ function Get-ClipboardAlternative {
                             Invoke-Item $saveFilePath
                         } elseif ($MSPaint){
                             if ($IsWindows){
-                                Start-Process -FilePath "${HOME}\AppData\Local\Microsoft\WindowsApps\mspaint.exe" -ArgumentList "$saveFilePath"
+                                Start-Process -FilePath "${HOME}\AppData\Local\Microsoft\WindowsApps\mspaint.exe" -ArgumentList """$saveFilePath"""
                             } else {
                                 Invoke-Item "$saveFilePath"
                             }
