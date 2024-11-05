@@ -3927,6 +3927,75 @@ cat keyval-dict.txt | getvalkey hog -Get 0,1
 hog val hoge
 ```
 
+#### [PullOut-String] (Alias: pullstr) - - Pull out strings from a line.<a id="PullOut-String"></a>
+
+[PullOut-String]: src/PullOut-String_function.ps1
+
+Returns an array of two elements, the first element being the extracted strings, the second element being the remaining line. Left shortest match.
+
+Usage:
+
+
+- Usage
+    - `man puulstr`
+    - `man PullOut-String`
+    - `$w, $l = $line | pullstr '<regex>'`
+
+Example
+
+```powershell
+# set line
+$line = "2024-10-23___cat1_cat2_cat3_hoge_fuga.txt"
+```
+
+```powershell
+$line
+2024-10-23___cat1_cat2_cat3_hoge_fuga.txt
+```
+
+```powershell
+# extract date
+$w, $l = $line | pullstr '[0-9]{4}\-[0-9]{2}\-[0-9]{2}'
+```
+
+```powershell
+$w, $l
+2024-10-23
+___cat1_cat2_cat3_hoge_fuga.txt
+```
+
+```powershell
+# extract category
+$w, $l = $l | pullstr '___[^_]+_[^_]+_[^_]+' -d '^___'
+```
+
+```powersehll
+$w, $l
+cat1_cat2_cat3
+_hoge_fuga.txt
+```
+
+Example
+
+```powershell
+# set line
+$line = "https://powershell/module/about_split"
+```
+
+```powershell
+# extract "module" strings
+$w, $l = $line | PullOut-String 'module'
+```
+
+```powershell
+# output
+$line, $l, $w
+https://powershell/module/about_split
+https://powershell//about_split
+module
+```
+
+
 ### Statistics
 
 #### [percentile] - Ranking with percentile and quartile <a id="percentile"></a>
@@ -12649,11 +12718,11 @@ echo "hoge" | Tee-Clip
 hoge
 ```
 
-#### [Auto-Clip] (Alias: aclip) - Get from clipboard and Set clipboard from pipeline.<a id="Auto-Clip"></a>
+#### [Auto-Clip] (Alias: aclip) - Get from clipboard and Set to clipboard from pipeline.<a id="Auto-Clip"></a>
 
 [Auto-Clip]: src/Auto-Clip_function.ps1
 
-    Automatically distinguishes between `Get-Clipboard` and `Set-Clipboard` depending on the situation. If detects pipeline input, it runs as `Set-Clipboard`, otherwise it runs `Get-Clipboard`.
+Automatically distinguishes between `Get-Clipboard` and `Set-Clipboard` depending on the situation. If detects pipeline input, it runs as `Set-Clipboard`, otherwise it runs `Get-Clipboard`.
 
 - Usage
     - `man Auto-Clip`
