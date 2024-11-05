@@ -98,6 +98,8 @@ if ($IsWindows){
 . $pwshSrcDir/conv_function.ps1
 . $pwshSrcDir/wrap_function.ps1
 
+. $pwshSrcDir/PullOut-String_function.ps1
+
 ### gdate includes thisyear, nextyear, lastyear
 . $pwshSrcDir/Get-DateAlternative_function.ps1
 
