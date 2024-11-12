@@ -43,6 +43,8 @@ if ($IsWindows){
     . $pwshSrcDir/teatimer_function.ps1
     . $pwshSrcDir/Sleep-ComputerAFM_function.ps1
     . $pwshSrcDir/Shutdown-ComputerAFM_function.ps1
+
+    . $pwshSrcDir/Set-DotEnv_function.ps1
 }
 
 ## get/edit funcs
