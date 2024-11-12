@@ -88,6 +88,9 @@ function PullOut-String {
         [Alias('c')]
         [Switch] $Casesensitive
         ,
+        [Parameter( Mandatory=$False )]
+        [Switch] $RightMostMatch
+        ,
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
         [object[]] $InputText
     )
@@ -116,9 +119,17 @@ function PullOut-String {
         } elseif ( $Split -match '\$$' ){
             [String] $reg = '^.*?(' + $($Split -replace '.$', '') + ')$'
         } elseif ( $Split.Count -eq 1 ){
-            [String] $reg = '^.*?(' + $Split + ').*$'
+            if ( $RightMostMatch ){
+                [String] $reg = '^.*(' + $Split + ').*?$'
+            } else {
+                [String] $reg = '^.*?(' + $Split + ').*$'
+            }
         } else {
-            [String] $reg = '^.*?(' + $Split + ').*$'
+            if ( $RightMostMatch ){
+                [String] $reg = '^.*(' + $Split + ').*?$'
+            } else {
+                [String] $reg = '^.*?(' + $Split + ').*$'
+            }
         }
         Write-Debug "reg = $reg"
 

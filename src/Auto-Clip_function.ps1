@@ -132,6 +132,7 @@ function Auto-Clip {
         [String] $ImagePath
         ,
         [Parameter( Mandatory=$False )]
+        [Alias('Screenshot')]
         [Switch] $MSPaint
         ,
         [Parameter( Mandatory=$False )]

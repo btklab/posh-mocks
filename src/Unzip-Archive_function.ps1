@@ -98,6 +98,12 @@ function Unzip-Archive {
         [Switch] $SkipDownload
         ,
         [Parameter( Mandatory=$False )]
+        [Switch] $OnlyDownload
+        ,
+        [Parameter( Mandatory=$False )]
+        [Switch] $SkipTest
+        ,
+        [Parameter( Mandatory=$False )]
         [String] $Algorithm = 'SHA256'
         ,
         [Parameter( Mandatory=$False )]
@@ -213,7 +219,9 @@ function Unzip-Archive {
         [String] $outDir  = Split-Path -Parent (Resolve-Path -LiteralPath $item).Path
         [String] $outName = (Get-Item -LiteralPath $item).BaseName
         [String] $outExt = (Get-Item -LiteralPath $item).Extension
-        if ( $outExt -notmatch '\.zip$'){
+        if ( $SkipTest ){
+            #pass
+        } elseif ( $outExt -notmatch '\.zip$'){
             Write-Error "A file other than "".zip"" was specified:`n$(Resolve-Path -LiteralPath $item -Relative)" -ErrorAction Stop
         }
         if ( $Path ){
@@ -232,7 +240,9 @@ function Unzip-Archive {
         }
         # expand zip
         [String] $destPath = $outPath
-        if ($True) {
+        if ( $OnlyDownload ){
+            #pass
+        } else {
             # zip
             Expand-Archive `
                 -LiteralPath $item `
