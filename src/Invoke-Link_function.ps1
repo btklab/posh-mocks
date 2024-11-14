@@ -411,9 +411,6 @@ function Invoke-Link {
                 # return file paths
                 #Invoke-Item -LiteralPath $File
                 Get-ChildItem -LiteralPath $File -Recurse:$Recurse -File `
-                    | Sort-Object {
-                        -join ( [int[]] ($_.FullName.ToCharArray()) | ForEach-Object { [System.Convert]::ToString($_, 16)})
-                    } `
                     | ForEach-Object {
                         $fileCounter++
                         if ( $InvokeById.Count -gt 0){
@@ -604,7 +601,7 @@ function Invoke-Link {
                         }
                         Write-Output $linkLine
                     }
-                } | Sort-Object -Unique
+                }
             if ( $Edit ){
                 continue
             }
