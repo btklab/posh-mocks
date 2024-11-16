@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Added: [Get-OGP] `-Dokuwiki` switch
 - Changed [Invoke-Link] Do not sort urls
 - Added [Set-DotEnv] (Alias: pwenv) function
 - Added [PullOut-String] (Alias: pullstr) function
