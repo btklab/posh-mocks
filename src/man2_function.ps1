@@ -10,6 +10,7 @@
         -l: List commands in a column
         -p: Out-Host -Paging
         -r: Sort by recent updates
+        -o: Output as file objects
 
     Dependency:
         flat, tateyoko, keta
@@ -120,6 +121,25 @@
     wrap                  yarr                 ycalc                ysort
     zen
 
+.EXAMPLE
+    # output as object
+    man2 -Object -Recent | tail
+    man2 -o -r | tail
+
+        Directory: /path/to/the/pwsh/src
+
+        Mode        LastWriteTime Length Name
+        ----        ------------- ------ ----
+        -a--- 2024/10/31    14:33   2630 Tee-Clip_function.ps1
+        -a--- 2024/11/02     6:47  18290 Get-ClipboardAlternative_function.ps1
+        -a--- 2024/11/07    22:17  13322 Auto-Clip_function.ps1
+        -a--- 2024/11/11    23:36  11830 Unzip-Archive_function.ps1
+        -a--- 2024/11/13     6:52   6651 Set-DotEnv_function.ps1
+        -a--- 2024/11/14    23:13  29466 Invoke-Link_function.ps1
+        -a--- 2024/11/16    14:05  26740 Get-OGP_function.ps1
+        -a--- 2024/11/16    15:42   8058 PullOut-String_function.ps1
+        -a--- 2024/11/16    15:42   3811 Extract-Substring_function.ps1
+        -a--- 2024/11/17    11:00  12265 man2_function.ps1
 #>
 function man2 {
 
@@ -147,6 +167,10 @@ function man2 {
         [Parameter(Mandatory=$False)]
         [Alias('d')]
         [switch]$Descending,
+
+        [Parameter(Mandatory=$False)]
+        [Alias('o')]
+        [switch]$Object,
 
         [Parameter(Mandatory=$False)]
         [Alias('i')]
@@ -235,39 +259,31 @@ function man2 {
         Property = $sortScript
         Descending = $Descending
     }
+    [object[]] $fileListObjects = Get-ChildItem -Path $targetDir -File `
+        | Sort-Object @splattingSort `
+        | Where-Object {
+            if (($Exclude) -and ($Include)) {
+                $_.Name -match $Include -and $_.Name -notmatch $Exclude
+            }elseif ($Exclude) {
+                $_.Name -notmatch $Exclude
+            }elseif ($Include) {
+                $_.Name -match $Include
+            }else{
+                $_.Name -match "."
+            }
+        }
+    if ( $Object ){
+        # output as file object
+        $fileListObjects
+        return
+    }
     if ($isPwshDir) {
-        # pwsh dir
-        $fileList = Get-ChildItem -Path $targetDir -File `
-            | Sort-Object @splattingSort `
+        [string[]] $fileList = $fileListObjects `
             | Where-Object { $_.Name -match '_function\.ps1$' } `
             | Select-Object @{ label="Name"; expression={ $_.Name.Replace('_function.ps1','') } } `
-            | Where-Object {
-                if (($Exclude) -and ($Include)) {
-                    $_.Name -match $Include -and $_.Name -notmatch $Exclude
-                }elseif ($Exclude) {
-                    $_.Name -notmatch $Exclude
-                }elseif ($Include) {
-                    $_.Name -match $Include
-                }else{
-                    $_.Name -match "."
-                }
-            } `
             | Select-Object -ExpandProperty Name
     } else {
-        # not pwsh dir
-        $fileList = Get-ChildItem -Path $targetDir -File  `
-            | Sort-Object @splattingSort `
-            | Where-Object {
-                if (($Exclude) -and ($Include)) {
-                    $_.Name -match $Include -and $_.Name -notmatch $Exclude
-                }elseif ($Exclude) {
-                    $_.Name -notmatch $Exclude
-                }elseif ($Include) {
-                    $_.Name -match $Include
-                }else{
-                    $_.Name -match "."
-                }
-            } `
+        [string[]] $fileList = $fileListObjects `
             | Select-Object -ExpandProperty Name
     }
     # output
