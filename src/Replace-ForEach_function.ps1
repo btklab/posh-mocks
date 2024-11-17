@@ -56,9 +56,9 @@ function Replace-ForEach
         [Alias('f')]
         [regex] $From
         ,
-        [Parameter( Mandatory=$True, Position=2 )]
+        [Parameter( Mandatory=$False, Position=2 )]
         [Alias('t')]
-        [regex] $To
+        [regex] $To = ''
         ,
         [Parameter( Mandatory=$False )]
         [ValidateSet("int", "double", "decimal", "string")]

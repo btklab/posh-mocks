@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Changed: [ForEach-Replace] Set the default value of the `-To` option to an empty string
 - Added: [man2] `-Recent`, `-Descending`, `-Object` switch
 - Added: [Get-OGP] `-Dokuwiki` switch
 - Changed [Invoke-Link] Do not sort urls
