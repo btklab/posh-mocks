@@ -9,6 +9,7 @@
     Options:
         -l: List commands in a column
         -p: Out-Host -Paging
+        -r: Sort by recent updates
 
     Dependency:
         flat, tateyoko, keta
@@ -24,8 +25,6 @@
 
     Select-Object (Microsoft.PowerShell.Utility
     https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-object
-
-
 
 .EXAMPLE
     man2 -Column 4
@@ -142,6 +141,14 @@ function man2 {
         [switch]$Paging,
 
         [Parameter(Mandatory=$False)]
+        [Alias('r')]
+        [switch]$Recent,
+
+        [Parameter(Mandatory=$False)]
+        [Alias('d')]
+        [switch]$Descending,
+
+        [Parameter(Mandatory=$False)]
         [Alias('i')]
         [string]$Include,
 
@@ -219,10 +226,19 @@ function man2 {
     }
 
     # get function files
+    if ( $Recent ){
+        [scriptblock] $sortScript = { $_.LastWriteTime } `
+    } else {
+        [scriptblock] $sortScript = { -join ( [int[]] $_.Name.ToCharArray()).ForEach('ToString', 'x4') } `
+    }
+    $splattingSort = @{
+        Property = $sortScript
+        Descending = $Descending
+    }
     if ($isPwshDir) {
         # pwsh dir
         $fileList = Get-ChildItem -Path $targetDir -File `
-            | Sort-Object { -join ( [int[]] $_.Name.ToCharArray()).ForEach('ToString', 'x4') } `
+            | Sort-Object @splattingSort `
             | Where-Object { $_.Name -match '_function\.ps1$' } `
             | Select-Object @{ label="Name"; expression={ $_.Name.Replace('_function.ps1','') } } `
             | Where-Object {
@@ -240,7 +256,7 @@ function man2 {
     } else {
         # not pwsh dir
         $fileList = Get-ChildItem -Path $targetDir -File  `
-            | Sort-Object { -join ( [int[]] $_.Name.ToCharArray()).ForEach('ToString', 'x4') } `
+            | Sort-Object @splattingSort `
             | Where-Object {
                 if (($Exclude) -and ($Include)) {
                     $_.Name -match $Include -and $_.Name -notmatch $Exclude
