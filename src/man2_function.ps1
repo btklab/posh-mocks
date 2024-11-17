@@ -264,8 +264,9 @@ function man2 {
                 "Mode",
                 "LastWriteTime",
                 "Length",
-                #@{N="Dir";E={(Split-Path -Parent -Path $(Resolve-Path -Path $_ -Relative)).Replace('\','/')}},
-                @{N="Name";E={$_.Name -replace '_function\.[^\.]+$'}}
+                "Name",
+                @{N="Directory";E={(Split-Path -Parent -Path $(Resolve-Path -Path $_ -Relative)).Replace('\','/')}},
+                @{N="ReplacedName";E={$_.Name -replace '_function\.[^\.]+$'}}
                 )
     }
     [object[]] $fileListObjects = Get-ChildItem -Path $targetDir -File `
@@ -284,17 +285,21 @@ function man2 {
         | Select-Object @splattingSelect
     if ( $Object ){
         # output as file object
-        $fileListObjects
+        $fileListObjects `
+            | Select-Object -Property `
+                "Mode",
+                "LastWriteTime",
+                "Length",
+                @{N="Name";E={$_.ReplacedName}}
         return
     }
     if ($isPwshDir) {
         [string[]] $fileList = $fileListObjects `
             | Where-Object { $_.Name -match '_function\.ps1$' } `
-            | Select-Object @{ label="Name"; expression={ $_.Name.Replace('_function.ps1','') } } `
-            | Select-Object -ExpandProperty Name
+            | Select-Object -ExpandProperty ReplacedName
     } else {
         [string[]] $fileList = $fileListObjects `
-            | Select-Object -ExpandProperty Name
+            | Select-Object -ExpandProperty ReplacedName
     }
     # output
     function dispMan {
