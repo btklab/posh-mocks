@@ -34,8 +34,10 @@
     any path.
 
     -Markdown switch to output in [label](uri) format.
-    thanks: goark/ml: Make Link with Markdown Format
-      <https://github.com/goark/ml>
+        thanks: goark/ml: Make Link with Markdown Format
+        <https://github.com/goark/ml>
+
+    -Dokuwiki switch to output in [[uri|title]] format.
 
 .LINK
     Get-OGP (ml), Get-ClipboardAlternative (gclipa)
@@ -47,6 +49,10 @@
 .PARAMETER Markdown
     Return links in markdown format
     like: [title](uri)
+
+.PARAMETER Dokuwiki
+    Return links in dokuwiki format
+    like: [[uri|title]]
 
 .PARAMETER Cite
     Wrap Markdown and Html output in "<cite>" tag
@@ -223,6 +229,10 @@ function Get-OGP {
         [Parameter(Mandatory=$False)]
         [Alias('m')]
         [switch] $Markdown,
+
+        [Parameter(Mandatory=$False)]
+        [Alias('d')]
+        [switch] $Dokuwiki,
 
         [Parameter(Mandatory=$False)]
         [Alias('i')]
@@ -558,6 +568,20 @@ function Get-OGP {
                 return
             } else {
                 return $oMarkdown
+            }
+        } elseif( $Dokuwiki ){
+            # markdown href output
+            [string[]] $oDokuwiki = @()
+            if ( $Cite ){
+                $oDokuwiki += "<cite>[[$innerUri|$innerTitle]]</cite>"
+            } else {
+                $oDokuwiki += "[[$innerUri|$innerTitle]]"
+            }
+            if ($Clip){
+                $oDokuwiki | Set-ClipBoard
+                return
+            } else {
+                return $oDokuwiki
             }
         } elseif ( $Html ){
             if ( $Cite ){

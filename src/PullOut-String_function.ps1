@@ -13,6 +13,9 @@
             git
             cli -> gitignore
 
+.LINK
+    Extract-Substring, PullOut-String
+
 .EXAMPLE
     # set line
     $line = "2024-10-23___cat1_cat2_cat3_hoge_fuga.txt"
