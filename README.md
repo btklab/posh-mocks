@@ -13217,7 +13217,7 @@ The processing priority is `pipeline > arguments > clipboard`.
     
     Link file structure:
         # amazon                          <- (optional) title / comment
-        Tag: #amazon #shop                <- (optiona) tag
+        Tag: #amazon #shop                <- (optional) tag
         https://www.amazon.co.jp/         <- 1st (top) uri
         https://music.amazon.co.jp/       <- 2nd uri
         # comment
