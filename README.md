@@ -13212,8 +13212,16 @@ clean: ## Remove "*.txt" items in Documents directory
 Open file/web links written in a text file or via pipeline or via Clipboard.
 The processing priority is `pipeline > arguments > clipboard`.
 
-- Usage:
-    - `i <file> [keyword] [command] [-Doc|-All|-First <n>] ... Invoke-Item <links-writtein-in-text-file>`
+    Usage:
+        `i <file> [keyword] [command] [-Doc|-All|-First <n>] ... Invoke-Item <links-writtein-in-text-file>`
+    
+    Link file structure:
+        # amazon                          <- (optional) title / comment
+        Tag: #amazon #shop                <- (optiona) tag
+        https://www.amazon.co.jp/         <- 1st (top) uri
+        https://music.amazon.co.jp/       <- 2nd uri
+        # comment
+        https://www.amazon.co.jp/photos/  <- 3rd uri
 
 By default, only the first (top) link in the link file is opened. The `-Doc` switch opens the second and subsequent links. The `-All` switch opens all links (the first link and the subsequent links).
 

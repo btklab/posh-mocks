@@ -6,7 +6,16 @@
     The processing priority is pipeline > arguments > clipboard.
 
         Usage:
-            i <file> [keyword] [command] [-Doc|-All|-First <n>] ... Invoke-Item <links-writtein-in-text-file>
+            i <file> [keyword] [command] [-Doc|-All|-First <n>]
+                ... Invoke-Item <links-writtein-in-text-file>
+        
+        Link file structure:
+            # amazon                          <- (optional) title / comment
+            Tag: #amazon #shop                <- (optiona) tag
+            https://www.amazon.co.jp/         <- 1st (top) uri
+            https://music.amazon.co.jp/       <- 2nd uri
+            # comment
+            https://www.amazon.co.jp/photos/  <- 3rd uri
 
     By default, only the first (top) link in the link file is opened. 
     The "-Doc" switch opens the second and subsequent links.
@@ -92,18 +101,6 @@
         1. As a starting point for tasks and apps
         2. As a website favorite link collection
         3. As a simple task runner
-
-.EXAMPLE
-    i                  ... Invoke-Item from Clipboard
-    i <file>           ... Invoke-Item <links-writtein-in-text-file>
-    i <file> <command> ... command <links-writtein-in-text-file>
-    i <file> <command> -b    ... run command in background
-    i <file> -l or -Location ... Open <link> location in explorer
-    i <file> -d or -DryRun   ... DryRun (listup links)
-    i <file> -e or -Edit     ... Edit <linkfile> using text editor
-
-    "url" | i                ... Start-Process -FilePath <url>
-    "url" | i -c "firefox"   ... firefox <url>
 
 .EXAMPLE
     # cat link file
