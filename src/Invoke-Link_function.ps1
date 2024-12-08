@@ -103,18 +103,6 @@
         3. As a simple task runner
 
 .EXAMPLE
-    i                  ... Invoke-Item from Clipboard
-    i <file>           ... Invoke-Item <links-writtein-in-text-file>
-    i <file> <command> ... command <links-writtein-in-text-file>
-    i <file> <command> -b    ... run command in background
-    i <file> -l or -Location ... Open <link> location in explorer
-    i <file> -d or -DryRun   ... DryRun (listup links)
-    i <file> -e or -Edit     ... Edit <linkfile> using text editor
-
-    "url" | i                ... Start-Process -FilePath <url>
-    "url" | i -c "firefox"   ... firefox <url>
-
-.EXAMPLE
     # cat link file
     cat amazon.txt
         # amazon
