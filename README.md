@@ -13213,7 +13213,7 @@ Open file/web links written in a text file or via pipeline or via Clipboard.
 The processing priority is `pipeline > arguments > clipboard`.
 
 - Usage:
-    - `i <file> [-Doc|-All|-First <n>] ... Invoke-Item <links-writtein-in-text-file>`
+    - `i <file> [keyword] [command] [-Doc|-All|-First <n>] ... Invoke-Item <links-writtein-in-text-file>`
 
 By default, only the first (top) link in the link file is opened. The `-Doc` switch opens the second and subsequent links. The `-All` switch opens all links (the first link and the subsequent links).
 
@@ -13256,17 +13256,15 @@ Usage:
 - Usage
     - `man2 i`
     - `man2 Invoke-Link`
-        - `i [[-File] <String>] [[-Command] <String>] [-Location] [-Edit] [-LinkCheck] [-DryRun]`
-        - `i` ... Equivalent to `Get-ChildItem .`
-        - `i <dir>` ... `Get-ChildItem <dir>`
-        - `i <file>` ... `Invoke-Item <links-writtein-in-text-file>`
-        - `i <file> <command>` ... `command <links-writtein-in-text-file>`
-        - `i <file> -l or -Location` ... Open `<link>` location in explorer
-        - `i <file> -d or -DryRun` ... DryRun (listup links)
-        - `i <file> -e or -Edit` ... Edit `<linkfile>` using text editor
+        - `i        [keyword] [command] ... Invoke-Item from Clipboard`
+        - `i <dir>  [keyword] [command] ... Invoke-Item <dir>`
+        - `i <file> [keyword]           ... Invoke-Item <links-writtein-in-text-file>`
+        - `i <file> [keyword] [command] ... command <links-writtein-in-text-file>`
+        - `i <file> [keyword] [command] [-l|-Location] ... Open <link> location in explorer`
+        - `i <file> [keyword] [command] [-d|-DryRun]   ... DryRun (listup links)`
+        - `i <file> [keyword] [command] [-e|-Edit]     ... Edit <linkfile> using text editor`
         - `"url" | i`                ... `Start-Process -FilePath <url>`
         - `"url" | i -c "firefox"`   ... `firefox <url>`
-
 - Note
     - This is the command I use most often in my daily work
     - I use this command and link file combination:
@@ -13366,7 +13364,7 @@ i ./link/about_Invoke-Item.txt
 
 ```powershell
 # open link in "firefox" browser
-i ./link/about_Invoke-Item.txt firefox
+i ./link/about_Invoke-Item.txt . firefox
 ```
 
 Examples:
@@ -13410,7 +13408,7 @@ i ./link/rmarkdown_site.txt
 
 ```powershell
 # open index.html in VSCode
-i ./link/rmarkdown_site.txt code
+i ./link/rmarkdown_site.txt . code
 ```
 
 ```powershell

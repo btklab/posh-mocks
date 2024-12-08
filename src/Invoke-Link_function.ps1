@@ -6,7 +6,7 @@
     The processing priority is pipeline > arguments > clipboard.
 
         Usage:
-            i <file> [-Doc|-All|-First <n>] ... Invoke-Item <links-writtein-in-text-file>
+            i <file> [keyword] [command] [-Doc|-All|-First <n>] ... Invoke-Item <links-writtein-in-text-file>
 
     By default, only the first (top) link in the link file is opened. 
     The "-Doc" switch opens the second and subsequent links.
@@ -57,13 +57,13 @@
         - Environment variables such as ${HOME} can be used for path strings.
 
     Usage:
-        i                  ... Invoke-Item from Clipboard
-        i <dir>            ... Invoke-Item <dir>
-        i <file>           ... Invoke-Item <links-writtein-in-text-file>
-        i <file> <command> ... command <links-writtein-in-text-file>
-        i <file> -l or -Location ... Open <link> location in explorer
-        i <file> -d or -DryRun   ... DryRun (listup links)
-        i <file> -e or -Edit     ... Edit <linkfile> using text editor
+        i        [keyword] [command] ... Invoke-Item from Clipboard
+        i <dir>  [keyword] [command] ... Invoke-Item <dir>
+        i <file> [keyword]           ... Invoke-Item <links-writtein-in-text-file>
+        i <file> [keyword] [command] ... command <links-writtein-in-text-file>
+        i <file> [keyword] [command] [-l|-Location] ... Open <link> location in explorer
+        i <file> [keyword] [command] [-d|-DryRun]   ... DryRun (listup links)
+        i <file> [keyword] [command] [-e|-Edit]     ... Edit <linkfile> using text editor
 
         "url" | i                ... Start-Process -FilePath <url>
         "url" | i -c "firefox"   ... firefox <url>
@@ -152,10 +152,10 @@
     i ./link/rmarkdown_site.txt
 
     # open index.html in firefox browser
-    i ./link/rmarkdown_site.txt firefox
+    i ./link/rmarkdown_site.txt . firefox
 
     # open index.html in VSCode
-    i ./link/rmarkdown_site.txt code
+    i ./link/rmarkdown_site.txt . code
 
     # show index.html file location
     i ./link/rmarkdown_site.txt -l
@@ -164,7 +164,7 @@
     i ./link/rmarkdown_site.txt -l | Resolve-Path -Relative
 
     # open index.html file location in explorer using Invoke-Item
-    i ./link/rmarkdown_site.txt -l ii
+    i ./link/rmarkdown_site.txt . ii -l
 
 .EXAMPLE
     ## Specify path containing wildcards
@@ -175,7 +175,6 @@
 
 .EXAMPLE
     ## execute if *.ps1 file specified
-
     cat ./link/work/MicrosoftSecurityResponseCenter_Get-Rssfeed.ps1
     # MSRC - Microsoft Security Response Center
     rssfeed https://api.msrc.microsoft.com/update-guide/rss -MaxResults 30
@@ -221,6 +220,10 @@ function Invoke-Link {
         [string[]] $Files,
         
         [Parameter( Mandatory=$False, Position=1 )]
+        [Alias('g')]
+        [string] $Grep,
+        
+        [Parameter( Mandatory=$False, Position=2 )]
         [Alias('c')]
         [string] $Command,
         
@@ -259,7 +262,6 @@ function Invoke-Link {
         [switch] $Recurse,
         
         [Parameter( Mandatory=$False )]
-        [Alias('g')]
         [switch] $AsFileObject,
         
         [Parameter( Mandatory=$False )]
@@ -284,9 +286,6 @@ function Invoke-Link {
         
         [Parameter( Mandatory=$False )]
         [int] $LimitErrorCount = 5,
-        
-        [Parameter( Mandatory=$False )]
-        [string] $Grep,
         
         [Parameter( Mandatory=$False )]
         [Alias('v')]
@@ -536,7 +535,15 @@ function Invoke-Link {
                                 Line = $Null
                             }
                         }
-                        [pscustomobject] $Hash
+                        if ( $Grep -and $NotMatch ){
+                            [pscustomobject] $Hash `
+                                | Where-Object Name -notmatch $Grep
+                        } elseif ( $Grep ){
+                            [pscustomobject] $Hash `
+                                | Where-Object Name -match $Grep
+                        } else {
+                            [pscustomobject] $Hash
+                        }
                     }
                 continue
             }
