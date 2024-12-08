@@ -7,14 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [7.4.0] - 2024-12-08
+
 - Changed: [ForEach-Replace] Set the default value of the `-To` option to an empty string
 - Added: [man2] `-Recent`, `-Descending`, `-Object` switch
 - Added: [Get-OGP] `-Dokuwiki` switch
-- Changed [Invoke-Link] Do not sort urls
 - Added [Set-DotEnv] (Alias: pwenv) function
 - Added [PullOut-String] (Alias: pullstr) function
 - Added [Auto-Clip] (Alias: aclip) function
 - Added [Tee-Clip] (Alias: tclip) function
+- Changed [Invoke-Link] Do not sort urls
+
+### Breaking Changes
+
+- Changed [Invoke-Link] Only top links are opened by default.
 
 ## [7.3.0] - 2024-10-24
 
@@ -786,7 +794,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Set-DotEnv]: src/Set-DotEnv_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/7.3.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/7.4.0..HEAD
+[7.4.0]: https://github.com/btklab/posh-mocks/releases/tag/7.4.0
 [7.3.0]: https://github.com/btklab/posh-mocks/releases/tag/7.3.0
 [7.2.4]: https://github.com/btklab/posh-mocks/releases/tag/7.2.4
 [7.2.3]: https://github.com/btklab/posh-mocks/releases/tag/7.2.3

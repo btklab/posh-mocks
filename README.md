@@ -13212,6 +13212,13 @@ clean: ## Remove "*.txt" items in Documents directory
 Open file/web links written in a text file or via pipeline or via Clipboard.
 The processing priority is `pipeline > arguments > clipboard`.
 
+- Usage:
+    - `i <file> [-Doc|-All|-First <n>] ... Invoke-Item <links-writtein-in-text-file>`
+
+By default, only the first (top) link in the link file is opened. The `-Doc` switch opens the second and subsequent links. The `-All` switch opens all links (the first link and the subsequent links).
+
+The intent of this specification is to reduce the number of link files. If you put the links that you usually use in the first line of the link file and the links that you refer to only occasionally in the following lines, you can avoid opening an extra link every time.
+
 - If a text file (`.txt`, `.md`, ...) is specified, open each line as link in default application
     - Link beginning with "http" or "www":
         - `Start-Process` (default browser)
@@ -13267,7 +13274,80 @@ Usage:
         2. As a website favorite link collection
         3. As a simple task runner
 
-Input:
+EXAMPLE:
+
+cat link file
+
+```powershell
+cat amazon.txt
+```
+
+```
+# amazon
+Tag: #amazon #shop
+https://www.amazon.co.jp/         <- 1st (top) uri
+https://music.amazon.co.jp/       <- 2nd uri
+https://www.amazon.co.jp/photos/  <- 3rd uri
+```
+
+(`default`) open only the top uri
+
+```powershell
+i amazon.txt
+```
+
+```
+Start-Process -FilePath "https://www.amazon.co.jp/" <- 1st uri
+```
+
+(`-Doc`) open extra uris
+
+```powershell
+i amazon.txt -Doc
+```
+
+```
+Start-Process -FilePath "https://music.amazon.co.jp/"      <- 2nd uri
+Start-Process -FilePath "https://www.amazon.co.jp/photos/" <- 3rd uri
+```
+
+(`-All`) open all uris
+
+```powershell
+i amazon.txt -All
+```
+
+```
+Start-Process -FilePath "https://www.amazon.co.jp/"        <- 1st uri
+Start-Process -FilePath "https://music.amazon.co.jp/"      <- 2nd uri
+Start-Process -FilePath "https://www.amazon.co.jp/photos/" <- 3rd uri
+```
+
+(`-First <n>`) open first `<n>` uris
+
+```powershell
+i amazon.txt -First 2
+```
+
+```
+Start-Process -FilePath "https://www.amazon.co.jp/"   <- 1st uri
+Start-Process -FilePath "https://music.amazon.co.jp/" <- 2nd uri
+```
+
+open extra uris except first `<n>` uris
+
+```powershell
+i amazon.txt -First 2 -Doc
+i amazon.txt -First 2 -man
+```
+
+```
+Start-Process -FilePath "https://www.amazon.co.jp/photos/" <- 3rd uri
+```
+
+Another examples:
+
+Input
 
 ```powershell
 cat ./link/about_Invoke-Item.txt
