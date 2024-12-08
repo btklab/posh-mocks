@@ -5,6 +5,18 @@
     Open file/web links written in a text file or via pipeline or via Clipboard.
     The processing priority is pipeline > arguments > clipboard.
 
+        Usage:
+            i <file> [-Doc|-All|-First <n>] ... Invoke-Item <links-writtein-in-text-file>
+
+    By default, only the first (top) link in the link file is opened. 
+    The "-Doc" switch opens the second and subsequent links.
+    The "-All" switch opens all links (the first link and the subsequent links).
+
+    The intent of this specification is to reduce the number of link files.
+    If you put the links that you usually use in the first line of the link
+    file and the links that you refer to only occasionally in the following
+    lines, you can avoid opening an extra link every time.
+
         - If a text file (Ext: None, .txt, .md, ...) is specified,
           open each line as link in default application
             - Link beginning with "http" or "www":
@@ -94,6 +106,40 @@
     "url" | i -c "firefox"   ... firefox <url>
 
 .EXAMPLE
+    # cat link file
+    cat amazon.txt
+        # amazon
+        Tag: #amazon #shop
+        https://www.amazon.co.jp/         <- 1st (top) uri
+        https://music.amazon.co.jp/       <- 2nd uri
+        https://www.amazon.co.jp/photos/  <- 3rd uri
+    
+    # (default) open uri (Only top URLs open by default)
+    i amazon.txt
+        Start-Process -FilePath "https://www.amazon.co.jp/" <- 1st uri
+    
+    # (-Doc) open extra uris
+    i amazon.txt -Doc
+        Start-Process -FilePath "https://music.amazon.co.jp/"      <- 2nd uri
+        Start-Process -FilePath "https://www.amazon.co.jp/photos/" <- 3rd uri
+    
+    # (-All) open all uris
+    i amazon.txt -All
+        Start-Process -FilePath "https://www.amazon.co.jp/"        <- 1st uri
+        Start-Process -FilePath "https://music.amazon.co.jp/"      <- 2nd uri
+        Start-Process -FilePath "https://www.amazon.co.jp/photos/" <- 3rd uri
+ 
+    # (-First <n>) open first <n> uris
+    i amazon.txt -First 2
+        Start-Process -FilePath "https://www.amazon.co.jp/"   <- 1st uri
+        Start-Process -FilePath "https://music.amazon.co.jp/" <- 2nd uri
+    
+    # open extra uris except first <n> uris
+    i amazon.txt -First 2 -Doc
+    i amazon.txt -First 2 -man
+        Start-Process -FilePath "https://www.amazon.co.jp/photos/" <- 3rd uri
+
+.EXAMPLE
     cat ./link/rmarkdown_site.txt
     "C:/Users/path/to/the/index.html"
 
@@ -179,6 +225,18 @@ function Invoke-Link {
         [string] $Command,
         
         [Parameter( Mandatory=$False )]
+        [Alias('a')]
+        [switch] $All,
+        
+        [Parameter( Mandatory=$False )]
+        [Alias('man')]
+        [Alias('ex')]
+        [switch] $Doc,
+        
+        [Parameter( Mandatory=$False )]
+        [int] $First = 1,
+        
+        [Parameter( Mandatory=$False )]
         [Alias('l')]
         [switch] $Location,
         
@@ -209,7 +267,6 @@ function Invoke-Link {
         [switch] $RemoveExtension,
         
         [Parameter( Mandatory=$False )]
-        [Alias('a')]
         [switch] $AllowBulkInput,
         
         [Parameter( Mandatory=$False )]
@@ -319,6 +376,7 @@ function Invoke-Link {
     }
     # set variable
     [int] $errCounter = 0
+    [int] $execCounter = 0
     # test bulk input
     if ( -not $AllowBulkInput ){
         $bulkList = New-Object 'System.Collections.Generic.List[System.String]'
@@ -634,6 +692,23 @@ function Invoke-Link {
         [String[]] $linkAry = $hrefList.ToArray()
         $hrefList = New-Object 'System.Collections.Generic.List[System.String]'
         foreach ( $href in $linkAry ){
+            # execute counter
+            $execCounter++
+            Write-Debug "exec cnt: $execCounter"
+            if ( $All ){
+                # execute all uris
+                #pass
+            } elseif ( $Doc ) {
+                # Execute except for the first <n> uri
+                if ( $execCounter -le $First ){
+                    continue
+                }
+            } else {
+                # (Default) Execute only the first <n> uri
+                if ( $execCounter -gt $First ){
+                    continue
+                }
+            }
             # execute command
             if ( $Command ){
                 [string] $com = $Command
