@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-- NA
+## [7.4.1] - 2024-12-09
+
+- Changed: [Invoke-Link] `-Command` option name was renamed to `-App` and made explicit mandatory.
+- Added: [Rename-Normalize] synopsis
+- Added: [clip2img] an example
 
 ## [7.4.0] - 2024-12-08
 
@@ -794,7 +798,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Set-DotEnv]: src/Set-DotEnv_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/7.4.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/7.4.1..HEAD
+[7.4.1]: https://github.com/btklab/posh-mocks/releases/tag/7.4.1
 [7.4.0]: https://github.com/btklab/posh-mocks/releases/tag/7.4.0
 [7.3.0]: https://github.com/btklab/posh-mocks/releases/tag/7.3.0
 [7.2.4]: https://github.com/btklab/posh-mocks/releases/tag/7.2.4
