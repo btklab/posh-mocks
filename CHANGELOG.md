@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [7.4.2] - 2024-12-09
+
+- Fixed: [Invoke-Link] -DryRun does not run to completion
+
+
 ## [7.4.1] - 2024-12-09
 
 - Changed: [Invoke-Link] `-Command` option name was renamed to `-App` and made explicit mandatory.
@@ -798,7 +803,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Set-DotEnv]: src/Set-DotEnv_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/7.4.1..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/7.4.2..HEAD
+[7.4.2]: https://github.com/btklab/posh-mocks/releases/tag/7.4.1
 [7.4.1]: https://github.com/btklab/posh-mocks/releases/tag/7.4.1
 [7.4.0]: https://github.com/btklab/posh-mocks/releases/tag/7.4.0
 [7.3.0]: https://github.com/btklab/posh-mocks/releases/tag/7.3.0

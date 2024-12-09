@@ -578,13 +578,10 @@ function Invoke-Link {
                 } else {
                     [string] $exeComStr = "Invoke-Item -LiteralPath $File"
                 }
-                if ( $DryRun ){
-                    $exeComStr
-                    continue
-                }
                 [string] $ext = (Get-Item -LiteralPath $File).Extension
                 ## is file shortcut?
                 if ( ( $ext -eq '.lnk' ) -or ( $ext -eq '.url') ){
+                    if ( $DryRun ){ $exeComStr; continue }
                     Invoke-Item -LiteralPath "$File"
                     if ( $App ){
                         $exeComStr | Invoke-Expression -ErrorAction $ErrAction
@@ -595,6 +592,7 @@ function Invoke-Link {
                 }
                 ## is file .ps1 script?
                 if ( $ext -eq '.ps1' ){
+                    if ( $DryRun ){ $exeComStr; continue }
                     #[string] $ps1FileFullPath = (Resolve-Path -LiteralPath $File).Path
                     if ( $App ){
                         $exeComStr | Invoke-Expression -ErrorAction $ErrAction
@@ -605,6 +603,7 @@ function Invoke-Link {
                 }
                 ## is non-text file
                 if ( -not ( ( -not $ext ) -or ( $ext -match '\.txt$|\.md$') ) ){
+                    if ( $DryRun ){ $exeComStr; continue }
                     if ( $App ){
                         $exeComStr | Invoke-Expression -ErrorAction $ErrAction
                     } else {
