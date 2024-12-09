@@ -6,9 +6,12 @@
     The processing priority is pipeline > arguments > clipboard.
 
         Usage:
-            i <file> [keyword] [command] [-Doc|-All|-First <n>]
+            i <file> [keyword] [-Doc|-All|-First <n>]
                 ... Invoke-Item <links-writtein-in-text-file>
         
+            i <file> [keyword] [-Doc|-All|-First <n>] -App <application>
+                ... application <links-writtein-in-text-file>
+
         Link file structure:
             # amazon                          <- (optional) title / comment
             Tag: #amazon #shop                <- (optional) tag
@@ -57,7 +60,7 @@
         - Skip line
             - Lines that empty or beginning with "#" are skipped.
             - Lines that empty or beginning with "Tag:" are skipped.
-        - The link execution app can be any command if "-Command" option is
+        - The link execution app can be any command if "-App" option is
           specified.
         - Links written in a text file may or may not be enclosed in
           single/double quotes.
@@ -66,16 +69,15 @@
         - Environment variables such as ${HOME} can be used for path strings.
 
     Usage:
-        i        [keyword] [command] ... Invoke-Item from Clipboard
-        i <dir>  [keyword] [command] ... Invoke-Item <dir>
-        i <file> [keyword]           ... Invoke-Item <links-writtein-in-text-file>
-        i <file> [keyword] [command] ... command <links-writtein-in-text-file>
-        i <file> [keyword] [command] [-l|-Location] ... Open <link> location in explorer
-        i <file> [keyword] [command] [-d|-DryRun]   ... DryRun (listup links)
-        i <file> [keyword] [command] [-e|-Edit]     ... Edit <linkfile> using text editor
-
-        "url" | i                ... Start-Process -FilePath <url>
-        "url" | i -c "firefox"   ... firefox <url>
+        i <file> [keyword] [-App <app>] ... Invoke-Item <links-writtein-in-text-file>
+        i <file> [keyword] [-App <app>] ... command <links-writtein-in-text-file>
+        i <file> [keyword] [-App <app>] [-l|-Location] ... Open <link> location in explorer
+        i <file> [keyword] [-App <app>] [-d|-DryRun]   ... DryRun (listup links)
+        i <file> [keyword] [-App <app>] [-e|-Edit]     ... Edit <linkfile> using text editor
+        i <dir>  [keyword]              ... Invoke-Item <dir>
+        i        [keyword] [-App <app>] ... Invoke-Item from Clipboard
+        "url" | i                  ... Start-Process -FilePath <url>
+        "url" | i -App "firefox"   ... firefox <url>
     
     Example of link file with tag:
         cat ./work/apps/chrome.txt
@@ -92,15 +94,15 @@
         i ./link/about_Invoke-Item.txt
         # open link in default browser
 
-        i ./link/about_Invoke-Item.txt firefox
+        i ./link/about_Invoke-Item.txt -App firefox
         # open link in "firefox" browser
 
     Note:
         I use this function and link file combination:
 
-        1. As a starting point for tasks and apps
-        2. As a website favorite link collection
-        3. As a simple task runner
+            1. As a starting point for tasks and apps
+            2. As a website favorite link collection
+            3. As a simple task runner
 
 .EXAMPLE
     # cat link file
@@ -149,10 +151,10 @@
     i ./link/rmarkdown_site.txt
 
     # open index.html in firefox browser
-    i ./link/rmarkdown_site.txt . firefox
+    i ./link/rmarkdown_site.txt -App firefox
 
     # open index.html in VSCode
-    i ./link/rmarkdown_site.txt . code
+    i ./link/rmarkdown_site.txt -App code
 
     # show index.html file location
     i ./link/rmarkdown_site.txt -l
@@ -161,7 +163,7 @@
     i ./link/rmarkdown_site.txt -l | Resolve-Path -Relative
 
     # open index.html file location in explorer using Invoke-Item
-    i ./link/rmarkdown_site.txt . ii -l
+    i ./link/rmarkdown_site.txt -App ii -l
 
 .EXAMPLE
     ## Specify path containing wildcards
@@ -220,9 +222,8 @@ function Invoke-Link {
         [Alias('g')]
         [string] $Grep,
         
-        [Parameter( Mandatory=$False, Position=2 )]
-        [Alias('c')]
-        [string] $Command,
+        [Parameter( Mandatory=$False )]
+        [string] $App,
         
         [Parameter( Mandatory=$False )]
         [Alias('a')]
@@ -572,37 +573,44 @@ function Invoke-Link {
             }
             # is windows shortcut?
             if ( Test-Path -LiteralPath $File ){
+                if ( $App ){
+                    [string] $exeComStr = "$App $File"
+                } else {
+                    [string] $exeComStr = "Invoke-Item -LiteralPath $File"
+                }
+                if ( $DryRun ){
+                    $exeComStr
+                    continue
+                }
                 [string] $ext = (Get-Item -LiteralPath $File).Extension
                 ## is file shortcut?
                 if ( ( $ext -eq '.lnk' ) -or ( $ext -eq '.url') ){
-                    if ( $DryRun ){
-                        "Invoke-Item -LiteralPath $File"
-                        continue
+                    Invoke-Item -LiteralPath "$File"
+                    if ( $App ){
+                        $exeComStr | Invoke-Expression -ErrorAction $ErrAction
                     } else {
-                        Invoke-Item -LiteralPath $File
-                        continue
+                        Invoke-Item -LiteralPath "$File"
                     }
+                    continue
                 }
                 ## is file .ps1 script?
                 if ( $ext -eq '.ps1' ){
-                    [string] $ps1FileFullPath = (Resolve-Path -LiteralPath $File).Path
-                    if ( $DryRun ){
-                        "Invoke-Item -LiteralPath ""$ps1FileFullPath"""
-                        continue
+                    #[string] $ps1FileFullPath = (Resolve-Path -LiteralPath $File).Path
+                    if ( $App ){
+                        $exeComStr | Invoke-Expression -ErrorAction $ErrAction
                     } else {
-                        & $ps1FileFullPath
-                        continue
+                        & "$File"
                     }
+                    continue
                 }
                 ## is non-text file
                 if ( -not ( ( -not $ext ) -or ( $ext -match '\.txt$|\.md$') ) ){
-                    if ( $DryRun ){
-                        "Invoke-Item -LiteralPath $File"
-                        continue
+                    if ( $App ){
+                        $exeComStr | Invoke-Expression -ErrorAction $ErrAction
                     } else {
-                        Invoke-Item -LiteralPath $File
-                        continue
+                        Invoke-Item -LiteralPath "$File"
                     }
+                    continue
                 }
                 ## is file .ps1 script?
             }
@@ -677,7 +685,7 @@ function Invoke-Link {
             if ( $DryRun ){
                 Write-Host "$File" -ForegroundColor Green
             }
-            if ( $Location -and -not $Command ){
+            if ( $Location -and -not $App ){
                 $linkLines | ForEach-Object {
                     if ( isLinkHttp $_ ){
                         #pass
@@ -690,7 +698,7 @@ function Invoke-Link {
                 $hrefList.Add($href)
             }
         }
-        if ( $Location -and -not $Command ){
+        if ( $Location -and -not $App ){
             continue
         }
         [String[]] $linkAry = $hrefList.ToArray()
@@ -714,8 +722,8 @@ function Invoke-Link {
                 }
             }
             # execute command
-            if ( $Command ){
-                [string] $com = $Command
+            if ( $App ){
+                [string] $com = $App
             } else {
                 if ( isLinkHttp $href ){
                     [string] $com = "Start-Process -FilePath"
