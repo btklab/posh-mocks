@@ -94,7 +94,7 @@
         clipwatch-function.ps1        => clipwatch-function.ps1
 
 .LINK
-    clip2file, han, zen, Rename-Item
+    clip2file, han, zen, Rename-Item, aclip
 
 #>
 function Rename-Normalize {

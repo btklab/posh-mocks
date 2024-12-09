@@ -65,6 +65,15 @@
     to "~/Pictures" directory.
 
 
+    PS> clip2img -Directory ~/Pictures -Name "$((Get-Date).ToString('yyyy-MM-dd-HHmmssfff')).png" -DirView
+
+    ====
+    Save image file as "yyyy-MM-dd-HHmmssfff.png"
+    to ~/Pictures
+    and open ~/Pictures
+    
+
+
 .EXAMPLE
     clip2img -n a.png
 

@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [7.4.1] - 2024-12-09
 
 - Changed: [Invoke-Link] `-Command` option name was renamed to `-App` and made explicit mandatory.
+- Added: [Rename-Normalize] synopsis
+- Added: [clip2img] an example
 
 ## [7.4.0] - 2024-12-08
 
