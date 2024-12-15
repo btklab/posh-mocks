@@ -4,8 +4,7 @@
 
     Parse "todo.txt" like format and output as Text/PsObject:
 
-        (B) 2023-12-01 +proj This is a [first ticket] @haccp #hashtag due:2023-12-31 link:"path/to/the/file or url"
-            link: https://github.com/todotxt/todo.txt
+        (B) 2023-12-01 +proj This is a [first ticket] @haccp #tag1 #tag2 due:2023-12-31 link:"path/to/the/file or url"
         x 2023-12-02 2023-12-01 This is a completed ticket
 
     For todo / task / ticket management, alternatively as a changelog or
@@ -625,6 +624,9 @@ function Get-Ticket {
         [Switch] $OffLink,
         
         [Parameter( Mandatory=$False )]
+        [Switch] $OffTag,
+        
+        [Parameter( Mandatory=$False )]
         [String] $HyphenPlaceHolder = '///@H@y@p@h@e@n@s@I@n@B@r@a@c@k@e@t@///',
         
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
@@ -911,6 +913,13 @@ function Get-Ticket {
         param ( [String] $line )
         $line = $line -replace ' link:"[^"]+"', ''
         $line = $line -replace ' link:[^ ]+', ''
+        $line = $line.Trim()
+        return $line
+    }
+    function deleteTagStr {
+        param ( [String] $line )
+        $line = $line -replace ' #[^ ]+', ''
+        $line = $line.Trim()
         return $line
     }
     function isLineEmpty ([String] $line ){
@@ -1618,7 +1627,9 @@ function Get-Ticket {
                     }
                     if ( $OffLink ){
                         $line = deleteLinkStr $line
-                        $line = "$line".Trim()
+                    }
+                    if ( $OffTag ){
+                        $line = deleteTagStr $line
                     }
                     Write-Output $line
                 } else {
@@ -1797,7 +1808,8 @@ function Get-Ticket {
             $hash["At"]      = $AtMarkStr.Trim()
             $hash["Due"]     = $dueDate
             $hash["Status"]  = $statStr.Trim()
-            $hash["Tag"]     = $tagStr.Trim()
+            #$hash["Tag"]     = $tagStr.Trim()
+            $hash["Tag"]     = $tagAry
             $hash["Link"]    = $linkStr
         }
         if ( $True ){
@@ -1813,7 +1825,14 @@ function Get-Ticket {
             #pass
         } else {
             # raw output 
-            [String] $outputStr = "$idCounter $($hash["Raw"])"
+            [String] $outputStr = $hash["Raw"]
+            if ( $OffLink ){
+                [String] $outputStr = deleteLinkStr $outputStr
+            }
+            if ( $OffTag ){
+                [String] $outputStr = deleteTagStr $outputStr
+            }
+            [String] $outputStr = "$idCounter $outputStr"
             Write-Output $outputStr
             continue
         }
