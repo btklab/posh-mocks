@@ -9,11 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed: [Unique-Object] Changed to output columns other than the specified columns
 - Fixed: [Invoke-Link] Fixed a bug that caused links to be executed twice when .lnk was specified
-- Changed: [Invoke-Link] Enable link with one-liner
-- Changed: [Invoke-Link] Enable execution of links written in one-liner
-- Changed: [Invoke-Link] Changed the tag string to an array
-- Added: [Invoke-Link] -TagOnly switch
 - Changed: [Get-Ticket] Changed short Act names to default
+- Changed: [Get-Ticket] Enable link with one-liner
+- Changed: [Get-Ticket] Enable execution of links written in one-liner
+- Changed: [Get-Ticket] Changed the tag string to an array
+- Added: [Get-Ticket] -TagOnly switch
 
 ## [7.4.2] - 2024-12-09
 
