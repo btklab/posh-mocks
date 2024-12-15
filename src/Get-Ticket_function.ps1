@@ -627,6 +627,9 @@ function Get-Ticket {
         [Switch] $OffTag,
         
         [Parameter( Mandatory=$False )]
+        [Switch] $TagOnly,
+        
+        [Parameter( Mandatory=$False )]
         [String] $HyphenPlaceHolder = '///@H@y@p@h@e@n@s@I@n@B@r@a@c@k@e@t@///',
         
         [parameter( Mandatory=$False, ValueFromPipeline=$True )]
@@ -1618,6 +1621,11 @@ function Get-Ticket {
             if ( $Id.Contains($idCounter) ){
                 if ( $parseLine ){
                     [Bool] $isViewId = $True
+                    if ( $TagOnly ){
+                        [String[]] $tagAry = getMatchesValue $line ' #[^ ]+|^#[^ ]+'
+                        Write-Output $tagAry
+                        continue
+                    }
                     if ( $InvokeLink -or $InvokeLinkWith ){
                         if ( $line -match 'link:..*'){
                             $linkStr = getOptLink $line
@@ -1826,6 +1834,11 @@ function Get-Ticket {
         } else {
             # raw output 
             [String] $outputStr = $hash["Raw"]
+            if ( $TagOnly ){
+                [String[]] $tagAry = getMatchesValue $outputStr ' #[^ ]+|^#[^ ]+'
+                Write-Output $tagAry
+                continue
+            }
             if ( $OffLink ){
                 [String] $outputStr = deleteLinkStr $outputStr
             }
@@ -1971,3 +1984,4 @@ if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0)
     Remove-Variable -Name "tmpAliasName" -Force
     Remove-Variable -Name "tmpCmdName" -Force
 }
+

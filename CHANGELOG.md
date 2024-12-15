@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed: [Invoke-Link] Enable link with one-liner
 - Changed: [Invoke-Link] Enable execution of links written in one-liner
 - Changed: [Invoke-Link] Changed the tag string to an array
+- Added: [Invoke-Link] -TagOnly switch
 - Changed: [Get-Ticket] Changed short Act names to default
 
 ## [7.4.2] - 2024-12-09
