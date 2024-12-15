@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 
 - Changed: [Unique-Object] Changed to output columns other than the specified columns
+- Changed: [Invoke-Link] Enable link with one-liner
 - Fixed: [Invoke-Link] Fixed a bug that caused links to be executed twice when .lnk was specified
 - Changed: [Get-Ticket] Changed short Act names to default
 

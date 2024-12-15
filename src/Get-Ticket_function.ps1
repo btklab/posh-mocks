@@ -4,7 +4,7 @@
 
     Parse "todo.txt" like format and output as Text/PsObject:
 
-        (B) 2023-12-01 +proj This is a [first ticket] @haccp #hashtag due:2023-12-31
+        (B) 2023-12-01 +proj This is a [first ticket] @haccp #hashtag due:2023-12-31 link:"path/to/the/file or url"
             link: https://github.com/todotxt/todo.txt
         x 2023-12-02 2023-12-01 This is a completed ticket
 
@@ -660,7 +660,9 @@ function Get-Ticket {
                 "Done",
                 "Project",
                 "ABC",
-                "Act"
+                "Act",
+                "Tag",
+                "Link"
             )
         } else {
             [String[]] $splatProp = @(
@@ -668,27 +670,30 @@ function Get-Ticket {
                 "Done",
                 "Project",
                 "ABC",
-                "Act"
+                "Act",
+                "Tag",
+                "Link"
             )
         }
         [String[]] $splatFullProp = @(
-            "Id", 
-            "Done", 
-            "Project", 
+            "Id",
+            "Done",
+            "Project",
             "ABC",
-            "Act", 
-            "Due", 
-            "Status", 
-            "Tag", 
-            "Create", 
-            "Complete", 
-            "Remain", 
-            "Age", 
-            "Raw", 
+            "Act",
+            "Due",
+            "Status",
+            "Tag",
+            "Create",
+            "Complete",
+            "Remain",
+            "Age",
+            "Link",
+            "Raw",
             "Note"
         )
     } else {
-        # ShortAct: separate Act, Name, At
+        # ShortAct: separate Act, Name, Tag
         if ( $ShortenProperty ){
             [String[]] $splatProp = @(
                 "Id",
@@ -696,7 +701,9 @@ function Get-Ticket {
                 "Project",
                 "ABC",
                 "Act",
-                "Name"
+                "Name",
+                "Tag",
+                "Link"
             )
         } else {
             [String[]] $splatProp = @(
@@ -706,25 +713,27 @@ function Get-Ticket {
                 "ABC",
                 "Act",
                 "Name",
-                "At"
+                "Tag",
+                "Link"
             )
         }
         [String[]] $splatFullProp = @(
-            "Id", 
-            "Done", 
-            "Project", 
-            "ABC",
-            "Act", 
-            "Name", 
-            "At", 
-            "Due", 
-            "Status", 
-            "Tag", 
-            "Create", 
-            "Complete", 
-            "Remain", 
-            "Age", 
-            "Raw", 
+            "Id",
+            "Done",
+            "Project",
+            "ABC"
+            "Act",
+            "Name",
+            "At",
+            "Due",
+            "Status",
+            "Tag",
+            "Create",
+            "Complete",
+            "Remain",
+            "Age",
+            "Link",
+            "Raw",
             "Note"
         )
     }
@@ -848,6 +857,20 @@ function Get-Ticket {
         if ( $line -match $reg ){
             [String] $match = $line -replace $reg, '$1'
             [String] $ret = $( (Get-Date $match).ToString('yyyy-MM-dd') )
+        } else {
+            $ret = $Null
+        }
+        return $ret
+    }
+    function getOptLink {
+        param ( [String] $line )
+        [String] $reg1 = '^.*\s+link:"([^"]+)".*$'
+        [String] $reg2 = '^.*\s+link:([^ ]+).*$'
+        # Convert date to string
+        if ( $line -match $reg1 ){
+            [String] $ret = $line -replace $reg1, '$1'
+        } elseif ( $line -match $reg2 ){
+            [String] $ret = $line -replace $reg2, '$1'
         } else {
             $ret = $Null
         }
@@ -1631,6 +1654,12 @@ function Get-Ticket {
         ## delete due date
         $line = $line -replace ' due:([-/0-9]{6,10})', ''
         Write-Debug "Due: $dueDate"
+        # get link
+        $linkStr = getOptLink $line
+        ## delete link
+        $line = $line -replace ' link:"[^"]+"', ''
+        $line = $line -replace ' link:[^ ]+', ''
+        Write-Debug "Link: $linkStr"
         # get status
         [String[]] $statAry = getOptStatus $line
         ## filter status array
@@ -1744,6 +1773,7 @@ function Get-Ticket {
             $hash["Due"]     = $dueDate
             $hash["Status"]  = $statStr.Trim()
             $hash["Tag"]     = $tagStr.Trim()
+            $hash["Link"]    = $linkStr
         }
         if ( $True ){
             $hash["Create"]   = $createDate
