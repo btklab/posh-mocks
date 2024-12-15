@@ -116,7 +116,8 @@ function Unique-Object
             }
         }
         [string] $oldVal = $newVal
-        $preItem = $InputObject | Select-Object -Property $Property
+        $preItem = $InputObject
+        #$preItem = $InputObject | Select-Object -Property $Property
         $Counter++
     }
     end {
@@ -130,3 +131,4 @@ function Unique-Object
             $preItem
     }
 }
+
