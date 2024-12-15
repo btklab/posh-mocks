@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Fixed: [Invoke-Link] Fixed a bug that caused links to be executed twice when .lnk was specified
+- Changed: [Get-Ticket] Changed short Act names to default
+
 ## [7.4.2] - 2024-12-09
 
 - Fixed: [Invoke-Link] -DryRun does not run to completion

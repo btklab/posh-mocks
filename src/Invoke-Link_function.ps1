@@ -582,7 +582,6 @@ function Invoke-Link {
                 ## is file shortcut?
                 if ( ( $ext -eq '.lnk' ) -or ( $ext -eq '.url') ){
                     if ( $DryRun ){ $exeComStr; continue }
-                    Invoke-Item -LiteralPath "$File"
                     if ( $App ){
                         $exeComStr | Invoke-Expression -ErrorAction $ErrAction
                     } else {
