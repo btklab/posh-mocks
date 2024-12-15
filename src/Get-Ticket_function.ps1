@@ -4,8 +4,7 @@
 
     Parse "todo.txt" like format and output as Text/PsObject:
 
-        (B) 2023-12-01 +proj This is a [first ticket] @haccp #hashtag due:2023-12-31
-            link: https://github.com/todotxt/todo.txt
+        (B) 2023-12-01 +proj This is a [first ticket] @haccp #tag1 #tag2 due:2023-12-31 link:"path/to/the/file or url"
         x 2023-12-02 2023-12-01 This is a completed ticket
 
     For todo / task / ticket management, alternatively as a changelog or
@@ -616,11 +615,20 @@ function Get-Ticket {
 
         [Parameter( Mandatory=$False )]
         [Switch] $GetSeries,
-
+        
         [Parameter( Mandatory=$False )]
         [Alias('os')]
         [Switch] $OutputSection,
-                
+        
+        [Parameter( Mandatory=$False )]
+        [Switch] $OffLink,
+        
+        [Parameter( Mandatory=$False )]
+        [Switch] $OffTag,
+        
+        [Parameter( Mandatory=$False )]
+        [Switch] $TagOnly,
+        
         [Parameter( Mandatory=$False )]
         [String] $HyphenPlaceHolder = '///@H@y@p@h@e@n@s@I@n@B@r@a@c@k@e@t@///',
         
@@ -660,7 +668,9 @@ function Get-Ticket {
                 "Done",
                 "Project",
                 "ABC",
-                "Act"
+                "Act",
+                "Tag",
+                "Link"
             )
         } else {
             [String[]] $splatProp = @(
@@ -668,27 +678,30 @@ function Get-Ticket {
                 "Done",
                 "Project",
                 "ABC",
-                "Act"
+                "Act",
+                "Tag",
+                "Link"
             )
         }
         [String[]] $splatFullProp = @(
-            "Id", 
-            "Done", 
-            "Project", 
+            "Id",
+            "Done",
+            "Project",
             "ABC",
-            "Act", 
-            "Due", 
-            "Status", 
-            "Tag", 
-            "Create", 
-            "Complete", 
-            "Remain", 
-            "Age", 
-            "Raw", 
+            "Act",
+            "Due",
+            "Status",
+            "Tag",
+            "Create",
+            "Complete",
+            "Remain",
+            "Age",
+            "Link",
+            "Raw",
             "Note"
         )
     } else {
-        # ShortAct: separate Act, Name, At
+        # ShortAct: separate Act, Name, Tag
         if ( $ShortenProperty ){
             [String[]] $splatProp = @(
                 "Id",
@@ -696,7 +709,9 @@ function Get-Ticket {
                 "Project",
                 "ABC",
                 "Act",
-                "Name"
+                "Name",
+                "Tag",
+                "Link"
             )
         } else {
             [String[]] $splatProp = @(
@@ -706,25 +721,27 @@ function Get-Ticket {
                 "ABC",
                 "Act",
                 "Name",
-                "At"
+                "Tag",
+                "Link"
             )
         }
         [String[]] $splatFullProp = @(
-            "Id", 
-            "Done", 
-            "Project", 
-            "ABC",
-            "Act", 
-            "Name", 
-            "At", 
-            "Due", 
-            "Status", 
-            "Tag", 
-            "Create", 
-            "Complete", 
-            "Remain", 
-            "Age", 
-            "Raw", 
+            "Id",
+            "Done",
+            "Project",
+            "ABC"
+            "Act",
+            "Name",
+            "At",
+            "Due",
+            "Status",
+            "Tag",
+            "Create",
+            "Complete",
+            "Remain",
+            "Age",
+            "Link",
+            "Raw",
             "Note"
         )
     }
@@ -853,6 +870,20 @@ function Get-Ticket {
         }
         return $ret
     }
+    function getOptLink {
+        param ( [String] $line )
+        [String] $reg1 = '^.*\s+link:"([^"]+)".*$'
+        [String] $reg2 = '^.*\s+link:([^ ]+).*$'
+        # Convert date to string
+        if ( $line -match $reg1 ){
+            [String] $ret = $line -replace $reg1, '$1'
+        } elseif ( $line -match $reg2 ){
+            [String] $ret = $line -replace $reg2, '$1'
+        } else {
+            $ret = $Null
+        }
+        return $ret
+    }
     function getOptStatus {
         param ( [String] $line )
         [String] $reg = '^.*\s+status:([^ ]+).*$'
@@ -880,6 +911,19 @@ function Get-Ticket {
             [String] $ret = '-'
         }
         return $ret
+    }
+    function deleteLinkStr {
+        param ( [String] $line )
+        $line = $line -replace ' link:"[^"]+"', ''
+        $line = $line -replace ' link:[^ ]+', ''
+        $line = $line.Trim()
+        return $line
+    }
+    function deleteTagStr {
+        param ( [String] $line )
+        $line = $line -replace ' #[^ ]+', ''
+        $line = $line.Trim()
+        return $line
     }
     function isLineEmpty ([String] $line ){
         if ( $line -match '^$' ){
@@ -1274,6 +1318,36 @@ function Get-Ticket {
             }
         }
     }
+    function invokeLinkStr {
+        param (
+            [String] $link
+        )
+        if ( isLinkHttp $link ){
+            if ( isLinkAlive $link ){
+                # invoke-link
+                if ( $InvokeLinkWith ){
+                    [string] $com = "$InvokeLinkWith ""$link"""
+                } else {
+                    [string] $com = "Start-Process -FilePath ""$link"""
+                }
+                Invoke-Expression -Command $com -ErrorAction Stop
+            } else {
+                Write-Error "broken link: '$link'" -ErrorAction Stop
+            }
+        } else {
+            if ( Test-Path -LiteralPath $link){
+                # invoke-link
+                if ( $InvokeLinkWith ){
+                    [string] $com = "$InvokeLinkWith ""$link"""
+                } else {
+                    [string] $com = "Invoke-Item -Path ""$link"""
+                }
+                Invoke-Expression -Command $com -ErrorAction Stop
+            } else {
+                Write-Error "broken link: '$link'" -ErrorAction Stop
+            }
+        }
+    }
     ## read line
     if ( $File ){
         # test path
@@ -1479,35 +1553,11 @@ function Get-Ticket {
                 if ( $InvokeLink -or $InvokeLinkWith ){
                     if ($line -match '^\s+link:\s*'){
                         [String] $link = $line
+                        Write-Output $line
                         [String] $link = $link -replace '^\s+link:\s*', ''
                         [String] $link = $link -replace('^"', '')
                         [String] $link = $link -replace('"$', '')
-                        if ( isLinkHttp $link ){
-                            if ( isLinkAlive $link ){
-                                # invoke-link
-                                if ( $InvokeLinkWith ){
-                                    [string] $com = "$InvokeLinkWith ""$link"""
-                                } else {
-                                    [string] $com = "Start-Process -FilePath ""$link"""
-                                }
-                                Invoke-Expression -Command $com -ErrorAction Stop
-                            } else {
-                                Write-Error "broken link: '$link'" -ErrorAction Stop
-                            }
-                        } else {
-                            if ( Test-Path -LiteralPath $link){
-                                # invoke-link
-                                if ( $InvokeLinkWith ){
-                                    [string] $com = "$InvokeLinkWith ""$link"""
-                                } else {
-                                    [string] $com = "Invoke-Item -Path ""$link"""
-                                }
-                                Invoke-Expression -Command $com -ErrorAction Stop
-                            } else {
-                                Write-Error "broken link: '$link'" -ErrorAction Stop
-                            }
-                        }
-                        Write-Output $line
+                        invokeLinkStr $link
                     }
                 } else {
                     Write-Output $line
@@ -1571,6 +1621,24 @@ function Get-Ticket {
             if ( $Id.Contains($idCounter) ){
                 if ( $parseLine ){
                     [Bool] $isViewId = $True
+                    if ( $TagOnly ){
+                        [String[]] $tagAry = getMatchesValue $line ' #[^ ]+|^#[^ ]+'
+                        Write-Output $tagAry
+                        continue
+                    }
+                    if ( $InvokeLink -or $InvokeLinkWith ){
+                        if ( $line -match 'link:..*'){
+                            $linkStr = getOptLink $line
+                            Write-Output " link: $linkStr"
+                            invokeLinkStr $linkStr
+                        }
+                    }
+                    if ( $OffLink ){
+                        $line = deleteLinkStr $line
+                    }
+                    if ( $OffTag ){
+                        $line = deleteTagStr $line
+                    }
                     Write-Output $line
                 } else {
                     [Bool] $isViewId = $False
@@ -1631,6 +1699,11 @@ function Get-Ticket {
         ## delete due date
         $line = $line -replace ' due:([-/0-9]{6,10})', ''
         Write-Debug "Due: $dueDate"
+        # get link
+        $linkStr = getOptLink $line
+        ## delete link
+        $line = deleteLinkStr $line
+        Write-Debug "Link: $linkStr"
         # get status
         [String[]] $statAry = getOptStatus $line
         ## filter status array
@@ -1743,7 +1816,9 @@ function Get-Ticket {
             $hash["At"]      = $AtMarkStr.Trim()
             $hash["Due"]     = $dueDate
             $hash["Status"]  = $statStr.Trim()
-            $hash["Tag"]     = $tagStr.Trim()
+            #$hash["Tag"]     = $tagStr.Trim()
+            $hash["Tag"]     = $tagAry
+            $hash["Link"]    = $linkStr
         }
         if ( $True ){
             $hash["Create"]   = $createDate
@@ -1758,7 +1833,19 @@ function Get-Ticket {
             #pass
         } else {
             # raw output 
-            [String] $outputStr = "$idCounter $($hash["Raw"])"
+            [String] $outputStr = $hash["Raw"]
+            if ( $TagOnly ){
+                [String[]] $tagAry = getMatchesValue $outputStr ' #[^ ]+|^#[^ ]+'
+                Write-Output $tagAry
+                continue
+            }
+            if ( $OffLink ){
+                [String] $outputStr = deleteLinkStr $outputStr
+            }
+            if ( $OffTag ){
+                [String] $outputStr = deleteTagStr $outputStr
+            }
+            [String] $outputStr = "$idCounter $outputStr"
             Write-Output $outputStr
             continue
         }
@@ -1897,3 +1984,4 @@ if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0)
     Remove-Variable -Name "tmpAliasName" -Force
     Remove-Variable -Name "tmpCmdName" -Force
 }
+
