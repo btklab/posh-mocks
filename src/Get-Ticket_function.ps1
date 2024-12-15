@@ -852,9 +852,12 @@ function Get-Ticket {
                 if ( $replaceChar.Count -gt 0 ){
                     foreach ( $r in $replaceChar ){
                         $writeLine = $writeLine.Replace($r, '')
+                        $writeLine = $writeLine.Trim()
                     }
                 }
-                Write-Output $writeLine
+                if ( $writeLine -ne '' ){
+                    Write-Output $writeLine
+                }
             }
         return $retAry
     }
@@ -1050,20 +1053,22 @@ function Get-Ticket {
         return $httpFlag
     }
     function isLinkAlive ( [string] $uri ){
-        $origErrActPref = $ErrorActionPreference
-        try {
-            $ErrorActionPreference = "SilentlyContinue"
-            $Response = Invoke-WebRequest -Uri "$uri"
-            $ErrorActionPreference = $origErrActPref
-            # This will only execute if the Invoke-WebRequest is successful.
-            $StatusCode = $Response.StatusCode
-            return $True
-        } catch {
-            $StatusCode = $_.Exception.Response.StatusCode.value__
-            return $False
-        } finally {
-            $ErrorActionPreference = $origErrActPref
-        }
+        return $True
+
+        #$origErrActPref = $ErrorActionPreference
+        #try {
+        #    $ErrorActionPreference = "SilentlyContinue"
+        #    $Response = Invoke-WebRequest -Uri "$uri"
+        #    $ErrorActionPreference = $origErrActPref
+        #    # This will only execute if the Invoke-WebRequest is successful.
+        #    $StatusCode = $Response.StatusCode
+        #    return $True
+        #} catch {
+        #    $StatusCode = $_.Exception.Response.StatusCode.value__
+        #    return $False
+        #} finally {
+        #    $ErrorActionPreference = $origErrActPref
+        #}
     }
     # Add new ticket
     if ( $Add -or $AddTail -or $AddEmpty -or $AddTailEmpty -or $Edit -or $Editor ){
@@ -1322,6 +1327,7 @@ function Get-Ticket {
         param (
             [String] $link
         )
+        if ( $link -eq '' ){ return }
         if ( isLinkHttp $link ){
             if ( isLinkAlive $link ){
                 # invoke-link
@@ -1330,6 +1336,7 @@ function Get-Ticket {
                 } else {
                     [string] $com = "Start-Process -FilePath ""$link"""
                 }
+                Write-Host $com -ForegroundColor Green
                 Invoke-Expression -Command $com -ErrorAction Stop
             } else {
                 Write-Error "broken link: '$link'" -ErrorAction Stop
@@ -1342,6 +1349,7 @@ function Get-Ticket {
                 } else {
                     [string] $com = "Invoke-Item -Path ""$link"""
                 }
+                Write-Host $com -ForegroundColor Green
                 Invoke-Expression -Command $com -ErrorAction Stop
             } else {
                 Write-Error "broken link: '$link'" -ErrorAction Stop
@@ -1623,7 +1631,9 @@ function Get-Ticket {
                     [Bool] $isViewId = $True
                     if ( $TagOnly ){
                         [String[]] $tagAry = getMatchesValue $line ' #[^ ]+|^#[^ ]+'
-                        Write-Output $tagAry
+                        if ( $tagAry.Count -gt 0 ){
+                            Write-Output $tagAry
+                        }
                         continue
                     }
                     if ( $InvokeLink -or $InvokeLinkWith ){
@@ -1764,30 +1774,22 @@ function Get-Ticket {
         if ( $DeleteTagFromAct -or $ShortenAct -or $Gantt -or $GanttNote ){
             if ( $projectAry.Count -gt 0 ){
                 foreach ( $item in $projectAry ){
-                    if ( $item -ne '' ){
-                        $line = removeStringsFromLine -line $line -targetStrings $item
-                    }
+                    $line = removeStringsFromLine -line $line -targetStrings $item
                 }
             }
             if ( $nameAry.Count -gt 0 ){
                 foreach ( $item in $nameAry ){
-                    if ( $item -ne '' ){
-                        $line = removeStringsFromLine -line $line -targetStrings $item
-                    }
+                    $line = removeStringsFromLine -line $line -targetStrings $item
                 }
             }
             if ( $AtMarkAry.Count -gt 0 ){
                 foreach ( $item in $AtMarkAry ){
-                    if ( $item -ne '' ){
-                        $line = removeStringsFromLine -line $line -targetStrings $item
-                    }
+                    $line = removeStringsFromLine -line $line -targetStrings $item
                 }
             }
             if ( $tagAry.Count -gt 0 ){
                 foreach ( $item in $tagAry ){
-                    if ( $item -ne '' ){
-                        $line = removeStringsFromLine -line $line -targetStrings $item
-                    }
+                    $line = removeStringsFromLine -line $line -targetStrings $item
                 }
             }
         }
@@ -1829,16 +1831,17 @@ function Get-Ticket {
             $hash["Note"]     = $Null
         }
         ## output as raw text
+        if ( $TagOnly ){
+            if ( $tagAry.Count -gt 0 ){
+                Write-Output $tagAry
+            }
+            continue
+        }
         if ( $AsObject -or $Gantt -or $GanttNote ){
             #pass
         } else {
             # raw output 
             [String] $outputStr = $hash["Raw"]
-            if ( $TagOnly ){
-                [String[]] $tagAry = getMatchesValue $outputStr ' #[^ ]+|^#[^ ]+'
-                Write-Output $tagAry
-                continue
-            }
             if ( $OffLink ){
                 [String] $outputStr = deleteLinkStr $outputStr
             }
@@ -1935,10 +1938,20 @@ function Get-Ticket {
     }
     if ( $AsObject -and $objAry.Count -gt 0 ){
         Write-Output $objAry
+        if ( $Id.Count -gt 0){
+            if ( $InvokeLink -or $InvokeLinkWith ){
+                invokeLinkStr "$($hash["Link"])"
+            }
+        }
         return
     }
     if ( $Relax -and $relaxAry.Count -gt 0 ){
         Write-Output $relaxAry | Format-Table
+        if ( $Id.Count -gt 0){
+            if ( $InvokeLink -or $InvokeLinkWith ){
+                invokeLinkStr "$($hash["Link"])"
+            }
+        }
         return
     }
 }
