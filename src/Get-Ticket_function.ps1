@@ -268,12 +268,11 @@
         - [-os||-OutputSection] ...Output with Section/Comment
     - Output as PsObject
         - [-o|-AsObject] ...Output as PsObject
-            - [-sa|-ShortenAct]
+            - [-la|-LongAct]
             - [-full|-FullProperty]
             - [-p|-Plus <String[]>]
             - [-d|-DeleteTagFromAct]
             - [-sp|-ShortenProperty]
-        - [-so|-AsObjectAndShortenAct]
     - Output as Gantt chart format for plantUMLweekl
         - [-Gantt] ...Output as plantUML gantt chart format
         - [-GanttNote] ...Output as plantUML gantt chart format
@@ -345,7 +344,7 @@
 
 .EXAMPLE
     # Sort By Project
-    PS > Get-Ticket -AsObject -ShortenAct -FullProperty | Sort-Object -Property "Project" | Format-Table
+    PS > Get-Ticket -AsObject -FullProperty | Sort-Object -Property "Project" | Format-Table
     PS > t -o -sa -full | Sort "Project" | ft
 
     Id Done Project     Act                          Name        
@@ -522,10 +521,6 @@ function Get-Ticket {
         [Switch] $AsObject,
         
         [Parameter( Mandatory=$False )]
-        [Alias('so')]
-        [Switch] $AsObjectAndShortenAct,
-        
-        [Parameter( Mandatory=$False )]
         [Alias('r')]
         [Switch] $Relax,
         
@@ -589,8 +584,8 @@ function Get-Ticket {
         [Switch] $DeleteTagFromAct,
         
         [Parameter( Mandatory=$False )]
-        [Alias('sa')]
-        [Switch] $ShortenAct,
+        [Alias('la')]
+        [Switch] $LongAct,
         
         [Parameter( Mandatory=$False )]
         [Alias('i')]
@@ -657,49 +652,95 @@ function Get-Ticket {
         return
     }
     # set output property names
-    if ( $ShortenProperty ){
-        [String[]] $splatProp = @(
-            "Id",
-            "Done",
-            "Act",
-            "Name"
+    if ( $LongAct ){
+        # LongAct: Name in Act
+        if ( $ShortenProperty ){
+            [String[]] $splatProp = @(
+                "Id",
+                "Done",
+                "Project",
+                "ABC",
+                "Act"
+            )
+        } else {
+            [String[]] $splatProp = @(
+                "Id",
+                "Done",
+                "Project",
+                "ABC",
+                "Act"
+            )
+        }
+        [String[]] $splatFullProp = @(
+            "Id", 
+            "Done", 
+            "Project", 
+            "ABC",
+            "Act", 
+            "Due", 
+            "Status", 
+            "Tag", 
+            "Create", 
+            "Complete", 
+            "Remain", 
+            "Age", 
+            "Raw", 
+            "Note"
         )
     } else {
-        [String[]] $splatProp = @(
-            "Id",
-            "Done",
-            "Project",
-            "Act",
-            "Name",
-            "At"
+        # ShortAct: separate Act, Name, At
+        if ( $ShortenProperty ){
+            [String[]] $splatProp = @(
+                "Id",
+                "Done",
+                "Project",
+                "ABC",
+                "Act",
+                "Name"
+            )
+        } else {
+            [String[]] $splatProp = @(
+                "Id",
+                "Done",
+                "Project",
+                "ABC",
+                "Act",
+                "Name",
+                "At"
+            )
+        }
+        [String[]] $splatFullProp = @(
+            "Id", 
+            "Done", 
+            "Project", 
+            "ABC",
+            "Act", 
+            "Name", 
+            "At", 
+            "Due", 
+            "Status", 
+            "Tag", 
+            "Create", 
+            "Complete", 
+            "Remain", 
+            "Age", 
+            "Raw", 
+            "Note"
         )
     }
-    [String[]] $splatFullProp = @(
-        "Id", 
-        "Done", 
-        "Project", 
-        "Act", 
-        "Name", 
-        "At", 
-        "Due", 
-        "Status", 
-        "Tag", 
-        "Create", 
-        "Complete", 
-        "Remain", 
-        "Age", 
-        "Raw", 
-        "Note"
-    )
     # set opt
+    if ( $LongAct ){
+        $ShortenAct = $False
+    } else {
+        $ShortenAct = $True
+    }
     if ( $Relax ){
         [Object[]] $relaxAry = @()
         $AsObject = $True
-        $ShortenAct = $True
     }
-    if ( $AsObjectAndShortenAct ){
+    if ( $AsObject ){
+        [Object[]] $objAry = @()
         $AsObject = $True
-        $ShortenAct = $True
     }
     # execute -ls
     if ( $lsProperty ){
@@ -1682,6 +1723,13 @@ function Get-Ticket {
         Write-Debug "line: $line"
         # get act (before delete option block)
         [String] $actStr = $line -creplace '^(x|\-) ', ''
+        if ( $actStr -cmatch '^\([A-Z]\) ..*$'){
+            [String] $priorityStr = $actStr -replace '^(\([A-Z]\)) (..*)$', '$1'
+            [String] $actStr      = $actStr -replace '^(\([A-Z]\)) (..*)$', '$2'
+        } else {
+            [String] $priorityStr = ''
+        }
+        
         Write-Debug "act: $actStr"
         # set hash
         [System.Collections.Specialized.OrderedDictionary] $hash = @{}
@@ -1689,6 +1737,7 @@ function Get-Ticket {
             $hash["Id"]      = $idCounter
             $hash["Done"]    = $doneStr.Trim()
             $hash["Project"] = $projectStr.Trim()
+            $hash["ABC"]     = $priorityStr.Trim()
             $hash["Act"]     = $actStr.Trim()
             $hash["Name"]    = $nameStr.Trim()
             $hash["At"]      = $AtMarkStr.Trim()
@@ -1786,7 +1835,7 @@ function Get-Ticket {
         if ( $Relax ){
             $relaxAry += $outputObj
         } else {
-            Write-Output $outputObj
+            $objAry += $outputObj
         }
         continue
     }
@@ -1795,9 +1844,15 @@ function Get-Ticket {
             Write-Error "No item matched." -ErrorAction Stop
         }
         Write-Output "@endgantt"
+        return
+    }
+    if ( $AsObject -and $objAry.Count -gt 0 ){
+        Write-Output $objAry
+        return
     }
     if ( $Relax -and $relaxAry.Count -gt 0 ){
         Write-Output $relaxAry | Format-Table
+        return
     }
 }
 # set alias
