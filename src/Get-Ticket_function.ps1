@@ -616,11 +616,14 @@ function Get-Ticket {
 
         [Parameter( Mandatory=$False )]
         [Switch] $GetSeries,
-
+        
         [Parameter( Mandatory=$False )]
         [Alias('os')]
         [Switch] $OutputSection,
-                
+        
+        [Parameter( Mandatory=$False )]
+        [Switch] $OffLink,
+        
         [Parameter( Mandatory=$False )]
         [String] $HyphenPlaceHolder = '///@H@y@p@h@e@n@s@I@n@B@r@a@c@k@e@t@///',
         
@@ -903,6 +906,12 @@ function Get-Ticket {
             [String] $ret = '-'
         }
         return $ret
+    }
+    function deleteLinkStr {
+        param ( [String] $line )
+        $line = $line -replace ' link:"[^"]+"', ''
+        $line = $line -replace ' link:[^ ]+', ''
+        return $line
     }
     function isLineEmpty ([String] $line ){
         if ( $line -match '^$' ){
@@ -1297,6 +1306,36 @@ function Get-Ticket {
             }
         }
     }
+    function invokeLinkStr {
+        param (
+            [String] $link
+        )
+        if ( isLinkHttp $link ){
+            if ( isLinkAlive $link ){
+                # invoke-link
+                if ( $InvokeLinkWith ){
+                    [string] $com = "$InvokeLinkWith ""$link"""
+                } else {
+                    [string] $com = "Start-Process -FilePath ""$link"""
+                }
+                Invoke-Expression -Command $com -ErrorAction Stop
+            } else {
+                Write-Error "broken link: '$link'" -ErrorAction Stop
+            }
+        } else {
+            if ( Test-Path -LiteralPath $link){
+                # invoke-link
+                if ( $InvokeLinkWith ){
+                    [string] $com = "$InvokeLinkWith ""$link"""
+                } else {
+                    [string] $com = "Invoke-Item -Path ""$link"""
+                }
+                Invoke-Expression -Command $com -ErrorAction Stop
+            } else {
+                Write-Error "broken link: '$link'" -ErrorAction Stop
+            }
+        }
+    }
     ## read line
     if ( $File ){
         # test path
@@ -1502,35 +1541,11 @@ function Get-Ticket {
                 if ( $InvokeLink -or $InvokeLinkWith ){
                     if ($line -match '^\s+link:\s*'){
                         [String] $link = $line
+                        Write-Output $line
                         [String] $link = $link -replace '^\s+link:\s*', ''
                         [String] $link = $link -replace('^"', '')
                         [String] $link = $link -replace('"$', '')
-                        if ( isLinkHttp $link ){
-                            if ( isLinkAlive $link ){
-                                # invoke-link
-                                if ( $InvokeLinkWith ){
-                                    [string] $com = "$InvokeLinkWith ""$link"""
-                                } else {
-                                    [string] $com = "Start-Process -FilePath ""$link"""
-                                }
-                                Invoke-Expression -Command $com -ErrorAction Stop
-                            } else {
-                                Write-Error "broken link: '$link'" -ErrorAction Stop
-                            }
-                        } else {
-                            if ( Test-Path -LiteralPath $link){
-                                # invoke-link
-                                if ( $InvokeLinkWith ){
-                                    [string] $com = "$InvokeLinkWith ""$link"""
-                                } else {
-                                    [string] $com = "Invoke-Item -Path ""$link"""
-                                }
-                                Invoke-Expression -Command $com -ErrorAction Stop
-                            } else {
-                                Write-Error "broken link: '$link'" -ErrorAction Stop
-                            }
-                        }
-                        Write-Output $line
+                        invokeLinkStr $link
                     }
                 } else {
                     Write-Output $line
@@ -1594,6 +1609,17 @@ function Get-Ticket {
             if ( $Id.Contains($idCounter) ){
                 if ( $parseLine ){
                     [Bool] $isViewId = $True
+                    if ( $InvokeLink -or $InvokeLinkWith ){
+                        if ( $line -match 'link:..*'){
+                            $linkStr = getOptLink $line
+                            Write-Output " link: $linkStr"
+                            invokeLinkStr $linkStr
+                        }
+                    }
+                    if ( $OffLink ){
+                        $line = deleteLinkStr $line
+                        $line = "$line".Trim()
+                    }
                     Write-Output $line
                 } else {
                     [Bool] $isViewId = $False
@@ -1657,8 +1683,7 @@ function Get-Ticket {
         # get link
         $linkStr = getOptLink $line
         ## delete link
-        $line = $line -replace ' link:"[^"]+"', ''
-        $line = $line -replace ' link:[^ ]+', ''
+        $line = deleteLinkStr $line
         Write-Debug "Link: $linkStr"
         # get status
         [String[]] $statAry = getOptStatus $line
