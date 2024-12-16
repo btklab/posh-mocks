@@ -33,8 +33,8 @@
 
         1. Write tickets in [tickets.md] with text editor
 
-            (B) 2023-12-01 +Get-Ticket Add-Ticket [tickets.md] @pwsh
-            (B) 2023-12-01 +Get-Ticket Register-Git [tickets.md] @pwsh
+            (B) 2024-12-17 +pwsh Add-Ticket [tickets.md] @home #lang/pwsh #work/pwsh link:"https://github.com/btklab"
+            (B) 2024-12-17 +pwsh Register-Git [tickets.md] @home #lang/pwsh
 
         2. list active tickets as text line from [tickets.md]
 
@@ -43,15 +43,50 @@
             PS> Get-Content tickets.md | Get-Ticket
             PS> Get-Content tickets.md | t
 
-            [-a|-AllData] output both incomplete and completed tickets
-
-            PS> Get-Ticket -AllData
-            PS> t -a
-
             The output is in text format by default. like this:
 
-            1 (B) 2023-12-01 +Get-Ticket Add-Ticket [tickets.md] @pwsh
-            2 (B) 2023-12-01 +Get-Ticket Register-Git [tickets.md] @pwsh
+            1 (B) 2024-12-17 +pwsh Add-Ticket [tickets.md] @home #lang/pwsh #work/pwsh link:"https://github.com/btklab"
+            2 (B) 2024-12-17 +pwsh Register-Git [tickets.md] @home #lang/pwsh
+
+            If you are bothered by the tags and links,
+            use the "-OffTag" and "-OffLink" switches.
+
+            PS> t -OffLink -OffTag
+
+            1 (B) 2024-12-17 +pwsh Add-Ticket [tickets.md] @home
+            2 (B) 2024-12-17 +pwsh Register-Git [tickets.md] @home
+
+            To output as objects, use the [-o|-AsObject] switch.
+
+            PS> t -AsObject | ft
+            PS> t -o | ft
+
+            Id Done Project ABC Act                     Name         Tag
+            -- ---- ------- --- ---                     ----         ---
+             1 -    +pwsh   (B) 2024-12-17 Add-Ticket   [tickets.md] {#lang/p…
+             2 -    +pwsh   (B) 2024-12-17 Register-Git [tickets.md] {#lang/p…
+
+             [-full|-AllProperty] switch prints all properties.
+
+            PS> t . 1 -AsObject -AllProperty
+            PS> t . 1 -o -full
+
+            Id       : 1
+            Done     : -
+            Project  : +pwsh
+            ABC      : (B)
+            Act      : 2024-12-17 Add-Ticket
+            Name     : [tickets.md]
+            At       : @home
+            Due      :
+            Status   :
+            Tag      : {#lang/pwsh, #work/pwsh}
+            Link     : https://github.com/btklab
+            Create   : 2024-12-17
+            Complete :
+            Remain   : 0
+            Age      : 0
+            Raw      : (B) 2024-12-17 +pwsh Add-Ticket [tickets.md] @home #lang/pwsh #work/pwsh link:"https://github.com/btklab"             
 
         3. filter tickets with keyword (regex) (position=0)
 
@@ -62,6 +97,9 @@
             PS> # the regex "." means wildcard (matches any character)
             PS> t .
 
+            1 (B) 2024-12-17 +pwsh Add-Ticket [tickets.md] @home #lang/pwsh #work/pwsh link:"https://github.com/btklab"
+            2 (B) 2024-12-17 +pwsh Register-Git [tickets.md] @home #lang/pwsh
+            
         4. select id and output body (position=1)
 
             PS> Get-Ticket -Where keyword -Id 1,3
@@ -76,7 +114,28 @@
             PS> t . 1,3 -InvokeLink
             PS> t . 1,3 -i
 
-        5. (Loop)
+        5. complete the task
+
+            Mark the line with an "x" to complete it
+
+            PS> vim tickets.txt
+            x (B) 2024-12-17 +pwsh Register-Git [tickets.md] @home #lang/pwsh
+
+            You can also add a completion date
+
+            PS> vim tickets.txt
+            x (B) 2024-12-31 2024-12-17 +pwsh Register-Git [tickets.md] @home #lang/pwsh
+
+            [-a|-AllData] output both incomplete and completed tickets
+
+            PS> Get-Ticket -AllData
+            PS> t -a
+
+            Or you can simply grep tickets.txt
+
+            PS> (sls '^x ' tickets.txt).Line
+
+        6. (Loop)
 
     Various output:
 
@@ -97,7 +156,7 @@
             (There are few default output properties as follows)
             (Id, Done, Project, Act, Name, At)
 
-            PS> Get-Ticket -Where keyword -id 1,3 -AsObject -FullProperty
+            PS> Get-Ticket -Where keyword -id 1,3 -AsObject -AllProperty
             PS> t -where keyword -id 1,3 -AsObject -full
             PS> t keyword 1,3 -o -full
 
@@ -262,13 +321,13 @@
     - Get and Output
         - [-a|-AllData] ...Get data including completed tickets
         - [-Id] ...Show body (description)
-            - [-i|-InvokeLink] ...Invoke link in the body block
-            - [-InvokeLinkWith <app>] ...Invoke link with app
+            - [-i|-ii|-InvokeLink] ...Invoke link in the body block
+            - [[-App|-InvokeLinkWith] <app>] ...Invoke link with app
         - [-os||-OutputSection] ...Output with Section/Comment
     - Output as PsObject
         - [-o|-AsObject] ...Output as PsObject
             - [-la|-LongAct]
-            - [-full|-FullProperty]
+            - [-full|-AllProperty]
             - [-p|-Plus <String[]>]
             - [-d|-DeleteTagFromAct]
             - [-sp|-ShortenProperty]
@@ -317,16 +376,14 @@
     file [tickets.md] example:
 
         # todo
-        (B) 2023-12-01 +proj This is a first ticket  @todo due:2023-12-31
-        (A) 2023-12-01 +proj This is a second ticket @todo status:monthly:25
-        (B) 2023-12-01 +proj This is a third ticket  @todo status:routine
-        x 2023-12-10 2023-12-01 +proj This is a completed ticket @todo
+        (B) 2023-12-01 +proj This is a first ticket  @home #todo/act due:2023-12-31
+        (A) 2023-12-01 +proj This is a second ticket @home #todo/act status:monthly:25
+        (B) 2023-12-01 +proj This is a third ticket  @home #todo/act status:routine
+        x 2023-12-10 2023-12-01 +proj This is a completed ticket @home #todo/done
 
         # book
-        Read book [The HACCP book] +haccp @book
+        Read book [The HACCP book] +haccp @book #book/author/btklab
             this is body
-            link: https://example.com/
-        Read book [My book collection] +haccp @book
             link: https://example.com/
 
         # double hyphen behavior
@@ -343,7 +400,7 @@
 
 .EXAMPLE
     # Sort By Project
-    PS > Get-Ticket -AsObject -FullProperty | Sort-Object -Property "Project" | Format-Table
+    PS > Get-Ticket -AsObject -AllProperty | Sort-Object -Property "Project" | Format-Table
     PS > t -o -sa -full | Sort "Project" | ft
 
     Id Done Project     Act                          Name        
@@ -479,7 +536,7 @@ function Get-Ticket {
         
         [Parameter( Mandatory=$False )]
         [Alias('full')]
-        [Switch] $FullProperty,
+        [Switch] $AllProperty,
         
         [Parameter( Mandatory=$False )]
         [Alias('New')]
@@ -588,10 +645,12 @@ function Get-Ticket {
         
         [Parameter( Mandatory=$False )]
         [Alias('i')]
+        [Alias('ii')]
         [Switch] $InvokeLink,
         
         [Parameter( Mandatory=$False )]
         [Alias('iw')]
+        [Alias('App')]
         [String] $InvokeLinkWith,
         
         [Parameter( Mandatory=$False )]
@@ -1336,7 +1395,7 @@ function Get-Ticket {
                 } else {
                     [string] $com = "Start-Process -FilePath ""$link"""
                 }
-                Write-Host $com -ForegroundColor Green
+                Write-Debug $com -ForegroundColor Green
                 Invoke-Expression -Command $com -ErrorAction Stop
             } else {
                 Write-Error "broken link: '$link'" -ErrorAction Stop
@@ -1349,7 +1408,7 @@ function Get-Ticket {
                 } else {
                     [string] $com = "Invoke-Item -Path ""$link"""
                 }
-                Write-Host $com -ForegroundColor Green
+                Write-Debug $com -ForegroundColor Green
                 Invoke-Expression -Command $com -ErrorAction Stop
             } else {
                 Write-Error "broken link: '$link'" -ErrorAction Stop
@@ -1639,7 +1698,7 @@ function Get-Ticket {
                     if ( $InvokeLink -or $InvokeLinkWith ){
                         if ( $line -match 'link:..*'){
                             $linkStr = getOptLink $line
-                            Write-Output " link: $linkStr"
+                            #Write-Output " link: $linkStr"
                             invokeLinkStr $linkStr
                         }
                     }
@@ -1914,7 +1973,7 @@ function Get-Ticket {
         if ( $Plus.Count -gt 0 ){
             [String[]] $splatPropAry = $splatProp + $Plus
             $splattingSelect.Set_Item("Property", $splatPropAry)
-        } elseif ( $FullProperty ){
+        } elseif ( $AllProperty ){
             $splattingSelect.Set_Item("Property", @('*'))
         } else {
             $splattingSelect.Set_Item("Property", $splatProp)
