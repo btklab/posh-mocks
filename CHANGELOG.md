@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed: [Get-Ticket] Enable execution of links written in one-liner
 - Changed: [Get-Ticket] Changed the tag string to an array
 - Changed: [Get-Ticket] Enabled -InvokeLink when -AsObject switch is specified
+- Changed: [Get-Ticket] Suppress standard output when -InvokeLink
 - Added: [Get-Ticket] -TagOnly switch
 
 ## [7.4.2] - 2024-12-09

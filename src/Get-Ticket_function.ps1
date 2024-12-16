@@ -588,10 +588,12 @@ function Get-Ticket {
         
         [Parameter( Mandatory=$False )]
         [Alias('i')]
+        [Alias('ii')]
         [Switch] $InvokeLink,
         
         [Parameter( Mandatory=$False )]
         [Alias('iw')]
+        [Alias('App')]
         [String] $InvokeLinkWith,
         
         [Parameter( Mandatory=$False )]
@@ -1336,7 +1338,7 @@ function Get-Ticket {
                 } else {
                     [string] $com = "Start-Process -FilePath ""$link"""
                 }
-                Write-Host $com -ForegroundColor Green
+                Write-Debug $com -ForegroundColor Green
                 Invoke-Expression -Command $com -ErrorAction Stop
             } else {
                 Write-Error "broken link: '$link'" -ErrorAction Stop
@@ -1349,7 +1351,7 @@ function Get-Ticket {
                 } else {
                     [string] $com = "Invoke-Item -Path ""$link"""
                 }
-                Write-Host $com -ForegroundColor Green
+                Write-Debug $com -ForegroundColor Green
                 Invoke-Expression -Command $com -ErrorAction Stop
             } else {
                 Write-Error "broken link: '$link'" -ErrorAction Stop
@@ -1639,7 +1641,7 @@ function Get-Ticket {
                     if ( $InvokeLink -or $InvokeLinkWith ){
                         if ( $line -match 'link:..*'){
                             $linkStr = getOptLink $line
-                            Write-Output " link: $linkStr"
+                            #Write-Output " link: $linkStr"
                             invokeLinkStr $linkStr
                         }
                     }
