@@ -13,13 +13,14 @@
 
     thanks:
         Water.css: https://watercss.kognise.dev/
-        GitHub: https://github.com/kognise/water.css)https://github.com/kognise/water.css
+        GitHub: https://github.com/kognise/water.css
         License: The MIT License (MIT) Copyright © 2019 Kognise
 
 .LINK
     thanks:
         Water.css: https://watercss.kognise.dev/
-        GitHub: https://github.com/kognise/water.css)https://github.com/kognise/water.css
+        GitHub: https://github.com/kognise/water.css
+        License: The MIT License (MIT) Copyright © 2019 Kognise
 
 
 #>
