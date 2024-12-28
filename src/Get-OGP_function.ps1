@@ -455,7 +455,7 @@ function Get-OGP {
                     $o["OutputImage"] = "$dlPath"
                 }
             }
-        }elseif ($imageFlag){
+        } elseif ($imageFlag){
             [string] $dlDirName = "${HOME}/Downloads"
             [string] $dlPath = Join-Path "$dlDirName" "$imageFileName"
             try {
@@ -538,11 +538,12 @@ function Get-OGP {
             }
             if ($Clip){
                 $oHtml | Set-ClipBoard
-                return
             } else {
-                return $oHtml
+                Write-Output $oHtml
             }
-        } elseif( $Markdown ){
+            return
+        }
+        if( $Markdown ){
             # markdown href output
             [string[]] $oMarkdown = @()
             if($Id -eq '@not@set@'){
@@ -565,11 +566,12 @@ function Get-OGP {
             }
             if ($Clip){
                 $oMarkdown | Set-ClipBoard
-                return
             } else {
-                return $oMarkdown
+                Write-Output $oMarkdown
             }
-        } elseif( $Dokuwiki ){
+            return
+        }
+        if( $Dokuwiki ){
             # markdown href output
             [string[]] $oDokuwiki = @()
             if ( $Cite ){
@@ -579,11 +581,12 @@ function Get-OGP {
             }
             if ($Clip){
                 $oDokuwiki | Set-ClipBoard
-                return
             } else {
-                return $oDokuwiki
+                Write-Output $oDokuwiki
             }
-        } elseif ( $Html ){
+            return
+        }
+        if ( $Html ){
             if ( $Cite ){
                 [string] $oHref = "<cite><a href=""$innerUri"">$innerTitle</a></cite>"
             } else {
@@ -591,11 +594,12 @@ function Get-OGP {
             }
             if ($Clip){
                 $oHref | Set-ClipBoard
-                return
             } else {
-                return $oHref
+                Write-Output $oHref
             }
-        } elseif ( $Raw ){
+            return
+        }
+        if ( $Raw ){
             # markdown href output
             [string[]] $oRaw = @()
             if ( $innerTitle -ne '' ){
@@ -606,20 +610,21 @@ function Get-OGP {
             }
             if ($Clip){
                 $oRaw | Set-ClipBoard
-                return
             } else {
-                return $oRaw
+                Write-Output $oRaw
             }
-        } else {
+            return
+        }
+        if ( $True ){
             if ($Clip){
                 [pscustomobject] $o `
                     | ConvertTo-Csv -NoTypeInformation `
                     | Set-ClipBoard
-                return
             } else {
                 # output as object
-                return [pscustomobject] $o
+                [pscustomobject] $o
             }            
+            return
         }
     } catch {
         # status code
@@ -676,3 +681,4 @@ if ((Get-Command -Name $tmpAliasName -ErrorAction SilentlyContinue).Count -gt 0)
     Remove-Variable -Name "tmpAliasName" -Force
     Remove-Variable -Name "tmpCmdName" -Force
 }
+
