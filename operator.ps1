@@ -145,6 +145,8 @@ if ($IsWindows){
 . $pwshSrcDir/linkcheck_function.ps1
 . $pwshSrcDir/linkextract_function.ps1
 . $pwshSrcDir/Get-OGP_function.ps1
+. $pwshSrcDir/Decode-Uri_function.ps1
+. $pwshSrcDir/Encode-Uri_function.ps1
 . $pwshSrcDir/fpath_function.ps1
 . $pwshSrcDir/watercss_function.ps1
 
