@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Added: [Encode-Uri] (Alias: encuri) function
+- Added: [Decode-Uri] (Alias: decuri) function
+- Changed: [Get-OGP] make if statement early return
 - Changed: [Unique-Object] Changed to output columns other than the specified columns
 - Fixed: [Invoke-Link] Fixed a bug that caused links to be executed twice when .lnk was specified
 - Changed: [Get-Ticket] Changed short Act names to default
