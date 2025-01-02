@@ -49,10 +49,13 @@ function Encode-Uri {
     }
     process {
         [string] $decodedUri = $_
+        [string] $status = ''
         ## skip if not encoded
         if ( -not $Force -and $decodedUri -cmatch '^.*%[0-9a-zA-Z][0-9a-zA-Z]+' ){
+            ## output as-is
             [string] $encodedUri = $decodedUri
             Write-Debug "skipped: $decodedUri"
+            [string] $status = 'skipped'
         } else {
             if ( $PSVersionTable.PSVersion.Major -le 5){
                 ## PowerShell 5-
@@ -63,11 +66,13 @@ function Encode-Uri {
                 [string] $encodedUri = [uri]::EscapeUriString($decodedUri)
                 Write-Debug "encoded by pwsh6+: $decodedUri"
             }
+            [string] $status = 'encoded'
         }
         if ( $AsObject ){
             [PSCustomObject]@{
-                DecodedUri = $decodedUri
-                EncodedUri = $encodedUri
+                EncodeFrom = $decodedUri
+                EncodeTo = $encodedUri
+                Status = $status
             }
         } elseif ( $AsArray ){
             @($decodedUri, $encodedUri)

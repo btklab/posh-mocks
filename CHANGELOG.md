@@ -7,19 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Added: [Encode-Uri] (Alias: encuri) Status property when using `-AsObject` option
+- Added: [Decode-Uri] (Alias: decuri) Status property when using `-AsObject` option
+
+## [7.5.0] - 2025-01-01
+
 - Added: [Encode-Uri] (Alias: encuri) function
 - Added: [Decode-Uri] (Alias: decuri) function
 - Changed: [Get-OGP] make if statement early return
 - Changed: [Unique-Object] Changed to output columns other than the specified columns
 - Fixed: [Invoke-Link] Fixed a bug that caused links to be executed twice when .lnk was specified
+- Update: [Get-Ticket] Synopsis
+- Added: [Get-Ticket] `-TagOnly` switch
 - Changed: [Get-Ticket] Changed short Act names to default
 - Changed: [Get-Ticket] Enable link with one-liner
 - Changed: [Get-Ticket] Enable execution of links written in one-liner
 - Changed: [Get-Ticket] Changed the tag string to an array
 - Changed: [Get-Ticket] Enabled `-InvokeLink` when `-AsObject` switch is specified
 - Changed: [Get-Ticket] Suppress standard output when `-InvokeLink`
-- Update: [Get-Ticket] Synopsis
-- Added: [Get-Ticket] `-TagOnly` switch
 
 ## [7.4.2] - 2024-12-09
 
@@ -817,7 +822,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Set-DotEnv]: src/Set-DotEnv_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/7.4.2..HEAD
+[Decode-Uri]: src/Decode-Uri_function.ps1
+[Encode-Uri]: src/Encode-Uri_function.ps1
+
+[unreleased]: https://github.com/btklab/posh-mocks/compare/7.5.0..HEAD
+[7.5.0]: https://github.com/btklab/posh-mocks/releases/tag/7.5.0
 [7.4.2]: https://github.com/btklab/posh-mocks/releases/tag/7.4.1
 [7.4.1]: https://github.com/btklab/posh-mocks/releases/tag/7.4.1
 [7.4.0]: https://github.com/btklab/posh-mocks/releases/tag/7.4.0
