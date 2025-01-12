@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- NA
+
+## [7.5.1] - 2025-01-12
+
 - Added: [Encode-Uri] (Alias: encuri) Status property when using `-AsObject` option
 - Added: [Decode-Uri] (Alias: decuri) Status property when using `-AsObject` option
+- Changed: [Invoke-Link] (Alias: i) to open only the first matched location
 
 ## [7.5.0] - 2025-01-01
 
@@ -825,7 +830,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Decode-Uri]: src/Decode-Uri_function.ps1
 [Encode-Uri]: src/Encode-Uri_function.ps1
 
-[unreleased]: https://github.com/btklab/posh-mocks/compare/7.5.0..HEAD
+[unreleased]: https://github.com/btklab/posh-mocks/compare/7.5.1..HEAD
+[7.5.1]: https://github.com/btklab/posh-mocks/releases/tag/7.5.1
 [7.5.0]: https://github.com/btklab/posh-mocks/releases/tag/7.5.0
 [7.4.2]: https://github.com/btklab/posh-mocks/releases/tag/7.4.1
 [7.4.1]: https://github.com/btklab/posh-mocks/releases/tag/7.4.1

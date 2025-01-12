@@ -64,14 +64,13 @@
           specified.
         - Links written in a text file may or may not be enclosed in
           single/double quotes.
-        - If -l or -Location specified, open the file location in explorer
-          (do not run link)
+        - If -l or -Location specified, open the first matched file location in explorer
         - Environment variables such as ${HOME} can be used for path strings.
 
     Usage:
         i <file> [keyword] [-App <app>] ... Invoke-Item <links-writtein-in-text-file>
         i <file> [keyword] [-App <app>] ... command <links-writtein-in-text-file>
-        i <file> [keyword] [-App <app>] [-l|-Location] ... Open <link> location in explorer
+        i <file> [keyword] [-App <app>] [-l|-Location] ... Open 1st matched file location in explorer
         i <file> [keyword] [-App <app>] [-d|-DryRun]   ... DryRun (listup links)
         i <file> [keyword] [-App <app>] [-e|-Edit]     ... Edit <linkfile> using text editor
         i <dir>  [keyword]              ... Invoke-Item <dir>
@@ -374,6 +373,8 @@ function Invoke-Link {
     # set variable
     [int] $errCounter = 0
     [int] $execCounter = 0
+    [int] $invokeLocationCounter = 0
+    [int] $invokeLocationLimit = 1
     # test bulk input
     if ( -not $AllowBulkInput ){
         $bulkList = New-Object 'System.Collections.Generic.List[System.String]'
@@ -688,9 +689,16 @@ function Invoke-Link {
                     if ( isLinkHttp $_ ){
                         #pass
                     } else {
-                        Invoke-Item $_ }
+                        $invokeLocationCounter++
+                        if ( $invokeLocationCounter -le $invokeLocationLimit ){
+                            Invoke-Item $_ 
+                            if ( -not $DryRub ){
+                                Write-Host "Invoke-Item $_" -ForegroundColor Green
+                            }
+                        }
                     }
-                continue
+                    continue
+                }
             }
             foreach ( $href in $linkLines ){
                 $hrefList.Add($href)
