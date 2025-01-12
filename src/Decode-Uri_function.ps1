@@ -21,7 +21,6 @@
     https://learn.microsoft.com/en-us/dotnet/api/system.uri.unescapedatastring
 #>
 function Decode-Uri {
-
     [CmdletBinding()]
     param (
         [Parameter( Mandatory=$False )]
@@ -50,11 +49,13 @@ function Decode-Uri {
     }
     process {
         [string] $encodedUri = $_
+        [string] $status = ''
         ## skip if not encoded
         if ( -not $Force -and $encodedUri -cnotmatch '^.*%[0-9a-zA-Z][0-9a-zA-Z]+' ){
             ## output as-is
             [string] $decodedUri = $encodedUri
             Write-Debug "skipped: $encodedUri"
+            [string] $status = 'skipped'
         } else {
             if ( $PSVersionTable.PSVersion.Major -le 5){
                 ## PowerShell 5-
@@ -65,11 +66,13 @@ function Decode-Uri {
                 [string] $decodedUri = [uri]::UnEscapeDataString($encodedUri)
                 Write-Debug "decoded by pwsh6+: $encodedUri"
             }
+            [string] $status = 'decoded'
         }
         if ( $AsObject ){
             [PSCustomObject]@{
-                EncodedUri = $encodedUri
-                DecodedUri = $decodedUri
+                DecodeFrom = $encodedUri
+                DecodeTo = $decodedUri
+                Status = $status
             }
         } elseif ( $AsArray ){
             @($encodedUri, $decodedUri)
