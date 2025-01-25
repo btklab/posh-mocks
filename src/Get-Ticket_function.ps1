@@ -1395,7 +1395,7 @@ function Get-Ticket {
                 } else {
                     [string] $com = "Start-Process -FilePath ""$link"""
                 }
-                Write-Debug $com -ForegroundColor Green
+                Write-Debug $com
                 Invoke-Expression -Command $com -ErrorAction Stop
             } else {
                 Write-Error "broken link: '$link'" -ErrorAction Stop
@@ -1408,7 +1408,7 @@ function Get-Ticket {
                 } else {
                     [string] $com = "Invoke-Item -Path ""$link"""
                 }
-                Write-Debug $com -ForegroundColor Green
+                Write-Debug $com
                 Invoke-Expression -Command $com -ErrorAction Stop
             } else {
                 Write-Error "broken link: '$link'" -ErrorAction Stop
