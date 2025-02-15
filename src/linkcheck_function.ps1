@@ -13,7 +13,7 @@
       The filename must not contain spaces. 
 
 .LINK
-    lincextract, linkcheck2
+    linkextract, linkcheck2
 
 .PARAMETER Header
     Recognize 1st column as filename, 2nd as href.
