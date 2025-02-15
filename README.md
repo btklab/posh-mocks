@@ -57,7 +57,7 @@ cat README.md `
 ```powershell
 # install all functions
 . path/to/posh-mocks/operator.ps1
-# option
+# optional
 . path/to/posh-mocks/operator-extra.ps1
 ```
 
@@ -67,13 +67,7 @@ The functions are designed to be as independent from other functions as possible
 ```powershell
 # install favorite functions for japanese environment
 # set encode
-if ($IsWindows){
-    chcp 65001
-    [System.Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding("utf-8")
-    [System.Console]::InputEncoding  = [System.Text.Encoding]::GetEncoding("utf-8")
-    # compartible with multi byte code
-    $env:LESSCHARSET = "utf-8"
-}
+. path/to/posh-mocks/operator-minimum.ps1
 # sourcing dot files
 . path/to/posh-mocks/src/hoge_function.ps1
 . path/to/posh-mocks/src/piyo_function.ps1
