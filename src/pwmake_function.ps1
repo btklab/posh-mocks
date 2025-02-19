@@ -33,7 +33,7 @@
             echo $params[0]
         ```
 
-    Execute examples:
+    Execution examples:
 
         ```powershell
         pwmake
@@ -47,6 +47,7 @@
 
     Note:
         Only the following automatic variables are impremented:
+            - $PSScriptRoot : Makefile directory path
             - $@ : Target file name
             - $< : The name of the first dependent file
             - $^ : Names of all dependent file
@@ -57,6 +58,14 @@
         # '%' example:
         %.tex: %.md
             cat $< | md2html > $@
+        ```
+
+        ```Makefile
+        root := $PSScriptRoot/args
+        all:
+            echo $PSScriptRoot
+            echo $PSScriptRoot/hoge
+            echo ${root}
         ```
 
     Detail:
@@ -285,6 +294,24 @@
     Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
 
 .EXAMPLE
+    # use predefined vaiable: $PSScriptRoot
+    # This gets the parent folder path of the Make file.
+    PS > cat Makefile
+
+    ```Makefile
+    root := $PSScriptRoot/args
+    all:
+        echo $PSScriptRoot
+        echo $PSScriptRoot/hoge
+        echo ${root}
+    ```
+
+    PS> pwmake -f ./Makefile
+        C:/Users/btklab/cms/
+        C:/Users/btklab/cms/hoge
+        C:/Users/btklab/cms/args
+
+.EXAMPLE
     # clone posh-source to posh-mocks
     PS > cat Makefile
 
@@ -404,6 +431,9 @@ function pwmake {
         [string[]] $Params,
 
         [Parameter(Mandatory=$False)]
+        [string] $PSScriptRoot,
+
+        [Parameter(Mandatory=$False)]
         [Alias('n')]
         [switch] $DryRun
     )
@@ -472,8 +502,10 @@ function pwmake {
     }
 
     ## init var
-    $makeFile = $File
+    [string] $makeFile = $File
     $phonyDict = @{}
+    [string] $makefileParentDir = Resolve-Path -LiteralPath "$makeFile" | Split-Path -Parent 
+    [string] $makefileParentDir = $makefileParentDir.Replace('\', '/')
 
     ## test
     $isExistMakefile = Test-Path -LiteralPath $makeFile
@@ -643,10 +675,13 @@ function pwmake {
             [string]$key = $varAry[0].trim()
             [string]$val = $varAry[1].trim()
             if ( $key -match '^[Pp]aram$'){
-                Write-Error 'Variable name: "Param" is predifined. Please use another keyword.' -ErrorAction Stop
+                Write-Error 'Variable name: "Param" is predefined. Please use another keyword.' -ErrorAction Stop
             }
             if ( $key -match '^[Pp]arams$'){
-                Write-Error 'Variable name: "Params" is predifined. Please use another keyword.' -ErrorAction Stop
+                Write-Error 'Variable name: "Params" is predefined. Please use another keyword.' -ErrorAction Stop
+            }
+            if ( $key -match '^PSScriptRoot$'){
+                Write-Error 'Variable name: "PSScriptRoot" is predefined. Please use another keyword.' -ErrorAction Stop
             }
             ## replace ${var}
             if ($val -match '\$\{'){
@@ -672,8 +707,21 @@ function pwmake {
             $varAry = $var -split "=", 2
             [string]$key = $varAry[0].trim()
             [string]$val = $varAry[1].trim()
+            if ( $key -match '^[Pp]aram$'){
+                Write-Error 'Variable name: "Param" is predefined. Please use another keyword.' -ErrorAction Stop
+            }
+            if ( $key -match '^[Pp]arams$'){
+                Write-Error 'Variable name: "Params" is predefined. Please use another keyword.' -ErrorAction Stop
+            }
+            if ( $key -match '^PSScriptRoot$'){
+                Write-Error 'Variable name: "PSScriptRoot" is predefined. Please use another keyword.' -ErrorAction Stop
+            }
             #$val = '$(' + $val + ')'
         }
+        ## replace predefined variable
+        $val = $val.Replace('${PSScriptRoot}', $makefileParentDir)
+        $val = $val.Replace('{$PSScriptRoot}', $makefileParentDir)
+        $val = $val.Replace('$PSScriptRoot', $makefileParentDir)
         return $key, $val
     }
 
@@ -993,6 +1041,7 @@ function pwmake {
         ##     $^ : Names of all dependent file
         ##     %.ext : Replace with a string with the extension removed
         ##         from the target name. Only target line can be used.
+        ##     $PSScriptRoot : Parent path of Makefile
 
         ## set dependency line
         if ($tarDepDict[$tar][0] -eq '') {
@@ -1008,9 +1057,12 @@ function pwmake {
         [string]$autoValDepFirst = ($dep -split "$Delimiter")[0]
 
         ## replace auto variables
-        $comline = $comline.replace('$@',"$autoValTarFirst")
-        $comline = $comline.replace('$<',"$autoValDepFirst")
-        $comline = $comline.replace('$^',"$autoValDepAll")
+        $comline = $comline.Replace('$@',"$autoValTarFirst")
+        $comline = $comline.Replace('$<',"$autoValDepFirst")
+        $comline = $comline.Replace('$^',"$autoValDepAll")
+        $comline = $comline.Replace('${PSScriptRoot}', $makefileParentDir)
+        $comline = $comline.Replace('{$PSScriptRoot}', $makefileParentDir)
+        $comline = $comline.Replace('$PSScriptRoot', $makefileParentDir)
         return $comline
     }
 
