@@ -1,5 +1,9 @@
 # posh-mocks
 
+**This repository has been archived**. Future script updates will be posted in the following repository:
+
+- [GitHub - btklab/pwsh-sketches](https://github.com/btklab/pwsh-sketches)
+
 ```markdown
 >  ____   ___   ____  _   _        _    _   ___    ___  _  _  ____
 > |  _ \ / _ \ /  __)| |_| | ____ | \  / | / _ \  / __)| |/ )/  __)
