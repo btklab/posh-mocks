@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [7.5.1] - 2025-01-12
 
+- Added: [pwmake] Autovariable: PSScriptRoot
 - Added: [Encode-Uri] (Alias: encuri) Status property when using `-AsObject` option
 - Added: [Decode-Uri] (Alias: decuri) Status property when using `-AsObject` option
 - Changed: [Invoke-Link] (Alias: i) to open only the first matched location
